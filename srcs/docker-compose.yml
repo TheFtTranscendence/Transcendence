@@ -7,12 +7,11 @@ networks:
 
 volumes:
   postgres_data:  # Define the volume for PostgreSQL data
-    #Use a volume in the local disk
     driver: local
     driver_opts:
       type: none
       o: bind
-      device: /home/loris/ft_transcendence
+      device: ${POSTGRES_DATA_PATH}
       
 services:
   django:
