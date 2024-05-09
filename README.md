@@ -21,3 +21,8 @@ This is group project of a project of:
 - <tiago>
 
 
+Commands:
+
+- 'make' to start the containers.
+- 'make clean' to stop and remove the images and containers.
+- 'make deepclean' to delete all docker related containers, images, network from your system.
