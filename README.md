@@ -17,7 +17,7 @@ This is group project of a project of:
 - [ddantas42](https://github.com/ddantas42)
 - [lopjf](https://github.com/lopjf)
 - [esali](https://github.com/emSali)
-- <ccourinha>
+- [courinha](https://github.com/Courinha768)
 - <tiago>
 
 
