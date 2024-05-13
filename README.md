@@ -18,7 +18,7 @@ This is group project of a project of:
 - [lopjf](https://github.com/lopjf)
 - [esali](https://github.com/emSali)
 - [courinha](https://github.com/Courinha768)
-- <tiago>
+- [tiago](https://github.com/tpereira22)
 
 
 Commands:
