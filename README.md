@@ -7,7 +7,7 @@ Transendence is the final project of the 42 Common Core and compromizes of the f
 - single page application with a pong-game, tournaments, authentication and chats
 - must be launched with a single command using Docker
 - Frontend with vanilla Javascrpit (for now)
-- Backend with Ruby (for now)
+- Backend with Django
 - Database with PostgreSQL
 - Blockchain storing tournament scores, written with Solidity on the Ethereum Blockchain
 
