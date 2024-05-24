@@ -12,7 +12,7 @@ volumes:
       type: none
       o: bind
       device: ${POSTGRES_DATA_PATH}
-      
+
 services:
   django:
     container_name: django
@@ -37,6 +37,15 @@ services:
       POSTGRES_PASSWORD: your_password
     volumes:
       - postgres_data:/var/lib/postgresql/data  # Mount a volume for PostgreSQL data
+    restart: unless-stopped
+
+  frontend:
+    container_name: frontend
+    build: ./nodejs
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
     restart: unless-stopped
 
 # Define other services here
