@@ -25,6 +25,7 @@ clean:
     done
 
 deepclean:
+	make clean
 	yes | docker system prune
 
 .PHONY: all down status clean
