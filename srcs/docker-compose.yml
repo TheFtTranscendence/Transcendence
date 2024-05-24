@@ -43,7 +43,7 @@ services:
     container_name: frontend
     build: ./nodejs
     ports:
-      - "3000:3000"
+      - "3000:80"
     networks:
       - app-network
     restart: unless-stopped

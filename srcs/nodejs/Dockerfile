@@ -1,26 +1,11 @@
-# official lighweight node image as the base image
-FROM node:14-alpine
+# Use the official nginx image as the base image
+FROM nginx:latest
 
-# Set the working directory
-WORKDIR /app
+# Copy the static files to the nginx html directory
+COPY public /usr/share/nginx/html
 
-# Copy package.json and package-lock.json
-COPY package*.json ./
+# Expose port 80 to the host
+EXPOSE 80
 
-# Install dependencies
-RUN npm install
-
-# Copy the rest of the application code
-COPY . .
-
-# Build the React app
-RUN npm run build
-
-# Install serve to serve the build files
-RUN npm install -g serve
-
-# Set the command to run the app
-CMD ["serve", "-s", "build", "-l", "3000"]
-
-# Expose the port the app runs on
-EXPOSE 3000
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"]
