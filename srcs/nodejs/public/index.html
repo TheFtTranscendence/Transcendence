@@ -3,11 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vanilla JS App</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Pong</title>
+    <style>
+        .hidden { display: none; }
+    </style>
 </head>
 <body>
-    <h1>Hello, Vanilla JavaScript!</h1>
+    <div id="auth">
+        <div id="login" class="auth-page">
+            <h1>Login</h1>
+            <form id="loginForm">
+                <label for="loginUsername">Username:</label>
+                <input type="text" id="loginUsername" name="username" required>
+                <label for="loginPassword">Password:</label>
+                <input type="password" id="loginPassword" name="password" required>
+                <button type="submit">Login</button>
+            </form>
+            <button id="toRegister">Not a user yet?</button>
+        </div>
+        <div id="register" class="auth-page hidden">
+            <h1>Register</h1>
+            <form id="registerForm">
+                <label for="registerUsername">Username:</label>
+                <input type="text" id="registerUsername" name="username" required>
+                <label for="registerPassword">Password:</label>
+                <input type="password" id="registerPassword" name="password" required>
+                <button type="submit">Register</button>
+            </form>
+            <button id="toLogin">Already a user?</button>
+        </div>
+    </div>
+    <nav class="hidden">
+        <a href="#home" class="nav-link">Home</a>
+        <a href="#game" class="nav-link">Game</a>
+        <a href="#chat" class="nav-link">Chat</a>
+    </nav>
+    <div id="content"></div>
     <script src="script.js"></script>
 </body>
 </html>
