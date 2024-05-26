@@ -20,6 +20,14 @@ This is group project of a project of:
 - [courinha](https://github.com/Courinha768)
 - [tiago](https://github.com/tpereira22)
 
+.env setup
+- POSTGRES_DATA_PATH: A directory where the volume of the database will be stored and persist. (create a directory on your machine and add its path to this variable).
+- POSTGRES_DB: The database name (anything will work)
+- POSTGRES_USER: Your username (anything will work)
+- POSTGRES_PASSWORD: Your password (anything will work)
+- POSTGRES_HOST: The database docker service name. It should match the service name in docker-compose.yml. In our case it is 'db'.
+- POSTGRES_PORT: Default postgres port is 5432. It needs to be set to 5432.
+- PRIVATE_KEY: The owner wallet private key.
 
 Commands:
 
