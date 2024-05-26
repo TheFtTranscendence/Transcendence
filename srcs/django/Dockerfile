@@ -10,14 +10,16 @@ RUN apt-get update \
 # Set working directory
 WORKDIR /usr/src/app
 
-# Copy script and requirements
+# Copy scripts and requirements
 COPY requirements.txt .
+COPY wait-for-it.sh .
 COPY init_django_project.sh .
 
 # Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# chmod the script
+# chmod the scripts
+RUN chmod +x wait-for-it.sh
 RUN chmod +x init_django_project.sh
 
 # Expose port
