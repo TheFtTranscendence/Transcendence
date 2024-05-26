@@ -25,18 +25,20 @@ services:
     networks:
       - app-network
     depends_on:
-      - postgres
+      - db
     restart: unless-stopped
 
-  postgres:
+  db:
     container_name: postgres_db
     image: postgres:13
     environment:
-      POSTGRES_DB: your_database_name
-      POSTGRES_USER: your_username
-      POSTGRES_PASSWORD: your_password
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data  # Mount a volume for PostgreSQL data
+    networks:
+      - app-network
     restart: unless-stopped
 
   frontend:
