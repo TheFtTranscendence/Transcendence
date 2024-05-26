@@ -10,11 +10,9 @@ RUN apt-get update \
 # Set working directory
 WORKDIR /usr/src/app
 
-# Copy project files and requirements
-COPY . .
-
-# Create a script to initialize Django project
-COPY init_django_project.sh /usr/src/app/
+# Copy script and requirements
+COPY requirements.txt .
+COPY init_django_project.sh .
 
 # Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
