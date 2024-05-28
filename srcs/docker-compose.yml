@@ -16,10 +16,14 @@ volumes:
 services:
   django:
     container_name: django
-    image: django
     build: ./django
     env_file:
       - .env  # Adjust the path to your .env file if needed
+    environment:
+      - DATABASE_HOST=${DATABASE_HOST}
+      - DATABASE_NAME=${POSTGRES_DB}
+      - DATABASE_USER=${POSTGRES_USER}
+      - DATABASE_PASSWORD=${POSTGRES_PASSWORD}
     ports:
       - "8000:8000"  # Adjust the port mapping as needed
     networks:
