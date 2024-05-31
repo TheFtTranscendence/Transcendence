@@ -21,5 +21,8 @@ sed -i "/'USER': '${POSTGRES_USER}',/a \        'PASSWORD': '${POSTGRES_PASSWORD
 sed -i "/'PASSWORD': '${POSTGRES_PASSWORD}',/a \        'HOST': '${POSTGRES_HOST}'," myproject/settings.py
 sed -i "/'HOST': '${POSTGRES_HOST}',/a \        'PORT': ${POSTGRES_PORT}," myproject/settings.py
 
+# add installed apps
+sed -i "/'django.contrib.staticfiles',/a \    'rest_framework'," myproject/settings.py
+
 # Run Django development server
 python manage.py runserver 0.0.0.0:8000
