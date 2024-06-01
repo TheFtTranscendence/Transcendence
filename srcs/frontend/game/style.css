@@ -1,0 +1,18 @@
+body {
+    text-align: center;
+}
+
+#game-area {
+    width: 800px;
+    height: 600px;
+    background-color: black;
+    /* position:  relative; */
+    margin: 0 auto;
+}
+
+@font-face {
+    font-family: "ARCADECLASSIC";
+    src: url("font/ARCADECLASSIC.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
