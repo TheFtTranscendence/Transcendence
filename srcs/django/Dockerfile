@@ -5,8 +5,7 @@ FROM python:3.9-slim
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         postgresql-client \
-    && rm -rf /var/lib/apt/lists/* \
-	&& apt install inetutils-ping
+    && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /usr/src/app
