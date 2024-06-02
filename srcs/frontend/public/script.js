@@ -32,15 +32,6 @@ function handleAuthForms() {
     document.getElementById('registerForm').addEventListener('submit', (event) => {
         event.preventDefault();
         // Mock registration and transition to home page
-
-		const apiUrl = 'http://django:8000/api/User';
-
-		fetch(apiUrl)
-			.then(response => response.json())
-			.then(data => console.log(data))
-			.catch(error => console.error('Error:', error));
-
-
         document.getElementById('auth').classList.add('hidden');
         document.querySelector('nav').classList.remove('hidden');
         window.location.hash = '#home';
