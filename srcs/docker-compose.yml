@@ -12,6 +12,7 @@ volumes:
       type: none
       o: bind
       device: ${POSTGRES_DATA_PATH}
+  shared_static:
 
 services:
   django:
@@ -28,6 +29,8 @@ services:
       - "8000:8000"  # Adjust the port mapping as needed
     networks:
       - app-network
+    volumes:
+      - shared_static:/usr/src/app/myproject/static
     depends_on:
       - db
     restart: unless-stopped
@@ -52,6 +55,8 @@ services:
       - "3000:80"
     networks:
       - app-network
+    volumes:
+      - shared_static:/usr/share/nginx/html
     restart: unless-stopped
 
 # Define other services here
