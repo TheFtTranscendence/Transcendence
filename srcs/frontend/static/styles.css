@@ -1,5 +1,19 @@
+:root {
+	--background-color: #f8f8db;
+	--light-accents: #e9e7f4;
+	--red: #d4320f;
+	--yellow: #d3ac53;
+	--blue: #2d77be;
+	--brown: #725d46;
+	--dark: #271c0b;
+}
+
 body {
     font-family: Arial, sans-serif;
     text-align: center;
     margin-top: 50px;
+}
+
+.hidden {
+    display: none;
 }
