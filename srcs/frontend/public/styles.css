@@ -1,6 +1,6 @@
 :root {
 	--background-color: #f8f8db;
-	--light-accents: #e9e7f4;
+	--light: #e9e7f4;
 	--red: #d4320f;
 	--yellow: #d3ac53;
 	--blue: #2d77be;
@@ -11,9 +11,62 @@
 body {
     font-family: Arial, sans-serif;
     text-align: center;
-    margin-top: 50px;
 }
 
 .hidden {
     display: none;
+}
+
+#auth {
+	border: 7px solid var(--background-color)
+}
+
+.horizontal-line {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background-color: var(--background-color);
+    transform: translateY(-50%);
+}
+
+.left-side, .right-side {
+	color: var(--background-color);
+	cursor: pointer;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+}
+
+.left-side {
+	background-color: var(--blue);
+	border-right: 7px solid var(--background-color);
+}
+.right-side {
+	background-color: var(--red);
+}
+.full-height {
+	height: 100%;
+}
+
+.left-content, .right-content {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.right-content {
+	padding-bottom: 500px;
+}
+
+.left-content {
+	padding-top: 500px;
+}
+
+.split-screen-text {
+	font-size: 3rem;
+	font-weight: bold;
 }

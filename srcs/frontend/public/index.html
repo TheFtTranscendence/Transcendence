@@ -6,16 +6,26 @@
     <title>Pong</title>
 	<link rel="stylesheet" href="styles.css">
 	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-
 </head>
 <body style="background-color: var(--background-color);">
 
-	<div id="auth" style="height: 100vh" >
-		<div class="row w-100 h-100">
-			<div class="col bg-info">Left side</div>
-			<div class="col bg-dark">Right side</div>
-		</div>
-	</div>
+    <div class="container-fluid">
+		<div class="row vh-100" id="auth">
+			<div class="col-sm-6 col-md-6 left-side">
+                <div class="left-content">
+                    <div class="split-screen-text">LOGIN</div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6 right-side">
+                <div class="right-content">
+                    <div class="split-screen-text">REGISTER</div>
+                </div>
+            </div>
+        </div>
+		<div class="horizontal-line"></div>
+
+    </div>
+
 	<!--
 	<div id="auth">
         <div id="login" class="auth-page hidden">
