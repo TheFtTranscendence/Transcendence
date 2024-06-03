@@ -1,7 +1,7 @@
 :root {
 	--background-color: #f8f8db;
 	--light: #e9e7f4;
-	--red: #d4320f;
+	--red: #d4302f;
 	--yellow: #d3ac53;
 	--blue: #2d77be;
 	--brown: #725d46;
@@ -70,9 +70,6 @@ body {
 .full-height {
 	height: 100%;
 }
-
-
-
 
 .left-content, .right-content {
 	width: 100%;

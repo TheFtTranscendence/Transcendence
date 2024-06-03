@@ -12,16 +12,20 @@
     <div class="container-fluid">
 		<div class="row vh-100" id="auth">
 			<div class="col-sm-6 left-side">
-                <div class="left-content">
-                    <div class="split-screen-text">LOGIN</div>
+                <div class="left-content text-center">
+                    <div class="split-screen-text mb-4">LOGIN</div>
 					<div id="login" class="hidden">
 						<form id="loginForm">
-							<label for="loginUsername">Username:</label>
-							<input type="text" id="loginUsername" name="username">
-							<label for="loginPassword">Password:</label>
-							<input type="password" id="loginPassword" name="password">
-							<button type="submit">Login</button>
-						</form>
+                            <div class="form-group">
+                                <label for="loginUsername">Username:</label>
+                                <input type="text" class="form-control" id="loginUsername" name="username">
+                            </div>
+                            <div class="form-group">
+                                <label for="loginPassword">Password:</label>
+                                <input type="password" class="form-control" id="loginPassword" name="password">
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Login</button>
+                        </form>
 					</div>
                 </div>
             </div>
@@ -30,12 +34,16 @@
                     <div class="split-screen-text">REGISTER</div>
 					<div id="register" class="hidden">
 						<form id="registerForm">
-							<label for="registerUsername">Username:</label>
-							<input type="text" id="registerUsername" name="username">
-							<label for="registerPassword">Password:</label>
-							<input type="password" id="registerPassword" name="password">
-							<button type="submit">Register</button>
-						</form>
+                            <div class="form-group">
+                                <label for="registerUsername">Username:</label>
+                                <input type="text" class="form-control" id="registerUsername" name="username">
+                            </div>
+                            <div class="form-group">
+                                <label for="registerPassword">Password:</label>
+                                <input type="password" class="form-control" id="registerPassword" name="password">
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Register</button>
+                        </form>
 					</div>
                 </div>
             </div>
