@@ -68,34 +68,35 @@
 
 //AUTH ANIMATION
 
-const leftSide = document.querySelector('.left-side');
-const rightSide = document.querySelector('.right-side');
-const rightContent = document.querySelector('.right-content')
-const leftContent = document.querySelector('.left-content')
+document.addEventListener('DOMContentLoaded', () => {
+    const leftSide = document.querySelector('.left-side');
+    const rightSide = document.querySelector('.right-side');
+    const rightContent = document.querySelector('.right-content');
+    const leftContent = document.querySelector('.left-content');
+	const leftForm = document.getElementById('login')
+	const rightForm = document.getElementById('register')
 
-leftSide.addEventListener('click', () => {
-	console.log("Left side clicked")
-	rightSide.classList.remove('col-sm-6');
-	rightSide.classList.remove('col-sm-10')
-	rightContent.classList.add('hidden')
-	rightSide.classList.add('col-sm-2')
 
-	leftSide.classList.remove('col-sm-2')
-	leftSide.classList.remove('col-sm-6');
-	leftSide.classList.add('col-sm-10');
-	leftContent.classList.remove('hidden')
-})
+    function handleClick(expandedSide, collapsedSide, expandedContent, collapsedContent, expandedForm, collapsedForm) {
+        collapsedSide.classList.remove('col-sm-6', 'col-sm-10');
+        collapsedContent.classList.add('hidden');
+        collapsedSide.classList.add('col-sm-2');
+		collapsedForm.classList.add('hidden');
 
-rightSide.addEventListener('click', () => {
-	console.log("Right side clicked")
-	leftSide.classList.remove('col-sm-6');
-	leftSide.classList.remove('col-sm-10')
-	leftContent.classList.add('hidden')
-	leftSide.classList.add('col-sm-2')
+        expandedSide.classList.remove('col-sm-2', 'col-sm-6');
+        expandedSide.classList.add('col-sm-10');
+        expandedContent.classList.remove('hidden');
+		expandedForm.classList.remove('hidden');
 
-	rightSide.classList.remove('col-sm-2')
-	rightSide.classList.remove('col-sm-6');
-	rightSide.classList.add('col-sm-10');
-	rightContent.classList.remove('hidden')
+    }
 
-})
+    leftSide.addEventListener('click', () => {
+        console.log("Left side clicked");
+        handleClick(leftSide, rightSide, leftContent, rightContent, leftForm, rightForm);
+    });
+
+    rightSide.addEventListener('click', () => {
+        console.log("Right side clicked");
+        handleClick(rightSide, leftSide, rightContent, leftContent, rightForm, leftForm);
+    });
+});
