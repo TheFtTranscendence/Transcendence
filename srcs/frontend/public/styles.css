@@ -11,14 +11,18 @@
 body {
     font-family: Arial, sans-serif;
     text-align: center;
+	margin: 0;
+    overflow: hidden;
 }
 
 .hidden {
-    display: none;
+    display: none !important;
 }
 
 #auth {
-	border: 7px solid var(--background-color)
+	border: 7px solid var(--background-color);
+    display: flex;
+    /* transition: all 0.5s ease; */
 }
 
 .horizontal-line {
@@ -38,6 +42,22 @@ body {
 	justify-content: center;
 	align-items: center;
 	position: relative;
+	transition: all 0.5s ease;
+}
+
+.col-0 {
+	width: 0;
+	flex-shrink: 1;
+	transition: all 400ms ease;
+}
+
+.col-6 {
+	flex-grow: 1;
+	transition: all 400ms ease;
+}
+
+.expanded{
+    flex: 8; /* Adjust this value to control text movement */
 }
 
 .left-side {
@@ -51,6 +71,9 @@ body {
 	height: 100%;
 }
 
+
+
+
 .left-content, .right-content {
 	width: 100%;
 	display: flex;
@@ -58,15 +81,7 @@ body {
 	align-items: center;
 }
 
-.right-content {
-	padding-bottom: 350px;
-}
-
-.left-content {
-	padding-top: 350px;
-}
-
 .split-screen-text {
 	font-size: 40px;
-	font-weight: bold;
+	/* transition: all 0.5s ease; */
 }
