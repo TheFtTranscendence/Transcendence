@@ -6,4 +6,4 @@ issues:
 
 Solutions:
 1. Deploy a a new Game array struct for every new instance.
-2. Store the index of the instance in the Postegres database to retrieve it even after a deepclean.
+2. Store the index of the instance in the Postegres database per user to retrieve it even after a deepclean.
