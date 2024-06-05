@@ -3,6 +3,7 @@ pragma solidity ^0.8.19;
 
 // Custom errors
 error onlyOwnerError();
+error wrongNumberOfPlayers();
 
 /**
  * @title Ownable
@@ -30,19 +31,29 @@ contract Ownable {
 contract Score is Ownable {
 
     // Custom events
+    event InstanceAdded(uint256 indexed instanceIndex);
+    event GameAdded(uint256 indexed instanceIndex, uint256 timestamp, string player1, string player2, uint8 score1, uint8 score2, int8 tournament);
+    event TournamentAdded(uint256 indexed instanceIndex, uint8 numberOfPlayers, string[] players);
 
     struct Game {
         uint256 timestamp;
         string player1;
         string player2;
-        uint256 score1;
-        uint256 score2;
-        bool tournament;
+        uint8 score1;
+        uint8 score2;
+        int8 tournament;    // -1: not a tournament, then the index of the tournament
+    }
+
+    struct Tournament {
+        uint8 numberOfPlayers;
+        string[] players;
+        Game[] games;
     }
 
     /* ========== STATE VARIABLES ========== */
     uint256 public instanceIndex;
-    mapping(uint256 => Game[]) public instances;
+    mapping(uint256 => Game[]) public instancesGame;
+    mapping(uint256 => Tournament[]) public instancesTournament;
 
     /* ========== CONSTRUCTOR ========== */
     constructor() {
@@ -51,58 +62,25 @@ contract Score is Ownable {
 
     /* ========== SETTER FUNCTIONS ========== */
     function addInstance() public onlyOwner {
-        instances[instanceIndex++].push();
+        instancesGame[instanceIndex].push();
+        instancesTournament[instanceIndex].push();
+        instanceIndex++;
+        emit InstanceAdded(instanceIndex);
     }
 
-    function addGame(
-        uint256 _instance,
-        string memory _player1,
-        string memory _player2,
-        uint256 _score1,
-        uint256 _score2,
-        bool _tournament
-    ) public onlyOwner {
-        instances[_instance].push(
-            Game({
-                timestamp: block.timestamp,
-                player1: _player1,
-                player2: _player2,
-                score1: _score1,
-                score2: _score2,
-                tournament: _tournament
-            })
-        );
+    function addGame(uint256 _instanceIndex, string memory _player1, string memory _player2, uint8 _score1, uint8 _score2, int8 _tournament) public onlyOwner {
+        instancesGame[_instanceIndex].push(Game(block.timestamp, _player1, _player2, _score1, _score2, _tournament));
+        emit GameAdded(_instanceIndex, block.timestamp, _player1, _player2, _score1, _score2, _tournament);
+    }
+
+    function addTournament(uint256 _instanceIndex, string[] memory _players) public onlyOwner {
+        // check if the number of players is a power of 2 and in between 0 and 256
+        if (_players.length < 2 || _players.length > 256 || (_players.length & (_players.length - 1)) != 0)
+            revert wrongNumberOfPlayers();
+        instancesTournament[_instanceIndex].push(Tournament(uint8(_players.length), _players, new Game[](0)));
+        emit TournamentAdded(instanceIndex, uint8(_players.length), _players);
     }
 
     /* ========== GETTER FUNCTIONS ========== */
-    function getGameCount(uint256 _instance) public view returns (uint256) {
-        return instances[_instance].length;
-    }
 
-    function getGame(uint256 _instance, uint256 _index)
-        public
-        view
-        returns (
-            uint256,
-            string memory,
-            string memory,
-            uint256,
-            uint256,
-            bool
-        )
-    {
-        Game memory game = instances[_instance][_index];
-        return (
-            game.timestamp,
-            game.player1,
-            game.player2,
-            game.score1,
-            game.score2,
-            game.tournament
-        );
-    }
-
-    function getGames(uint256 _instance) public view returns (Game[] memory) {
-        return instances[_instance];
-    }
 }
