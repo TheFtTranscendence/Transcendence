@@ -12,47 +12,46 @@ function navigate() {
     contentDiv.innerHTML = routes[hash] || '<h1>404 Not Found</h1><p>Page not found.</p>';
 }
 
-// Show the appropriate auth page (login or register)
-function showAuthPage(page) {
-    document.querySelectorAll('.auth-page').forEach(el => el.classList.add('hidden'));
-    document.getElementById(page).classList.remove('hidden');
-}
-
 // Handle login and register forms
-function handleAuthForms() {
-    document.getElementById('loginForm').addEventListener('submit', (event) => {
-        event.preventDefault();
-        // Mock authentication and transition to home page
-        document.getElementById('auth').classList.add('hidden');
-        document.querySelector('nav').classList.remove('hidden');
-        window.location.hash = '#home';
-        navigate();
-    });
-
-    document.getElementById('registerForm').addEventListener('submit', (event) => {
-        event.preventDefault();
-        // Mock registration and transition to home page
-        document.getElementById('auth').classList.add('hidden');
-        document.querySelector('nav').classList.remove('hidden');
-        window.location.hash = '#home';
-        navigate();
-    });
-
-    document.getElementById('toRegister').addEventListener('click', () => {
-        showAuthPage('register');
-    });
-
-    document.getElementById('toLogin').addEventListener('click', () => {
-        showAuthPage('login');
-    });
-}
-
-// Initial page load
-window.addEventListener('load', () => {
-    // Show login page initially
-    showAuthPage('login');
-    handleAuthForms();
+document.getElementById('loginForm').addEventListener('submit', (event) => {
+    event.preventDefault();
+    // Mock authentication and transition to home page
+    document.getElementById('auth').classList.add('hidden');
+    document.querySelector('nav').classList.remove('hidden');
+    window.location.hash = '#home';
+    navigate();
 });
+
+document.getElementById('registerForm').addEventListener('submit', (event) => {
+	event.preventDefault();
+	// Mock registration and transition to home page
+	document.getElementById('auth').classList.add('hidden');
+	document.querySelector('nav').classList.remove('hidden');
+	window.location.hash = '#home';
+	navigate();
+});
+
+// // Show the appropriate auth page (login or register)
+// function showAuthPage(page) {
+//     document.querySelectorAll('.auth-page').forEach(el => el.classList.add('hidden'));
+//     document.getElementById(page).classList.remove('hidden');
+// }
+
+//     document.getElementById('toRegister').addEventListener('click', () => {
+//         showAuthPage('register');
+//     });
+
+//     document.getElementById('toLogin').addEventListener('click', () => {
+//         showAuthPage('login');
+//     });
+// }
+
+// // Initial page load
+// window.addEventListener('load', () => {
+//     // Show login page initially
+//     showAuthPage('login');
+//     handleAuthForms();
+// });
 
 // Event listener for hash changes
 window.addEventListener('hashchange', navigate);
@@ -64,3 +63,39 @@ document.querySelectorAll('.nav-link').forEach(link => {
         window.location.hash = link.getAttribute('href');
     });
 });
+
+
+//AUTH ANIMATION
+
+document.addEventListener('DOMContentLoaded', () => {
+    const leftSide = document.querySelector('.left-side');
+    const rightSide = document.querySelector('.right-side');
+    const rightContent = document.querySelector('.right-content');
+    const leftContent = document.querySelector('.left-content');
+	const leftForm = document.getElementById('login')
+	const rightForm = document.getElementById('register')
+
+
+    function handleClick(expandedSide, collapsedSide, expandedContent, collapsedContent, expandedForm, collapsedForm) {
+        collapsedSide.classList.remove('col-sm-6', 'col-sm-10');
+        collapsedContent.classList.add('hidden');
+        collapsedSide.classList.add('col-sm-2');
+		collapsedForm.classList.add('hidden');
+
+        expandedSide.classList.remove('col-sm-2', 'col-sm-6');
+        expandedSide.classList.add('col-sm-10');
+        expandedContent.classList.remove('hidden');
+		expandedForm.classList.remove('hidden');
+
+    }
+
+    leftSide.addEventListener('click', () => {
+        console.log("Left side clicked");
+        handleClick(leftSide, rightSide, leftContent, rightContent, leftForm, rightForm);
+    });
+
+    rightSide.addEventListener('click', () => {
+        console.log("Right side clicked");
+        handleClick(rightSide, leftSide, rightContent, leftContent, rightForm, leftForm);
+    });
+})
