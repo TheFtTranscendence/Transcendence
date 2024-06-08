@@ -56,6 +56,7 @@ contract Score is Ownable {
         uint8 numberOfGames;
         string[] reversedRanking;       // index 0 is the looser, last index is the winner
         Game[] games;
+        bool finished;
     }
 
     /* ========== STATE VARIABLES ========== */
@@ -100,7 +101,7 @@ contract Score is Ownable {
         * @notice Add a new tournament to the database.
         * @param _instanceIndex The index of the instance in the database.
         * @param _players The list of players in the tournament.
-        * @dev The number of players must be a power of 2 and in between 2 and 256.
+        * @dev The number of players must be a power of 2 and in between 2 and 256. So can only launch a tournament with 2, 4, 8, 16, 32, 64, 128 or 256 players.
     **/
     function addTournament(uint256 _instanceIndex, string[] memory _players) public onlyOwner {
         if (_instanceIndex < 0 || _instanceIndex >= instanceIndex)
@@ -109,8 +110,8 @@ contract Score is Ownable {
         if (_players.length < 2 || _players.length > 256 || (_players.length & (_players.length - 1)) != 0)
             revert wrongNumberOfPlayers();
         // check if a tournament is not already in progress
-        for (uint256 i = 0; i < instancesTournament[_instanceIndex].length; i++) {
-            if (instancesTournament[_instanceIndex][i].players.length == _players.length)
+        if (instancesTournament[_instanceIndex].length > 0) {
+            if (instancesTournament[_instanceIndex][instancesTournament[_instanceIndex].length - 1].finished == false)
                 revert AlreadyInTournament();
         }
 
