@@ -48,7 +48,10 @@ const buttonY = (canvas.height / 2) - 35;
 const buttonWidth = 160;
 const buttonHeight = 70;
 
-window.onload = function() {
+window.onload = startGame();
+
+function startGame()
+{
     document.addEventListener("keydown", handleKeyDown);
     document.addEventListener("keyup", handleKeyUp);
     canvas.addEventListener("click", handleCanvasClick)
@@ -315,6 +318,8 @@ function endGame()
 function gameLoop(event)
 {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     if (!gameStart)
     {
         if (!gameReset)

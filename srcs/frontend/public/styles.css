@@ -82,3 +82,18 @@ body {
 	font-size: 40px;
 	/* transition: all 0.5s ease; */
 }
+
+#game-area {
+    width: 800px;
+    height: 600px;
+    background-color: black;
+    /* position:  relative; */
+    margin: 0 auto;
+}
+
+@font-face {
+    font-family: "ARCADECLASSIC";
+    src: url("game/font/ARCADECLASSIC.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
