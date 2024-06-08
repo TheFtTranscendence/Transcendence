@@ -13,25 +13,23 @@ function navigate() {
 }
 
 // Handle login and register forms
-function handleAuthForms() {
-    document.getElementById('loginForm').addEventListener('submit', (event) => {
-        event.preventDefault();
-        // Mock authentication and transition to home page
-        document.getElementById('auth').classList.add('hidden');
-        document.querySelector('nav').classList.remove('hidden');
-        window.location.hash = '#home';
-        navigate();
-    });
-}
+document.getElementById('loginForm').addEventListener('submit', (event) => {
+    event.preventDefault();
+    // Mock authentication and transition to home page
+    document.getElementById('auth').classList.add('hidden');
+    document.querySelector('nav').classList.remove('hidden');
+    window.location.hash = '#home';
+    navigate();
+});
 
-    document.getElementById('registerForm').addEventListener('submit', (event) => {
-        event.preventDefault();
-        // Mock registration and transition to home page
-        document.getElementById('auth').classList.add('hidden');
-        document.querySelector('nav').classList.remove('hidden');
-        window.location.hash = '#home';
-        navigate();
-    });
+document.getElementById('registerForm').addEventListener('submit', (event) => {
+	event.preventDefault();
+	// Mock registration and transition to home page
+	document.getElementById('auth').classList.add('hidden');
+	document.querySelector('nav').classList.remove('hidden');
+	window.location.hash = '#home';
+	navigate();
+});
 
 // // Show the appropriate auth page (login or register)
 // function showAuthPage(page) {
