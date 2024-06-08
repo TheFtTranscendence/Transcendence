@@ -130,7 +130,7 @@ contract Score is Ownable {
             revert wrongInstanceIndex();
         if (_tournamentIndex < 0 || _tournamentIndex >= instancesTournament[_instanceIndex].length)
             revert wrongTournamentIndex();
-        if (instancesTournament[_instanceIndex][_tournamentIndex].games.length >= instancesTournament[_instanceIndex][_tournamentIndex].numberOfGames)
+        if (instancesTournament[_instanceIndex][_tournamentIndex].finished)
             revert tournamentAlreadyFinished();
 
         instancesTournament[_instanceIndex][_tournamentIndex].games.push(Game(block.timestamp, _player1, _player2, _score1, _score2, int8(_tournamentIndex)));
@@ -146,6 +146,11 @@ contract Score is Ownable {
             instancesTournament[_instanceIndex][_tournamentIndex].reversedRanking.push(_player1);
 
         emit PlayerLost(_instanceIndex, _tournamentIndex, _score1 > _score2 ? _player2 : _player1);
+
+        // check if the tournament is finished
+        if (instancesTournament[_instanceIndex][_tournamentIndex].games.length == instancesTournament[_instanceIndex][_tournamentIndex].numberOfGames) {
+            instancesTournament[_instanceIndex][_tournamentIndex].finished = true;
+        }
     }
 
     /* ========== GETTER FUNCTIONS ========== */
