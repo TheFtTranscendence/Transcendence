@@ -16,3 +16,10 @@ body {
     font-weight: normal;
     font-style: normal;
 }
+
+@font-face {
+    font-family: "recharge";
+    src: url("font/recharge.otf") format("opentype");
+    font-weight: normal;
+    font-style: normal;
+}

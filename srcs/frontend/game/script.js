@@ -21,10 +21,10 @@ let paddleHeight = 80;
 let paddleWidth = 10;
 let paddleSpeed = 6;
 
-let p1paddleX = 20; 
+let p1paddleX = 40; 
 let p1paddleY = (canvas.height / 2) - (paddleHeight / 2);
 
-let p2paddleX = canvas.width - 30;
+let p2paddleX = canvas.width - 50;
 let p2paddleY =  (canvas.height / 2) - (paddleHeight / 2);
 
 // Ball Vars
@@ -85,12 +85,6 @@ function handleCanvasClick(event)
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
 
-    // console.log(x);
-    // console.log(y);
-    // // console.log(buttonX);
-    // // console.log(buttonY);
-    // console.log(canvas.width);
-    // console.log(canvas.height);
     if (x >= buttonX && x <= buttonX + buttonWidth && y >= buttonY && y <= buttonY + buttonHeight && !gameStart)
     {
         gameStart = true;
@@ -101,19 +95,20 @@ function handleCanvasClick(event)
 
 function updatePaddles()
 {
-    if (p1PaddleState.up === true && p1paddleY > 2)
+    if (p1PaddleState.up === true && p1paddleY > 1)
         p1paddleY -= paddleSpeed;
-    if (p1PaddleState.down === true && (p1paddleY + paddleHeight + paddleSpeed) < canvas.height)
+    if (p1PaddleState.down === true && (p1paddleY + paddleHeight) < canvas.height)
         p1paddleY += paddleSpeed;
-    if (p2PaddleState.up === true && p2paddleY > 2)
+    if (p2PaddleState.up === true && p2paddleY > 1)
         p2paddleY -= paddleSpeed;
-    if (p2PaddleState.down === true && (p2paddleY + paddleHeight + paddleSpeed) < canvas.height)
+    if (p2PaddleState.down === true && (p2paddleY + paddleHeight) < canvas.height)
         p2paddleY += paddleSpeed;
 
 }
 
 function ballMovement()
 {
+    // If point has been scored make ball travel out of screen
     if (pointScored)
     {
         if (ballMoveRight)
@@ -148,9 +143,7 @@ function ballMovement()
         if ((ballX + ballSize + ballSpeedX) < p2paddleX)
         {
             ballX += ballSpeedX;
-            if ((ballY + ballSpeedY) < 2)
-                ballSpeedY *= -1;
-            else if ((ballY + ballSpeedY) > canvas.height)
+            if ((ballY - (ballSize / 2)) < 0 || (ballY + (ballSize / 2)) >= canvas.height)
                 ballSpeedY *= -1;
             ballY += ballSpeedY;
         }
@@ -162,10 +155,10 @@ function ballMovement()
                 {
                     ballSpeedX++;
                     speedIncY++;
-                    ballSpeedY = (Math.random() * speedIncY - 1) * (Math.random() < 0.5 ? 1 : -1);
                 }
+                ballSpeedY = (Math.random() * speedIncY - 1) * (Math.random() < 0.5 ? 1 : -1);
                 ballX -= ballSpeedX;
-                console.log("vballspeed : ", ballSpeedY);
+                // console.log("vballspeed : ", ballSpeedY);
                 ballY += ballSpeedY;
                 ballMoveRight = false;
                 ballMoveLeft = true;
@@ -181,31 +174,34 @@ function ballMovement()
     }
     else if (ballMoveLeft === true)
     {
-        if ((ballX + ballSpeedX) > (p1paddleX + paddleWidth))
+        // Ball didn't hit the paddle X
+        if ((ballX - ballSpeedX) > (p1paddleX + paddleWidth))
         {
             ballX -= ballSpeedX;
-            if ((ballY + ballSpeedY) < 2)
-                ballSpeedY *= -1;
-            else if ((ballY + ballSpeedY) > canvas.height)
+            if ((ballY - (ballSize / 2)) < 0 || (ballY + (ballSize / 2)) >= canvas.height)
                 ballSpeedY *= -1;
             ballY += ballSpeedY;
         }
+        // Ball hit the pladdle X
         else
         {
+            // Check if hit the paddle Y
             if (ballY >= p1paddleY && ballY <= (p1paddleY + paddleHeight))
             {
                 if (hitCounter % 5 == 0)
                 {
                     ballSpeedX++;
                     speedIncY++;
-                    ballSpeedY = (Math.random() * speedIncY - 1) * (Math.random() < 0.5 ? 1 : -1);
                 }
+                ballSpeedY = (Math.random() * speedIncY - 1) * (Math.random() < 0.5 ? 1 : -1);
+                // console.log("vballspeed : ", ballSpeedY);
                 ballX += ballSpeedX;
                 ballY += ballSpeedY;
                 ballMoveLeft = false;
                 ballMoveRight = true;
                 hitCounter++;
             }
+            // Didn't hit the paddle Y - Point Scored
             else
             {
                 pointScored = true;
@@ -214,15 +210,14 @@ function ballMovement()
             }
         }
     }
-    
 }
 
 
 function resetGame()
 {
-    p1paddleX = 20; 
+    p1paddleX = 40; 
     p1paddleY = (canvas.height / 2) - (paddleHeight / 2);
-    p2paddleX = canvas.width - 30;
+    p2paddleX = canvas.width - 50;
     p2paddleY =  (canvas.height / 2) - (paddleHeight / 2);
     
     ballX = canvas.width / 2;
@@ -241,9 +236,9 @@ function resetGame()
     gameReset = false;
 }
 
-function drawPaddle(x, y)
+function drawPaddle(x, y, color)
 {
-    ctx.fillStyle = "white";
+    ctx.fillStyle = color;
     ctx.fillRect(x, y, paddleWidth, paddleHeight);
 }
 
@@ -251,23 +246,50 @@ function drawBall(x, y)
 {
     ctx.beginPath();
     ctx.arc(x, y, ballSize, 0, Math.PI * 2);
-    ctx.fillStyle = "white";
+    if (x > (canvas.width / 2 - 10))
+        ctx.fillStyle = "blue";
+    else
+        ctx.fillStyle = "red";
     ctx.fill();
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = "white";
+    ctx.stroke();
+}
+
+function drawBackground()
+{
+    let it = 0;
+    ctx.fillStyle = "white";
+    for (let y = 10; y < canvas.height; y += 40)
+        {
+            it++;
+            if (it === 2)
+                drawText("white", "40px ARCADECLASSIC", "SCORE", (canvas.width / 2) - 55, y + 20);
+            else
+                ctx.fillRect((canvas.width / 2 - 10), y, 20, 20);        
+    }
+    drawText("red", "50px Verdana", p1Score, (canvas.width / 2) - 130, 75);
+    drawText("BLUE", "50px Verdana", p2Score, (canvas.width / 2) + 100, 75);
+}
+
+function drawText(color, font, text, x, y)
+{
+    ctx.fillStyle = color;
+    ctx.font = font;
+    ctx.fillText(text, x, y);
 }
 
 function drawGame()
 {
-    drawPaddle(p1paddleX, p1paddleY);
-    drawPaddle(p2paddleX, p2paddleY);
+    drawBackground();
+    drawPaddle(p1paddleX, p1paddleY, "red");
+    drawPaddle(p2paddleX, p2paddleY, "blue");
     drawBall(ballX, ballY);
-
-    ctx.fillText(p1Score, 20, 50);
-    ctx.fillText("SCORE", (canvas.width / 2) - 70, 50);
-    ctx.fillText(p2Score, canvas.width - 40, 50);
 }
 
-function drawButton(text, x, y, width, height, size)
+function drawButton(text, x, y, width, height, size, font)
 {
+    ctx.font = size + "px " + font;
     let textMetrics = ctx.measureText(text);
     let textWidth = textMetrics.width;
     let textX = x + (width / 2) - (textWidth / 2);
@@ -277,51 +299,43 @@ function drawButton(text, x, y, width, height, size)
     ctx.fillRect(x, y, width, height);
     ctx.fillStyle = "black";
     ctx.fillRect(x + 5, y + 5, width - 10, height - 10);
-    ctx.fillStyle = "white";
-    ctx.font = size + "px ARCADECLASSIC";
-    ctx.fillText(text, textX, textY);
-    ctx.fillStyle = "white";
+    drawText("white", size + "px " + font, text, textX, textY);
 }
 
 function endGame()
 {
-    ctx.fillStyle = "white";
     if (p1Score === 5)
-        ctx.fillText("PLAYER 1 WINS !", (canvas.width / 2) - 100, (canvas.height / 2) - 130);
+        drawText("red", "50px ARCADECLASSIC", "PLAYER 1 WINS !", (canvas.width / 2) - 160, (canvas.height / 2) - 130)
     else if (p2Score === 5)
-        ctx.fillText("PLAYER 2 WINS !", (canvas.width / 2) - 100, (canvas.height / 2) - 130);
-    drawButton("RESTART", (canvas.width / 2) - 80, (canvas.height / 2) - 35, 160, 70, 30);
+        drawText("blue", "50px ARCADECLASSIC", "PLAYER 2 WINS !", (canvas.width / 2) - 160, (canvas.height / 2) - 130)
+
+    drawButton("RESTART", (canvas.width / 2) - 80, (canvas.height / 2) - 35, 160, 70, 30, "ARCADECLASSIC");
 }
 
 function gameLoop(event)
 {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    // console.log(canvas.width);
-    // console.log(canvas.height);
     if (!gameStart)
     {
         if (!gameReset)
-            drawButton("START", (canvas.width / 2) - 80, (canvas.height / 2) - 35, 160, 70, 40);
+            drawButton("START", (canvas.width / 2) - 80, (canvas.height / 2) - 35, 160, 70, 40, "ARCADECLASSIC");
         else
-        {
             endGame();
-            drawButton("RESTART", (canvas.width / 2) - 80, (canvas.height / 2) - 35, 160, 70, 30);
-        }
     }
     else
     {
+        // Reset paddle and ball position
         if (gameReset)
             resetGame();
         
+        // Reset game and shows restart screen
         if (!gameStart)
         {
             return ;
         }
 
         updatePaddles();
-    
         ballMovement();
-    
         drawGame();
     }
 }
