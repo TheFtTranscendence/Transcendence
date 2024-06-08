@@ -3,6 +3,7 @@ pragma solidity ^0.8.19;
 
 // Custom errors
 error onlyOwnerError();
+error wrongInstanceIndex();
 error wrongNumberOfPlayers();
 error wrongTournamentIndex();
 error AlreadyInTournament();
@@ -28,9 +29,9 @@ contract Ownable {
 }
 
 /**
- * @title Score
- * @notice This smart contract is used to store the scores of the pong game developed for the 42 transcendence project.
- * @dev It's important to store the instance index in the database for persistence.
+    * @title Score
+    * @notice This smart contract is used to store the scores of the pong game developed for the 42 transcendence project.
+    * @dev It's important to store the instance index in the database for persistence.
 */
 contract Score is Ownable {
 
@@ -68,22 +69,42 @@ contract Score is Ownable {
     }
 
     /* ========== SETTER FUNCTIONS ========== */
-    function addInstance() public onlyOwner {
-        instancesGame[instanceIndex].push();
-        instancesTournament[instanceIndex].push();
-
+    /**
+        * @notice Add a new instance to the database.
+        * @dev Returns the index of the new instance. Starting from 0.
+    **/
+    function addInstance() public onlyOwner returns (uint256){
         emit InstanceAdded(instanceIndex);
-
         instanceIndex++;
+        return instanceIndex - 1;
     }
 
+    /**
+        * @notice Add a new game to the database.
+        * @param _instanceIndex The index of the instance in the database.
+        * @param _player1 The name of the first player.
+        * @param _player2 The name of the second player.
+        * @param _score1 The score of the first player.
+        * @param _score2 The score of the second player.
+        * @dev The tournament index is -1 if it's not a tournament, otherwise it's the index of the tournament.
+    **/
     function addGame(uint256 _instanceIndex, string memory _player1, string memory _player2, uint8 _score1, uint8 _score2) public onlyOwner {
+        if (_instanceIndex < 0 || _instanceIndex >= instanceIndex)
+            revert wrongInstanceIndex();
         instancesGame[_instanceIndex].push(Game(block.timestamp, _player1, _player2, _score1, _score2, -1));
 
         emit GameAdded(_instanceIndex, block.timestamp, _player1, _player2, _score1, _score2, -1);
     }
 
+    /**
+        * @notice Add a new tournament to the database.
+        * @param _instanceIndex The index of the instance in the database.
+        * @param _players The list of players in the tournament.
+        * @dev The number of players must be a power of 2 and in between 2 and 256.
+    **/
     function addTournament(uint256 _instanceIndex, string[] memory _players) public onlyOwner {
+        if (_instanceIndex < 0 || _instanceIndex >= instanceIndex)
+            revert wrongInstanceIndex();
         // check if the number of players is a power of 2 and in between 2 and 256
         if (_players.length < 2 || _players.length > 256 || (_players.length & (_players.length - 1)) != 0)
             revert wrongNumberOfPlayers();
@@ -104,6 +125,8 @@ contract Score is Ownable {
     }
 
     function addGameToTournament(uint256 _instanceIndex, uint8 _tournamentIndex, string memory _player1, string memory _player2, uint8 _score1, uint8 _score2) public onlyOwner {
+        if (_instanceIndex < 0 || _instanceIndex >= instanceIndex)
+            revert wrongInstanceIndex();
         if (_tournamentIndex < 0 || _tournamentIndex >= instancesTournament[_instanceIndex].length)
             revert wrongTournamentIndex();
         if (instancesTournament[_instanceIndex][_tournamentIndex].games.length >= instancesTournament[_instanceIndex][_tournamentIndex].numberOfGames)
@@ -134,11 +157,10 @@ contract Score is Ownable {
     function getNumberOfTournaments(uint256 _instanceIndex) public view returns (uint256) {
         return instancesTournament[_instanceIndex].length;
     }
-    
-    function getGame(uint256 _instanceIndex, uint256 _gameIndex) public view returns (Game memory) {
-        return instancesGame[_instanceIndex][_gameIndex];
-    }
 
+    /**
+        * @notice Get all the games of an instance.
+    **/
     function getGames(uint256 _instanceIndex) public view returns (Game[] memory) {
         return instancesGame[_instanceIndex];
     }
@@ -167,7 +189,7 @@ contract Score is Ownable {
             revert tournamentAlreadyFinished();
 
         // need to write the logic to get the next players to play
-        // return (instancesTournament[_instanceIndex][_tournamentIndex].players[0], instancesTournament[_instanceIndex][_tournamentIndex].players[1]);
+        return (instancesTournament[_instanceIndex][_tournamentIndex].players[0], instancesTournament[_instanceIndex][_tournamentIndex].players[1]);
     }
 
     // fetching the ranking of a tournament
