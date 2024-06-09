@@ -1,11 +1,10 @@
-// import * as game from "game/script.js"
-
 // Sample content for each route
 const routes = {
     '#home': '<h1>Home Page</h1><p>Welcome to the home page!</p>',
-    '#game': '<h1>Game</h1><p>Here should be the Pong game</p><canvas id="game-area"></canvas>',
+    '#game': '<h1>Game</h1><canvas id="game-area"></canvas>',
     '#chat': '<h1>Chat</h1><p>Here can be eventually the chat</p>'
 };
+
 
 // Function to handle navigation
 function navigate() {
@@ -22,9 +21,19 @@ function loadGameScript()
 {
     const script = document.createElement('script');
     script.src = 'game/gameScript.js';
-    document.head.prepend(script);
-    if (typeof startGame === 'function')
-        startGame();
+    script.type = 'text/javascript';
+
+    script.onload = function() {
+        if (typeof startGame === 'function') {
+            startGame();
+        } else {
+            console.error("startGame function not found");
+        }
+    };
+
+    // if (typeof startGame === 'function')
+    //     startGame();
+    document.body.appendChild(script);
 }
 
 // Handle login and register forms
