@@ -82,3 +82,15 @@ body {
 	font-size: 40px;
 	/* transition: all 0.5s ease; */
 }
+
+.logo-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.logo {
+    width: 50px;
+    height: auto;
+}
