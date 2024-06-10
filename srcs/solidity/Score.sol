@@ -98,16 +98,16 @@ contract Score is Ownable {
     }
 
     /**
-        * @notice Add a new tournament to the database.
+        * @notice Add a new 4 or 8 players tournament to the database.
         * @param _instanceIndex The index of the instance in the database.
-        * @param _players The list of players in the tournament.
+        * @param _players The list of players in the tournament. 4 or 8 players only.
         * @dev The number of players must be a power of 2 and in between 2 and 256. So can only launch a tournament with 2, 4, 8, 16, 32, 64, 128 or 256 players.
     **/
     function addTournament(uint256 _instanceIndex, string[] memory _players) public onlyOwner {
         if (_instanceIndex < 0 || _instanceIndex >= instanceIndex)
             revert wrongInstanceIndex();
-        // check if the number of players is a power of 2 and in between 2 and 256
-        if (_players.length < 2 || _players.length > 256 || (_players.length & (_players.length - 1)) != 0)
+        // check if the number of players is correct
+        if (_players.length != 4 || _players.length != 8)
             revert wrongNumberOfPlayers();
         // check if a tournament is not already in progress
         if (instancesTournament[_instanceIndex].length > 0) {
