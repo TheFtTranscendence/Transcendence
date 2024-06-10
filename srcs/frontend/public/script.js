@@ -36,10 +36,33 @@ function loadGameScript()
     document.body.appendChild(script);
 }
 
+function handleLogin() {
+	const username = document.getElementById('username').value;
+	const password = document.getElementById('password').value;
+
+	axios.post('http://0.0.0.0:8000/api/loginUser', {
+		username: username,
+		password: password
+	}, {
+		withCredentials: true
+	})
+	.then((response) => {
+		console.log(response.data);
+		alert('Login successful');
+	})
+	.catch((error) => {
+		console.error(error);
+		alert('Login failed');
+	});
+}
+
 // Handle login and register forms
 document.getElementById('loginForm').addEventListener('submit', (event) => {
     event.preventDefault();
+
     // Mock authentication and transition to home page
+	handleLogin();
+	
     document.getElementById('auth').classList.add('hidden');
     document.querySelector('nav').classList.remove('hidden');
     window.location.hash = '#home';
