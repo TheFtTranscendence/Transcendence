@@ -15,24 +15,6 @@ volumes:
   shared_static:
 
 services:
-  django:
-    container_name: django
-    build: ./django
-    env_file:
-      - .env  # Adjust the path to your .env file if needed
-    environment:
-      - DATABASE_HOST=${POSTGRES_HOST}
-      - DATABASE_NAME=${POSTGRES_DB}
-      - DATABASE_USER=${POSTGRES_USER}
-      - DATABASE_PASSWORD=${POSTGRES_PASSWORD}
-    ports:
-      - "8000:8000"  # Adjust the port mapping as needed
-    networks:
-      - app-network
-    depends_on:
-      - db
-    restart: unless-stopped
-
   authentication:
     container_name: authentication
     build: ./authentication
