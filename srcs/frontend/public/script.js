@@ -56,6 +56,26 @@ function handleLogin() {
 	});
 }
 
+function handleRegister() {
+	const username = document.getElementById('registerUsername').value;
+	const password = document.getElementById('registerPassword').value;
+	const email = document.getElementById('registerEmail').value;
+
+	axios.post('http://localhost:8001/register/', {
+		username: username,
+		password: password,
+		email: email
+	})
+	.then((response) => {
+		console.log(response.data);
+		alert('Registration successful');
+	})
+	.catch((error) => {
+		console.error(error);
+		alert('Registration failed');
+	});
+}
+
 // Handle login and register forms
 document.getElementById('loginForm').addEventListener('submit', (event) => {
     event.preventDefault();
@@ -71,7 +91,10 @@ document.getElementById('loginForm').addEventListener('submit', (event) => {
 
 document.getElementById('registerForm').addEventListener('submit', (event) => {
 	event.preventDefault();
+
 	// Mock registration and transition to home page
+	handleRegister();
+
 	document.getElementById('auth').classList.add('hidden');
 	document.querySelector('nav').classList.remove('hidden');
 	window.location.hash = '#home';
