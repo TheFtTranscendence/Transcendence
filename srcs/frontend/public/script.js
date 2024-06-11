@@ -40,7 +40,7 @@ function handleLogin() {
 	const username = document.getElementById('loginUsername').value;
 	const password = document.getElementById('loginPassword').value;
 
-	axios.post('http://0.0.0.0:8000/api/loginUser', {
+	axios.post('http://0.0.0.0:8001/login/', {
 		username: username,
 		password: password
 	}, {
