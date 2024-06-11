@@ -18,7 +18,8 @@ function game_hashchange(vars)
 	}
 }
 
-function startGame()
+
+function init()
 {
     const vars = initVars();
 

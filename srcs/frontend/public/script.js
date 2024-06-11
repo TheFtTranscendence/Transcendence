@@ -110,7 +110,7 @@ function UnloadScripts(scripts) {
 
 
 // Starts game script
-function loadGameScript()
+function loadScript(filePath)
 {
 	const script = document.createElement('script');
 	script.src = 'game/gameScript.js';
