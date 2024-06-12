@@ -56,25 +56,6 @@ function navigate() {
 	loadScripts(scripts, startFunction);
 }
 
-// Function to load a script and return a Promise
-function loadScript(src) {
-	return new Promise((resolve, reject) => {
-		const script = document.createElement('script');
-		script.src = src;
-		script.type = 'text/javascript';
-		
-		script.onload = () => {
-			resolve();
-		};
-		
-		script.onerror = () => {
-			reject(new Error(`Failed to load script: ${src}`));
-		};
-
-		document.body.appendChild(script);
-	});
-}
-
 // Function to load all scripts
 function loadScripts(scripts, functionName) {
 	
@@ -98,6 +79,7 @@ function loadScripts(scripts, functionName) {
 	});
 }
 
+
 function UnloadScripts(scripts) {
 
 	scripts.forEach(script => {
@@ -116,13 +98,13 @@ function loadScript(filePath)
 	script.src = 'game/gameScript.js';
 	script.type = 'text/javascript';
 
-	script.onload = function() {
-		if (typeof startGame === 'function') {
-			startGame();
-		} else {
-			console.error("startGame function not found");
-		}
-	};
+    script.onload = function() {
+        if (typeof init === 'function') {
+            init();
+        } else {
+            console.error("init function not found" + filePath);
+        }
+    };
 
 	// if (typeof startGame === 'function')
 	//     startGame();

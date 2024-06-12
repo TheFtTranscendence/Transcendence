@@ -92,11 +92,25 @@ body {
 }
 
 /* Game Page */
-#game-menu {
+
+#gamePageBg {
 	display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+}
+
+#gameMenu {
+	display: flex;
+	flex-direction: column; 
 	justify-content: center;
 	align-items: center;
-	height: 50vh;
+	height: auto;
+}
+
+#selectText {
+	font-size: 30px;
+	text-align: center;
 }
 
 .button {
@@ -123,17 +137,7 @@ body {
     background-color: rgb(1, 108, 179);
 }
 
-#game-area {
-	width: 800px;
-    height: 600px;
-    background-color: black;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-#tournament-menu {
+#gameArea {
     width: 800px;
     height: 600px;
     background-color: black;
@@ -143,11 +147,18 @@ body {
     transform: translate(-50%, -50%);
 }
 
+#bLabel {
+	font-size: 30px;
+	margin-right: 10px;
+	vertical-align: middle;
+}
+
+
 @font-face {
-	font-family: "ARCADECLASSIC";
-	src: url("game/font/ARCADECLASSIC.TTF") format("truetype");
-	font-weight: normal;
-	font-style: normal;
+    font-family: "ARCADECLASSIC";
+    src: url("gameMenu/font/ARCADECLASSIC.TTF") format("truetype");
+    font-weight: normal;
+    font-style: normal;
 }
 
 #game2-area {

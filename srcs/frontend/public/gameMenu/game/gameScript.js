@@ -41,7 +41,7 @@ function initVars()
 {
     const canvasVars = {
         ratio: window.devicePixelRatio,
-        canvas: document.getElementById("game-area"),
+        canvas: document.getElementById("gameArea"),
         ctx: null,
         canvasWidth: 800,
         canvasHeight: 600
@@ -330,8 +330,8 @@ function drawBackground(vars)
             else
             vars.canvasVars.ctx.fillRect((vars.canvasVars.canvasWidth / 2 - 10), y, 20, 20);        
     }
-    drawText("red", "50px Verdana", vars.gameVars.p1Score, (vars.canvasVars.canvasWidth / 2) - 130, 75, vars);
-    drawText("BLUE", "50px Verdana", vars.gameVars.p2Score, (vars.canvasVars.canvasWidth / 2) + 100, 75, vars);
+    drawText("red", "50px Arial", vars.gameVars.p1Score, (vars.canvasVars.canvasWidth / 2) - 130, 75, vars);
+    drawText("BLUE", "50px Arial", vars.gameVars.p2Score, (vars.canvasVars.canvasWidth / 2) + 100, 75, vars);
 }
 
 function drawText(color, font, text, x, y, vars)
