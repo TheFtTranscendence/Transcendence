@@ -15,14 +15,17 @@ function initVars()
     const canvasVars = {
         ratio: window.devicePixelRatio,
         canvas: document.getElementById("game-area"),
-        ctx: null
+        ctx: null,
+        canvasWidth: 800,
+        canvasHeight: 600
     }
 
-    canvasVars.ctx = canvasVars.canvas.getContext("2d")
-    canvasVars.canvas.width = 800 * canvasVars.ratio;
-    canvasVars.canvas.height = 600 * canvasVars.ratio;
-    canvasVars.canvas.style.width = 800 + "px";
-    canvasVars.canvas.style.height = 600 + "px";
+    canvasVars.canvas.style.width = canvasVars.canvasWidth + "px";
+    canvasVars.canvas.style.height = canvasVars.canvasHeight + "px";
+    canvasVars.canvas.width = canvasVars.canvasWidth * canvasVars.ratio;
+    canvasVars.canvas.height = canvasVars.canvasHeight * canvasVars.ratio;
+    canvasVars.ctx = canvasVars.canvas.getContext("2d");
+    canvasVars.ctx.scale(canvasVars.ratio, canvasVars.ratio);
 
     const gameVars = {
         gameStart: false,
@@ -42,14 +45,14 @@ function initVars()
         paddleWidth: 10,
         paddleSpeed: 6,
         p1paddleX: 40,
-        p1paddleY: (canvasVars.canvas.height / 2) - (paddleHeight / 2),
-        p2paddleX: canvasVars.canvas.width - 50,
-        p2paddleY: (canvasVars.canvas.height / 2) - (paddleHeight / 2)
+        p1paddleY: (canvasVars.canvasHeight / 2) - (paddleHeight / 2),
+        p2paddleX: canvasVars.canvasWidth - 50,
+        p2paddleY: (canvasVars.canvasHeight / 2) - (paddleHeight / 2)
     }
 
     const ballVars = {
-        ballX: canvasVars.canvas.width / 2,
-        ballY: canvasVars.canvas.height / 2,
+        ballX: canvasVars.canvasWidth / 2,
+        ballY: canvasVars.canvasHeight / 2,
         ballSize: 7,
         ballSpeedX: 5,
         ballSpeedY: 0,
@@ -60,8 +63,8 @@ function initVars()
     }
 
     const buttonVars = {
-        buttonX: (canvasVars.canvas.width / 2) - 80,
-        buttonY: (canvasVars.canvas.height / 2) - 35,
+        buttonX: (canvasVars.canvasWidth / 2) - 80,
+        buttonY: (canvasVars.canvasHeight / 2) - 35,
         buttonWidth: 160,
         buttonHeight: 70
     }
@@ -122,11 +125,11 @@ function updatePaddles(vars)
 {
     if (vars.paddleVars.p1PaddleState.up === true && vars.paddleVars.p1paddleY > 1)
         vars.paddleVars.p1paddleY -= vars.paddleVars.paddleSpeed;
-    if (vars.paddleVars.p1PaddleState.down === true && (vars.paddleVars.p1paddleY + vars.paddleVars.paddleHeight) < vars.canvasVars.canvas.height)
+    if (vars.paddleVars.p1PaddleState.down === true && (vars.paddleVars.p1paddleY + vars.paddleVars.paddleHeight) < vars.canvasVars.canvasHeight)
         vars.paddleVars.p1paddleY += vars.paddleVars.paddleSpeed;
     if (vars.paddleVars.p2PaddleState.up === true && vars.paddleVars.p2paddleY > 1)
         vars.paddleVars.p2paddleY -= vars.paddleVars.paddleSpeed;
-    if (vars.paddleVars.p2PaddleState.down === true && (vars.paddleVars.p2paddleY + vars.paddleVars.paddleHeight) < vars.canvasVars.canvas.height)
+    if (vars.paddleVars.p2PaddleState.down === true && (vars.paddleVars.p2paddleY + vars.paddleVars.paddleHeight) < vars.canvasVars.canvasHeight)
         vars.paddleVars.p2paddleY += vars.paddleVars.paddleSpeed;
 }
 
@@ -139,7 +142,7 @@ function ballMovement(vars)
         {
             vars.ballVars.ballX += vars.ballVars.ballSpeedX;
             vars.ballVars.ballY += vars.ballVars.ballSpeedY;
-            if (vars.ballVars.ballX > vars.canvasVars.canvas.width)
+            if (vars.ballVars.ballX > vars.canvasVars.canvasWidth)
             {
                 vars.gameVars.pointScored = false;
                 vars.gameVars.gameReset = true;        
@@ -169,7 +172,7 @@ function ballMovement(vars)
         if ((vars.ballVars.ballX + vars.ballVars.ballSize + vars.ballVars.ballSpeedX) < vars.paddleVars.p2paddleX)
         {
             vars.ballVars.ballX += vars.ballVars.ballSpeedX;
-            if ((vars.ballVars.ballY - (vars.ballVars.ballSize / 2)) < 0 || (vars.ballVars.ballY + (vars.ballVars.ballSize / 2)) >= vars.canvasVars.canvas.height)
+            if ((vars.ballVars.ballY - (vars.ballVars.ballSize / 2)) < 0 || (vars.ballVars.ballY + (vars.ballVars.ballSize / 2)) >= vars.canvasVars.canvasHeight)
                 vars.ballVars.ballSpeedY *= -1;
             vars.ballVars.ballY += vars.ballVars.ballSpeedY;
         }
@@ -206,7 +209,7 @@ function ballMovement(vars)
         if ((vars.ballVars.ballX - vars.ballVars.ballSpeedX) > (vars.paddleVars.p1paddleX + vars.paddleVars.paddleWidth))
         {
             vars.ballVars.ballX -= vars.ballVars.ballSpeedX;
-            if ((vars.ballVars.ballY - (vars.ballVars.ballSize / 2)) < 0 || (vars.ballVars.ballY + (vars.ballVars.ballSize / 2)) >= vars.canvasVars.canvas.height)
+            if ((vars.ballVars.ballY - (vars.ballVars.ballSize / 2)) < 0 || (vars.ballVars.ballY + (vars.ballVars.ballSize / 2)) >= vars.canvasVars.canvasHeight)
                 vars.ballVars.ballSpeedY *= -1;
             vars.ballVars.ballY += vars.ballVars.ballSpeedY;
         }
@@ -242,12 +245,12 @@ function ballMovement(vars)
 function resetGame(vars)
 {
     vars.paddleVars.p1paddleX = 40; 
-    vars.paddleVars.p1paddleY = (vars.canvasVars.canvas.height / 2) - (vars.paddleVars.paddleHeight / 2);
-    vars.paddleVars.p2paddleX = vars.canvasVars.canvas.width - 50;
-    vars.paddleVars.p2paddleY = (vars.canvasVars.canvas.height / 2) - (vars.paddleVars.paddleHeight / 2);
+    vars.paddleVars.p1paddleY = (vars.canvasVars.canvasHeight / 2) - (vars.paddleVars.paddleHeight / 2);
+    vars.paddleVars.p2paddleX = vars.canvasVars.canvasWidth - 50;
+    vars.paddleVars.p2paddleY = (vars.canvasVars.canvasHeight / 2) - (vars.paddleVars.paddleHeight / 2);
     
-    vars.ballVars.ballX = vars.canvasVars.canvas.width / 2;
-    vars.ballVars.ballY = vars.canvasVars.canvas.height / 2;
+    vars.ballVars.ballX = vars.canvasVars.canvasWidth / 2;
+    vars.ballVars.ballY = vars.canvasVars.canvasHeight / 2;
     vars.ballVars.ballSpeedX = 5;
     vars.ballVars.ballSpeedY = 0;
     vars.ballVars.ballHitCounter = 0;
@@ -272,7 +275,7 @@ function drawBall(x, y, vars)
 {
     vars.canvasVars.ctx.beginPath();
     vars.canvasVars.ctx.arc(x, y, vars.ballVars.ballSize, 0, Math.PI * 2);
-    if (x > (vars.canvasVars.canvas.width / 2 - 10))
+    if (x > (vars.canvasVars.canvasWidth / 2 - 10))
         vars.canvasVars.ctx.fillStyle = "blue";
     else
         vars.canvasVars.ctx.fillStyle = "red";
@@ -286,16 +289,16 @@ function drawBackground(vars)
 {
     let it = 0;
     vars.canvasVars.ctx.fillStyle = "white";
-    for (let y = 10; y < vars.canvasVars.canvas.height; y += 40)
+    for (let y = 10; y < vars.canvasVars.canvasHeight; y += 40)
         {
             it++;
             if (it === 2)
-                drawText("white", "40px ARCADECLASSIC", "SCORE", (vars.canvasVars.canvas.width / 2) - 55, y + 20, vars);
+                drawText("white", "40px ARCADECLASSIC", "SCORE", (vars.canvasVars.canvasWidth / 2) - 55, y + 20, vars);
             else
-            vars.canvasVars.ctx.fillRect((vars.canvasVars.canvas.width / 2 - 10), y, 20, 20);        
+            vars.canvasVars.ctx.fillRect((vars.canvasVars.canvasWidth / 2 - 10), y, 20, 20);        
     }
-    drawText("red", "50px Verdana", vars.gameVars.p1Score, (vars.canvasVars.canvas.width / 2) - 130, 75, vars);
-    drawText("BLUE", "50px Verdana", vars.gameVars.p2Score, (vars.canvasVars.canvas.width / 2) + 100, 75, vars);
+    drawText("red", "50px Verdana", vars.gameVars.p1Score, (vars.canvasVars.canvasWidth / 2) - 130, 75, vars);
+    drawText("BLUE", "50px Verdana", vars.gameVars.p2Score, (vars.canvasVars.canvasWidth / 2) + 100, 75, vars);
 }
 
 function drawText(color, font, text, x, y, vars)
@@ -331,22 +334,23 @@ function drawButton(text, x, y, width, height, size, font, vars)
 function endGame(vars)
 {
     if (vars.gameVars.p1Score === 5)
-        drawText("red", "50px ARCADECLASSIC", "PLAYER 1 WINS !", (vars.canvasVars.canvas.width / 2) - 160, (vars.canvasVars.canvas.height / 2) - 130, vars)
+        drawText("red", "50px ARCADECLASSIC", "PLAYER 1 WINS !", (vars.canvasVars.canvasWidth / 2) - 160, (vars.canvasVars.canvasHeight / 2) - 130, vars)
     else if (vars.gameVars.p2Score === 5)
-        drawText("blue", "50px ARCADECLASSIC", "PLAYER 2 WINS !", (vars.canvasVars.canvas.width / 2) - 160, (vars.canvasVars.canvas.height / 2) - 130, vars)
+        drawText("blue", "50px ARCADECLASSIC", "PLAYER 2 WINS !", (vars.canvasVars.canvasWidth / 2) - 160, (vars.canvasVars.canvasHeight / 2) - 130, vars)
 
-    drawButton("RESTART", (vars.canvasVars.canvas.width / 2) - 80, (vars.canvasVars.canvas.height / 2) - 35, 160, 70, 30, "ARCADECLASSIC", vars);
+    drawButton("RESTART", (vars.canvasVars.canvasWidth / 2) - 80, (vars.canvasVars.canvasHeight / 2) - 35, 160, 70, 30, "ARCADECLASSIC", vars);
 }
 
 function gameLoop(vars)
 {
-    vars.canvasVars.ctx.clearRect(0, 0, vars.canvasVars.canvas.width, vars.canvasVars.canvas.height);
+    // vars.canvasVars.ctx.scale(canvasVars.ratio, canvasVars.ratio);
+    vars.canvasVars.ctx.clearRect(0, 0, vars.canvasVars.canvasWidth, vars.canvasVars.canvasHeight);
     vars.canvasVars.ctx.fillStyle = "black";
-    vars.canvasVars.ctx.fillRect(0, 0, vars.canvasVars.canvas.width, vars.canvasVars.canvas.height);
+    vars.canvasVars.ctx.fillRect(0, 0, vars.canvasVars.canvasWidth, vars.canvasVars.canvasHeight);
     if (!vars.gameVars.gameStart)
     {
         if (!vars.gameVars.gameReset)
-            drawButton("START", (vars.canvasVars.canvas.width / 2) - 80, (vars.canvasVars.canvas.height / 2) - 35, 160, 70, 40, "ARCADECLASSIC", vars);
+            drawButton("START", (vars.canvasVars.canvasWidth / 2) - 80, (vars.canvasVars.canvasHeight / 2) - 35, 160, 70, 40, "ARCADECLASSIC", vars);
         else
             endGame(vars);
     }
