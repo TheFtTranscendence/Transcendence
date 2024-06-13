@@ -40,12 +40,14 @@ function handleLogin() {
 	const username = document.getElementById('loginUsername').value;
 	const password = document.getElementById('loginPassword').value;
 
-	axios.post('http://0.0.0.0:8001/login/', {
+	const data = {
 		username: username,
 		password: password,
-	}, {
-		withCredentials: true
-	})
+	}
+
+	// console.log('Sending JSON:', JSON.stringify(data, null, 2));
+
+	axios.post('http://localhost:8001/login/', data)
 	.then((response) => {
 		console.log(response.data);
 		alert('Login successful');
@@ -54,14 +56,19 @@ function handleLogin() {
 		console.error(error);
 		if (error.response)	{
 			const status = error.response.status;
-			const errorMessage = error.response.data.message;
+			const missing_fields = error.response.data.missing_fields;
 
-			switch(status) {
-				case 400:
-					console.log('U need to fill all the ')
+			if (status === 400 && missing_fields) {
+				if (missing_fields.includes('username')) {
+					console.log('Username is required.');
+				}
+				if (missing_fields.includes('password')) {
+					console.log('Password is required.');
+				}
+			} else {
+				console.log('An error occurred: ' + error.response.json().message);
 			}
 		}
-		
 	});
 }
 
@@ -122,7 +129,6 @@ function handleRegister() {
 document.getElementById('loginForm').addEventListener('submit', (event) => {
 	event.preventDefault();
 
-	// Mock authentication and transition to home page
 	handleLogin();
 	
 	document.getElementById('auth').classList.add('hidden');
@@ -134,7 +140,6 @@ document.getElementById('loginForm').addEventListener('submit', (event) => {
 document.getElementById('registerForm').addEventListener('submit', (event) => {
 	event.preventDefault();
 
-	// Mock registration and transition to home page
 	handleRegister();
 
 	document.getElementById('auth').classList.add('hidden');
