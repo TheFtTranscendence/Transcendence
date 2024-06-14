@@ -40,8 +40,10 @@ INSTALLED_APPS = [
 
 	'corsheaders',
 	'rest_framework',
+
+	#My apps
 	'authentication',
-	'API'
+	'data'
 ]
 
 REST_FRAMEWORK = {
@@ -52,6 +54,7 @@ REST_FRAMEWORK = {
 
 # CORS_ALLOW_ALL_ORIGINS = True
 
+#! this is not working i think
 CORS_ALLOWED_ORIGINS = [
 	"http://0.0.0.0:3000",
 ]
