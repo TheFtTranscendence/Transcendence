@@ -70,6 +70,7 @@ function init() {
         nickList = getNicknames(2, function(updatedNickList) {
             nickList = updatedNickList;
             document.getElementById('gameArea').classList.remove('hidden');
+            window.nickList = nickList;
             loadScript("gameMenu/game/gameScript.js");
         });
     });

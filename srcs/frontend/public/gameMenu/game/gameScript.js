@@ -367,9 +367,9 @@ function drawButton(text, x, y, width, height, size, font, vars)
 function endGame(vars)
 {
     if (vars.gameVars.p1Score === 5)
-        drawText("red", "50px ARCADECLASSIC", "PLAYER 1 WINS !", (vars.canvasVars.canvasWidth / 2) - 160, (vars.canvasVars.canvasHeight / 2) - 130, vars)
+        drawText("red", "50px ARCADECLASSIC", window.nickList[0] + " WINS !", (vars.canvasVars.canvasWidth / 2) - 160, (vars.canvasVars.canvasHeight / 2) - 130, vars)
     else if (vars.gameVars.p2Score === 5)
-        drawText("blue", "50px ARCADECLASSIC", "PLAYER 2 WINS !", (vars.canvasVars.canvasWidth / 2) - 160, (vars.canvasVars.canvasHeight / 2) - 130, vars)
+        drawText("blue", "50px ARCADECLASSIC", window.nickList[1] + " WINS !", (vars.canvasVars.canvasWidth / 2) - 160, (vars.canvasVars.canvasHeight / 2) - 130, vars)
 
     drawButton("RESTART", (vars.canvasVars.canvasWidth / 2) - 80, (vars.canvasVars.canvasHeight / 2) - 35, 160, 70, 30, "ARCADECLASSIC", vars);
 }
@@ -399,6 +399,8 @@ function gameLoop(vars)
             return ;
         }
 
+        drawText("white", "30px ARCADECLASSIC", window.nickList[0], 50, 50, vars);
+        drawText("white", "30px ARCADECLASSIC", window.nickList[1], (vars.canvasVars.canvasWidth - 100), 50, vars);
         updatePaddles(vars);
         ballMovement(vars);
         drawGame(vars);
