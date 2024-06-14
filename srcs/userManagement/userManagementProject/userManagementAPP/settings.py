@@ -27,6 +27,33 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+import logging
+
+import logging
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'INFO',  # Adjust level as needed
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'ERROR',  # Adjust level as needed
+            'propagate': False,
+        },
+        'authentication': {
+            'handlers': ['console'],
+            'level': 'ERROR',  # Adjust level as needed
+            'propagate': False,
+        },
+    },
+}
+
 
 # Application definition
 
@@ -45,6 +72,8 @@ INSTALLED_APPS = [
 	'authentication',
 	'data'
 ]
+
+AUTH_USER_MODEL = 'authentication.User'
 
 REST_FRAMEWORK = {
 	'DEFAULT_RENDERER_CLASSES': (

@@ -119,7 +119,8 @@ function handleRegister() {
 			} else if (status === 409) {
 				console.log('Username already exists');
 			} else {
-				console.log('An error occurred: ' + error.response.json().message);
+				console.log('An error occurred: ' + error.response.data.message);
+				console.log('An error occurred: ' + error.response.message);
 			}
 		}
 	});

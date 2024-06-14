@@ -1,8 +1,11 @@
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.models import User
+from .models import User
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+import logging
+
+logger = logging.getLogger(__name__)
 
 @csrf_exempt
 def login_view(request):
@@ -29,10 +32,10 @@ def login_view(request):
 				return JsonResponse({'message': 'Invalid credentials'}, status=400)
 			
 		except json.JSONDecodeError as e:
-			print(f'JSON decoding error: {str(e)}')
+			logger.exception(f'JSON decoding error: {str(e)}')
 			return JsonResponse({'message': 'Invalid JSON'}, status=400)
 		except Exception as e:
-			print(f'Unexpected error: {str(e)}')
+			logger.exception(f'Unexpected error: {str(e)}')
 			return JsonResponse({'message': 'Internal server error'}, status=500)
 	return JsonResponse({'message': 'Invalid request method'}, status=405)
 
@@ -74,10 +77,10 @@ def register_view(request):
 			return JsonResponse({'message': 'Registration successful'}, status=201)
 		
 		except json.JSONDecodeError as e:
-			print(f'JSON decoding error: {str(e)}')
+			logger.exception(f'JSON decoding error: {str(e)}')
 			return JsonResponse({'message': 'Invalid JSON'}, status=400)
 		except Exception as e:
-			print(f'Unexpected error: {str(e)}')
+			logger.exception(f'Unexpected error: {str(e)}')
 			return JsonResponse({'message': 'Internal server error'}, status=500)
 	
 	# This should never appear to the user
