@@ -9,11 +9,11 @@ WORKDIR /usr/src/app
 
 COPY requirements.txt .
 COPY init_django_project.sh .
-COPY authProject/ authProject/
+COPY userManagementProject/ userManagementProject/
 
 RUN pip install --no-cache-dir -r requirements.txt
 RUN chmod +x init_django_project.sh
 
-EXPOSE 8001
+EXPOSE 8000
 
 CMD ["./init_django_project.sh"]

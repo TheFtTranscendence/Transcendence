@@ -47,7 +47,7 @@ function handleLogin() {
 
 	// console.log('Sending JSON:', JSON.stringify(data, null, 2));
 
-	axios.post('http://localhost:8001/login/', data)
+	axios.post('http://localhost:8000/auth/login/', data)
 	.then((response) => {
 		console.log(response.data);
 		alert('Login successful');
@@ -89,7 +89,7 @@ function handleRegister() {
 
 	// console.log('Sending JSON:', JSON.stringify(data, null, 2));
 
-	axios.post('http://localhost:8001/register/', data)
+	axios.post('http://localhost:8000/auth/register/', data)
 	.then((response) => {
 		console.log(response.data);
 		alert('Registration successful');
