@@ -55,8 +55,12 @@ services:
     restart: unless-stopped
 
   solidity:
-    container_name: solidity
+    container_name: solidity_service
     build: ./solidity
+    env_file:
+      - .env
+    ports:
+      - "8001:8000"
     networks:
       - app-network
     restart: unless-stopped
