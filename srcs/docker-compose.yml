@@ -54,5 +54,12 @@ services:
       - app-network
     restart: unless-stopped
 
+  solidity:
+    container_name: solidity
+    build: ./solidity
+    networks:
+      - app-network
+    restart: unless-stopped
+
 # Define other services here
 
