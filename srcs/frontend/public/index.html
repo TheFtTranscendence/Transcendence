@@ -1,93 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pong</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Pong</title>
 	<link rel="stylesheet" href="styles.css">
 	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
-<body style="background-color: var(--background-color);">
-
-    <div class="container-fluid">
+<body>
+	<div class="container-fluid">
 		<div class="row vh-100" id="auth">
 			<div class="col-sm-6 left-side">
-                <div class="left-content text-center">
-                    <div class="split-screen-text">LOGIN</div>
+				<div class="left-content text-center">
+					<div class="split-screen-text">LOGIN</div>
 					<div id="login" class="hidden">
 						<form id="loginForm">
-                            <div class="form-group">
-                                <label for="loginUsername">Username:</label>
-                                <input type="text" class="form-control" id="loginUsername" name="username">
-                            </div>
-                            <div class="form-group">
-                                <label for="loginPassword">Password:</label>
-                                <input type="password" class="form-control" id="loginPassword" name="password">
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-block">Login</button>
-                        </form>
+							<div class="form-group">
+								<label for="loginUsername">Username:</label>
+								<input type="text" class="form-control" id="loginUsername" name="username">
+							</div>
+							<div class="form-group">
+								<label for="loginPassword">Password:</label>
+								<input type="password" class="form-control" id="loginPassword" name="password">
+							</div>
+							<button type="submit" class="btn btn-primary btn-block">Login</button>
+						</form>
 					</div>
-                </div>
-            </div>
-            <div class="col-sm-6 right-side">
-                <div class="right-content">
-                    <div class="split-screen-text">REGISTER</div>
+				</div>
+			</div>
+			<div class="col-sm-6 right-side">
+				<div class="right-content">
+					<div class="split-screen-text">REGISTER</div>
 					<div id="register" class="hidden">
 						<form id="registerForm">
-                            <div class="form-group">
-                                <label for="registerUsername">Username:</label>
-                                <input type="text" class="form-control" id="registerUsername" name="username">
-                            </div>
-                            <div class="form-group">
-                                <label for="registerPassword">Password:</label>
-                                <input type="password" class="form-control" id="registerPassword" name="password">
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-block">Register</button>
-                        </form>
+							<div class="form-group">
+								<label for="registerEmail">Email:</label>
+								<input type="email" class="form-control" id="registerEmail" name="email">
+							</div>
+							<div class="form-group">
+								<label for="registerUsername">Username:</label>
+								<input type="text" class="form-control" id="registerUsername" name="username">
+							</div>
+							<div class="form-group">
+								<label for="registerPassword">Password:</label>
+								<input type="password" class="form-control" id="registerPassword" name="password">
+							</div>
+							<div class="form-group">
+								<label for="registerFirstName">First Name:</label>
+								<input type="text" class="form-control" id="registerFirstName" name="firstname">
+							</div>
+							<div class="form-group">
+								<label for="registerLastName">Last Name:</label>
+								<input type="text" class="form-control" id="registerLastName" name="lastname">
+							</div>
+							<button type="submit" class="btn btn-primary btn-block">Register</button>
+						</form>
 					</div>
-                </div>
-            </div>
-        </div>
+				</div>
+			</div>
+		</div>
 
-    </div>
+	</div>
 
 	<!--
 	<div id="auth">
-        <div id="login" class="auth-page hidden">
-            <h1>Login</h1>
-            <form id="loginForm">
-                <label for="loginUsername">Username:</label>
-                <input type="text" id="loginUsername" name="username">
-                <label for="loginPassword">Password:</label>
-                <input type="password" id="loginPassword" name="password">
-                <button type="submit">Login</button>
-            </form>
-            <button id="toRegister">Not a user yet?</button>
-        </div>
-        <div id="register" class="auth-page hidden">
-            <h1>Register</h1>
-            <form id="registerForm">
-                <label for="registerUsername">Username:</label>
-                <input type="text" id="registerUsername" name="username">
-                <label for="registerPassword">Password:</label>
-                <input type="password" id="registerPassword" name="password">
-                <button type="submit">Register</button>
-            </form>
-            <button id="toLogin">Already a user?</button>
-        </div>
-    </div>
+		<div id="login" class="auth-page hidden">
+			<h1>Login</h1>
+			<form id="loginForm">
+				<label for="loginUsername">Username:</label>
+				<input type="text" id="loginUsername" name="username">
+				<label for="loginPassword">Password:</label>
+				<input type="password" id="loginPassword" name="password">
+				<button type="submit">Login</button>
+			</form>
+			<button id="toRegister">Not a user yet?</button>
+		</div>
+		<div id="register" class="auth-page hidden">
+			<h1>Register</h1>
+			<form id="registerForm">
+				<label for="registerUsername">Username:</label>
+				<input type="text" id="registerUsername" name="username">
+				<label for="registerPassword">Password:</label>
+				<input type="password" id="registerPassword" name="password">
+				<button type="submit">Register</button>
+			</form>
+			<button id="toLogin">Already a user?</button>
+		</div>
+	</div>
 -->
 
-    <nav class="hidden">
-        <a href="#home" class="nav-link">Home</a>
-        <a href="#game" class="nav-link">Game</a>
-        <a href="#chat" class="nav-link">Chat</a>
-    </nav>
-    <div id="content">
-        <div id="game" class="hidden">
-            <canvas id="game-area" class="hidden"></canvas>
-        </div>
-    </div>
+	<nav class="hidden">
+		<a href="#home" class="nav-link">Home</a>
+		<a href="#game" class="nav-link">Game</a>
+		<a href="#chat" class="nav-link">Chat</a>
+	</nav>
+	<div id="content">
+		<div id="game" class="hidden">
+			<canvas id="game-area" class="hidden"></canvas>
+		</div>
+	</div>
 
 	<!-- Bootstrap JS and dependencies -->
 	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
