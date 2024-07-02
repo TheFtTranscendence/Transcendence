@@ -12,8 +12,13 @@ private_key = settings.PRIVATE_KEY
 web3 = Web3(AsyncHTTPProvider(ethereum_node_url))
 
 # Load the contract ABI
-with open('path/to/Score.json') as f:
-    contract_abi = json.load(f)['abi']
+with open('/usr/src/app/Score.json') as f:
+    contract_abi_list = json.load(f)
+    print("Loaded JSON content:", contract_abi_list)  # Debugging line
+    
+    # Assuming it's an array of ABIs
+    contract_abi = contract_abi_list
+    
 contract = web3.eth.contract(address=contract_address, abi=contract_abi)
 
 async def get_number_of_games(instance_index):

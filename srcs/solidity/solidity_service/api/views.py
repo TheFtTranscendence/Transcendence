@@ -13,7 +13,7 @@ def add_new_game(request):
     player2 = request.data.get('player2')
     score1 = request.data.get('score1')
     score2 = request.data.get('score2')
-    tx_hash = await add_game(instance_index, player1, player2, score1, score2)
+    # tx_hash = await add_game(instance_index, player1, player2, score1, score2)
     return JsonResponse({'message': 'Game added'}, status=200)
 
 # Add tournament (4 or 8 players)
@@ -23,7 +23,7 @@ def add_new_game(request):
 # Get the number of games
 @api_view(['GET'])
 def get_games(request, instance_index):
-    number_of_games = await get_number_of_games(instance_index)
+    # number_of_games = await get_number_of_games(instance_index)
     return JsonResponse({'number_of_games': number_of_games}, status=200)
 
 # Get all the games (for the history)
