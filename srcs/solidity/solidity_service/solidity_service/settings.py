@@ -169,12 +169,6 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Get from .env
-ETHEREUM_NODE_URL = "https://eth-sepolia.g.alchemy.com/v2/ip-0Ebt2KSW5uyeAHh8xxA2EJu9Vmb7U"
-CONTRACT_ADDRESS = "0x3FcffCb71855DdCb98B80AF670C1ecc6F7415769"
-PRIVATE_KEY = "0x1c2f929b36f338f660c6b9f3d735232f939715cc70305c54709cf4b0c8d771b3"
-# ethereum_node_url = GET_ETHEREUM_NODE_URL
-# contract_address = GET_CONTRACT_ADDRESS
-# private_key = GET_PRIVATE_KEY
-# ethereum_node_url = os.getenv('ETHEREUM_NODE_URL', 'default_value')
-# contract_address = os.getenv('CONTRACT_ADDRESS', 'default_value')
-# private_key = os.getenv('PRIVATE_KEY', 'default_value')
+ETHEREUM_NODE_URL = os.getenv('ETHEREUM_NODE_URL', 'default_value')
+CONTRACT_ADDRESS = os.getenv('CONTRACT_ADDRESS', 'default_value')
+PRIVATE_KEY = os.getenv('PRIVATE_KEY', 'default_value')
