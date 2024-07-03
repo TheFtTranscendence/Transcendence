@@ -4,7 +4,7 @@ from django.http import JsonResponse
 
 import asyncio
 import json
-from web3 import Web3, AsyncHTTPProvider
+from web3 import Web3, HTTPProvider
 from django.conf import settings
 
 # Helper function to execute async functions synchronously
@@ -17,7 +17,7 @@ contract_address = settings.CONTRACT_ADDRESS
 private_key = settings.PRIVATE_KEY
 
 # Initialize Web3
-web3 = Web3(AsyncHTTPProvider(ethereum_node_url))
+web3 = Web3(HTTPProvider(ethereum_node_url))
 
 # Load the contract ABI
 with open('/usr/src/app/Score.json') as f:
@@ -40,10 +40,10 @@ def add_instance(request):
             'chainId': 11155111,
             'gas': 2000000,
             'gasPrice': web3.toWei('50', 'gwei'),
-            'nonce': await web3.eth.getTransactionCount(web3.eth.default_account),
+            'nonce': web3.eth.getTransactionCount(web3.eth.default_account),
         })
         signed_tx = web3.eth.account.sign_transaction(tx, private_key)
-        tx_hash = await web3.eth.sendRawTransaction(signed_tx.rawTransaction)
+        tx_hash = web3.eth.sendRawTransaction(signed_tx.rawTransaction)
         return tx_hash
     
     tx_hash = run_async(add_instance_async)
@@ -62,10 +62,10 @@ def add_new_game(request):
             'chainId': 11155111,
             'gas': 2000000,
             'gasPrice': web3.toWei('50', 'gwei'),
-            'nonce': await web3.eth.getTransactionCount(web3.eth.default_account),
+            'nonce': web3.eth.getTransactionCount(web3.eth.default_account),
         })
         signed_tx = web3.eth.account.sign_transaction(tx, private_key)
-        tx_hash = run_async(web3.eth.sendRawTransaction, signed_tx.rawTransaction)
+        tx_hash = web3.eth.sendRawTransaction(signed_tx.rawTransaction)
         return tx_hash
 
     tx_hash = run_async(add_new_game_async)
@@ -81,7 +81,7 @@ def add_new_game(request):
 @api_view(['GET'])
 def get_instance_index(request):
     async def get_instance_index_async():
-        instance_index = await contract.functions.instanceIndex().call()
+        instance_index = contract.functions.instanceIndex().call()
         return instance_index
 
     instance_index = run_async(get_instance_index_async)
@@ -91,7 +91,7 @@ def get_instance_index(request):
 @api_view(['GET'])
 def get_number_of_games(request, instance_index):
     async def get_number_of_games_async(instance_index):
-        number_of_games = await contract.functions.getNumberOfGames(instance_index).call()
+        number_of_games = contract.functions.getNumberOfGames(instance_index).call()
         return number_of_games
 
     number_of_games = run_async(get_number_of_games_async, instance_index)
