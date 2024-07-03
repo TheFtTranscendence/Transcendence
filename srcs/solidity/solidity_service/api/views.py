@@ -2,14 +2,9 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from django.http import JsonResponse
 
-import asyncio
 import json
 from web3 import Web3, HTTPProvider
 from django.conf import settings
-
-# Helper function to execute async functions synchronously
-def run_async(func, *args):
-    return asyncio.run(func(*args))
 
 # Get from settings
 ethereum_node_url = settings.ETHEREUM_NODE_URL
@@ -35,7 +30,7 @@ contract = web3.eth.contract(address=contract_address, abi=contract_abi)
 # Add an instance (it returns the instance index)
 @api_view(['POST'])
 def add_instance(request):
-    async def add_instance_async():
+    def add_instance_func():
         tx = contract.functions.addInstance().buildTransaction({
             'chainId': 11155111,
             'gas': 2000000,
@@ -46,13 +41,13 @@ def add_instance(request):
         tx_hash = web3.eth.sendRawTransaction(signed_tx.rawTransaction)
         return tx_hash
     
-    tx_hash = run_async(add_instance_async)
+    tx_hash = add_instance_func()
     return JsonResponse({'message': 'Instance added with tx hash: ' + tx_hash.hex()}, status=200)
 
 # Add a game
 @api_view(['POST'])
 def add_new_game(request):
-    async def add_new_game_async():
+    def add_new_game_func():
         instance_index = request.data.get('instance_index')
         player1 = request.data.get('player1')
         player2 = request.data.get('player2')
@@ -68,7 +63,7 @@ def add_new_game(request):
         tx_hash = web3.eth.sendRawTransaction(signed_tx.rawTransaction)
         return tx_hash
 
-    tx_hash = run_async(add_new_game_async)
+    tx_hash = add_new_game_func()
     return JsonResponse({'message': 'Game added'}, status=200)
 
 # Add tournament (4 or 8 players)
@@ -80,21 +75,13 @@ def add_new_game(request):
 # Get the value of the uint256 public variable instanceIndex
 @api_view(['GET'])
 def get_instance_index(request):
-    async def get_instance_index_async():
-        instance_index = contract.functions.instanceIndex().call()
-        return instance_index
-
-    instance_index = run_async(get_instance_index_async)
+    instance_index = contract.functions.instanceIndex().call()
     return JsonResponse({'instance_index': instance_index}, status=200)
 
 # Get the number of games
 @api_view(['GET'])
 def get_number_of_games(request, instance_index):
-    async def get_number_of_games_async(instance_index):
-        number_of_games = contract.functions.getNumberOfGames(instance_index).call()
-        return number_of_games
-
-    number_of_games = run_async(get_number_of_games_async, instance_index)
+    number_of_games = contract.functions.getNumberOfGames(instance_index).call()
     return JsonResponse({'number_of_games': number_of_games}, status=200)
 
 # Get all the games (for the history)
