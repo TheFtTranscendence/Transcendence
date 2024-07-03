@@ -46,9 +46,9 @@ def add_instance(request):
 
 # Add a game
 @api_view(['POST'])
-def add_new_game(request):
+def add_new_game(request, instanceIndex):
     def add_new_game_func():
-        instance_index = request.data.get('instance_index')
+        instance_index = instanceIndex
         player1 = request.data.get('player1')
         player2 = request.data.get('player2')
         score1 = request.data.get('score1')
