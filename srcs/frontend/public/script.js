@@ -2,6 +2,7 @@
 const routes = {
 	'#home': '<h1>Home Page</h1><p>Welcome to the home page!</p>',
 	'#game': '<h1>Game</h1><canvas id="game-area"></canvas>',
+	'#game2': '<h1>Game</h1><canvas id="game2-area"></canvas>',
 	'#chat': '<h1>Chat</h1><p>Here can be eventually the chat</p>'
 };
 
@@ -14,6 +15,28 @@ function navigate() {
 
 	if (hash === '#game')
 		loadGameScript();
+	if (hash === '#game2')
+		loadGameScript2();
+}
+
+// Starts game script
+function loadGameScript2()
+{
+	const script = document.createElement('script');
+	script.src = 'game/gameScript2.js';
+	script.type = 'text/javascript';
+
+	script.onload = function() {
+		if (typeof startGame2 === 'function') {
+			startGame2();
+		} else {
+			console.error("startGame2 function not found");
+		}
+	};
+
+	// if (typeof startGame === 'function')
+	//     startGame();
+	document.body.appendChild(script);
 }
 
 // Starts game script
