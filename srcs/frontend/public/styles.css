@@ -88,8 +88,8 @@ body {
 }
 
 #game-area {
-    width: 800px;
-    height: 600px;
+    width: 1024px;
+    height: 576px;
     background-color: black;
     position: fixed;
     top: 50%;
