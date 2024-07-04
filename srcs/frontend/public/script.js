@@ -2,7 +2,7 @@
 const routes = {
 	'#home': '<h1>Home Page</h1><p>Welcome to the home page!</p>',
 	'#game': '<h1>Game</h1><canvas id="game-area"></canvas>',
-	'#game2': '<h1>Game</h1><canvas id="game2-area"></canvas>',
+	'#game2': '<h1>Game2</h1><canvas id="game2-area"></canvas>',
 	'#chat': '<h1>Chat</h1><p>Here can be eventually the chat</p>'
 };
 
@@ -23,7 +23,7 @@ function navigate() {
 function loadGameScript2()
 {
 	const script = document.createElement('script');
-	script.src = 'game/gameScript2.js';
+	script.src = 'game2/gameScript2.js';
 	script.type = 'text/javascript';
 
 	script.onload = function() {
