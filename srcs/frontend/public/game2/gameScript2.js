@@ -1,13 +1,14 @@
-window.onload = startGame2;
+window.onload = startGame2
 
-const canvas = document.getElementById('game2-area');
-const c = canvas.getContext('2d');
-canvas.width = 1024;
-canvas.height = 576;
+const canvas = document.getElementById('game2-area')
+const c = canvas.getContext('2d')
+canvas.width = 1024
+canvas.height = 576
 
-c.fillRect(0, 0, canvas.width, canvas.height);
+c.fillRect(0, 0, canvas.width, canvas.height)
 
-const gravity = 0.5;
+const gravity = 0.5
+const drag = .1
 
 const keys = {
 	d: { pressed: false },
@@ -20,104 +21,149 @@ const keys = {
 }
 
 class Sprite {
-	constructor({ position,  velocity, color}) {
-		this.position = position;
-		this.velocity = velocity;
+	constructor({ name, position,  velocity, color, offset}) {
+		this.name = name
+		this.position = position
+		this.velocity = velocity
 		this.height = 150
 		this.width = 50
-		this.lastKey = '';
+		this.lastKey = ''
 		this.attackbox = {
-			position: this.position,
-			width: 150,
+			position: { x: this.position.x, y: this.position.y},
+			offset, // offset: offset
+			width: 100,
 			height: 50
 		}
-		this.color = color;
+		this.color = color
+		this.isAttacking
+	}
+
+	attack() {
+		this.isAttacking = true
+		setTimeout(() => {
+			this.isAttacking = false
+		}, 100)
 	}
 
 	draw() {
-		c.fillStyle = this.color;
-		c.fillRect(this.position.x, this.position.y, this.width, this.height);
+		c.fillStyle = this.color
+		c.fillRect(this.position.x, this.position.y, this.width, this.height)
 
-		c.fillStyle = 'red';
-		c.fillRect(this.attackbox.position.x, this.attackbox.position.y, this.attackbox.width, this.attackbox.height);
+		if (this.isAttacking) {
+			c.fillStyle = 'red'
+			c.fillRect(this.attackbox.position.x, this.attackbox.position.y, this.attackbox.width, this.attackbox.height)
+		}
 	}
 	
 	update() {
 		this.draw()
+		
+		this.attackbox.position.x = this.position.x + this.attackbox.offset.x;
+		this.attackbox.position.y = this.position.y;
 
-		this.velocity.y += gravity;
+		this.velocity.y += gravity
 		if (this.position.y + this.velocity.y + this.height >= canvas.height)
-			this.position.y = canvas.height - this.height;
+			this.position.y = canvas.height - this.height
 		else if (this.position.y + this.velocity.y <= 0) {
-			this.position.y = 0; this.velocity.y = 0;
+			this.position.y = 0; this.velocity.y = 0
 		}
 		else
-			this.position.y += this.velocity.y;
+			this.position.y += this.velocity.y
 		
-		if (this.position.x + this.velocity.x <= 0 || this.position.x + this.velocity.x + this.width === canvas.width)
-			this.velocity.x = 0;
-		this.position.x += this.velocity.x;
+		if (this.position.x + this.velocity.x + this.width >= canvas.width)
+			this.position.x = canvas.width - this.width
+		else if (this.position.x + this.velocity.x <= 0)
+			this.position.x = 0
+		else		
+			this.position.x += this.velocity.x
 		
 	}
 } 
 
 const player = new Sprite({
+	name: 'player',
 	position: { x: 0, y: 0},
 	velocity: { x: 0, y: 0},
 	color: 'blue',
-
+	offset: { x: 0, y: 0}
 })
 
 const enemy = new Sprite({
+	name: 'enemy',
 	position : { x: 400, y: 100},
 	velocity: { x: 0, y: 0},
 	color: 'green',
+	offset: { x: -50, y: 0}
 })
 
 
 window.addEventListener('keydown', (event) => {
 	switch (event.key) {
-		case 'd':keys.d.pressed = true; player.lastKey = 'd'; break;
-		case 'a':keys.a.pressed = true; player.lastKey = 'a'; break;
-		case 'w':keys.w.pressed = true; break;
+		case 'd':keys.d.pressed = true; player.lastKey = 'd'; break
+		case 'a':keys.a.pressed = true; player.lastKey = 'a'; break
+		case 'w':keys.w.pressed = true; break
+		case ' ':player.attack(); break
 
-		case 'ArrowRight':keys.ArrowRight.pressed = true; enemy.lastKey = 'ArrowRight'; break;
-		case 'ArrowLeft':keys.ArrowLeft.pressed = true; enemy.lastKey = 'ArrowLeft'; break;
-		case 'ArrowUp':keys.ArrowUp.pressed = true; break;
+		case 'ArrowRight':keys.ArrowRight.pressed = true; enemy.lastKey = 'ArrowRight'; break
+		case 'ArrowLeft':keys.ArrowLeft.pressed = true; enemy.lastKey = 'ArrowLeft'; break
+		case 'ArrowUp':keys.ArrowUp.pressed = true; break
+		case 'Enter':enemy.attack(); break
 	}
 })
 
 window.addEventListener('keyup', (event) => {
 	switch (event.key) {
-		case 'd':keys.d.pressed = false; break;
-		case 'a':keys.a.pressed = false; break;
-		case 'w':keys.w.pressed = false; break;
+		case 'd':keys.d.pressed = false; break
+		case 'a':keys.a.pressed = false; break
+		case 'w':keys.w.pressed = false; break
 
-		case 'ArrowRight':keys.ArrowRight.pressed = false; break;
-		case 'ArrowLeft':keys.ArrowLeft.pressed = false; break;
-		case 'ArrowUp':keys.ArrowUp.pressed = false; break;
+		case 'ArrowRight':keys.ArrowRight.pressed = false; break
+		case 'ArrowLeft':keys.ArrowLeft.pressed = false; break
+		case 'ArrowUp':keys.ArrowUp.pressed = false; break
 	}
 })
 
 
 function startGame2()
 {
-	game_loop();
-	
+	game_loop()
 }
 
 function game_loop() {
-	window.requestAnimationFrame(game_loop);
+	window.requestAnimationFrame(game_loop)
 	c.fillStyle = 'black'
-	c.fillRect(0, 0, canvas.width, canvas.height);
-	player.update();
-	enemy.update();
+	c.fillRect(0, 0, canvas.width, canvas.height)
+	
+	update_offset()
+	
+	player.update()
+	enemy.update()
 
-	update_keys();
+	detect_colision(player, enemy)
+	detect_colision(enemy, player)
+
+	update_keys()
+}
+
+function update_offset()
+{
+	if (player.position.x < enemy.position.x) {
+		player.attackbox.offset.x = player.position.x
+		enemy.attackbox.offset.x = enemy.position.x - enemy.attackbox.width
+	}
+	else {
+		player.attackbox.offset.x = 100
+		enemy.attackbox.offset.x = 100
+	}
 }
 
 function update_keys() {
-	player.velocity.x = 0;
+	if (player.velocity.x > 0)
+		player.velocity.x -= drag
+	else if (player.velocity.x < 0)
+		player.velocity.x += drag
+
+
 	if (keys.d.pressed && player.lastKey === 'd')
 		player.velocity.x = 5
 	if (keys.a.pressed && player.lastKey === 'a')
@@ -125,11 +171,35 @@ function update_keys() {
 	if (keys.w.pressed && player.position.y === canvas.height - player.height )
 		player.velocity.y = -19
 
-	enemy.velocity.x = 0;
+	if (enemy.velocity.x > 0)
+		enemy.velocity.x -= drag
+	else if (enemy.velocity.x < 0)
+		enemy.velocity.x += drag
+
+
 	if (keys.ArrowRight.pressed && enemy.lastKey === 'ArrowRight')
 		enemy.velocity.x = 5
 	if (keys.ArrowLeft.pressed && enemy.lastKey === 'ArrowLeft')
 		enemy.velocity.x = -5
 	if (keys.ArrowUp.pressed && enemy.position.y === canvas.height - enemy.height )
 		enemy.velocity.y = -19
+
+
 }
+
+function detect_colision(Sprite1, Sprite2) {
+	if (Sprite1.isAttacking && Sprite1.attackbox.position.x + Sprite1.attackbox.width >= Sprite2.position.x &&
+		Sprite1.attackbox.position.x <= Sprite2.position.x + Sprite2.width &&
+		Sprite1.attackbox.position.y + Sprite1.attackbox.height >= Sprite2.position.y &&
+		Sprite1.attackbox.position.y <= Sprite2.position.y + Sprite2.height)
+	{
+		console.log(Sprite1.name + " Attacked!")
+		Sprite1.isAttacking = false
+		Sprite2.velocity.y = -10
+		if (Sprite1.position.x < Sprite2.position.x)
+			Sprite2.velocity.x = 100
+		else
+			Sprite2.velocity.x = -100
+
+	}
+} 
