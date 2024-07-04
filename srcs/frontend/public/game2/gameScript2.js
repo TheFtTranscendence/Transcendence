@@ -29,7 +29,10 @@ class Sprite {
 		this.velocity.y += gravity;
 		if (this.position.y + this.velocity.y + this.height >= canvas.height)
 			this.position.y = canvas.height - this.height;
-		else 
+		else if (this.position.y + this.velocity.y <= 0) {
+			this.position.y = 0; this.velocity.y = 0;
+		}
+		else
 			this.position.y += this.velocity.y;
 			
 		if (this.position.x + this.velocity.x <= 0 || this.position.x + this.velocity.x + this.width == canvas.width)
@@ -56,7 +59,7 @@ window.addEventListener('keydown', (event) => {
 	switch (event.key) {
 		case 'd': player.velocity.x = 1; break;
 		case 'a': player.velocity.x = -1; break;
-		case 'w': player.velocity.y = -1; break;
+		case 'w': player.velocity.y = -10; break;
 	}
 })
 
