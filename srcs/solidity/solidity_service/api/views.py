@@ -27,15 +27,40 @@ contract = web3.eth.contract(address=contract_address, abi=contract_abi)
 
 ### SETTER FUNCTIONS ###
 
+# def add_instance(request):
+#     def add_instance_func():
+#         try:
+#             # Send the transaction using `transact`
+#             tx_hash = contract.functions.addInstance().transact({
+#                 'from': web3.eth.default_account,
+#                 'gas': 2000000,
+#                 'gasPrice': web3.toWei('50', 'gwei')
+#             })
+            
+#             return tx_hash
+#         except Exception as e:
+#             # Catch all other exceptions and log them
+#             print(f"Exception: {e}")
+#             raise
+
+#     # Call the add_instance_func to get the transaction hash
+#     try:
+#         tx_hash = add_instance_func()
+#         # Return the transaction hash in the response
+#         return JsonResponse({'message': 'Instance added with tx hash: ' + tx_hash.hex()}, status=200)
+#     except Exception as e:
+#         return JsonResponse({'error': str(e)}, status=500)
+
 # Add an instance (it returns the instance index)
 @api_view(['POST'])
 def add_instance(request):
     def add_instance_func():
-        tx = contract.functions.addInstance().buildTransaction({
+        tx = contract.functions.addInstance().build_transaction({
+            # 'from': web3.eth.default_account,
             'chainId': 11155111,
             'gas': 2000000,
-            'gasPrice': web3.toWei('50', 'gwei'),
-            'nonce': web3.eth.getTransactionCount(web3.eth.default_account),
+            'gasPrice': web3.to_wei('50', 'gwei'),
+            'nonce': web3.eth.get_transaction_count(web3.eth.default_account),
         })
         signed_tx = web3.eth.account.sign_transaction(tx, private_key)
         tx_hash = web3.eth.sendRawTransaction(signed_tx.rawTransaction)
@@ -53,11 +78,11 @@ def add_new_game(request, instanceIndex):
         player2 = request.data.get('player2')
         score1 = request.data.get('score1')
         score2 = request.data.get('score2')
-        tx = contract.functions.addGame(instance_index, player1, player2, score1, score2).buildTransaction({
+        tx = contract.functions.addGame(instance_index, player1, player2, score1, score2).build_transaction({
             'chainId': 11155111,
             'gas': 2000000,
             'gasPrice': web3.toWei('50', 'gwei'),
-            'nonce': web3.eth.getTransactionCount(web3.eth.default_account),
+            'nonce': web3.eth.get_transaction_count(web3.eth.default_account),
         })
         signed_tx = web3.eth.account.sign_transaction(tx, private_key)
         tx_hash = web3.eth.sendRawTransaction(signed_tx.rawTransaction)
