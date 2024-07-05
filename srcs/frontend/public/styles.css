@@ -107,11 +107,20 @@ body {
     transform: translate(-50%, -50%); /* Centering trick */
 }
 
+#div-game2-area {
+	width: 1366px;
+    height: 768px;
+	position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Centering trick */
+}
+
 #health-bar1 {
 	width: 500px;
 	height: 70px;
 	background-color: yellow;
-	
+
 }
 
 @font-face {
