@@ -4,12 +4,14 @@ const routes = {
 	'#game': `<h1>Game</h1><canvas id="game-area"></canvas>`,
 	'#game2': `<h1>Game2</h1>
 				<div id="div-game2-area">
-					<!-- Player health -->
-					<div id="health-bar1"></div>
-					<!-- timer -->
-					<div></div>
-					<!-- Enemy health -->
-					<div></div>
+					<div id="div-game2-top">
+						<!-- Player health -->
+						<div id="game2-health-bar1"></div>
+						<!-- timer -->
+						<div id="game2-timer1"></div>
+						<!-- Enemy health -->
+						<div id="game2-health-bar2"</div>
+					</div>
 					<div>
 						<canvas id="game2-area"></canvas>
 					</div>

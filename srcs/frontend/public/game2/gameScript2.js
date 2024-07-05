@@ -206,6 +206,6 @@ function detect_colision(Sprite1, Sprite2) {
 		else
 			Sprite2.velocity.x = -15
 		
-		Sprite2.recentlyAttacked = fps
+		Sprite2.recentlyAttacked = fps / 2
 	}
 } 

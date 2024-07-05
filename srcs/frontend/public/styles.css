@@ -117,12 +117,35 @@ body {
     transform: translate(-50%, -50%); /* Centering trick */
 }
 
-#health-bar1 {
+#div-game2-top {
+	position: fixed;
+	background-color: transparent;
+	z-index: 10;
+	display: flex;
+}
+
+#game2-health-bar1 {
 	width: 500px;
 	height: 70px;
-	position: absolute; /* Or relative, if needed */
+	position: relative;
 	background-color: yellow;
-	z-index: 10
+	z-index: 12
+}
+
+#game2-health-bar2 {
+	width: 500px;
+	height: 70px;
+	position: relative;
+	background-color: green;
+	z-index: 11
+}
+
+#game2-timer1 {
+	width: 100px;
+	height: 100px;
+	position: relative;
+	background-color: red;
+	z-index: 13
 }
 
 @font-face {
