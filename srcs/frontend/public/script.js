@@ -3,27 +3,29 @@ const routes = {
 	'#home': `<h1>Home Page</h1><p>Welcome to the home page!</p>`,
 	'#game': `<h1>Game</h1><canvas id="game-area"></canvas>`,
 	'#game2': `<h1>Game2</h1>
-				<div id="div-game2-area">
-					<div id="div-game2-top">
-						<!-- Player health -->
-						<div id="game2-bar1"></div>
-						<!-- timer -->
-						<div id="game2-timer1"></div>
-						<!-- Enemy health -->
-						<div id="game2-bar2-parent">
-							<div id="game2-bar2-background"</div>
-							<div id="game2-bar2"</div>
-						</div>
+					<div id="div-game2-area">
+					    <div id="div-game2-top">
+					        <!-- Player health -->
+					        <div id="game2-bar1-parent">
+					            <div id="game2-bar1-background"></div>
+					            <div id="game2-bar1"></div>
+					        </div>
+					        <!-- timer -->
+					        <div id="game2-timer1"></div>
+					        <!-- Enemy health -->
+					        <div id="game2-bar2-parent">
+					            <div id="game2-bar2-background"></div>
+					            <div id="game2-bar2"></div>
+					        </div>
+					    </div>
+					    <div>
+					        <canvas id="game2-area"></canvas>
+					    </div>
 					</div>
-					<div>
-						<canvas id="game2-area"></canvas>
-					</div>
-				</div>
-	`,
-	'#chat': `<h1>Chat</h1><p>Here can be eventually the chat</p>
-	`
+					`,
+	'#chat': `<h1>Chat</h1><p>Here can be eventually the chat</p>`
 };
-
+				
 
 // Function to handle navigation
 function navigate() {

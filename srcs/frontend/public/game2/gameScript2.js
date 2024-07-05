@@ -27,20 +27,23 @@ class Sprite {
 		this.velocity = velocity
 		this.height = 150
 		this.width = 50
+		this.color = color
+
+		this.health = 100
 		this.lastKey = ''
+		
 		this.attackbox = {
 			position: { x: this.position.x, y: this.position.y },
 			offset, // same as offset: offset
 			width: 100,
 			height: 50
 		}
-		this.color = color
 		this.isAttacking
 		this.recentlyAttacked = 0
 		
 		this.bar = document.querySelector('#game2-bar' + bar)
 	}
-
+	
 	get_hit(other) {
 
 		this.velocity.y = -10
@@ -51,7 +54,8 @@ class Sprite {
 			this.velocity.x = -15
 		
 		this.recentlyAttacked = fps / 2
-		this.bar.style.width = '20%'
+		this.health -= 10
+		this.bar.style.width = this.health + '%'
 	}
 
 	attack() {
