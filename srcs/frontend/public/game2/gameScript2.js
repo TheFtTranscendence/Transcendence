@@ -2,8 +2,8 @@ window.onload = startGame2
 
 const canvas = document.getElementById('game2-area')
 const c = canvas.getContext('2d')
-canvas.width = 1600
-canvas.height = 900
+canvas.width = 1366
+canvas.height = 768
 
 c.fillRect(0, 0, canvas.width, canvas.height)
 
