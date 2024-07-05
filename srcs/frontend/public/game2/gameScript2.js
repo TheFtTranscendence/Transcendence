@@ -38,7 +38,7 @@ class Sprite {
 		this.isAttacking
 		this.recentlyAttacked = 0
 		
-		this.bar = bar
+		this.bar = document.querySelector('#game2-bar' + bar)
 	}
 
 	get_hit(other) {
@@ -51,6 +51,7 @@ class Sprite {
 			this.velocity.x = -15
 		
 		this.recentlyAttacked = fps / 2
+		this.bar.style.width = '20%'
 	}
 
 	attack() {

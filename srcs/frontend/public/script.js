@@ -6,11 +6,14 @@ const routes = {
 				<div id="div-game2-area">
 					<div id="div-game2-top">
 						<!-- Player health -->
-						<div id="game2-health-bar1"></div>
+						<div id="game2-bar1"></div>
 						<!-- timer -->
 						<div id="game2-timer1"></div>
 						<!-- Enemy health -->
-						<div id="game2-health-bar2"</div>
+						<div id="game2-bar2-parent">
+							<div id="game2-bar2-background"</div>
+							<div id="game2-bar2"</div>
+						</div>
 					</div>
 					<div>
 						<canvas id="game2-area"></canvas>
