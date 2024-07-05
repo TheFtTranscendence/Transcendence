@@ -105,7 +105,8 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%); /* Centering trick */
-	z-index: 1
+	z-index: 1;
+	display: inline-block;
 }
 
 #div-game2-area {
@@ -118,34 +119,41 @@ body {
 }
 
 #div-game2-top {
+	width: 100%;
+	height: 12.7%;
 	position: fixed;
+	align-items: center;
 	background-color: transparent;
 	z-index: 10;
 	display: flex;
+	box-sizing: border-box;
+	padding: 6.3%;
+	padding-top: 5%;
 }
 
 #game2-health-bar1 {
-	width: 500px;
-	height: 70px;
+	width: 100%;
+	height: 75px; /* missing put as percentage */
 	position: relative;
 	background-color: yellow;
 	z-index: 12
 }
 
 #game2-health-bar2 {
-	width: 500px;
-	height: 70px;
+	width: 100%;
+	height: 75px; /* missing put as percentage */
 	position: relative;
 	background-color: green;
 	z-index: 11
 }
 
 #game2-timer1 {
-	width: 100px;
-	height: 100px;
+	width: 7.3%;
+	height: 110px; /* missing put as percentage */
 	position: relative;
 	background-color: red;
-	z-index: 13
+	z-index: 13;
+	flex-shrink: 0
 }
 
 @font-face {
