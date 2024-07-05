@@ -1,30 +1,20 @@
 // Sample content for each route
 const routes = {
-	'#home': `
-		<h1>Home Page</h1>
-		<p>Welcome to the home page!</p>
+	'#home': `<h1>Home Page</h1><p>Welcome to the home page!</p>
 	`,
-	'#game': `
-		<h1>Game</h1>
-		<canvas id="game-area"></canvas>
+	'#game': `<h1>Game</h1><canvas id="game-area"></canvas>`,
+	'#game2': `<h1>Game2</h1>
+				<div>
+					<canvas id="game2-area"></canvas>
+					<!-- Player health -->
+					<div id="health-bar1"></div>
+					<!-- timer -->
+					<div></div>
+					<!-- Enemy health -->
+					<div></div>
+				</div>
 	`,
-	'#game2': `
-		<h1>Game2</h1>
-		<div>
-			<div>
-				<!-- Player health -->
-				<div style="background-color: yellow; height: 30px; width: 100px;"></div>
-				<!-- timer -->
-				<div></div>
-				<!-- Enemy health -->
-				<div></div>
-			</div>
-			<canvas id="game2-area"></canvas>
-		</div>
-	`,
-	'#chat': `
-		<h1>Chat</h1>
-		<p>Here can be eventually the chat</p>
+	'#chat': `<h1>Chat</h1><p>Here can be eventually the chat</p>
 	`
 };
 

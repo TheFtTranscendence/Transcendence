@@ -107,6 +107,13 @@ body {
     transform: translate(-50%, -50%); /* Centering trick */
 }
 
+#health-bar1 {
+	width: 500px;
+	height: 70px;
+	background-color: yellow;
+	
+}
+
 @font-face {
     font-family: "ARCADECLASSIC";
     src: url("game/font/ARCADECLASSIC.TTF") format("truetype");
