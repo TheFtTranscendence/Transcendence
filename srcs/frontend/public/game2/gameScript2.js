@@ -58,8 +58,14 @@ class Sprite {
 		this.health -= 10
 		this.bar.style.width = this.health + '%'
 
-		if (this.health == 0)
-			end_game()
+		if (this.health <= 0)
+		{
+			this.bar.style.width = '1%'
+			setTimeout(() => {
+				// Code to execute after 1 second
+				game_end()
+			}, 1000);
+		}
 	}
 
 	attack() {
@@ -108,7 +114,7 @@ const player = new Sprite({
 	name: 'player',
 	position: { x: canvas.width / 4, y: canvas.height - 150},
 	velocity: { x: 0, y: 0},
-	color: 'blue',
+	color: 'lightblue',
 	offset: { x: 0, y: 0},
 	bar: 1
 })
@@ -117,7 +123,7 @@ const enemy = new Sprite({
 	name: 'enemy',
 	position : { x: canvas.width * 3 / 4, y: canvas.height - 150},
 	velocity: { x: 0, y: 0},
-	color: 'green',
+	color: 'red',
 	offset: { x: -50, y: 0},
 	bar: 2
 })
@@ -149,6 +155,8 @@ window.addEventListener('keyup', (event) => {
 	}
 })
 
+let gameInterval;
+let timerInterval;
 
 function startGame2() {
 	gameInterval = window.setInterval(() => game_loop(), 1000 / fps)
