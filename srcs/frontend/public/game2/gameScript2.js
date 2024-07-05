@@ -21,7 +21,7 @@ const keys = {
 }
 
 class Sprite {
-	constructor({ name, position,  velocity, color, offset }) {
+	constructor({ name, position,  velocity, color, offset, bar }) {
 		this.name = name
 		this.position = position
 		this.velocity = velocity
@@ -37,6 +37,20 @@ class Sprite {
 		this.color = color
 		this.isAttacking
 		this.recentlyAttacked = 0
+		
+		this.bar = bar
+	}
+
+	get_hit(other) {
+
+		this.velocity.y = -10
+
+		if (other.position.x < this.position.x)
+			this.velocity.x = 15
+		else
+			this.velocity.x = -15
+		
+		this.recentlyAttacked = fps / 2
 	}
 
 	attack() {
@@ -86,7 +100,8 @@ const player = new Sprite({
 	position: { x: canvas.width / 4, y: canvas.height - 150},
 	velocity: { x: 0, y: 0},
 	color: 'blue',
-	offset: { x: 0, y: 0}
+	offset: { x: 0, y: 0},
+	bar: 1
 })
 
 const enemy = new Sprite({
@@ -94,7 +109,8 @@ const enemy = new Sprite({
 	position : { x: canvas.width * 3 / 4, y: canvas.height - 150},
 	velocity: { x: 0, y: 0},
 	color: 'green',
-	offset: { x: -50, y: 0}
+	offset: { x: -50, y: 0},
+	bar: 2
 })
 
 
@@ -199,13 +215,6 @@ function detect_colision(Sprite1, Sprite2) {
 	{
 		console.log(Sprite1.name + " Attacked!")
 		Sprite1.isAttacking = false
-		Sprite2.velocity.y = -10
-
-		if (Sprite1.position.x < Sprite2.position.x)
-			Sprite2.velocity.x = 15
-		else
-			Sprite2.velocity.x = -15
-		
-		Sprite2.recentlyAttacked = fps / 2
+		Sprite2.get_hit(Sprite1)
 	}
 } 
