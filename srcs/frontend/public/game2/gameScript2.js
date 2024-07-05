@@ -8,7 +8,8 @@ canvas.height = 768
 c.fillRect(0, 0, canvas.width, canvas.height)
 
 const gravity = 0.5
-const drag = .1
+const drag = .50
+const knockback = 25
 const fps = 100
 const keys = {
 	d: { pressed: false },
@@ -49,13 +50,16 @@ class Sprite {
 		this.velocity.y = -10
 
 		if (other.position.x < this.position.x)
-			this.velocity.x = 15
+			this.velocity.x = knockback
 		else
-			this.velocity.x = -15
+			this.velocity.x = -1 * knockback
 		
-		this.recentlyAttacked = fps / 2
+		this.recentlyAttacked = fps / 4
 		this.health -= 10
 		this.bar.style.width = this.health + '%'
+
+		if (this.health == 0)
+			end_game()
 	}
 
 	attack() {
@@ -146,9 +150,24 @@ window.addEventListener('keyup', (event) => {
 })
 
 
-function startGame2() { window.setInterval(() => game_loop(), 1000 / fps) }
+function startGame2() {
+	gameInterval = window.setInterval(() => game_loop(), 1000 / fps)
+	timerInterval = window.setInterval(() => decreaseTimer(), 1000)
+}
 
-function game_loop() {
+
+function decreaseTimer() {
+	const timer = document.querySelector('#game2-timer')
+	let time = parseInt(timer.innerHTML)
+	time -= 1
+	timer.innerHTML = time
+	if (time == 0) {
+		game_end()
+	}
+}
+
+
+function game_loop(v) {
 	c.fillStyle = 'black'
 	c.fillRect(0, 0, canvas.width, canvas.height)
 	
@@ -161,6 +180,9 @@ function game_loop() {
 	detect_colision(enemy, player)
 
 	update_keys()
+
+	console.log('player' + player.velocity.x)
+	console.log('enemy' + enemy.velocity.x)
 }
 
 function update_offset()
@@ -223,3 +245,17 @@ function detect_colision(Sprite1, Sprite2) {
 		Sprite2.get_hit(Sprite1)
 	}
 } 
+
+function game_end() {
+	clearInterval(gameInterval);
+    clearInterval(timerInterval);
+
+	if (player.health > enemy.health)
+		alert('Player Wins!')
+	else if (player.health < enemy.health)
+		alert('Enemy Wins!')
+	else
+		alert('Draw!')
+// wait indefinitly
+	while (true) {}
+}

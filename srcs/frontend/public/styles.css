@@ -165,7 +165,7 @@ body {
 	position: relative;
 	height: 50px; /* missing put as percentage */
 	width: 100%;
-	background-color: yellow;
+	background-color: rgb(185, 44, 44);
 	z-index: 5
 }
 #game2-bar1 {
@@ -175,7 +175,7 @@ body {
 	width: 100%;
 	bottom: 0;
 	position: absolute;
-	background-color: blue;
+	background-color: #29ff52;
 	z-index: 5;
 }
 
@@ -188,7 +188,7 @@ body {
 #game2-bar2-background {
 	position: relative;
 	height: 50px; /* missing put as percentage */
-	background-color: yellow;
+	background-color: rgb(185, 44, 44);
 	z-index: 5
 }
 #game2-bar2 {
@@ -197,15 +197,15 @@ body {
 	left: 0;
 	bottom: 0;
 	position: absolute;
-	background-color: blue;
+	background-color: #29ff52;
 	z-index: 5;
 }
 
-#game2-timer1 {
+#game2-timer {
 	width: 7.3%;
 	height: 110px; /* missing put as percentage */
 	position: relative;
-	background-color: red;
+	background-color: white;
 	z-index: 5;
 	flex-shrink: 0;
 	display: flex;
