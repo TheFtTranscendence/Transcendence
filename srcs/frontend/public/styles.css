@@ -105,7 +105,7 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%); /* Centering trick */
-	z-index: 1;
+	z-index: 1
 }
 
 #div-game2-area {
@@ -120,7 +120,9 @@ body {
 #health-bar1 {
 	width: 500px;
 	height: 70px;
+	position: absolute; /* Or relative, if needed */
 	background-color: yellow;
+	z-index: 10
 }
 
 @font-face {
