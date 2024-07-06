@@ -29,6 +29,7 @@ class Sprite {
 		this.height = 150
 		this.width = 50
 		this.color = color
+		this.attackCD = false
 
 		this.health = 100
 		this.lastKey = ''
@@ -40,7 +41,7 @@ class Sprite {
 			height: 50
 		}
 		this.isAttacking
-		this.recentlyAttacked = 0
+		this.stunned = false
 		
 		this.bar = document.querySelector('#game2-bar' + bar)
 	}
@@ -54,25 +55,29 @@ class Sprite {
 		else
 			this.velocity.x = -1 * knockback
 		
-		this.recentlyAttacked = fps / 4
+		this.stunned = true
+		setTimeout(() => {this.stunned = false}, 150)
 		this.health -= 10
 		this.bar.style.width = this.health + '%'
 
 		if (this.health <= 0)
 		{
-			this.bar.style.width = '1%'
+			this.bar.style.width = '0%'
 			setTimeout(() => {
 				// Code to execute after 1 second
 				game_end()
-			}, 1000);
+			}, 200);
 		}
 	}
 
 	attack() {
-		if (this.recentlyAttacked === 0) {
+		if (this.stunned == false && this.attackCD == false) {
 			this.isAttacking = true
-			setTimeout(() => {this.isAttacking = false}, fps / 10)
+			this.attackCD = true
+			setTimeout(() => {this.isAttacking = false}, 10)
+			setTimeout(() => {this.attackCD = false}, 250)
 		}
+		
 	}
 
 	draw() {
@@ -107,8 +112,26 @@ class Sprite {
 		else		
 			this.position.x += this.velocity.x
 		
+		}
+}
+
+class Fighter {
+	constructor({ position }) {
+		this.position = position
+		this.height = 150
+		this.width = 50
+
 	}
+	draw() {
+
+	}
+	
+	update() {
+		this.draw()
+
+		}
 } 
+
 
 const player = new Sprite({
 	name: 'player',
@@ -123,10 +146,11 @@ const enemy = new Sprite({
 	name: 'enemy',
 	position : { x: canvas.width * 3 / 4, y: canvas.height - 150},
 	velocity: { x: 0, y: 0},
-	color: 'red',
+	color: 'white',
 	offset: { x: -50, y: 0},
 	bar: 2
 })
+
 
 
 window.addEventListener('keydown', (event) => {
@@ -135,7 +159,7 @@ window.addEventListener('keydown', (event) => {
 		case 'a':keys.a.pressed = true; player.lastKey = 'a'; break
 		case 'w':keys.w.pressed = true; break
 		case ' ':player.attack(); break
-
+		
 		case 'ArrowRight':keys.ArrowRight.pressed = true; enemy.lastKey = 'ArrowRight'; break
 		case 'ArrowLeft':keys.ArrowLeft.pressed = true; enemy.lastKey = 'ArrowLeft'; break
 		case 'ArrowUp':keys.ArrowUp.pressed = true; break
@@ -148,7 +172,7 @@ window.addEventListener('keyup', (event) => {
 		case 'd':keys.d.pressed = false; break
 		case 'a':keys.a.pressed = false; break
 		case 'w':keys.w.pressed = false; break
-
+		
 		case 'ArrowRight':keys.ArrowRight.pressed = false; break
 		case 'ArrowLeft':keys.ArrowLeft.pressed = false; break
 		case 'ArrowUp':keys.ArrowUp.pressed = false; break
@@ -159,6 +183,8 @@ let gameInterval;
 let timerInterval;
 
 function startGame2() {
+	
+
 	gameInterval = window.setInterval(() => game_loop(), 1000 / fps)
 	timerInterval = window.setInterval(() => decreaseTimer(), 1000)
 }
@@ -214,11 +240,11 @@ function update_keys() {
 		player.velocity.x = 0
 
 
-	if (keys.d.pressed && player.lastKey === 'd' && player.recentlyAttacked === 0)
+	if (keys.d.pressed && player.lastKey === 'd' && player.stunned == false)
 		player.velocity.x = 5
-	if (keys.a.pressed && player.lastKey === 'a' && player.recentlyAttacked === 0)
+	if (keys.a.pressed && player.lastKey === 'a' && player.stunned == false)
 		player.velocity.x = -5
-	if (keys.w.pressed && player.position.y === canvas.height - player.height && player.recentlyAttacked === 0)
+	if (keys.w.pressed && player.position.y === canvas.height - player.height && player.stunned == false)
 		player.velocity.y = -20
 
 	if (enemy.velocity.x > 0)
@@ -229,17 +255,13 @@ function update_keys() {
 		enemy.velocity.x = 0
 
 
-	if (keys.ArrowRight.pressed && enemy.lastKey === 'ArrowRight' && enemy.recentlyAttacked === 0)
+	if (keys.ArrowRight.pressed && enemy.lastKey === 'ArrowRight' && enemy.stunned == false)
 		enemy.velocity.x = 5
-	if (keys.ArrowLeft.pressed && enemy.lastKey === 'ArrowLeft' && enemy.recentlyAttacked === 0)
+	if (keys.ArrowLeft.pressed && enemy.lastKey === 'ArrowLeft' && enemy.stunned == false)
 		enemy.velocity.x = -5
-	if (keys.ArrowUp.pressed && enemy.position.y === canvas.height - enemy.height && enemy.recentlyAttacked === 0)
+	if (keys.ArrowUp.pressed && enemy.position.y === canvas.height - enemy.height && enemy.stunned == false)
 		enemy.velocity.y = -20
 
-	if (player.recentlyAttacked > 0)
-		player.recentlyAttacked -= 1;
-	if (enemy.recentlyAttacked > 0)
-		enemy.recentlyAttacked -= 1;
 }
 
 function detect_colision(Sprite1, Sprite2) {
@@ -259,11 +281,11 @@ function game_end() {
     clearInterval(timerInterval);
 
 	if (player.health > enemy.health)
-		alert('Player Wins!')
+		document.querySelector('#game2-end-text').innerHTML = 'Player Wins!'
 	else if (player.health < enemy.health)
-		alert('Enemy Wins!')
+		document.querySelector('#game2-end-text').innerHTML = 'Enemy Wins!'
 	else
-		alert('Draw!')
-// wait indefinitly
-	while (true) {}
+		document.querySelector('#game2-end-text').innerHTML = 'Player Wins!'
+
+	document.querySelector('#game2-end-text').style.display = 'flex'
 }
