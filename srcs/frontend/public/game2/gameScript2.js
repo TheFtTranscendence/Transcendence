@@ -288,4 +288,6 @@ function game_end() {
 		document.querySelector('#game2-end-text').innerHTML = 'Player Wins!'
 
 	document.querySelector('#game2-end-text').style.display = 'flex'
+
+	// Reset variables!
 }
