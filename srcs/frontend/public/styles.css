@@ -153,6 +153,44 @@ body {
 	vertical-align: middle;
 }
 
+#gameBracket {
+    display: flex; /* Use flexbox to center children */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+	flex-direction: column; 
+    height: 50vh; /* Set a specific height */
+}
+
+.bracket {
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+	flex-wrap: nowrap;
+	margin-top: 100px;
+	margin-bottom: 100px;
+  }
+  .round {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin: 0 10px;
+  }
+  .match {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	padding: 10px;
+	margin: 10px 0;
+	border: 1px solid #000;
+	border-radius: 5px;
+	width: 150px;
+	background-color: #f1f1f1;
+  }
+  .match span {
+	margin: 5px 0;
+  }
+
 
 @font-face {
     font-family: "ARCADECLASSIC";
@@ -453,3 +491,4 @@ body {
 	font-size: 40px;
 	/* transition: all 0.5s ease; */
 }
+

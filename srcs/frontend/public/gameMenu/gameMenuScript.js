@@ -1,56 +1,7 @@
 function init() {
-    nickList = [];
+    let nickList = [];    
 
-    // Create Game Page Background Div - This will be the div for the entire page. Always visible. All elements in the page will be inside it.
-    const gamePageBgDiv = document.createElement('div');
-    gamePageBgDiv.id = "gamePageBg";
-
-    // Append Game Page Backgroud to Body
-    document.body.appendChild(gamePageBgDiv);
-
-    // Create Div for Menu
-    const gameMenuDiv = document.createElement('div');
-    gameMenuDiv.id = 'gameMenu';
-    
-    // Create elements inside gameMenuDiv
-    gameMenuDiv.innerHTML = '<h1 id=selectText>Select Game Mode</h1>' +
-                            '<button id="normalGameBtn" class="button red-button">Normal Game</button>' +
-                            '<button id="tournamentGameBtn" class="button blue-button">Tournament Game</button>'
-
-    // Append Menu Div to Page Div
-    gamePageBgDiv.appendChild(gameMenuDiv);
-    
-    // // Create Select Game Text
-    // const selectTextHeader = document.createElement('h1');
-    // selectTextHeader.id = 'selectText';
-    // selectTextHeader.textContent = 'Select Game Mode';
-
-    // // Create Button for Normal Game
-    // const normalGameButton = document.createElement('button');
-    // normalGameButton.id = 'normalGameBtn';
-    // normalGameButton.textContent = 'Normal Game';
-    // normalGameButton.classList.add('button', 'red-button');
-    
-    // // Create Button for Tournament Game
-    // const tournamentGameButton = document.createElement('button');
-    // tournamentGameButton.id = 'tournamentGameBtn';
-    // tournamentGameButton.textContent = 'Tournament Game';
-    // tournamentGameButton.classList.add('button', 'blue-button');    
-    
-    // // Append Buttons and Text to Menu Div
-    // gameMenuDiv.appendChild(selectTextHeader);
-    // gameMenuDiv.appendChild(document.createElement('br'));
-    // gameMenuDiv.appendChild(normalGameButton);
-    // gameMenuDiv.appendChild(tournamentGameButton);
-
-    // Create Game Canvas
-    const gameAreaCanvas = document.createElement('canvas');
-    gameAreaCanvas.id = 'gameArea';
-    gameAreaCanvas.classList.add('hidden');
-
-    // Append Canvas to Game Page Background
-    gamePageBgDiv.appendChild(gameAreaCanvas);
-    
+    createPageElements();
 
     // Listen to Normal Game Button
     const gameButton = document.getElementById("normalGameBtn");
@@ -75,45 +26,82 @@ function init() {
         });
     });
 
-    // const tournamentButton = document.getElementById("tournament-button");
-    // tournamentButton.addEventListener('click', (event) => {
-    //     event.preventDefault();
-    //     // document.getElementById('Title').classList.add('hidden');
-    //     document.getElementById('game-menu').classList.add('hidden');
-    //     document.getElementById('tournament-menu').classList.remove('hidden');
+    // Listen to tournament button
+    const tournamentButton = document.getElementById("tournamentGameBtn");
+    tournamentButton.addEventListener('click', (event) => {
+        event.preventDefault();
 
-        // nickList = tournamentMenu(0);
-    // });
+        // Hide Game Menu Div
+        document.getElementById('gameMenu').classList.add('hidden');
+
+        document.getElementById('tournamentType').classList.remove('hidden');
+
+        // 4P Button
+        document.getElementById("4p").addEventListener('click', (event) => {
+            event.preventDefault();
+            document.getElementById('tournamentType').classList.add('hidden');
+            document.getElementById('gamePageBg').classList.add('hidden');
+            
+            nickList = getNicknames(4, function(updatedNickList) {
+                nickList = updatedNickList;
+                window.nickList = nickList;
+                loadScript("gameMenu/tournament/tournamentScript.js");
+                // console.log(nickList);
+            });
+        });
+    
+        // 8P Button
+        document.getElementById("8p").addEventListener('click', (event) => {
+            event.preventDefault();
+            document.getElementById('tournamentType').classList.add('hidden');
+            document.getElementById('gamePageBg').classList.add('hidden');
+    
+            nickList = getNicknames(8, function(updatedNickList) {
+                nickList = updatedNickList;
+                window.nickList = nickList;
+                loadScript("gameMenu/tournament/tournamentScript.js");
+                // console.log(nickList);
+            });
+        });
+    });
 }
 
+function createPageElements()
+{
+    // Create Game Page Background Div - This will be the div for the entire page. Always visible. All elements in the page will be inside it.
+    const gamePageBgDiv = document.createElement('div');
+    gamePageBgDiv.id = "gamePageBg";
 
-function tournamentMenu(size) {
-    nickList = [];
+    // Append Game Page Backgroud to Body
+    document.body.appendChild(gamePageBgDiv);
 
-    if (size === 2)
-    {
-        nickList = getTournamentNicknames(2);
-        return nickList;
-    }
+    // Create Div for Menu
+    const gameMenuDiv = document.createElement('div');
+    gameMenuDiv.id = 'gameMenu';
+    
+    // Create elements inside gameMenuDiv
+    gameMenuDiv.innerHTML = '<h1 id="gameMode" class="selectText">Select Game Mode</h1>' +
+                            '<button id="normalGameBtn" class="button red-button">Normal Game</button>' +
+                            '<button id="tournamentGameBtn" class="button blue-button">Tournament Game</button>'
 
-    document.getElementById("4p").addEventListener('click', (event) => {
-        event.preventDefault();
-        document.getElementById('tournament-menu').classList.add('hidden');
-        document.getElementById('4pform').classList.remove('hidden');
+    // Create Game Canvas
+    const gameAreaCanvas = document.createElement('canvas');
+    gameAreaCanvas.id = 'gameArea';
+    gameAreaCanvas.classList.add('hidden');
 
-        nickList = getTournamentNicknames(4);
-        console.log(nickList);
-    });
+    // Created Div for tournament Type
+    const tournamentTypeDiv = document.createElement("div");
+    tournamentTypeDiv.id = "tournamentType";
+    tournamentTypeDiv.classList.add('hidden');
+    tournamentTypeDiv.innerHTML = '<h1 id="tModeText" class="SelectText">Select Tournament Mode</h1>' +
+                        '<button id="4p" class="button red-button">4 Players</button>' +
+                        '<button id="8p" class="button blue-button">8 Players</button>'
 
-    document.getElementById("8p").addEventListener('click', (event) => {
-        event.preventDefault();
-        document.getElementById('tournament-menu').classList.add('hidden');
-        document.getElementById('8pform').classList.remove('hidden');
-
-        nickList = getTournamentNicknames(8);
-        console.log(nickList);
-    });
-
+    // Append Elements to Main Page Div
+    gamePageBgDiv.appendChild(gameMenuDiv);
+    gamePageBgDiv.appendChild(gameAreaCanvas);
+    gamePageBgDiv.appendChild(tournamentTypeDiv);
+    
 }
 
 function getNicknames(size, callback)

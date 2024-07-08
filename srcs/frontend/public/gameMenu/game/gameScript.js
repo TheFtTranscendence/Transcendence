@@ -56,6 +56,7 @@ function initVars()
 
     const gameVars = {
         gameStart: false,
+        gameFinish: false,
         gameOver: false,
         gameReset: false,
         pointScored: false,
@@ -148,6 +149,12 @@ function handleCanvasClick(event, vars)
 
     if (x >= vars.buttonVars.buttonX && x <= vars.buttonVars.buttonX + vars.buttonVars.buttonWidth && y >= vars.buttonVars.buttonY && y <= vars.buttonVars.buttonY + vars.buttonVars.buttonHeight && !vars.gameVars.gameStart)
     {
+        if (vars.gameVars.gameFinish)
+        {
+            const canvas = document.getElementById('gameArea');
+            canvas.classList.add('hidden');
+            loadScript("gameMenu/gameMenuScript.js");
+        }
         vars.gameVars.gameStart = true;
         vars.gameVars.p1Score = 0;
         vars.gameVars.p2Score = 0;
@@ -370,8 +377,8 @@ function endGame(vars)
         drawText("red", "50px ARCADECLASSIC", window.nickList[0] + " WINS !", (vars.canvasVars.canvasWidth / 2) - 160, (vars.canvasVars.canvasHeight / 2) - 130, vars)
     else if (vars.gameVars.p2Score === 5)
         drawText("blue", "50px ARCADECLASSIC", window.nickList[1] + " WINS !", (vars.canvasVars.canvasWidth / 2) - 160, (vars.canvasVars.canvasHeight / 2) - 130, vars)
-
-    drawButton("RESTART", (vars.canvasVars.canvasWidth / 2) - 80, (vars.canvasVars.canvasHeight / 2) - 35, 160, 70, 30, "ARCADECLASSIC", vars);
+    vars.gameVars.gameFinish = true;
+    drawButton("FINISH", (vars.canvasVars.canvasWidth / 2) - 80, (vars.canvasVars.canvasHeight / 2) - 35, 160, 70, 30, "ARCADECLASSIC", vars);
 }
 
 function gameLoop(vars)
@@ -405,5 +412,22 @@ function gameLoop(vars)
         ballMovement(vars);
         drawGame(vars);
     }
+}
+
+function loadScript(filePath)
+{
+    const script = document.createElement('script');
+    script.src = filePath;
+    script.type = 'text/javascript';
+
+    script.onload = function() {
+        if (typeof init === 'function') {
+            init();
+        } else {
+            console.error("init function not found" + filePath);
+        }
+    };
+
+    document.body.appendChild(script);
 }
 
