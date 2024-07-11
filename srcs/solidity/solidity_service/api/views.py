@@ -13,6 +13,8 @@ private_key = settings.PRIVATE_KEY
 
 # Initialize Web3
 web3 = Web3(HTTPProvider(ethereum_node_url))
+account = web3.eth.account.from_key(private_key)  # Correct method
+web3.eth.default_account = account.address  # Set the default account
 
 # Load the contract ABI
 with open('/usr/src/app/Score.json') as f:
@@ -56,18 +58,19 @@ contract = web3.eth.contract(address=contract_address, abi=contract_abi)
 def add_instance(request):
     def add_instance_func():
         tx = contract.functions.addInstance().build_transaction({
-            # 'from': web3.eth.default_account,
             'chainId': 11155111,
             'gas': 2000000,
             'gasPrice': web3.to_wei('50', 'gwei'),
             'nonce': web3.eth.get_transaction_count(web3.eth.default_account),
         })
         signed_tx = web3.eth.account.sign_transaction(tx, private_key)
-        tx_hash = web3.eth.sendRawTransaction(signed_tx.rawTransaction)
+        tx_hash = web3.eth.send_raw_transaction(signed_tx.raw_transaction)
         return tx_hash
     
+    # Still need to get and return the instance index
+
     tx_hash = add_instance_func()
-    return JsonResponse({'message': 'Instance added with tx hash: ' + tx_hash.hex()}, status=200)
+    return JsonResponse({'message': 'Instance added, instance number is: '}, status=200)
 
 # Add a game
 @api_view(['POST'])
