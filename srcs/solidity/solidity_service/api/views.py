@@ -89,12 +89,6 @@ def add_new_game(request, instanceIndex):
 
 ### GETTER FUNCTIONS ###
 
-# Get the value of the uint256 public variable instanceIndex
-@api_view(['GET'])
-def get_instance_index(request):
-    instance_index = contract.functions.instanceIndex().call()
-    return JsonResponse({'instance_index': instance_index}, status=200)
-
 # Get the number of games
 @api_view(['GET'])
 def get_number_of_games(request, instanceIndex):
