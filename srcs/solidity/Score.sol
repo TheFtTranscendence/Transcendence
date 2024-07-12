@@ -77,7 +77,6 @@ contract Score is Ownable {
     function addInstance() public onlyOwner returns (uint256){
         emit InstanceAdded(instanceIndex);
         instanceIndex++;
-        return instanceIndex - 1;
     }
 
     /**

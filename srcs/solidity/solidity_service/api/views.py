@@ -67,10 +67,15 @@ def add_instance(request):
         tx_hash = web3.eth.send_raw_transaction(signed_tx.raw_transaction)
         return tx_hash
     
-    # Still need to get and return the instance index
-
     tx_hash = add_instance_func()
-    return JsonResponse({'message': 'Instance added, instance number is: '}, status=200)
+
+    # Wait for the transaction to be mined
+    tx_receipt = web3.eth.wait_for_transaction_receipt(tx_hash)
+
+    logs = contract.events.InstanceAdded().process_receipt(tx_receipt)
+    instance_index = logs[0]['args']['instanceIndex']  # Adjust based on your event arguments
+
+    return JsonResponse({'message': f'Instance added, instance number is: {instance_index}'}, status=200)
 
 # Add a game
 @api_view(['POST'])
@@ -108,8 +113,8 @@ def get_instance_index(request):
 
 # Get the number of games
 @api_view(['GET'])
-def get_number_of_games(request, instance_index):
-    number_of_games = contract.functions.getNumberOfGames(instance_index).call()
+def get_number_of_games(request, instanceIndex):
+    number_of_games = contract.functions.getNumberOfGames(instanceIndex).call()
     return JsonResponse({'number_of_games': number_of_games}, status=200)
 
 # Get all the games (for the history)
