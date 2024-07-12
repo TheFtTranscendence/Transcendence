@@ -11,7 +11,7 @@ const routes = {
 								<div id="game2-bar1"></div>
 							</div>
 							<!-- timer -->
-							<div id="game2-timer"> 100 </div>
+							<div id="game2-timer"> 50 </div>
 							<!-- Enemy health -->
 							<div id="game2-bar2-parent">
 								<div id="game2-bar2-background"></div>
@@ -40,24 +40,44 @@ function navigate() {
 		loadGameScript2();
 }
 
-// Starts game script
-function loadGameScript2()
-{
-	const script = document.createElement('script');
-	script.src = 'game2/gameScript2.js';
-	script.type = 'text/javascript';
+// Function to load a script and return a Promise
+function loadScript(src) {
+    return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = src;
+        script.type = 'text/javascript';
+        
+        script.onload = () => {
+            resolve();
+        };
+        
+        script.onerror = () => {
+            reject(new Error(`Failed to load script: ${src}`));
+        };
 
-	script.onload = function() {
-		if (typeof startGame2 === 'function') {
-			startGame2();
-		} else {
-			console.error("startGame2 function not found");
-		}
-	};
+        document.body.appendChild(script);
+    });
+}
 
-	// if (typeof startGame === 'function')
-	//	 startGame();
-	document.body.appendChild(script);
+// Function to load all scripts
+function loadGameScript2() {
+    const scripts = [
+		'game2/config.js',
+		'game2/classes.js',
+		'game2/init.js',
+        'game2/gameScript2.js'
+    ];
+    scripts.reduce((promise, src) => {
+        return promise.then(() => loadScript(src));
+    }, Promise.resolve()).then(() => {
+        if (typeof startGame2 === 'function') {
+            startGame2();
+        } else {
+            console.error("startGame2 function not found");
+        }
+    }).catch(error => {
+        console.error(error);
+    });
 }
 
 // Starts game script
