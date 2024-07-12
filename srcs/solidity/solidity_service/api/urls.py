@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import add_instance, get_instance_index, get_number_of_games, add_new_game
+from .views import add_instance, get_instance_index, get_number_of_games, add_new_game, get_games
 
 urlpatterns = [
     # Setter functions
@@ -9,4 +9,5 @@ urlpatterns = [
     # Getter functions
     path('getinstance/', get_instance_index),
     path('getnumberofgames/<int:instanceIndex>', get_number_of_games),
+    path('getgames/<int:instanceIndex>', get_games),
 ]

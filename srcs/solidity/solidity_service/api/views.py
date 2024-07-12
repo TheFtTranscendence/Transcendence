@@ -101,7 +101,11 @@ def get_number_of_games(request, instanceIndex):
     number_of_games = contract.functions.getNumberOfGames(instanceIndex).call()
     return JsonResponse({'number_of_games': number_of_games}, status=200)
 
-# Get all the games (for the history)
+# Get all the games from an instance (for the history)
+@api_view(['GET'])
+def get_games(request, instanceIndex):
+    games = contract.functions.getGames(instanceIndex).call()
+    return JsonResponse({'games': games}, status=200)
 
 # Get the next tournament game to play (returns 2 players)
 
