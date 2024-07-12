@@ -141,7 +141,6 @@ function game_end(v) {
 	document.querySelector('#game2-end-text').style.display = 'flex'
 
 	// Reset variables!
+	// Do we really?
 	console.log('Game Ended!')
-	v = init_vars()
-
 }

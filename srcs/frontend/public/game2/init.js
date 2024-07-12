@@ -22,7 +22,11 @@ function init_vars() {
             velocity: { x: 0, y: 0},
             color: 'lightblue',
             offset: { x: 0, y: 0},
-            bar: 1
+            bar: 1,
+            imageSrc: path_player_idle,
+            framesMax: 6,
+            scale: 2.5,
+            
         }),
         
         enemy: new Fighter({
@@ -31,7 +35,11 @@ function init_vars() {
             velocity: { x: 0, y: 0},
             color: 'white',
             offset: { x: -50, y: 0},
-            bar: 2
+            bar: 2,
+            imageSrc: path_enemy_idle,
+            framesMax: 6,
+            scale: 2.5,
+            img_offset: {x: 215, y: 180}
         }),
         
 
