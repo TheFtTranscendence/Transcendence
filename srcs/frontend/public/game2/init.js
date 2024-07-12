@@ -18,28 +18,28 @@ function init_vars() {
         
         player: new Fighter({
             name: 'player',
-            position: { x: canvas.width / 4, y: canvas.height - 150},
+            position: { x: canvas.width / 4, y: canvas.height - ground_height + 250},
             velocity: { x: 0, y: 0},
             color: 'lightblue',
             offset: { x: 0, y: 0},
             bar: 1,
             imageSrc: path_player_idle,
-            framesMax: 6,
+            framesMax: 4,
             scale: 2.5,
-            
+            img_offset: {x: 215, y: 180}
         }),
         
         enemy: new Fighter({
             name: 'enemy',
-            position : { x: canvas.width * 3 / 4, y: canvas.height - 150},
+            position : { x: canvas.width * 3 / 4, y: canvas.height - ground_height + 250},
             velocity: { x: 0, y: 0},
             color: 'white',
             offset: { x: -50, y: 0},
             bar: 2,
             imageSrc: path_enemy_idle,
-            framesMax: 6,
+            framesMax: 8,
             scale: 2.5,
-            img_offset: {x: 215, y: 180}
+            img_offset: {x: 215, y: 165}
         }),
         
 

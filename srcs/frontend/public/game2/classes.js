@@ -9,6 +9,7 @@ class Sprite {
 		this.framesMax = framesMax
 		this.framesCurrent = 0
 		this.framesElapsed = 0
+		this.img_offset = img_offset
 	}
 	draw() {
 		c.drawImage(
@@ -18,17 +19,16 @@ class Sprite {
 			this.image.width / this.framesMax,
 			this.image.height,
 
-			this.position.x,
-			this.position.y,
+			this.position.x - this.img_offset.x,
+			this.position.y - this.img_offset.y,
 			(this.image.width / this.framesMax) * this.scale,
 			this.image.height * this.scale
 		)
 	}
 	
-	update() {
-		this.draw()
+	animateFrames() {
 		this.framesElapsed++
-		if (this.framesElapsed == fps / 10)
+		if (this.framesElapsed > fps / this.framesMax)
 		{
 			if (this.framesCurrent < this.framesMax - 1)
 				this.framesCurrent++
@@ -37,12 +37,17 @@ class Sprite {
 			this.framesElapsed = 0
 		}
 	}
+
+	update() {
+		this.draw()
+		this.animateFrames()
+	}
 }
 
 class Fighter extends Sprite {
 	constructor({ name, position, velocity, color, offset, bar , scale = 1, imageSrc, framesMax = 1, img_offset = {x: 0, y: 0}}) {
 		{
-			super({ position, imageSrc, scale, framesMax, img_offset: {x: 0, y: 0}})
+			super({ position, imageSrc, scale, framesMax, img_offset})
 		}
 		this.name = name
 		this.velocity = velocity
@@ -62,6 +67,7 @@ class Fighter extends Sprite {
 		}
 		this.isAttacking
 		this.stunned = false
+		
 		
 		this.bar = document.querySelector('#game2-bar' + bar)
 
@@ -100,18 +106,20 @@ class Fighter extends Sprite {
 			setTimeout(() => {this.isAttacking = false}, 10)
 			setTimeout(() => {this.attackCD = false}, 250)
 		}
-		
 	}
 	
 	update()	{
 		this.draw()
 		
+		this.framesElapsed++
+		this.animateFrames()
+
 		this.attackbox.position.x = this.position.x + this.attackbox.offset.x;
 		this.attackbox.position.y = this.position.y;
 
 		this.velocity.y += gravity
-		if (this.position.y + this.velocity.y + this.height >= canvas.height)
-			this.position.y = canvas.height - this.height
+		if (this.position.y + this.velocity.y + this.height >= canvas.height - ground_height)
+			this.position.y = canvas.height - this.height - ground_height
 		else if (this.position.y + this.velocity.y <= 0) {
 			this.position.y = 0; this.velocity.y = 0
 		}
@@ -125,5 +133,10 @@ class Fighter extends Sprite {
 		else		
 			this.position.x += this.velocity.x
 		
+		if (this.velocity.x > 0)
+			this.imageSrc = path_player_run
+		else if (this.velocity.x < 0)
+			this.imageSrc = path_player_fall
+
 	}
 }
