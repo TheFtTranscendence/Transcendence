@@ -26,7 +26,17 @@ function init_vars() {
             imageSrc: path_player_idle,
             framesMax: 4,
             scale: 2.5,
-            img_offset: {x: 215, y: 180}
+            img_offset: {x: 215, y: 180},
+            sprites: {
+                attack1: {imageSrc: path_player_attack1, framesMax: 4},
+                attack2: {imageSrc: path_player_attack2, framesMax: 4},
+                death: {imageSrc: path_player_death, framesMax: 7},
+                fall: {imageSrc: path_player_fall, framesMax: 2},
+                idle: {imageSrc: path_player_idle, framesMax: 4},
+                jump: {imageSrc: path_player_jump, framesMax: 2},
+                run: {imageSrc: path_player_run, framesMax: 8},
+                hit: {imageSrc: path_player_hit, framesMax: 3}
+            }
         }),
         
         enemy: new Fighter({
@@ -39,7 +49,17 @@ function init_vars() {
             imageSrc: path_enemy_idle,
             framesMax: 8,
             scale: 2.5,
-            img_offset: {x: 215, y: 165}
+            img_offset: {x: 215, y: 165},
+            sprites: {
+                attack1: {imageSrc: path_enemy_attack1, framesMax: 6},
+                attack2: {imageSrc: path_enemy_attack2, framesMax: 6},
+                death: {imageSrc: path_enemy_death, framesMax: 6},
+                fall: {imageSrc: path_enemy_fall, framesMax: 2},
+                idle: {imageSrc: path_enemy_idle, framesMax: 8},
+                jump: {imageSrc: path_enemy_jump, framesMax: 2},
+                run: {imageSrc: path_enemy_run, framesMax: 8},
+                hit: {imageSrc: path_enemy_hit, framesMax: 4}
+            }
         }),
         
 

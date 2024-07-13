@@ -91,15 +91,24 @@ function update_keys(v) {
 	else if (v.player.velocity.x < 0)
 		v.player.velocity.x += drag
 	else if (v.player.velocity.x <= 2 && v.player.velocity.x >= -2)
+	{
 		v.player.velocity.x = 0
+		v.player.change_sprites(v.player.sprites.idle)
+	}
 
 
-	if (v.keys.d.pressed && v.player.lastKey === 'd' && v.player.stunned == false)
+	if (v.keys.d.pressed && v.player.lastKey === 'd' && v.player.stunned == false) {
 		v.player.velocity.x = 5
-	if (v.keys.a.pressed && v.player.lastKey === 'a' && v.player.stunned == false)
+		v.player.change_sprites(v.player.sprites.run)
+	}
+	if (v.keys.a.pressed && v.player.lastKey === 'a' && v.player.stunned == false) {
 		v.player.velocity.x = -5
-	if (v.keys.w.pressed && v.player.position.y === canvas.height - v.player.height - ground_height && v.player.stunned == false)
+		v.player.change_sprites(v.player.sprites.run)
+	}
+	if (v.keys.w.pressed && v.player.position.y === canvas.height - v.player.height - ground_height && v.player.stunned == false) {
 		v.player.velocity.y = -20
+		v.player.change_sprites(v.player.sprites.jump)
+	}
 
 	if (v.enemy.velocity.x > 0)
 		v.enemy.velocity.x -= drag
@@ -109,13 +118,15 @@ function update_keys(v) {
 		v.enemy.velocity.x = 0
 
 
-	if (v.keys.ArrowRight.pressed && v.enemy.lastKey === 'ArrowRight' && v.enemy.stunned == false)
+	if (v.keys.ArrowRight.pressed && v.enemy.lastKey === 'ArrowRight' && v.enemy.stunned == false) {
 		v.enemy.velocity.x = 5
-	if (v.keys.ArrowLeft.pressed && v.enemy.lastKey === 'ArrowLeft' && v.enemy.stunned == false)
+	}
+	if (v.keys.ArrowLeft.pressed && v.enemy.lastKey === 'ArrowLeft' && v.enemy.stunned == false) {
 		v.enemy.velocity.x = -5
-	if (v.keys.ArrowUp.pressed && v.enemy.position.y === canvas.height - v.enemy.height - ground_height  && v.enemy.stunned == false)
+	}
+	if (v.keys.ArrowUp.pressed && v.enemy.position.y === canvas.height - v.enemy.height - ground_height  && v.enemy.stunned == false) {
 		v.enemy.velocity.y = -20
-
+	}
 }
 
 function detect_colision(Sprite1, Sprite2) {

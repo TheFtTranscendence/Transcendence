@@ -45,7 +45,7 @@ class Sprite {
 }
 
 class Fighter extends Sprite {
-	constructor({ name, position, velocity, color, offset, bar , scale = 1, imageSrc, framesMax = 1, img_offset = {x: 0, y: 0}}) {
+	constructor({ name, position, velocity, color, offset, bar , scale = 1, imageSrc, framesMax = 1, img_offset = {x: 0, y: 0}, sprites}) {
 		{
 			super({ position, imageSrc, scale, framesMax, img_offset})
 		}
@@ -58,6 +58,7 @@ class Fighter extends Sprite {
 
 		this.health = 100
 		this.lastKey = ''
+		this.lastImage = this.image
 		
 		this.attackbox = {
 			position: { x: this.position.x, y: this.position.y },
@@ -70,9 +71,16 @@ class Fighter extends Sprite {
 		
 		
 		this.bar = document.querySelector('#game2-bar' + bar)
-
+		
 		this.framesCurrent = 0
 		this.framesElapsed = 0
+		
+		this.sprites = sprites
+		
+		for (const sprite in this.sprites) {
+			sprites[sprite].image = new Image()
+			sprites[sprite].image.src = sprites[sprite].imageSrc
+		}
 	}
 	
 	get_hit(other) {
@@ -107,11 +115,8 @@ class Fighter extends Sprite {
 			setTimeout(() => {this.attackCD = false}, 250)
 		}
 	}
-	
-	update()	{
+	update() {
 		this.draw()
-		
-		this.framesElapsed++
 		this.animateFrames()
 
 		this.attackbox.position.x = this.position.x + this.attackbox.offset.x;
@@ -132,11 +137,15 @@ class Fighter extends Sprite {
 			this.position.x = 0
 		else		
 			this.position.x += this.velocity.x
-		
-		if (this.velocity.x > 0)
-			this.imageSrc = path_player_run
-		else if (this.velocity.x < 0)
-			this.imageSrc = path_player_fall
 
 	}
+
+	change_sprites(sprite) {
+		this.image = sprite.image
+		this.framesMax = sprite.framesMax
+		if (this.image != this.lastImage)
+			this.framesCurrent = 0
+		this.lastImage = this.image
+	}
+
 }
