@@ -28,7 +28,7 @@ class Sprite {
 	
 	animateFrames() {
 		this.framesElapsed++
-		if (this.framesElapsed >= fps / this.framesMax)
+		if (this.framesElapsed >= fps / this.time)
 		{
 			if (this.framesCurrent < this.framesMax - 1)
 				this.framesCurrent++
@@ -55,7 +55,6 @@ class Fighter extends Sprite {
 		this.width = 50
 		this.color = color
 		this.attackCD = false
-
 		this.health = 100
 		this.lastKey = ''
 		
@@ -75,11 +74,13 @@ class Fighter extends Sprite {
 		this.framesElapsed = 0
 		
 		this.sprites = sprites
-		
+
 		for (const sprite in this.sprites) {
 			sprites[sprite].image = new Image()
 			sprites[sprite].image.src = sprites[sprite].imageSrc
 		}
+		
+		this.time = 10
 	}
 	
 	get_hit(other) {
@@ -107,6 +108,11 @@ class Fighter extends Sprite {
 	}
 
 	attack() {
+		if (Math.random() < 0.5)
+			this.change_sprites(this.sprites.attack1)
+		else 
+			this.change_sprites(this.sprites.attack2)
+
 		if (this.stunned == false && this.attackCD == false) {
 			this.isAttacking = true
 			this.attackCD = true
@@ -147,9 +153,13 @@ class Fighter extends Sprite {
 	}
 
 	change_sprites(sprite) {
+		if ((this.image == this.sprites.attack1.image || this.image == this.sprites.attack2.image)
+			&& (this.framesCurrent < this.sprites.attack1.framesMax - 1 || this.framesCurrent < this.sprites.attack2.framesMax - 1))
+			return 
 		if (this.image != sprite.image) {
 			this.image = sprite.image
 			this.framesMax = sprite.framesMax
+			this.time = sprite.time
 			this.framesCurrent = 0
 		}
 	}
