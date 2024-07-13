@@ -93,7 +93,7 @@ function update_keys(v) {
 	else if (v.player.velocity.x <= 2 && v.player.velocity.x >= -2)
 	{
 		v.player.velocity.x = 0
-		v.player.change_sprites(v.player.sprites.idle)
+		// v.player.change_sprites(v.player.sprites.idle)
 	}
 
 
@@ -107,9 +107,14 @@ function update_keys(v) {
 	}
 	if (v.keys.w.pressed && v.player.position.y === canvas.height - v.player.height - ground_height && v.player.stunned == false) {
 		v.player.velocity.y = -20
-		v.player.change_sprites(v.player.sprites.jump)
 	}
+	
+	if (v.player.velocity.y < 0)
+		v.player.change_sprites(v.player.sprites.jump)
+	else if (v.player.velocity.y > 0)
+		v.player.change_sprites(v.player.sprites.fall)
 
+	console.log(v.player.velocity.y)
 	if (v.enemy.velocity.x > 0)
 		v.enemy.velocity.x -= drag
 	else if (v.enemy.velocity.x < 0)

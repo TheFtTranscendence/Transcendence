@@ -28,7 +28,7 @@ class Sprite {
 	
 	animateFrames() {
 		this.framesElapsed++
-		if (this.framesElapsed > fps / this.framesMax)
+		if (this.framesElapsed >= fps / this.framesMax)
 		{
 			if (this.framesCurrent < this.framesMax - 1)
 				this.framesCurrent++
@@ -58,7 +58,6 @@ class Fighter extends Sprite {
 
 		this.health = 100
 		this.lastKey = ''
-		this.lastImage = this.image
 		
 		this.attackbox = {
 			position: { x: this.position.x, y: this.position.y },
@@ -123,6 +122,16 @@ class Fighter extends Sprite {
 		this.attackbox.position.y = this.position.y;
 
 		this.velocity.y += gravity
+
+		if (this.position.y + this.velocity.y + this.height >= canvas.height - ground_height) {
+			this.position.y = canvas.height - this.height - ground_height
+
+			this.velocity.y = 0
+			if (this.velocity.x == 0)
+				this.change_sprites(this.sprites.idle)
+		}
+		
+
 		if (this.position.y + this.velocity.y + this.height >= canvas.height - ground_height)
 			this.position.y = canvas.height - this.height - ground_height
 		else if (this.position.y + this.velocity.y <= 0) {
@@ -141,11 +150,11 @@ class Fighter extends Sprite {
 	}
 
 	change_sprites(sprite) {
-		this.image = sprite.image
-		this.framesMax = sprite.framesMax
-		if (this.image != this.lastImage)
+		if (this.image != sprite.image) {
+			this.image = sprite.image
+			this.framesMax = sprite.framesMax
 			this.framesCurrent = 0
-		this.lastImage = this.image
+		}
 	}
 
 }
