@@ -125,10 +125,7 @@ class Fighter extends Sprite {
 
 		if (this.position.y + this.velocity.y + this.height >= canvas.height - ground_height) {
 			this.position.y = canvas.height - this.height - ground_height
-
 			this.velocity.y = 0
-			if (this.velocity.x == 0)
-				this.change_sprites(this.sprites.idle)
 		}
 		
 
