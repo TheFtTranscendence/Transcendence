@@ -62,7 +62,7 @@ class Fighter extends Sprite {
 			position: { x: this.position.x, y: this.position.y },
 			offset, // same as offset: offset
 			width: 250,
-			height: 50
+			height: 150
 		}
 		this.isAttacking
 		this.stunned = false
@@ -121,19 +121,20 @@ class Fighter extends Sprite {
 		}
 	}
 	update() {
-		
+				
 		this.draw()
 		this.animateFrames()
 
-
+			
 		this.attackbox.position.x = this.position.x + this.attackbox.offset.x;
 		this.attackbox.position.y = this.position.y;
 
-		c.fillStyle = 'red'
-		c.fillRect(this.attackbox.position.x, this.attackbox.position.y, this.attackbox.width, this.attackbox.height, 'red')
+		// c.fillStyle = 'red'
+		// c.fillRect(this.attackbox.position.x, this.attackbox.position.y, this.attackbox.width, this.attackbox.height, 'red')
 
-		c.fillStyle = 'green'
-		c.fillRect(this.position.x, this.position.y, this.width, this.height)
+		// c.fillStyle = 'green'
+		// c.fillRect(this.position.x, this.position.y, this.width, this.height)
+
 		this.velocity.y += gravity
 
 		if (this.position.y + this.velocity.y + this.height >= canvas.height - ground_height) {
