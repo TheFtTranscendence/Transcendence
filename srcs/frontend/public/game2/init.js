@@ -23,19 +23,19 @@ function init_vars() {
             color: 'lightblue',
             offset: { x: 0, y: 0},
             bar: 1,
-            imageSrc: path_player_idle,
+            imageSrc: Mask.idle.imageSrc,
             framesMax: 4,
             scale: 2.5,
             img_offset: {x: 215, y: 180},
             sprites: {
-                attack1: {imageSrc: path_player_attack1, framesMax: 4, time: 15},
-                attack2: {imageSrc: path_player_attack2, framesMax: 4, time: 15},
-                death: {imageSrc: path_player_death, framesMax: 7, time: 10},
-                fall: {imageSrc: path_player_fall, framesMax: 2, time: 10},
-                idle: {imageSrc: path_player_idle, framesMax: 4, time: 10},
-                jump: {imageSrc: path_player_jump, framesMax: 2, time: 10},
-                run: {imageSrc: path_player_run, framesMax: 8, time: 10},
-                hit: {imageSrc: path_player_hit, framesMax: 3, time: 10}
+                attack1: {imageSrc: Mask.attack1.imageSrc, framesMax: Mask.attack1.framesMax, time: Mask.attack1.time},
+                attack2: {imageSrc: Mask.attack2.imageSrc, framesMax: Mask.attack2.framesMax, time: Mask.attack2.time},
+                death: {imageSrc: Mask.death.imageSrc, framesMax: Mask.death.framesMax, time: Mask.death.time},
+                fall: {imageSrc: Mask.fall.imageSrc, framesMax: Mask.fall.framesMax, time: Mask.fall.time},
+                idle: {imageSrc: Mask.idle.imageSrc, framesMax: Mask.idle.framesMax, time: Mask.idle.time},
+                jump: {imageSrc: Mask.jump.imageSrc, framesMax: Mask.jump.framesMax, time: Mask.jump.time},
+                run: {imageSrc: Mask.run.imageSrc, framesMax: Mask.run.framesMax, time: Mask.run.time},
+                hit: {imageSrc: Mask.hit.imageSrc, framesMax: Mask.hit.framesMax, time: Mask.hit.time}
             }
         }),
         
@@ -46,19 +46,19 @@ function init_vars() {
             color: 'white',
             offset: { x: -50, y: 0},
             bar: 2,
-            imageSrc: path_enemy_idle,
+            imageSrc: Samu.idle.imageSrc,
             framesMax: 8,
             scale: 2.5,
             img_offset: {x: 215, y: 165},
             sprites: {
-                attack1: {imageSrc: path_enemy_attack1, framesMax: 4, time: 20},
-                attack2: {imageSrc: path_enemy_attack2, framesMax: 4, time: 20},
-                death: {imageSrc: path_enemy_death, framesMax: 6, time: 10},
-                fall: {imageSrc: path_enemy_fall, framesMax: 2, time: 10},
-                idle: {imageSrc: path_enemy_idle, framesMax: 8, time: 10},
-                jump: {imageSrc: path_enemy_jump, framesMax: 2, time: 10},
-                run: {imageSrc: path_enemy_run, framesMax: 8, time: 10},
-                hit: {imageSrc: path_enemy_hit, framesMax: 4, time: 10}
+                attack1: {imageSrc: Samu.attack1.imageSrc, framesMax: Samu.attack1.framesMax, time: Samu.attack1.time},
+                attack2: {imageSrc: Samu.attack2.imageSrc, framesMax: Samu.attack2.framesMax, time: Samu.attack2.time},
+                death: {imageSrc: Samu.death.imageSrc, framesMax: Samu.death.framesMax, time: Samu.death.time},
+                fall: {imageSrc: Samu.fall.imageSrc, framesMax: Samu.fall.framesMax, time: Samu.fall.time},
+                idle: {imageSrc: Samu.idle.imageSrc, framesMax: Samu.idle.framesMax, time: Samu.idle.time},
+                jump: {imageSrc: Samu.jump.imageSrc, framesMax: Samu.jump.framesMax, time: Samu.jump.time},
+                run: {imageSrc: Samu.run.imageSrc, framesMax: Samu.run.framesMax, time: Samu.run.time},
+                hit: {imageSrc: Samu.hit.imageSrc, framesMax: Samu.hit.framesMax, time: Samu.hit.time}
             }
         }),
         

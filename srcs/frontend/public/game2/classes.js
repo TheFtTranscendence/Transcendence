@@ -74,13 +74,13 @@ class Fighter extends Sprite {
 		this.framesElapsed = 0
 		
 		this.sprites = sprites
+		this.time = 10
 
 		for (const sprite in this.sprites) {
 			sprites[sprite].image = new Image()
 			sprites[sprite].image.src = sprites[sprite].imageSrc
 		}
 		
-		this.time = 10
 	}
 	
 	get_hit(other) {
@@ -93,7 +93,8 @@ class Fighter extends Sprite {
 			this.velocity.x = -1 * knockback
 		
 		this.stunned = true
-		setTimeout(() => {this.stunned = false}, 150)
+		this.change_sprites(this.sprites.hit)
+		setTimeout(() => {this.stunned = false}, stun_time)
 		this.health -= 10
 		this.bar.style.width = this.health + '%'
 
@@ -160,10 +161,24 @@ class Fighter extends Sprite {
 
 	}
 
-	change_sprites(sprite) {
-		if ((this.image == this.sprites.attack1.image || this.image == this.sprites.attack2.image)
+	check_sprites_middle_animation() {
+		
+		// Attack
+		if ((this.image == this.sprites.attack1.image || this.image == this.sprites.attack2.image || this.image == this.sprites.hit.image)
 			&& (this.framesCurrent < this.sprites.attack1.framesMax - 1 || this.framesCurrent < this.sprites.attack2.framesMax - 1))
-			return 
+			return true
+		
+		// Take Hit
+		if (this.image == this.sprites.hit.image && this.framesCurrent < this.sprites.hit.framesMax - 1)
+			return true
+
+		return false
+	}
+	
+	change_sprites(sprite) {
+		
+		if (this.check_sprites_middle_animation())
+			return
 		if (this.image != sprite.image) {
 			this.image = sprite.image
 			this.framesMax = sprite.framesMax
