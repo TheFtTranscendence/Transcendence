@@ -129,14 +129,19 @@ function update_keys(v) {
 	}
 	else if (v.keys.ArrowLeft.pressed && v.enemy.lastKey === 'ArrowLeft' && v.enemy.stunned == false) {
 		v.enemy.velocity.x = -5
-		v.enemy.change_sprites(v.player.enemy.run)
+		v.enemy.change_sprites(v.enemy.sprites.run)
 	}
 	else
 		v.enemy.change_sprites(v.enemy.sprites.idle)
-	
+
 	if (v.keys.ArrowUp.pressed && v.enemy.position.y === canvas.height - v.enemy.height - ground_height  && v.enemy.stunned == false) {
 		v.enemy.velocity.y = -20
 	}
+
+	if (v.enemy.velocity.y < 0)
+		v.enemy.change_sprites(v.enemy.sprites.jump)
+	else if (v.enemy.velocity.y > 0)
+		v.enemy.change_sprites(v.enemy.sprites.fall)
 }
 
 function detect_colision(Sprite1, Sprite2) {
