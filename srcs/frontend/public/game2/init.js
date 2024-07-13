@@ -24,7 +24,7 @@ function init_vars() {
             offset: { x: 0, y: 0},
             bar: 1,
             imageSrc: Mask.idle.imageSrc,
-            framesMax: 4,
+            framesMax: Mask.idle.framesMax,
             scale: 2.5,
             img_offset: {x: 215, y: 180},
             sprites: {
@@ -47,7 +47,7 @@ function init_vars() {
             offset: { x: -50, y: 0},
             bar: 2,
             imageSrc: Samu.idle.imageSrc,
-            framesMax: 8,
+            framesMax: Samu.idle.framesMax,
             scale: 2.5,
             img_offset: {x: 215, y: 165},
             sprites: {

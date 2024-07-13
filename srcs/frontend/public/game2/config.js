@@ -1,3 +1,6 @@
+const canvas_width = 1366
+const canvas_height = 768
+
 const gravity = 0.5
 const drag = .50
 const knockback = 25
@@ -30,8 +33,3 @@ const Samu = {
     run: { imageSrc: './game2/assets/Samu/Sprites/Run.png', framesMax: 8, time: 10},
     hit: { imageSrc: './game2/assets/Samu/Sprites/Take-Hit.png', framesMax: 4, time: stun_time / 4},
 }
-
-
-
-const canvas_width = 1366
-const canvas_height = 768
