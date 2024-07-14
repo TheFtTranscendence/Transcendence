@@ -19,7 +19,7 @@ const Mask = {
     idle: { imageSrc: './game2/assets/Mask/Sprites/Idle.png', framesMax: 4, time: 10},
     jump: { imageSrc: './game2/assets/Mask/Sprites/Jump.png', framesMax: 2, time: 10},
     run: { imageSrc: './game2/assets/Mask/Sprites/Run.png', framesMax: 8, time: 10},
-    hit: { imageSrc: './game2/assets/Mask/Sprites/Take-Hit.png', framesMax: 3, time: stun_time / 3},
+    hit: { imageSrc: './game2/assets/Mask/Sprites/TakeHit.png', framesMax: 4, time: stun_time / 4},
 }
 
 
@@ -31,5 +31,5 @@ const Samu = {
     idle: { imageSrc: './game2/assets/Samu/Sprites/Idle.png', framesMax: 8, time: 10},
     jump: { imageSrc: './game2/assets/Samu/Sprites/Jump.png', framesMax: 2, time: 10},
     run: { imageSrc: './game2/assets/Samu/Sprites/Run.png', framesMax: 8, time: 10},
-    hit: { imageSrc: './game2/assets/Samu/Sprites/Take-Hit.png', framesMax: 4, time: stun_time / 4},
+    hit: { imageSrc: './game2/assets/Samu/Sprites/TakeHit.png', framesMax: 4, time: stun_time / 4},
 }

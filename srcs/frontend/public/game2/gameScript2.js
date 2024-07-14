@@ -121,6 +121,10 @@ function update_keys(v) {
 	else if (v.enemy.velocity.x <= 2 && v.enemy.velocity.x >= -2)
 		v.enemy.velocity.x = 0
 
+	if (v.enemy.velocity.y < 0)
+		v.enemy.change_sprites(v.enemy.sprites.jump)
+	else if (v.enemy.velocity.y > 0)
+		v.enemy.change_sprites(v.enemy.sprites.fall)
 
 	if (v.keys.ArrowRight.pressed && v.enemy.lastKey === 'ArrowRight' && v.enemy.stunned == false) {
 		v.enemy.velocity.x = 5
@@ -138,10 +142,6 @@ function update_keys(v) {
 		v.enemy.velocity.y = -20
 	}
 
-	if (v.enemy.velocity.y < 0)
-		v.enemy.change_sprites(v.enemy.sprites.jump)
-	else if (v.enemy.velocity.y > 0)
-		v.enemy.change_sprites(v.enemy.sprites.fall)
 }
 
 function detect_colision(Sprite1, Sprite2) {

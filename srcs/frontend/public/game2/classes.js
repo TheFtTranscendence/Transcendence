@@ -109,12 +109,12 @@ class Fighter extends Sprite {
 	}
 
 	attack() {
-		if (Math.random() < 0.5)
-			this.change_sprites(this.sprites.attack1)
-		else 
-			this.change_sprites(this.sprites.attack2)
-
+		
 		if (this.stunned == false && this.attackCD == false) {
+			if (Math.random() < 0.5)
+				this.change_sprites(this.sprites.attack1)
+			else 
+				this.change_sprites(this.sprites.attack2)
 			this.isAttacking = true
 			this.attackCD = true
 			setTimeout(() => {this.isAttacking = false}, 10)
