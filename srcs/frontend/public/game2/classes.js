@@ -171,6 +171,7 @@ class Fighter extends Sprite {
 		this.draw()
 		if (this.framesCurrent < this.framesMax - 1)
 			this.animateFrames()
+
 		this.velocity.y += gravity
 
 		if (this.position.y + this.velocity.y + this.height >= canvas.height - ground_height) {

@@ -209,7 +209,7 @@ async function game_end(v) {
 	v.shop.update_game_end()
 	v.player.draw()
 	v.enemy.draw()
-	console.log('Playres drawn')
+	console.log('Players drawn')
 	await sleep(1000)
 
 	while (loser.framesCurrent < loser.framesMax - 1) {
@@ -227,7 +227,7 @@ async function game_end(v) {
 	winner.velocity.x = 0;
 	reset_keys(v)
 	update_keys(v)
-	winner.framesCurrent = winner.framesMaxa
+	winner.framesCurrent = winner.framesMax
 	loser.change_sprites(loser.sprites.death)
 	winner.change_sprites(winner.sprites.idle)
 	backgroundInterval = setInterval(() => {
@@ -241,9 +241,9 @@ async function game_end(v) {
 	console.log('Game ending sequence ended')
 
 	if (v.player.health > v.enemy.health)
-		document.querySelector('#game2-end-text').innerHTML = 'Player Wins!'
+		document.querySelector('#game2-end-text').innerHTML = 'Player 1 Wins!'
 	else if (v.player.health < v.enemy.health)
-		document.querySelector('#game2-end-text').innerHTML = 'Enemy Wins!'
+		document.querySelector('#game2-end-text').innerHTML = 'Player 2 Wins!'
 	else
 		document.querySelector('#game2-end-text').innerHTML = 'Tie!'
 

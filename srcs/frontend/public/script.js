@@ -5,14 +5,14 @@ const routes = {
 	'#game2': `<h1>Game2</h1>
 					<div id="div-game2-area">
 						<div id="div-game2-top">
-							<!-- Player health -->
+							<!-- Player 1 health -->
 							<div id="game2-bar1-parent">
 								<div id="game2-bar1-background"></div>
 								<div id="game2-bar1"></div>
 							</div>
 							<!-- timer -->
 							<div id="game2-timer"> 50 </div>
-							<!-- Enemy health -->
+							<!-- Player 2 health -->
 							<div id="game2-bar2-parent">
 								<div id="game2-bar2-background"></div>
 								<div id="game2-bar2"></div>
