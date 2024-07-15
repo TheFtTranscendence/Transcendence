@@ -55,7 +55,7 @@ class Sprite {
 }
 
 class Fighter extends Sprite {
-	constructor({ name, position, velocity, color, offset, bar , scale = 1, imageSrc, framesMax = 1, img_offset = {x: 0, y: 0}, sprites}) {
+	constructor({ name, position, velocity, color, offset, bar , scale = 1, imageSrc, framesMax = 1, img_offset = {x: 0, y: 0}, sprites, facing}) {
 		{
 			super({ position, imageSrc, scale, framesMax, img_offset})
 		}
@@ -91,6 +91,8 @@ class Fighter extends Sprite {
 			sprites[sprite].image.src = sprites[sprite].imageSrc
 		}
 
+		this.facing = facing
+
 
 	}
 	
@@ -104,7 +106,10 @@ class Fighter extends Sprite {
 			this.velocity.x = -1 * knockback
 		
 		this.stunned = true
-		this.change_sprites(this.sprites.hit)
+		if (this.facing == 'right')
+			this.change_sprites(this.sprites.hit)
+		else if (this.facing == 'left')
+			this.change_sprites(this.sprites.hitInv)
 		setTimeout(() => {this.stunned = false}, stun_time)
 		this.health -= hit_dmg
 		this.bar.style.width = this.health + '%'
@@ -159,10 +164,18 @@ class Fighter extends Sprite {
 	attack() {
 		
 		if (this.stunned == false && this.attackCD == false) {
-			if (Math.random() < 0.5)
-				this.change_sprites(this.sprites.attack1)
-			else 
-				this.change_sprites(this.sprites.attack2)
+			if (Math.random() < 0.5) {
+				if (this.facing == 'right')
+					this.change_sprites(this.sprites.attack1)
+				else
+					this.change_sprites(this.sprites.attack1Inv)
+			}
+			else {
+				if (this.facing == 'right')
+					this.change_sprites(this.sprites.attack2)
+				else
+					this.change_sprites(this.sprites.attack2Inv)
+			} 
 			this.isAttacking = true
 			this.attackCD = true
 			setTimeout(() => {this.isAttacking = false}, 10)

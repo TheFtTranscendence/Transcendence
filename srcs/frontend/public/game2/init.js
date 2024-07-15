@@ -46,6 +46,7 @@ function init_vars() {
                 runInv: {imageSrc: Mask.runInv.imageSrc, framesMax: Mask.runInv.framesMax, time: Mask.runInv.time},
                 hitInv: {imageSrc: Mask.hitInv.imageSrc, framesMax: Mask.hitInv.framesMax, time: Mask.hitInv.time},
             },
+            facing : 'right',
         }),
         
         enemy: new Fighter({
@@ -79,6 +80,7 @@ function init_vars() {
                 hitInv: {imageSrc: Samu.hitInv.imageSrc, framesMax: Samu.hitInv.framesMax, time: Samu.hitInv.time},
 
             },
+            facing : 'left',
         }),
         
 

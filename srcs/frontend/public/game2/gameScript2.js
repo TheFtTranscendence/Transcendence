@@ -79,7 +79,6 @@ function game_loop(v) {
 
 function update_offset(v)
 {
-
 	if (v.player.velocity.x > 1)
 		v.player.attackbox.offset.x = 0
 	else if (v.player.velocity.x < -1)
@@ -92,6 +91,7 @@ function update_offset(v)
 }
 
 function update_keys(v) {
+
 	if (v.player.velocity.x > 0)
 		v.player.velocity.x -= drag
 	else if (v.player.velocity.x < 0)
@@ -102,28 +102,35 @@ function update_keys(v) {
 
 	if (v.keys.d.pressed && v.player.lastKey === 'd' && v.player.stunned == false) {
 		v.player.velocity.x = 5
+		v.player.facing = 'right'
 		v.player.change_sprites(v.player.sprites.run)
 	}
 	else if (v.keys.a.pressed && v.player.lastKey === 'a' && v.player.stunned == false) {
 		v.player.velocity.x = -5
+		v.player.facing = 'left'
 		v.player.change_sprites(v.player.sprites.runInv)
 	}
 	else if (v.player.position.y === canvas.height - v.player.height - ground_height)
-		v.player.change_sprites(v.player.sprites.idle)
+	{
+		if (v.player.facing === 'right')
+			v.player.change_sprites(v.player.sprites.idle)
+		else
+			v.player.change_sprites(v.player.sprites.idleInv)
+	}
 
 	if (v.keys.w.pressed && v.player.position.y === canvas.height - v.player.height - ground_height && v.player.stunned == false)
 		v.player.velocity.y = -20
 	
-	if (v.player.velocity.y < 0 && v.player.velocity.x >= 0 && v.player.position.y < canvas.height - v.player.height - ground_height)
+	if (v.player.velocity.y < 0 && v.player.facing == 'right')
 		v.player.change_sprites(v.player.sprites.jump)
-	else if (v.player.velocity.y < 0 && v.player.velocity.x <= 0 && v.player.position.y < canvas.height - v.player.height - ground_height)
+	else if (v.player.velocity.y < 0  && v.player.facing == 'left')
 		v.player.change_sprites(v.player.sprites.jumpInv)
-	else if (v.player.velocity.y > 0 && v.player.velocity.x > 0 && v.player.position.y < canvas.height - v.player.height - ground_height)
+	else if (v.player.velocity.y > 0  && v.player.facing == 'right')
 		v.player.change_sprites(v.player.sprites.fall)
-	else if (v.player.velocity.y > 0 && v.player.velocity.x < 0 && v.player.position.y < canvas.height - v.player.height - ground_height)
+	else if (v.player.velocity.y > 0  && v.player.facing == 'left')
 		v.player.change_sprites(v.player.sprites.fallInv)
-
-
+	
+	
 	if (v.enemy.velocity.x > 0)
 		v.enemy.velocity.x -= drag
 	else if (v.enemy.velocity.x < 0)
@@ -134,26 +141,34 @@ function update_keys(v) {
 	
 	if (v.keys.ArrowRight.pressed && v.enemy.lastKey === 'ArrowRight' && v.enemy.stunned == false) {
 		v.enemy.velocity.x = 5
+		v.enemy.facing = 'right'
 		v.enemy.change_sprites(v.enemy.sprites.run)
 		
 	}
 	else if (v.keys.ArrowLeft.pressed && v.enemy.lastKey === 'ArrowLeft' && v.enemy.stunned == false) {
 		v.enemy.velocity.x = -5
+		v.enemy.facing = 'left'
 		v.enemy.change_sprites(v.enemy.sprites.runInv)
 	}
 	else if (v.enemy.position.y === canvas.height - v.enemy.height - ground_height)
-		v.enemy.change_sprites(v.enemy.sprites.idle)
+	{
+		if (v.enemy.facing === 'right')
+			v.enemy.change_sprites(v.enemy.sprites.idle)
+		else if (v.enemy.facing === 'left')
+			v.enemy.change_sprites(v.enemy.sprites.idleInv)
+	}
 
 
 	if (v.keys.ArrowUp.pressed && v.enemy.position.y === canvas.height - v.enemy.height - ground_height  && v.enemy.stunned == false)
 		v.enemy.velocity.y = -20
-	if (v.enemy.velocity.y < 0 && v.enemy.velocity.x > 1)
+	
+	if (v.enemy.velocity.y < 0 && v.enemy.facing == 'right')
 		v.enemy.change_sprites(v.enemy.sprites.jump)
-	else if (v.enemy.velocity.y > 0 && v.enemy.velocity.x > 1)
+	else if (v.enemy.velocity.y > 0 && v.enemy.facing == 'left')
 		v.enemy.change_sprites(v.enemy.sprites.fall)
-	else if (v.enemy.velocity.y < 0 && v.enemy.velocity.x < -1)
+	else if (v.enemy.velocity.y < 0 && v.enemy.facing == 'right')
 		v.enemy.change_sprites(v.enemy.sprites.jumpInv)
-	else if (v.enemy.velocity.y > 0 && v.enemy.velocity.x < -1)
+	else if (v.enemy.velocity.y > 0 && v.enemy.facing == 'left')
 		v.enemy.change_sprites(v.enemy.sprites.fallInv)
 }
 
@@ -223,8 +238,19 @@ async function game_end(v) {
 	reset_keys(v)
 	update_keys(v)
 	winner.framesCurrent = winner.framesMax
-	loser.change_sprites(loser.sprites.death)
-	winner.change_sprites(winner.sprites.idle)
+
+	
+	if (loser.facing == 'right')
+		loser.change_sprites(loser.sprites.death)
+	else
+		loser.change_sprites(loser.sprites.deathInv)
+	
+	if (winner.facing == 'right')
+		winner.change_sprites(winner.sprites.idle)
+	else 
+		winner.change_sprites(winner.sprites.idleInv)
+
+	
 	backgroundInterval = setInterval(() => {
 		c.fillStyle = 'black'; c.fillRect(0, 0, canvas.width, canvas.height)
 		v.background.update()
