@@ -106,19 +106,23 @@ function update_keys(v) {
 	}
 	else if (v.keys.a.pressed && v.player.lastKey === 'a' && v.player.stunned == false) {
 		v.player.velocity.x = -5
-		v.player.change_sprites(v.player.sprites.run)
+		v.player.change_sprites(v.player.sprites.runInv)
 	}
-	else
+	else if (v.player.position.y === canvas.height - v.player.height - ground_height)
 		v.player.change_sprites(v.player.sprites.idle)
 
-	if (v.keys.w.pressed && v.player.position.y === canvas.height - v.player.height - ground_height && v.player.stunned == false) {
+	if (v.keys.w.pressed && v.player.position.y === canvas.height - v.player.height - ground_height && v.player.stunned == false)
 		v.player.velocity.y = -20
-	}
 	
-	if (v.player.velocity.y < 0)
+	if (v.player.velocity.y < 0 && v.player.velocity.x >= 0 && v.player.position.y < canvas.height - v.player.height - ground_height)
 		v.player.change_sprites(v.player.sprites.jump)
-	else if (v.player.velocity.y > 0)
+	else if (v.player.velocity.y < 0 && v.player.velocity.x <= 0 && v.player.position.y < canvas.height - v.player.height - ground_height)
+		v.player.change_sprites(v.player.sprites.jumpInv)
+	else if (v.player.velocity.y > 0 && v.player.velocity.x > 0 && v.player.position.y < canvas.height - v.player.height - ground_height)
 		v.player.change_sprites(v.player.sprites.fall)
+	else if (v.player.velocity.y > 0 && v.player.velocity.x < 0 && v.player.position.y < canvas.height - v.player.height - ground_height)
+		v.player.change_sprites(v.player.sprites.fallInv)
+
 
 	if (v.enemy.velocity.x > 0)
 		v.enemy.velocity.x -= drag
@@ -127,27 +131,30 @@ function update_keys(v) {
 	else if (v.enemy.velocity.x <= 2 && v.enemy.velocity.x >= -2)
 		v.enemy.velocity.x = 0
 
-	if (v.enemy.velocity.y < 0)
-		v.enemy.change_sprites(v.enemy.sprites.jump)
-	else if (v.enemy.velocity.y > 0)
-		v.enemy.change_sprites(v.enemy.sprites.fall)
-
+	
 	if (v.keys.ArrowRight.pressed && v.enemy.lastKey === 'ArrowRight' && v.enemy.stunned == false) {
 		v.enemy.velocity.x = 5
 		v.enemy.change_sprites(v.enemy.sprites.run)
-
+		
 	}
 	else if (v.keys.ArrowLeft.pressed && v.enemy.lastKey === 'ArrowLeft' && v.enemy.stunned == false) {
 		v.enemy.velocity.x = -5
-		v.enemy.change_sprites(v.enemy.sprites.run)
+		v.enemy.change_sprites(v.enemy.sprites.runInv)
 	}
-	else
+	else if (v.enemy.position.y === canvas.height - v.enemy.height - ground_height)
 		v.enemy.change_sprites(v.enemy.sprites.idle)
 
-	if (v.keys.ArrowUp.pressed && v.enemy.position.y === canvas.height - v.enemy.height - ground_height  && v.enemy.stunned == false) {
-		v.enemy.velocity.y = -20
-	}
 
+	if (v.keys.ArrowUp.pressed && v.enemy.position.y === canvas.height - v.enemy.height - ground_height  && v.enemy.stunned == false)
+		v.enemy.velocity.y = -20
+	if (v.enemy.velocity.y < 0 && v.enemy.velocity.x > 1)
+		v.enemy.change_sprites(v.enemy.sprites.jump)
+	else if (v.enemy.velocity.y > 0 && v.enemy.velocity.x > 1)
+		v.enemy.change_sprites(v.enemy.sprites.fall)
+	else if (v.enemy.velocity.y < 0 && v.enemy.velocity.x < -1)
+		v.enemy.change_sprites(v.enemy.sprites.jumpInv)
+	else if (v.enemy.velocity.y > 0 && v.enemy.velocity.x < -1)
+		v.enemy.change_sprites(v.enemy.sprites.fallInv)
 }
 
 function detect_colision(Sprite1, Sprite2) {
