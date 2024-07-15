@@ -167,6 +167,35 @@ class Fighter extends Sprite {
 
 	}
 
+	death_update() {
+		this.draw()
+		if (this.framesCurrent < this.framesMax - 1)
+			this.animateFrames()
+		this.velocity.y += gravity
+
+		if (this.position.y + this.velocity.y + this.height >= canvas.height - ground_height) {
+			this.position.y = canvas.height - this.height - ground_height
+			this.velocity.y = 0
+		}
+		
+
+		if (this.position.y + this.velocity.y + this.height >= canvas.height - ground_height)
+			this.position.y = canvas.height - this.height - ground_height
+		else if (this.position.y + this.velocity.y <= 0) {
+			this.position.y = 0; this.velocity.y = 0
+		}
+		else
+			this.position.y += this.velocity.y
+		
+		if (this.position.x + this.velocity.x + this.width >= canvas.width)
+			this.position.x = canvas.width - this.width
+		else if (this.position.x + this.velocity.x <= 0)
+			this.position.x = 0
+		else		
+			this.position.x += this.velocity.x
+	
+	}
+
 	update_game_end() {
 		this.draw()
 		
@@ -204,6 +233,7 @@ class Fighter extends Sprite {
 			this.framesMax = sprite.framesMax
 			this.time = sprite.time
 			this.framesCurrent = 0
+			this.framesElapsed = 0
 		}
 	}
 

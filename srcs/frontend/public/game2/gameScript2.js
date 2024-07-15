@@ -19,7 +19,11 @@ window.addEventListener('keydown', (event) => {
 })
 
 // Crashes whole game
-// window.addEventListener('unload', game_end(v))
+window.addEventListener('unload', (event) => {
+	clearInterval(gameInterval)
+	clearInterval(timerInterval)
+	clearInterval(backgroundInterval)
+})
 
 window.addEventListener('keyup', (event) => {
 	switch (event.key) {
@@ -160,11 +164,29 @@ function detect_colision(Sprite1, Sprite2) {
 
 
 
+// async function death_game_loop(v) {
+// 	c.fillStyle = 'black'; c.fillRect(0, 0, canvas.width, canvas.height)
+
+// 	v.background.update_game_end()
+// 	v.shop.update_game_end()
+// 	v.player.update_game_end()
+// 	v.enemy.update_game_end()
+	
+// 	await sleep(1000)
+// }
+
 function sleep(ms) {
 	return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function game_end_sequence(v) {
+let backgroundInterval
+async function game_end(v) {
+	clearInterval(gameInterval);
+    clearInterval(timerInterval);
+
+	
+	// console.log('Game ending sequence starting in 3 seconds')
+	// await sleep(3000)
 	console.log('Game ending sequence started')
 
 	if (v.player.health > v.enemy.health) {
@@ -190,8 +212,6 @@ async function game_end_sequence(v) {
 	console.log('Playres drawn')
 	await sleep(1000)
 
-	loser.change_sprites(loser.sprites.death)
-	winner.change_sprites(winner.sprites.idle)
 	while (loser.framesCurrent < loser.framesMax - 1) {
 
 		c.fillStyle = 'black'; c.fillRect(0, 0, canvas.width, canvas.height)
@@ -201,41 +221,24 @@ async function game_end_sequence(v) {
 		v.player.update_game_end()
 		v.enemy.update_game_end()
 		
-		console.log('WAINTING')
 		await sleep(1000)
-		console.log('not waiting lol')
 	}
 
-	console.log('Out of loop')
-
-	loser.change_sprites(loser.sprites.death)
-	winner.change_sprites(winner.sprites.idle)
+	winner.velocity.x = 0;
 	reset_keys(v)
 	update_keys(v)
+	winner.framesCurrent = winner.framesMaxa
+	loser.change_sprites(loser.sprites.death)
+	winner.change_sprites(winner.sprites.idle)
 	backgroundInterval = setInterval(() => {
 		c.fillStyle = 'black'; c.fillRect(0, 0, canvas.width, canvas.height)
 		v.background.update()
 		v.shop.update()
 		winner.update()
-		if (loser.framesCurrent < loser.framesMax - 1)
-			loser.update()
-		else
-			loser.draw()
+		loser.death_update()
 	}, 1000 / fps)
+	
 	console.log('Game ending sequence ended')
-
-}
-
-let backgroundInterval
-async function game_end(v) {
-	clearInterval(gameInterval);
-    clearInterval(timerInterval);
-
-	
-	// console.log('Game ending sequence starting in 3 seconds')
-	// await sleep(3000)
-	
-	game_end_sequence(v)
 
 	if (v.player.health > v.enemy.health)
 		document.querySelector('#game2-end-text').innerHTML = 'Player Wins!'
