@@ -35,8 +35,17 @@ function init_vars() {
                 idle: {imageSrc: Mask.idle.imageSrc, framesMax: Mask.idle.framesMax, time: Mask.idle.time},
                 jump: {imageSrc: Mask.jump.imageSrc, framesMax: Mask.jump.framesMax, time: Mask.jump.time},
                 run: {imageSrc: Mask.run.imageSrc, framesMax: Mask.run.framesMax, time: Mask.run.time},
-                hit: {imageSrc: Mask.hit.imageSrc, framesMax: Mask.hit.framesMax, time: Mask.hit.time}
-            }
+                hit: {imageSrc: Mask.hit.imageSrc, framesMax: Mask.hit.framesMax, time: Mask.hit.time},
+
+                attack1Inv: {imageSrc: Mask.attack1Inv.imageSrc, framesMax: Mask.attack1Inv.framesMax, time: Mask.attack1Inv.time},
+                attack2Inv: {imageSrc: Mask.attack2Inv.imageSrc, framesMax: Mask.attack2Inv.framesMax, time: Mask.attack2Inv.time},
+                deathInv: {imageSrc: Mask.deathInv.imageSrc, framesMax: Mask.deathInv.framesMax, time: Mask.deathInv.time},
+                fallInv: {imageSrc: Mask.fallInv.imageSrc, framesMax: Mask.fallInv.framesMax, time: Mask.fallInv.time},
+                idleInv: {imageSrc: Mask.idleInv.imageSrc, framesMax: Mask.idleInv.framesMax, time: Mask.idleInv.time},
+                jumpInv: {imageSrc: Mask.jumpInv.imageSrc, framesMax: Mask.jumpInv.framesMax, time: Mask.jumpInv.time},
+                runInv: {imageSrc: Mask.runInv.imageSrc, framesMax: Mask.runInv.framesMax, time: Mask.runInv.time},
+                hitInv: {imageSrc: Mask.hitInv.imageSrc, framesMax: Mask.hitInv.framesMax, time: Mask.hitInv.time},
+            },
         }),
         
         enemy: new Fighter({
@@ -58,8 +67,18 @@ function init_vars() {
                 idle: {imageSrc: Samu.idle.imageSrc, framesMax: Samu.idle.framesMax, time: Samu.idle.time},
                 jump: {imageSrc: Samu.jump.imageSrc, framesMax: Samu.jump.framesMax, time: Samu.jump.time},
                 run: {imageSrc: Samu.run.imageSrc, framesMax: Samu.run.framesMax, time: Samu.run.time},
-                hit: {imageSrc: Samu.hit.imageSrc, framesMax: Samu.hit.framesMax, time: Samu.hit.time}
-            }
+                hit: {imageSrc: Samu.hit.imageSrc, framesMax: Samu.hit.framesMax, time: Samu.hit.time},
+
+                attack1Inv: {imageSrc: Samu.attack1Inv.imageSrc, framesMax: Samu.attack1Inv.framesMax, time: Samu.attack1Inv.time},
+                attack2Inv: {imageSrc: Samu.attack2Inv.imageSrc, framesMax: Samu.attack2Inv.framesMax, time: Samu.attack2Inv.time},
+                deathInv: {imageSrc: Samu.deathInv.imageSrc, framesMax: Samu.deathInv.framesMax, time: Samu.deathInv.time},
+                fallInv: {imageSrc: Samu.fallInv.imageSrc, framesMax: Samu.fallInv.framesMax, time: Samu.fallInv.time},
+                idleInv: {imageSrc: Samu.idleInv.imageSrc, framesMax: Samu.idleInv.framesMax, time: Samu.idleInv.time},
+                jumpInv: {imageSrc: Samu.jumpInv.imageSrc, framesMax: Samu.jumpInv.framesMax, time: Samu.jumpInv.time},
+                runInv: {imageSrc: Samu.runInv.imageSrc, framesMax: Samu.runInv.framesMax, time: Samu.runInv.time},
+                hitInv: {imageSrc: Samu.hitInv.imageSrc, framesMax: Samu.hitInv.framesMax, time: Samu.hitInv.time},
+
+            },
         }),
         
 

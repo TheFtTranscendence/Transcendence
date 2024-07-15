@@ -90,7 +90,8 @@ class Fighter extends Sprite {
 			sprites[sprite].image = new Image()
 			sprites[sprite].image.src = sprites[sprite].imageSrc
 		}
-		
+
+
 	}
 	
 	get_hit(other) {
@@ -114,6 +115,47 @@ class Fighter extends Sprite {
 		}
 	}
 
+	invert_sprites() {
+
+		if (this.image == this.sprites.attack1.image)
+			this.image = this.sprites.attack1Inv.image
+		else if (this.image == this.sprites.attack2.image)
+			this.image = this.sprites.attack2Inv.image
+		else if (this.image == this.sprites.death.image)
+			this.image = this.sprites.deathInv.image
+		else if (this.image == this.sprites.fall.image)
+			this.image = this.sprites.fallInv.image
+		else if (this.image == this.sprites.idle.image)
+			this.image = this.sprites.idleInv.image
+		else if (this.image == this.sprites.jump.image)
+			this.image = this.sprites.jumpInv.image
+		else if (this.image == this.sprites.run.image)
+			this.image = this.sprites.runInv.image
+		else if (this.image == this.sprites.hit.image)
+			this.image = this.sprites.hitInv.image
+		
+	}
+
+	
+	draw() {
+		
+		// if (this.velocity.x < -1)
+		// 	this.invert_sprites()
+		
+		c.drawImage(
+			this.image,
+			this.framesCurrent * (this.image.width / this.framesMax),
+			0,
+			this.image.width / this.framesMax,
+			this.image.height,
+
+			this.position.x - this.img_offset.x,
+			this.position.y - this.img_offset.y,
+			(this.image.width / this.framesMax) * this.scale,
+			this.image.height * this.scale
+		)
+	}
+	
 	attack() {
 		
 		if (this.stunned == false && this.attackCD == false) {
@@ -213,13 +255,22 @@ class Fighter extends Sprite {
 		if ((this.image == this.sprites.attack1.image || this.image == this.sprites.attack2.image || this.image == this.sprites.hit.image)
 			&& (this.framesCurrent < this.sprites.attack1.framesMax - 1 || this.framesCurrent < this.sprites.attack2.framesMax - 1))
 			return true
-		
+		if ((this.image == this.sprites.attack1Inv.image || this.image == this.sprites.attack2Inv.image || this.image == this.sprites.hitInv.image)
+			&& (this.framesCurrent < this.sprites.attack1Inv.framesMax - 1 || this.framesCurrent < this.sprites.attack2Inv.framesMax - 1))
+			return true
+			
+
+
 		// Take Hit
 		if (this.image == this.sprites.hit.image && this.framesCurrent < this.sprites.hit.framesMax - 1)
 			return true
-		
+		if (this.image == this.sprites.hitInv.image && this.framesCurrent < this.sprites.hitInv.framesMax - 1)
+			return true
+
 		// Death
 		if (this.image == this.sprites.death.image 	&& this.framesCurrent < this.sprites.death.framesMax - 1)
+			return true
+		if (this.image == this.sprites.deathInv.image && this.framesCurrent < this.sprites.deathInv.framesMax - 1)
 			return true
 
 		return false

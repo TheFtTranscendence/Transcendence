@@ -18,12 +18,12 @@ window.addEventListener('keydown', (event) => {
 	}
 })
 
-// Crashes whole game
-window.addEventListener('unload', (event) => {
-	clearInterval(gameInterval)
-	clearInterval(timerInterval)
-	clearInterval(backgroundInterval)
-})
+// Let it be for now
+// window.addEventListener('unload', (event) => {
+// 	clearInterval(gameInterval)
+// 	clearInterval(timerInterval)
+// 	clearInterval(backgroundInterval)
+// })
 
 window.addEventListener('keyup', (event) => {
 	switch (event.key) {
@@ -162,18 +162,6 @@ function detect_colision(Sprite1, Sprite2) {
 	}
 } 
 
-
-
-// async function death_game_loop(v) {
-// 	c.fillStyle = 'black'; c.fillRect(0, 0, canvas.width, canvas.height)
-
-// 	v.background.update_game_end()
-// 	v.shop.update_game_end()
-// 	v.player.update_game_end()
-// 	v.enemy.update_game_end()
-	
-// 	await sleep(1000)
-// }
 
 function sleep(ms) {
 	return new Promise(resolve => setTimeout(resolve, ms));
