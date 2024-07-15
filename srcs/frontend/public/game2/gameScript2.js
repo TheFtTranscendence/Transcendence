@@ -75,14 +75,16 @@ function game_loop(v) {
 
 function update_offset(v)
 {
-	if (v.player.position.x < v.enemy.position.x) {
+
+	if (v.player.velocity.x > 1)
 		v.player.attackbox.offset.x = 0
-		v.enemy.attackbox.offset.x = 50 - v.enemy.attackbox.width
-	}
-	else {
-		v.player.attackbox.offset.x = 50 - v.player.attackbox.width	
+	else if (v.player.velocity.x < -1)
+		v.player.attackbox.offset.x = 50 - v.player.attackbox.width
+
+	if (v.enemy.velocity.x > 1)
 		v.enemy.attackbox.offset.x = 0
-	}
+	else if (v.enemy.velocity.x < -1)
+		v.enemy.attackbox.offset.x = 50 - v.enemy.attackbox.width
 }
 
 function update_keys(v) {
@@ -157,9 +159,43 @@ function detect_colision(Sprite1, Sprite2) {
 } 
 
 
-function game_end(v) {
+
+function sleep(ms) {
+	return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function game_end_sequence(v) {
+	console.log('Game ending sequence started')
+
+	if (v.player.health > v.enemy.health)
+		loser = v.enemy
+	else
+		loser = v.player
+	
+	while (loser.framesCurrent < loser.framesMax - 1) {
+
+		c.fillStyle = 'black'; c.fillRect(0, 0, canvas.width, canvas.height)
+		v.background.update_game_end()
+		v.shop.update_game_end()
+		v.player.update_game_end()
+		v.enemy.update_game_end()
+		
+		
+		console.log('Updated')
+		await sleep(1000)
+	}
+	console.log('Game ending sequence ended')
+
+}
+
+async function game_end(v) {
 	clearInterval(gameInterval);
     clearInterval(timerInterval);
+
+	
+	console.log('Game ending sequence starting in 5 seconds')
+	await sleep(3000)
+	game_end_sequence(v)
 
 	if (v.player.health > v.enemy.health)
 		document.querySelector('#game2-end-text').innerHTML = 'Player Wins!'

@@ -42,6 +42,14 @@ class Sprite {
 		this.draw()
 		this.animateFrames()
 	}
+	update_game_end() {
+		this.draw()
+		
+		if (this.framesCurrent < this.framesMax - 1)
+			this.framesCurrent++
+		else
+			this.framesCurrent = 0
+	}
 }
 
 class Fighter extends Sprite {
@@ -95,16 +103,14 @@ class Fighter extends Sprite {
 		this.stunned = true
 		this.change_sprites(this.sprites.hit)
 		setTimeout(() => {this.stunned = false}, stun_time)
-		this.health -= 10
+		this.health -= hit_dmg
 		this.bar.style.width = this.health + '%'
-
 		if (this.health <= 0)
 		{
+			this.change_sprites(this.sprites.death)
+			other.change_sprites(other.sprites.idle)
 			this.bar.style.width = '0%'
-			setTimeout(() => {
-				// Code to execute after 200 ms
-				game_end(v)
-			}, 200);
+			game_end(v)
 		}
 	}
 
@@ -161,6 +167,15 @@ class Fighter extends Sprite {
 
 	}
 
+	update_game_end() {
+		this.draw()
+		
+		if (this.framesCurrent < this.framesMax - 1)
+			this.framesCurrent++
+		else
+			this.framesCurrent = 0
+	}
+
 	check_sprites_middle_animation() {
 		
 		// Attack
@@ -170,6 +185,10 @@ class Fighter extends Sprite {
 		
 		// Take Hit
 		if (this.image == this.sprites.hit.image && this.framesCurrent < this.sprites.hit.framesMax - 1)
+			return true
+		
+		// Death
+		if (this.image == this.sprites.death.image 	&& this.framesCurrent < this.sprites.death.framesMax - 1)
 			return true
 
 		return false
