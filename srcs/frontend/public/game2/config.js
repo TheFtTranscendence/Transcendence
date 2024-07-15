@@ -14,8 +14,8 @@ const background = { path: './game2/assets/background.png', scale: 1, framesMax:
 const shop = {path: './game2/assets/shop.png', scale: 3, framesMax: 6, time: 10}
 
 const Mask = {
-	hit_frame: 3,
-    hit_frameInv: 2,
+	hit_frame: 2,
+    hit_frameInv: 0,
     attack1: { imageSrc: './game2/assets/Mask/Sprites/normal/Attack1.png', framesMax: 4, time: 15},
     attack2: { imageSrc: './game2/assets/Mask/Sprites/normal/Attack2.png',framesMax: 4, time: 15},
     death: { imageSrc: './game2/assets/Mask/Sprites/normal/Death.png', framesMax: 7, time: 10},
