@@ -167,34 +167,74 @@ function sleep(ms) {
 async function game_end_sequence(v) {
 	console.log('Game ending sequence started')
 
-	if (v.player.health > v.enemy.health)
+	if (v.player.health > v.enemy.health) {
 		loser = v.enemy
-	else
+		winner = v.player
+		v.player.framesCurrent = Mask.hit_frame
+	}
+	else {
 		loser = v.player
+		winner = v.enemy
+		v.enemy.framesCurrent = Samu.hit_frame
+	}
+
 	
+	c.fillStyle = 'black'; c.fillRect(0, 0, canvas.width, canvas.height)
+	
+	
+	loser.change_sprites(loser.sprites.death)
+	v.background.update_game_end()
+	v.shop.update_game_end()
+	v.player.draw()
+	v.enemy.draw()
+	console.log('Playres drawn')
+	await sleep(1000)
+
+	loser.change_sprites(loser.sprites.death)
+	winner.change_sprites(winner.sprites.idle)
 	while (loser.framesCurrent < loser.framesMax - 1) {
 
 		c.fillStyle = 'black'; c.fillRect(0, 0, canvas.width, canvas.height)
+
 		v.background.update_game_end()
 		v.shop.update_game_end()
 		v.player.update_game_end()
 		v.enemy.update_game_end()
 		
-		
-		console.log('Updated')
+		console.log('WAINTING')
 		await sleep(1000)
+		console.log('not waiting lol')
 	}
+
+	console.log('Out of loop')
+
+	loser.change_sprites(loser.sprites.death)
+	winner.change_sprites(winner.sprites.idle)
+	reset_keys(v)
+	update_keys(v)
+	backgroundInterval = setInterval(() => {
+		c.fillStyle = 'black'; c.fillRect(0, 0, canvas.width, canvas.height)
+		v.background.update()
+		v.shop.update()
+		winner.update()
+		if (loser.framesCurrent < loser.framesMax - 1)
+			loser.update()
+		else
+			loser.draw()
+	}, 1000 / fps)
 	console.log('Game ending sequence ended')
 
 }
 
+let backgroundInterval
 async function game_end(v) {
 	clearInterval(gameInterval);
     clearInterval(timerInterval);
 
 	
-	console.log('Game ending sequence starting in 5 seconds')
-	await sleep(3000)
+	// console.log('Game ending sequence starting in 3 seconds')
+	// await sleep(3000)
+	
 	game_end_sequence(v)
 
 	if (v.player.health > v.enemy.health)
@@ -208,5 +248,7 @@ async function game_end(v) {
 
 	// Reset variables!
 	// Do we really?
+
+	
 	console.log('Game Ended!')
 }

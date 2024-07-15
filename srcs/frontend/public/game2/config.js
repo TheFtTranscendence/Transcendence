@@ -8,12 +8,13 @@ const drag = .50 // px
 const knockback = 25 // px
 const ground_height = 50 // px
 const stun_time = 150 // ms
-const hit_dmg = 5 // %
+const hit_dmg = 50 // %
 
-const path_background = './game2/assets/background.png'
-const path_shop = './game2/assets/shop.png'
+const background = { path: './game2/assets/background.png', scale: 1, framesMax: 1 }
+const shop = {path: './game2/assets/shop.png', scale: 3, framesMax: 6, time: 10}
 
 const Mask = {
+	hit_frame: 2,
     attack1: { imageSrc: './game2/assets/Mask/Sprites/Attack1.png', framesMax: 4, time: 15},
     attack2: { imageSrc: './game2/assets/Mask/Sprites/Attack2.png', framesMax: 4, time: 15},
     death: { imageSrc: './game2/assets/Mask/Sprites/Death.png', framesMax: 7, time: 10},
@@ -26,6 +27,7 @@ const Mask = {
 
 
 const Samu = {
+	hit_frame: 0,
     attack1: { imageSrc: './game2/assets/Samu/Sprites/Attack1.png', framesMax: 4, time: 15},
     attack2: { imageSrc: './game2/assets/Samu/Sprites/Attack2.png', framesMax: 4, time: 15},
     death: { imageSrc: './game2/assets/Samu/Sprites/Death.png', framesMax: 6, time: 10},

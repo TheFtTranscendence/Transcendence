@@ -4,16 +4,16 @@ function init_vars() {
 
         background: new Sprite({
             position: { x: 0, y: 0 },
-            imageSrc: path_background,
-            scale: 1,
-            framesMax: 1
+            imageSrc: background.path,
+            scale: background.scale,
+            framesMax: background.framesMax
         }),
 
         shop: new Sprite({
             position: { x: 800, y: 320 },
-            imageSrc: path_shop,
-            scale: 3,
-            framesMax: 6
+            imageSrc: shop.path,
+            scale: shop.scale,
+            framesMax: shop.framesMax
         }),
         
         player: new Fighter({
@@ -73,4 +73,15 @@ function init_vars() {
             ArrowUp: { pressed: false },
         }
     }
+}
+
+function reset_keys(v) {
+	v.keys.d.pressed = false
+	v.keys.a.pressed = false
+	v.keys.w.pressed = false
+	
+	v.keys.ArrowRight.pressed = false
+	v.keys.ArrowLeft.pressed = false
+	v.keys.ArrowUp.pressed = false
+
 }

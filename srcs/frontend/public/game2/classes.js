@@ -1,5 +1,5 @@
 class Sprite {
-	constructor({ position, imageSrc, scale = 1, framesMax = 1, img_offset = {x: 0, y: 0}}) {
+	constructor({ position, imageSrc, scale = 1, framesMax = 1, time = shop.time, img_offset = {x: 0, y: 0}}) {
 		this.position = position
 		this.height = 150
 		this.width = 50
@@ -7,6 +7,7 @@ class Sprite {
 		this.image.src = imageSrc
 		this.scale = scale
 		this.framesMax = framesMax
+		this.time = time
 		this.framesCurrent = 0
 		this.framesElapsed = 0
 		this.img_offset = img_offset
@@ -42,6 +43,7 @@ class Sprite {
 		this.draw()
 		this.animateFrames()
 	}
+
 	update_game_end() {
 		this.draw()
 		
@@ -107,8 +109,6 @@ class Fighter extends Sprite {
 		this.bar.style.width = this.health + '%'
 		if (this.health <= 0)
 		{
-			this.change_sprites(this.sprites.death)
-			other.change_sprites(other.sprites.idle)
 			this.bar.style.width = '0%'
 			game_end(v)
 		}
@@ -175,6 +175,7 @@ class Fighter extends Sprite {
 		else
 			this.framesCurrent = 0
 	}
+
 
 	check_sprites_middle_animation() {
 		
