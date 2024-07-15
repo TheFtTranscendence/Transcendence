@@ -195,26 +195,26 @@ async function game_end(v) {
     clearInterval(timerInterval);
 
 	
-	// console.log('Game ending sequence starting in 3 seconds')
-	// await sleep(3000)
-	console.log('Game ending sequence started')
-
 	if (v.player.health > v.enemy.health) {
 		loser = v.enemy
 		winner = v.player
-		v.player.framesCurrent = Mask.hit_frame
+		if (v.player.facing == 'right')
+			v.player.framesCurrent = Mask.hit_frame	
+		else
+			v.player.framesCurrent = Mask.hit_frameInv
 	}
 	else {
 		loser = v.player
 		winner = v.enemy
-		v.enemy.framesCurrent = Samu.hit_frame
+		if (v.enemy.facing == 'right')
+			v.enemy.framesCurrent = Samu.hit_frame
+		else
+			v.enemy.framesCurrent = Samu.hit_frameInv
 	}
 
 	
 	c.fillStyle = 'black'; c.fillRect(0, 0, canvas.width, canvas.height)
 	
-	
-	loser.change_sprites(loser.sprites.death)
 	v.background.update_game_end()
 	v.shop.update_game_end()
 	v.player.draw()

@@ -120,33 +120,7 @@ class Fighter extends Sprite {
 		}
 	}
 
-	invert_sprites() {
-
-		if (this.image == this.sprites.attack1.image)
-			this.image = this.sprites.attack1Inv.image
-		else if (this.image == this.sprites.attack2.image)
-			this.image = this.sprites.attack2Inv.image
-		else if (this.image == this.sprites.death.image)
-			this.image = this.sprites.deathInv.image
-		else if (this.image == this.sprites.fall.image)
-			this.image = this.sprites.fallInv.image
-		else if (this.image == this.sprites.idle.image)
-			this.image = this.sprites.idleInv.image
-		else if (this.image == this.sprites.jump.image)
-			this.image = this.sprites.jumpInv.image
-		else if (this.image == this.sprites.run.image)
-			this.image = this.sprites.runInv.image
-		else if (this.image == this.sprites.hit.image)
-			this.image = this.sprites.hitInv.image
-		
-	}
-
-	
 	draw() {
-		
-		// if (this.velocity.x < -1)
-		// 	this.invert_sprites()
-		
 		c.drawImage(
 			this.image,
 			this.framesCurrent * (this.image.width / this.framesMax),
@@ -289,9 +263,9 @@ class Fighter extends Sprite {
 		return false
 	}
 	
-	change_sprites(sprite) {
+	change_sprites(sprite, force = false) {
 		
-		if (this.check_sprites_middle_animation())
+		if (this.check_sprites_middle_animation() && force == true)
 			return
 		if (this.image != sprite.image) {
 			this.image = sprite.image
