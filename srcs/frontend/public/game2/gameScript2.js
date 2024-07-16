@@ -71,10 +71,11 @@ function game_loop(v) {
 	v.player.update()
 	v.enemy.update()
 
+	update_keys(v)
+	
 	detect_colision(v.player, v.enemy)
 	detect_colision(v.enemy, v.player)
 
-	update_keys(v)
 }
 
 function update_offset(v)

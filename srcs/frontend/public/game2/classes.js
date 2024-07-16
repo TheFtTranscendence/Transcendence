@@ -265,7 +265,7 @@ class Fighter extends Sprite {
 	
 	change_sprites(sprite, force = false) {
 		
-		if (this.check_sprites_middle_animation() && force == true)
+		if (this.check_sprites_middle_animation() && force == false)
 			return
 		if (this.image != sprite.image) {
 			this.image = sprite.image
