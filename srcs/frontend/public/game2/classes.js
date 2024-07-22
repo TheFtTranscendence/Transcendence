@@ -90,10 +90,7 @@ class Fighter extends Sprite {
 			sprites[sprite].image = new Image()
 			sprites[sprite].image.src = sprites[sprite].imageSrc
 		}
-
 		this.facing = facing
-
-
 	}
 	
 	get_hit(other) {

@@ -41,7 +41,7 @@ window.addEventListener('keyup', (event) => {
 let gameInterval;
 let timerInterval;
 function startGame2() {
-	
+
 	v = init_vars()
 	
 	gameInterval = window.setInterval(() => game_loop(v), 1000 / fps)
