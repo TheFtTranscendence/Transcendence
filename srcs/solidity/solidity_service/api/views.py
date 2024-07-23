@@ -33,10 +33,19 @@ contract = web3.eth.contract(address=contract_address, abi=contract_abi)
 @api_view(['POST'])
 def add_instance(request):
     def add_instance_func():
+        # Estimate gas and gas price
+        base_gas_price = web3.eth.gas_price
+        gas_price = int(base_gas_price * 1.5)
+        base_gas = contract.functions.addInstance().estimate_gas({
+            'from': web3.eth.default_account
+        })
+        gas = int(base_gas * 1.5)
+
+        # Build the transaction
         tx = contract.functions.addInstance().build_transaction({
             'chainId': 11155111,
-            'gas': 2000000,
-            'gasPrice': web3.to_wei('50', 'gwei'),
+            'gas': gas,
+            'gasPrice': gas_price,
             'nonce': web3.eth.get_transaction_count(web3.eth.default_account),
         })
         signed_tx = web3.eth.account.sign_transaction(tx, private_key)
@@ -66,10 +75,19 @@ def add_new_game(request, instanceIndex):
         return JsonResponse({'message': 'Missing data'}, status=400)
 
     def add_new_game_func():
+        # Estimate gas and gas price
+        base_gas_price = web3.eth.gas_price
+        gas_price = int(base_gas_price * 1.5)
+        base_gas = contract.functions.addGame(instanceIndex, player1, player2, score1, score2).estimate_gas({
+            'from': web3.eth.default_account
+        })
+        gas = int(base_gas * 1.5)
+
+        # Build the transaction
         tx = contract.functions.addGame(instanceIndex, player1, player2, score1, score2).build_transaction({
             'chainId': 11155111,
-            'gas': 2000000,
-            'gasPrice': web3.to_wei('50', 'gwei'),
+            'gas': gas,
+            'gasPrice': gas_price,
             'nonce': web3.eth.get_transaction_count(web3.eth.default_account),
         })
         signed_tx = web3.eth.account.sign_transaction(tx, private_key)
