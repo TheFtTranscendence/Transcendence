@@ -51,7 +51,7 @@ def add_instance(request):
     logs = contract.events.InstanceAdded().process_receipt(tx_receipt)
     instance_index = logs[0]['args']['instanceIndex']  # Adjust based on your event arguments
 
-    return JsonResponse({'message': f'Instance added, instance number is: {instance_index}'}, status=200)
+    return JsonResponse({'message': instance_index}, status=200)
 
 # Add a game
 @api_view(['POST'])
