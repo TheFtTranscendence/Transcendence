@@ -1,5 +1,6 @@
 class Sprite {
-	constructor({ position, imageSrc, scale = 1, framesMax = 1, time = shop.time, img_offset = {x: 0, y: 0}}) {
+	// time = shop.time = 10
+	constructor({ position, imageSrc, scale = 1, framesMax = 1, time = 10 , img_offset = {x: 0, y: 0}}) {
 		this.position = position
 		this.height = 150
 		this.width = 50
