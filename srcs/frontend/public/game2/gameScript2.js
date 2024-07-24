@@ -20,43 +20,43 @@ window.addEventListener('keydown', (event) => {
 
 // Let it be for now
 // window.addEventListener('unload', (event) => {
-	// 	clearInterval(gameInterval)
-	// 	clearInterval(timerInterval)
-	// 	clearInterval(backgroundInterval)
-	// })
+// 	clearInterval(gameInterval)
+// 	clearInterval(timerInterval)
+// 	clearInterval(backgroundInterval)
+// })
 	
-	window.addEventListener('keyup', (event) => {
-		switch (event.key) {
-			case 'd': v.keys.d.pressed = false; break
-			case 'a': v.keys.a.pressed = false; break
-			case 'w': v.keys.w.pressed = false; break
-			
-			case 'ArrowRight': v.keys.ArrowRight.pressed = false; break
-			case 'ArrowLeft': v.keys.ArrowLeft.pressed = false; break
-			case 'ArrowUp': v.keys.ArrowUp.pressed = false; break
-		}
-	})
-	
-	
-	let gameInterval;
-	let timerInterval;
-	function startGame2() {
+window.addEventListener('keyup', (event) => {
+	switch (event.key) {
+		case 'd': v.keys.d.pressed = false; break
+		case 'a': v.keys.a.pressed = false; break
+		case 'w': v.keys.w.pressed = false; break
 		
-		v = init_vars()
-		
-		// Get usernames from the players
-		// axios.get('http://localhost:8000/data/user_info/' + data.username).then((response) => { bla bla bla })
-
-		gameInterval = window.setInterval(() => game_loop(v), 1000 / v.g.fps)
-		timerInterval = window.setInterval(() => decreaseTimer(v), 1000)
+		case 'ArrowRight': v.keys.ArrowRight.pressed = false; break
+		case 'ArrowLeft': v.keys.ArrowLeft.pressed = false; break
+		case 'ArrowUp': v.keys.ArrowUp.pressed = false; break
 	}
+})
+
+
+let gameInterval;
+let timerInterval;
+function startGame2() {
+	
+	v = init_vars()
+	
+	// Get usernames from the players
+	// axios.get('http://localhost:8000/data/user_info/' + data.username).then((response) => { bla bla bla })
+
+	gameInterval = window.setInterval(() => game_loop(v), 1000 / v.g.fps)
+	timerInterval = window.setInterval(() => decreaseTimer(v), 1000)
+}
 	
 	
-	function decreaseTimer(v) {
-		const timer = document.querySelector('#game2-timer')
-		let time = parseInt(timer.innerHTML)
-		if (time > 0)
-		time -= 1
+function decreaseTimer(v) {
+	const timer = document.querySelector('#game2-timer')
+	let time = parseInt(timer.innerHTML)
+	if (time > 0)
+	time -= 1
 	timer.innerHTML = time
 	if (time == 0) {
 		game_end(v)
@@ -195,7 +195,10 @@ async function game_end(v) {
 
 	winner.velocity.x = 0;
 	reset_keys(v)
-	update_keys(v)
+	
+	update_keys2(v.player, v.keys.d.pressed, v.keys.a.pressed, v.keys.w.pressed, 'd', 'a')
+	update_keys2(v.enemy, v.keys.ArrowRight.pressed, v.keys.ArrowLeft.pressed, v.keys.ArrowUp.pressed, 'ArrowRight', 'ArrowLeft')
+	
 	winner.framesCurrent = winner.framesMax
 
 	
