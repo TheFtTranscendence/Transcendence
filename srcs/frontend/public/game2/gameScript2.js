@@ -74,7 +74,8 @@ function game_loop(v) {
 	v.player.update(v.g.fps)
 	v.enemy.update(v.g.fps)
 
-	update_keys(v)
+	update_keys2(v.player, v.keys.d.pressed, v.keys.a.pressed, v.keys.w.pressed, 'd', 'a')
+	update_keys2(v.enemy, v.keys.ArrowRight.pressed, v.keys.ArrowLeft.pressed, v.keys.ArrowUp.pressed, 'ArrowRight', 'ArrowLeft')
 	
 	detect_colision(v.player, v.enemy)
 	detect_colision(v.enemy, v.player)
@@ -94,87 +95,44 @@ function update_offset(v)
 		v.enemy.attackbox.offset.x = 50 - v.enemy.attackbox.width
 }
 
-function update_keys(v) {
+function update_keys2(guy, keyPress_left, keyPress_right, key_jump, key_right, key_left) {
+	if (guy.velocity.x > 0)
+		guy.velocity.x -= drag
+	else if (guy.velocity.x < 0)
+		guy.velocity.x += drag
+	else if (guy.velocity.x <= 2 && guy.velocity.x >= -2)
+		guy.velocity.x = 0
 
-	if (v.player.velocity.x > 0)
-		v.player.velocity.x -= drag
-	else if (v.player.velocity.x < 0)
-		v.player.velocity.x += drag
-	else if (v.player.velocity.x <= 2 && v.player.velocity.x >= -2)
-		v.player.velocity.x = 0
 
-
-	if (v.keys.d.pressed && v.player.lastKey === 'd' && v.player.stunned == false) {
-		v.player.velocity.x = 5
-		v.player.facing = 'right'
-		v.player.change_sprites(v.player.sprites.run)
+	if (keyPress_left && guy.lastKey === key_right && guy.stunned == false) {
+		guy.velocity.x = 5
+		guy.facing = 'right'
+		guy.change_sprites(guy.sprites.run)
 	}
-	else if (v.keys.a.pressed && v.player.lastKey === 'a' && v.player.stunned == false) {
-		v.player.velocity.x = -5
-		v.player.facing = 'left'
-		v.player.change_sprites(v.player.sprites.runInv)
+	else if (keyPress_right && guy.lastKey === key_left && guy.stunned == false) {
+		guy.velocity.x = -5
+		guy.facing = 'left'
+		guy.change_sprites(guy.sprites.runInv)
 	}
-	else if (v.player.position.y === canvas.height - v.player.height - ground_height)
+	else if (guy.position.y === canvas.height - guy.height - ground_height)
 	{
-		if (v.player.facing === 'right')
-			v.player.change_sprites(v.player.sprites.idle)
+		if (guy.facing === 'right')
+			guy.change_sprites(guy.sprites.idle)
 		else
-			v.player.change_sprites(v.player.sprites.idleInv)
+			guy.change_sprites(guy.sprites.idleInv)
 	}
 
-	if (v.keys.w.pressed && v.player.position.y === canvas.height - v.player.height - ground_height && v.player.stunned == false)
-		v.player.velocity.y = -20
+	if (key_jump && guy.position.y === canvas.height - guy.height - ground_height && guy.stunned == false)
+		guy.velocity.y = -20
 	
-	if (v.player.velocity.y < 0 && v.player.facing == 'right')
-		v.player.change_sprites(v.player.sprites.jump)
-	else if (v.player.velocity.y < 0  && v.player.facing == 'left')
-		v.player.change_sprites(v.player.sprites.jumpInv)
-	else if (v.player.velocity.y > 0  && v.player.facing == 'right')
-		v.player.change_sprites(v.player.sprites.fall)
-	else if (v.player.velocity.y > 0  && v.player.facing == 'left')
-		v.player.change_sprites(v.player.sprites.fallInv)
-	
-	
-	if (v.enemy.velocity.x > 0)
-		v.enemy.velocity.x -= drag
-	else if (v.enemy.velocity.x < 0)
-		v.enemy.velocity.x += drag
-	else if (v.enemy.velocity.x <= 2 && v.enemy.velocity.x >= -2)
-		v.enemy.velocity.x = 0
-
-	
-	if (v.keys.ArrowRight.pressed && v.enemy.lastKey === 'ArrowRight' && v.enemy.stunned == false) {
-		v.enemy.velocity.x = 5
-		v.enemy.facing = 'right'
-		v.enemy.change_sprites(v.enemy.sprites.run)
-		
-	}
-	else if (v.keys.ArrowLeft.pressed && v.enemy.lastKey === 'ArrowLeft' && v.enemy.stunned == false) {
-		v.enemy.velocity.x = -5
-		v.enemy.facing = 'left'
-		v.enemy.change_sprites(v.enemy.sprites.runInv)
-	}
-	else if (v.enemy.position.y === canvas.height - v.enemy.height - ground_height)
-	{
-		if (v.enemy.facing === 'right')
-			v.enemy.change_sprites(v.enemy.sprites.idle)
-		else if (v.enemy.facing === 'left')
-			v.enemy.change_sprites(v.enemy.sprites.idleInv)
-	}
-
-
-	if (v.keys.ArrowUp.pressed && v.enemy.position.y === canvas.height - v.enemy.height - ground_height  && v.enemy.stunned == false)
-		v.enemy.velocity.y = -20
-	
-	if (v.enemy.velocity.y < 0 && v.enemy.facing == 'right')
-		v.enemy.change_sprites(v.enemy.sprites.jump)
-	else if (v.enemy.velocity.y < 0  && v.enemy.facing == 'left')
-		v.enemy.change_sprites(v.enemy.sprites.jumpInv)
-	else if (v.enemy.velocity.y > 0  && v.enemy.facing == 'right')
-		v.enemy.change_sprites(v.enemy.sprites.fall)
-	else if (v.enemy.velocity.y > 0  && v.enemy.facing == 'left')
-		v.enemy.change_sprites(v.enemy.sprites.fallInv)
-	
+	if (guy.velocity.y < 0 && guy.facing == 'right')
+		guy.change_sprites(guy.sprites.jump)
+	else if (guy.velocity.y < 0  && guy.facing == 'left')
+		guy.change_sprites(guy.sprites.jumpInv)
+	else if (guy.velocity.y > 0  && guy.facing == 'right')
+		guy.change_sprites(guy.sprites.fall)
+	else if (guy.velocity.y > 0  && guy.facing == 'left')
+		guy.change_sprites(guy.sprites.fallInv)
 }
 
 function detect_colision(Sprite1, Sprite2) {
@@ -277,7 +235,7 @@ async function game_end(v) {
 	// Reset variables!
 	// Do we really?
 	// YES!!!
-	v = NULL
+	// Not going global!
 
 	// Para registar na blockchain o jogo
 	// axios.post('http://localhost:8001/solidity/addgame')
