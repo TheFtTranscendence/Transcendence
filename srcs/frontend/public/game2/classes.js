@@ -97,16 +97,16 @@ class Fighter extends Sprite {
 
 		this.velocity.y = -10
 
-		if (other.position.x < this.position.x)
+		if (other.facing == 'right') {
 			this.velocity.x = knockback
-		else
-			this.velocity.x = -1 * knockback
-		
-		this.stunned = true
-		if (this.facing == 'right')
 			this.change_sprites(this.sprites.hit)
-		else if (this.facing == 'left')
+		}
+		else {
+			this.velocity.x = -1 * knockback
 			this.change_sprites(this.sprites.hitInv)
+		}
+
+		this.stunned = true
 		setTimeout(() => {this.stunned = false}, stun_time)
 		this.health -= hit_dmg
 		this.bar.style.width = this.health + '%'

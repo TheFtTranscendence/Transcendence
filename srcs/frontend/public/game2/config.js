@@ -1,7 +1,6 @@
+const fps = 100
 const canvas_width = 1366
 const canvas_height = 768
- 
-const fps = 100
  
 const gravity = 0.5 // px
 const drag = .50 // px

@@ -44,7 +44,7 @@ function startGame2() {
 
 	v = init_vars()
 	
-	gameInterval = window.setInterval(() => game_loop(v), 1000 / fps)
+	gameInterval = window.setInterval(() => game_loop(v), 1000 / v.g.fps)
 	timerInterval = window.setInterval(() => decreaseTimer(v), 1000)
 }
 
@@ -66,10 +66,10 @@ function game_loop(v) {
 	
 	update_offset(v)
 	
-	v.background.update()
-	v.shop.update()
-	v.player.update()
-	v.enemy.update()
+	v.background.update(v.g.fps)
+	v.shop.update(v.g.fps)
+	v.player.update(v.g.fps)
+	v.enemy.update(v.g.fps)
 
 	update_keys(v)
 	
@@ -251,14 +251,13 @@ async function game_end(v) {
 	else 
 		winner.change_sprites(winner.sprites.idleInv)
 
-	
 	backgroundInterval = setInterval(() => {
 		c.fillStyle = 'black'; c.fillRect(0, 0, canvas.width, canvas.height)
-		v.background.update()
-		v.shop.update()
-		winner.update()
-		loser.death_update()
-	}, 1000 / fps)
+		v.background.update(v.g.fps)
+		v.shop.update(v.g.fps)
+		winner.update(v.g.fps)
+		loser.death_update(v.g.fps)
+	}, 1000 / v.g.fps)
 	
 	console.log('Game ending sequence ended')
 
