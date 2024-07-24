@@ -27,7 +27,7 @@ class Sprite {
 		)
 	}
 	
-	animateFrames() {
+	animateFrames(fps) {
 		this.framesElapsed++
 		if (this.framesElapsed >= fps / this.time)
 		{
@@ -39,9 +39,9 @@ class Sprite {
 		}
 	}
 
-	update() {
+	update(fps) {
 		this.draw()
-		this.animateFrames()
+		this.animateFrames(fps)
 	}
 
 	update_game_end() {
@@ -153,10 +153,10 @@ class Fighter extends Sprite {
 			setTimeout(() => {this.attackCD = false}, 250)
 		}
 	}
-	update() {
+	update(fps) {
 				
 		this.draw()
-		this.animateFrames()
+		this.animateFrames(fps)
 
 			
 		this.attackbox.position.x = this.position.x + this.attackbox.offset.x;
@@ -193,10 +193,10 @@ class Fighter extends Sprite {
 
 	}
 
-	death_update() {
+	death_update(fps) {
 		this.draw()
 		if (this.framesCurrent < this.framesMax - 1)
-			this.animateFrames()
+			this.animateFrames(fps)
 
 		this.velocity.y += gravity
 

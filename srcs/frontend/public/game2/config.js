@@ -1,4 +1,3 @@
-const fps = 100
 const canvas_width = 1366
 const canvas_height = 768
  
