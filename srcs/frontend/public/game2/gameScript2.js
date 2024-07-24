@@ -67,7 +67,8 @@ window.addEventListener('keydown', (event) => {
 function game_loop(v) {
 	c.fillStyle = 'black'; c.fillRect(0, 0, canvas.width, canvas.height)
 	
-	update_offset(v)
+	update_attackbox_offset(v.player)
+	update_attackbox_offset(v.enemy)
 	
 	v.background.update(v.g.fps)
 	v.shop.update(v.g.fps)
@@ -82,17 +83,12 @@ function game_loop(v) {
 
 }
 
-function update_offset(v)
+function update_attackbox_offset(guy)
 {
-	if (v.player.velocity.x > 1)
-		v.player.attackbox.offset.x = 0
-	else if (v.player.velocity.x < -1)
-		v.player.attackbox.offset.x = 50 - v.player.attackbox.width
-
-	if (v.enemy.velocity.x > 1)
-		v.enemy.attackbox.offset.x = 0
-	else if (v.enemy.velocity.x < -1)
-		v.enemy.attackbox.offset.x = 50 - v.enemy.attackbox.width
+	if (guy.velocity.x > 1)
+		guy.attackbox.offset.x = 0
+	else if (guy.velocity.x < -1)
+		guy.attackbox.offset.x = 50 - guy.attackbox.width
 }
 
 function update_keys2(guy, keyPress_left, keyPress_right, key_jump, key_right, key_left) {
