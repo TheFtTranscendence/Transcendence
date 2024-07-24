@@ -20,39 +20,42 @@ window.addEventListener('keydown', (event) => {
 
 // Let it be for now
 // window.addEventListener('unload', (event) => {
-// 	clearInterval(gameInterval)
-// 	clearInterval(timerInterval)
-// 	clearInterval(backgroundInterval)
-// })
-
-window.addEventListener('keyup', (event) => {
-	switch (event.key) {
-		case 'd': v.keys.d.pressed = false; break
-		case 'a': v.keys.a.pressed = false; break
-		case 'w': v.keys.w.pressed = false; break
-		
-		case 'ArrowRight': v.keys.ArrowRight.pressed = false; break
-		case 'ArrowLeft': v.keys.ArrowLeft.pressed = false; break
-		case 'ArrowUp': v.keys.ArrowUp.pressed = false; break
-	}
-})
-
-
-let gameInterval;
-let timerInterval;
-function startGame2() {
-
-	v = init_vars()
+	// 	clearInterval(gameInterval)
+	// 	clearInterval(timerInterval)
+	// 	clearInterval(backgroundInterval)
+	// })
 	
-	gameInterval = window.setInterval(() => game_loop(v), 1000 / v.g.fps)
-	timerInterval = window.setInterval(() => decreaseTimer(v), 1000)
-}
+	window.addEventListener('keyup', (event) => {
+		switch (event.key) {
+			case 'd': v.keys.d.pressed = false; break
+			case 'a': v.keys.a.pressed = false; break
+			case 'w': v.keys.w.pressed = false; break
+			
+			case 'ArrowRight': v.keys.ArrowRight.pressed = false; break
+			case 'ArrowLeft': v.keys.ArrowLeft.pressed = false; break
+			case 'ArrowUp': v.keys.ArrowUp.pressed = false; break
+		}
+	})
+	
+	
+	let gameInterval;
+	let timerInterval;
+	function startGame2() {
+		
+		v = init_vars()
+		
+		// Get usernames from the players
+		// axios.get('http://localhost:8000/data/user_info/' + data.username).then((response) => { bla bla bla })
 
-
-function decreaseTimer(v) {
-	const timer = document.querySelector('#game2-timer')
-	let time = parseInt(timer.innerHTML)
-	if (time > 0)
+		gameInterval = window.setInterval(() => game_loop(v), 1000 / v.g.fps)
+		timerInterval = window.setInterval(() => decreaseTimer(v), 1000)
+	}
+	
+	
+	function decreaseTimer(v) {
+		const timer = document.querySelector('#game2-timer')
+		let time = parseInt(timer.innerHTML)
+		if (time > 0)
 		time -= 1
 	timer.innerHTML = time
 	if (time == 0) {
@@ -165,12 +168,13 @@ function update_keys(v) {
 	
 	if (v.enemy.velocity.y < 0 && v.enemy.facing == 'right')
 		v.enemy.change_sprites(v.enemy.sprites.jump)
-	else if (v.enemy.velocity.y > 0 && v.enemy.facing == 'left')
-		v.enemy.change_sprites(v.enemy.sprites.fall)
-	else if (v.enemy.velocity.y < 0 && v.enemy.facing == 'right')
+	else if (v.enemy.velocity.y < 0  && v.enemy.facing == 'left')
 		v.enemy.change_sprites(v.enemy.sprites.jumpInv)
-	else if (v.enemy.velocity.y > 0 && v.enemy.facing == 'left')
+	else if (v.enemy.velocity.y > 0  && v.enemy.facing == 'right')
+		v.enemy.change_sprites(v.enemy.sprites.fall)
+	else if (v.enemy.velocity.y > 0  && v.enemy.facing == 'left')
 		v.enemy.change_sprites(v.enemy.sprites.fallInv)
+	
 }
 
 function detect_colision(Sprite1, Sprite2) {
@@ -272,7 +276,11 @@ async function game_end(v) {
 
 	// Reset variables!
 	// Do we really?
+	// YES!!!
+	v = NULL
 
+	// Para registar na blockchain o jogo
+	// axios.post('http://localhost:8001/solidity/addgame')
 	
 	console.log('Game Ended!')
 }
