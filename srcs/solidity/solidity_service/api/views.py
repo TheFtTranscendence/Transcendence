@@ -39,7 +39,7 @@ def add_instance(request):
         base_gas = contract.functions.addInstance().estimate_gas({
             'from': web3.eth.default_account
         })
-        gas = int(base_gas * 1.5)
+        gas = int(base_gas * 2)
 
         # Build the transaction
         tx = contract.functions.addInstance().build_transaction({
@@ -81,7 +81,7 @@ def add_new_game(request, instanceIndex):
         base_gas = contract.functions.addGame(instanceIndex, player1, player2, score1, score2).estimate_gas({
             'from': web3.eth.default_account
         })
-        gas = int(base_gas * 1.5)
+        gas = int(base_gas * 2)
 
         # Build the transaction
         tx = contract.functions.addGame(instanceIndex, player1, player2, score1, score2).build_transaction({
