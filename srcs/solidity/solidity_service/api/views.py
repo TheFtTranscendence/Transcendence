@@ -71,7 +71,7 @@ def add_new_game(request, instanceIndex):
     score1 = data.get('score1')
     score2 = data.get('score2')
 
-    if not all([player1, player2, score1, score2]):
+    if player1 is None or player2 is None or score1 is None or score2 is None:
         return JsonResponse({'message': 'Missing data'}, status=400)
 
     def add_new_game_func():
