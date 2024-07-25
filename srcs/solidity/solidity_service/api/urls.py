@@ -5,6 +5,7 @@ urlpatterns = [
     # Setter functions
     path('addinstance/', add_instance),
     path('addgame/<int:instanceIndex>', add_new_game),
+    path('addtournament/<int:instanceIndex>', add_new_tournament),
 
     # Getter functions
     path('getnumberofgames/<int:instanceIndex>', get_number_of_games),

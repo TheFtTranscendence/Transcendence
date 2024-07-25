@@ -74,7 +74,7 @@ contract Score is Ownable {
         * @notice Add a new instance to the database.
         * @dev Returns the index of the new instance. Starting from 0.
     **/
-    function addInstance() public onlyOwner returns (uint256){
+    function addInstance() public onlyOwner {
         emit InstanceAdded(instanceIndex);
         instanceIndex++;
     }
@@ -106,7 +106,7 @@ contract Score is Ownable {
         if (_instanceIndex < 0 || _instanceIndex >= instanceIndex)
             revert wrongInstanceIndex();
         // check if the number of players is correct
-        if (_players.length != 4 || _players.length != 8)
+        if (_players.length != 4 && _players.length != 8)
             revert wrongNumberOfPlayers();
         // check if a tournament is not already in progress
         if (instancesTournament[_instanceIndex].length > 0) {
@@ -161,6 +161,15 @@ contract Score is Ownable {
 
     function getNumberOfTournaments(uint256 _instanceIndex) public view returns (uint256) {
         return instancesTournament[_instanceIndex].length;
+    }
+
+    // get the current tournament index
+    function getCurrentTournamentIndex(uint256 _instanceIndex) public view returns (uint256) {
+        if (_instanceIndex < 0 || _instanceIndex >= instanceIndex)
+            revert wrongInstanceIndex();
+        if (instancesTournament[_instanceIndex].length == 0)
+            return 0;
+        return instancesTournament[_instanceIndex].length - 1;
     }
 
     /**

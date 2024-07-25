@@ -35,7 +35,7 @@ def add_instance(request):
     def add_instance_func():
         # Estimate gas and gas price
         base_gas_price = web3.eth.gas_price
-        gas_price = int(base_gas_price * 1.5)
+        gas_price = int(base_gas_price * 2)
         base_gas = contract.functions.addInstance().estimate_gas({
             'from': web3.eth.default_account
         })
@@ -77,7 +77,7 @@ def add_new_game(request, instanceIndex):
     def add_new_game_func():
         # Estimate gas and gas price
         base_gas_price = web3.eth.gas_price
-        gas_price = int(base_gas_price * 1.5)
+        gas_price = int(base_gas_price * 2)
         base_gas = contract.functions.addGame(instanceIndex, player1, player2, score1, score2).estimate_gas({
             'from': web3.eth.default_account
         })
@@ -102,8 +102,79 @@ def add_new_game(request, instanceIndex):
     return JsonResponse({'message': 'Game added'}, status=200)
 
 # Add tournament (4 or 8 players)
+@api_view(['POST'])
+def add_new_tournament(request, instanceIndex):
+    data = request.data
+    players = data.get('players')
+
+    if players is None:
+        return JsonResponse({'message': 'Missing data'}, status=400)
+
+    def add_new_tournament_func():
+        # Estimate gas and gas price
+        base_gas_price = web3.eth.gas_price
+        gas_price = int(base_gas_price * 2)
+        base_gas = contract.functions.addTournament(instanceIndex, players).estimate_gas({
+            'from': web3.eth.default_account
+        })
+        gas = int(base_gas * 2)
+
+        # Build the transaction
+        tx = contract.functions.addTournament(instanceIndex, players).build_transaction({
+            'chainId': 11155111,
+            'gas': gas,
+            'gasPrice': gas_price,
+            'nonce': web3.eth.get_transaction_count(web3.eth.default_account),
+        })
+        signed_tx = web3.eth.account.sign_transaction(tx, private_key)
+        tx_hash = web3.eth.send_raw_transaction(signed_tx.raw_transaction)
+        return tx_hash
+
+    tx_hash = add_new_tournament_func()
+
+    # Wait for the transaction to be mined
+    tx_receipt = web3.eth.wait_for_transaction_receipt(tx_hash)
+
+    return JsonResponse({'message': 'Tournament added'}, status=200)
 
 # Add a tournament game (it also adds it to the array of games with a index of the tournament)
+@api_view(['POST'])
+def add_new_tournament_game(request, instanceIndex):
+    data = request.data
+    player1 = data.get('player1')
+    player2 = data.get('player2')
+    score1 = data.get('score1')
+    score2 = data.get('score2')
+
+    if player1 is None or player2 is None or score1 is None or score2 is None:
+        return JsonResponse({'message': 'Missing data'}, status=400)
+
+    def add_new_tournament_game_func():
+        # Estimate gas and gas price
+        base_gas_price = web3.eth.gas_price
+        gas_price = int(base_gas_price * 2)
+        base_gas = contract.functions.addTournamentGame(instanceIndex, player1, player2, score1, score2).estimate_gas({
+            'from': web3.eth.default_account
+        })
+        gas = int(base_gas * 2)
+
+        # Build the transaction
+        tx = contract.functions.addTournamentGame(instanceIndex, player1, player2, score1, score2).build_transaction({
+            'chainId': 11155111,
+            'gas': gas,
+            'gasPrice': gas_price,
+            'nonce': web3.eth.get_transaction_count(web3.eth.default_account),
+        })
+        signed_tx = web3.eth.account.sign_transaction(tx, private_key)
+        tx_hash = web3.eth.send_raw_transaction(signed_tx.raw_transaction)
+        return tx_hash
+
+    tx_hash = add_new_tournament_game_func()
+
+    # Wait for the transaction to be mined
+    tx_receipt = web3.eth.wait_for_transaction_receipt(tx_hash)
+
+    return JsonResponse({'message': 'Tournament game added'}, status=200)
 
 ### GETTER FUNCTIONS ###
 
