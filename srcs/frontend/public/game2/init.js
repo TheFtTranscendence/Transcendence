@@ -134,16 +134,17 @@ function reset_keys(v) {
 }
 
 function leave_game(v) {
-    
+
     console.log('fps = ' + v.g.fps)
 
     clearInterval(v.g.gameInterval)
     clearInterval(v.g.timerInterval)
     clearInterval(v.g.backgroundInterval)
-    
+        
 	
 	document.querySelector('#game2-end-text').style.display = 'none'
     v.g.timer.innerHTML = 50
-    
+        
     reset_keys(v)
+    v = 0
 }
