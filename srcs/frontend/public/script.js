@@ -62,7 +62,7 @@ function loadScript(src) {
 // Function to load all scripts
 function loadGameScript2() {
     const scripts = [
-		'game2/config.js',
+		// 'game2/config.js',
 		'game2/classes.js',
 		'game2/init.js',
         'game2/gameScript2.js'

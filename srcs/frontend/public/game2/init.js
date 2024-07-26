@@ -46,6 +46,8 @@ function init_vars(canvas_width, canvas_height, stun_time, ground_height) {
                 runInv: {imageSrc: './game2/assets/Mask/Sprites/inverted/Run.png', framesMax: 8, time: 10},
                 hitInv: {imageSrc: './game2/assets/Mask/Sprites/inverted/TakeHit-silhouette.png', framesMax: 4, time: stun_time / 4},
             },
+            hit_frame: 2,
+            hit_frameInv: 0,
             facing : 'right',
         }),
         
@@ -79,6 +81,8 @@ function init_vars(canvas_width, canvas_height, stun_time, ground_height) {
                 runInv: {imageSrc: './game2/assets/Samu/Sprites/inverted/Run.png', framesMax: 8, time: 10},
                 hitInv: {imageSrc: './game2/assets/Samu/Sprites/inverted/Take-Hit-white-silhouette.png', framesMax: 4, time: stun_time / 4},
             },
+            hit_frame: 1,
+            hit_frameInv: 1,
             facing : 'left',
         }),
         
@@ -96,6 +100,12 @@ function init_vars(canvas_width, canvas_height, stun_time, ground_height) {
         g: {
             fps: 100,
 
+            gameInterval: 0,
+            timerInterval: 0,
+            backgroundInterval: 0,
+            timer: 0,
+            time: 0,
+            
             c: 0,
             canvas: 0,
             canvas_width: canvas_width,
@@ -121,4 +131,19 @@ function reset_keys(v) {
 	v.keys.ArrowLeft.pressed = false
 	v.keys.ArrowUp.pressed = false
 
+}
+
+function leave_game(v) {
+    
+    console.log('fps = ' + v.g.fps)
+
+    clearInterval(v.g.gameInterval)
+    clearInterval(v.g.timerInterval)
+    clearInterval(v.g.backgroundInterval)
+    
+	
+	document.querySelector('#game2-end-text').style.display = 'none'
+    v.g.timer.innerHTML = 50
+    
+    reset_keys(v)
 }

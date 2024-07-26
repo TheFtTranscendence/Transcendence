@@ -56,7 +56,7 @@ class Sprite {
 }
 
 class Fighter extends Sprite {
-	constructor({ name, position, velocity, color, offset, bar , scale = 1, imageSrc, framesMax = 1, img_offset = {x: 0, y: 0}, sprites, facing}) {
+	constructor({ name, position, velocity, color, offset, bar , scale = 1, imageSrc, framesMax = 1, img_offset = {x: 0, y: 0}, sprites, hit_frame, hit_frameInv, facing}) {
 		{
 			super({ position, imageSrc, scale, framesMax, img_offset})
 		}
@@ -85,6 +85,8 @@ class Fighter extends Sprite {
 		this.framesElapsed = 0
 		
 		this.sprites = sprites
+		this.hit_frame = hit_frame
+		this.hit_frameInv = hit_frameInv
 		this.time = 10
 
 		for (const sprite in this.sprites) {

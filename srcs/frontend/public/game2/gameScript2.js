@@ -14,11 +14,11 @@ window.addEventListener('keydown', (event) => {
 })
 
 // Let it be for now
-// window.addEventListener('unload', (event) => {
-// 	clearInterval(gameInterval)
-// 	clearInterval(timerInterval)
-// 	clearInterval(backgroundInterval)
-// })
+window.addEventListener('beforeunload', (event) => {
+    console.log('leaving game')
+
+	leave_game(v)
+})
 	
 window.addEventListener('keyup', (event) => {
 	switch (event.key) {
@@ -33,35 +33,34 @@ window.addEventListener('keyup', (event) => {
 })
 
 
-let gameInterval;
-let timerInterval;
 function startGame2() {
 
-	const canvas_width = 1366
-	const canvas_height = 768
-	const stun_time = 150 // ms
-	const ground_height = 50 // px
+	canvas_width = 1366
+	canvas_height = 768
+	stun_time = 150 // ms
+	ground_height = 50 // px
 	
 	v = init_vars(canvas_width, canvas_height, stun_time, ground_height)
 	v.g.canvas = document.getElementById('game2-area')
 	v.g.c = v.g.canvas.getContext('2d')
 	v.g.canvas.width = v.g.canvas_width
 	v.g.canvas.height = v.g.canvas_height
+
+	v.g.timer = document.querySelector('#game2-timer')
+	v.g.time = parseInt(v.g.timer.innerHTML)
 	// Get usernames from the players
 	// axios.get('http://localhost:8000/data/user_info/' + data.username).then((response) => { bla bla bla })
 
-	gameInterval = window.setInterval(() => game_loop(v), 1000 / v.g.fps)
-	timerInterval = window.setInterval(() => decreaseTimer(v), 1000)
+	v.g.gameInterval = window.setInterval(() => game_loop(v), 1000 / v.g.fps)
+	v.g.timerInterval = window.setInterval(() => decreaseTimer(v), 1000)
 }
 	
 	
 function decreaseTimer(v) {
-	const timer = document.querySelector('#game2-timer')
-	let time = parseInt(timer.innerHTML)
-	if (time > 0)
-	time -= 1
-	timer.innerHTML = time
-	if (time == 0) {
+	if (v.g.time > 0)
+		v.g.time -= 1
+	v.g.timer.innerHTML = v.g.time
+	if (v.g.time == 0) {
 		game_end(v)
 	}
 }
@@ -151,27 +150,26 @@ function sleep(ms) {
 	return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-let backgroundInterval
 async function game_end(v) {
-	clearInterval(gameInterval);
-    clearInterval(timerInterval);
+	clearInterval(v.g.gameInterval);
+    clearInterval(v.g.timerInterval);
 
 	
 	if (v.player.health > v.enemy.health) {
 		loser = v.enemy
 		winner = v.player
 		if (v.player.facing == 'right')
-			v.player.framesCurrent = Mask.hit_frame	
+			v.player.framesCurrent = v.player.hit_frame	
 		else
-			v.player.framesCurrent = Mask.hit_frameInv
+			v.player.framesCurrent = v.player.hit_frameInv
 	}
 	else {
 		loser = v.player
 		winner = v.enemy
 		if (v.enemy.facing == 'right')
-			v.enemy.framesCurrent = Samu.hit_frame
+			v.enemy.framesCurrent = v.enemy.hit_frame
 		else
-			v.enemy.framesCurrent = Samu.hit_frameInv
+			v.enemy.framesCurrent = v.enemy.hit_frameInv
 	}
 
 	
@@ -215,7 +213,7 @@ async function game_end(v) {
 	else 
 		winner.change_sprites(winner.sprites.idleInv)
 
-	backgroundInterval = setInterval(() => {
+	v.g.backgroundInterval = setInterval(() => {
 		v.g.c.fillStyle = 'black'; v.g.c.fillRect(0, 0, v.g.canvas.width, v.g.canvas.height)
 		v.background.update(v.g.fps, v.g)
 		v.shop.update(v.g.fps, v.g)
@@ -239,8 +237,12 @@ async function game_end(v) {
 	// YES!!!
 	// Not going global!
 
+	leave_game(v)
+
 	// Para registar na blockchain o jogo
 	// axios.post('http://localhost:8001/solidity/addgame')
+	
+
 	
 	console.log('Game Ended!')
 }
