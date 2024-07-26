@@ -96,6 +96,8 @@ function init_vars(canvas_width, canvas_height) {
         g: {
             c: 0,
             canvas: 0,
+            gravity: 0.5, // px
+            drag: 0.5, // px
             fps: 100,
             canvas_width: 1366,
             canvas_height: 768,

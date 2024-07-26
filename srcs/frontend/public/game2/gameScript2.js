@@ -94,9 +94,9 @@ function update_attackbox_offset(guy)
 
 function update_keys2(v, guy, keyPress_left, keyPress_right, key_jump, key_right, key_left) {
 	if (guy.velocity.x > 0)
-		guy.velocity.x -= drag
+		guy.velocity.x -= v.g.drag
 	else if (guy.velocity.x < 0)
-		guy.velocity.x += drag
+		guy.velocity.x += v.g.drag
 	else if (guy.velocity.x <= 2 && guy.velocity.x >= -2)
 		guy.velocity.x = 0
 

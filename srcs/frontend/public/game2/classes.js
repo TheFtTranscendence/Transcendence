@@ -169,7 +169,7 @@ class Fighter extends Sprite {
 		// c.fillStyle = 'green'
 		// c.fillRect(this.position.x, this.position.y, this.width, this.height)
 
-		this.velocity.y += gravity
+		this.velocity.y += g.gravity
 
 		if (this.position.y + this.velocity.y + this.height >= g.canvas.height - ground_height) {
 			this.position.y = g.canvas.height - this.height - ground_height
@@ -199,7 +199,7 @@ class Fighter extends Sprite {
 		if (this.framesCurrent < this.framesMax - 1)
 			this.animateFrames(fps)
 
-		this.velocity.y += gravity
+		this.velocity.y += g.gravity
 
 		if (this.position.y + this.velocity.y + this.height >= g.canvas.height - ground_height) {
 			this.position.y = g.canvas.height - this.height - ground_height
