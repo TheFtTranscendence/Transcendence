@@ -94,22 +94,22 @@ class Fighter extends Sprite {
 		this.facing = facing
 	}
 	
-	get_hit(other) {
+	get_hit(other, g) {
 
 		this.velocity.y = -10
 
 		if (other.facing == 'right') {
-			this.velocity.x = knockback
+			this.velocity.x = g.knockback
 			this.change_sprites(this.sprites.hit)
 		}
 		else {
-			this.velocity.x = -1 * knockback
+			this.velocity.x = -1 * g.knockback
 			this.change_sprites(this.sprites.hitInv)
 		}
 
 		this.stunned = true
-		setTimeout(() => {this.stunned = false}, stun_time)
-		this.health -= hit_dmg
+		setTimeout(() => {this.stunned = false}, g.stun_time)
+		this.health -= g.hit_dmg
 		this.bar.style.width = this.health + '%'
 		if (this.health <= 0)
 		{
@@ -171,14 +171,14 @@ class Fighter extends Sprite {
 
 		this.velocity.y += g.gravity
 
-		if (this.position.y + this.velocity.y + this.height >= g.canvas.height - ground_height) {
-			this.position.y = g.canvas.height - this.height - ground_height
+		if (this.position.y + this.velocity.y + this.height >= g.canvas.height - g.ground_height) {
+			this.position.y = g.canvas.height - this.height - g.ground_height
 			this.velocity.y = 0
 		}
 		
 
-		if (this.position.y + this.velocity.y + this.height >= g.canvas.height - ground_height)
-			this.position.y = g.canvas.height - this.height - ground_height
+		if (this.position.y + this.velocity.y + this.height >= g.canvas.height - g.ground_height)
+			this.position.y = g.canvas.height - this.height - g.ground_height
 		else if (this.position.y + this.velocity.y <= 0) {
 			this.position.y = 0; this.velocity.y = 0
 		}
@@ -201,13 +201,13 @@ class Fighter extends Sprite {
 
 		this.velocity.y += g.gravity
 
-		if (this.position.y + this.velocity.y + this.height >= g.canvas.height - ground_height) {
-			this.position.y = g.canvas.height - this.height - ground_height
+		if (this.position.y + this.velocity.y + this.height >= g.canvas.height - g.ground_height) {
+			this.position.y = g.canvas.height - this.height - g.ground_height
 			this.velocity.y = 0
 		}
 		
-		if (this.position.y + this.velocity.y + this.height >= g.canvas.height - ground_height)
-			this.position.y = g.canvas.height - this.height - ground_height
+		if (this.position.y + this.velocity.y + this.height >= g.canvas.height - g.ground_height)
+			this.position.y = g.canvas.height - this.height - g.ground_height
 		else if (this.position.y + this.velocity.y <= 0) {
 			this.position.y = 0; this.velocity.y = 0
 		}

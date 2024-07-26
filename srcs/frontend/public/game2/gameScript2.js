@@ -36,11 +36,13 @@ window.addEventListener('keyup', (event) => {
 let gameInterval;
 let timerInterval;
 function startGame2() {
-	
+
 	const canvas_width = 1366
 	const canvas_height = 768
+	const stun_time = 150 // ms
+	const ground_height = 50 // px
 	
-	v = init_vars(canvas_width, canvas_height)
+	v = init_vars(canvas_width, canvas_height, stun_time, ground_height)
 	v.g.canvas = document.getElementById('game2-area')
 	v.g.c = v.g.canvas.getContext('2d')
 	v.g.canvas.width = v.g.canvas_width
@@ -79,8 +81,8 @@ function game_loop(v) {
 	update_keys2(v, v.player, v.keys.d.pressed, v.keys.a.pressed, v.keys.w.pressed, 'd', 'a')
 	update_keys2(v, v.enemy, v.keys.ArrowRight.pressed, v.keys.ArrowLeft.pressed, v.keys.ArrowUp.pressed, 'ArrowRight', 'ArrowLeft')
 	
-	detect_colision(v.player, v.enemy)
-	detect_colision(v.enemy, v.player)
+	detect_colision(v.player, v.enemy, v.g)
+	detect_colision(v.enemy, v.player, v.g)
 
 }
 
@@ -111,7 +113,7 @@ function update_keys2(v, guy, keyPress_left, keyPress_right, key_jump, key_right
 		guy.facing = 'left'
 		guy.change_sprites(guy.sprites.runInv)
 	}
-	else if (guy.position.y === v.g.canvas.height - guy.height - ground_height)
+	else if (guy.position.y === v.g.canvas.height - guy.height - v.g.ground_height)
 	{
 		if (guy.facing === 'right')
 			guy.change_sprites(guy.sprites.idle)
@@ -119,7 +121,7 @@ function update_keys2(v, guy, keyPress_left, keyPress_right, key_jump, key_right
 			guy.change_sprites(guy.sprites.idleInv)
 	}
 
-	if (key_jump && guy.position.y === v.g.canvas.height - guy.height - ground_height && guy.stunned == false)
+	if (key_jump && guy.position.y === v.g.canvas.height - guy.height - v.g.ground_height && guy.stunned == false)
 		guy.velocity.y = -20
 	
 	if (guy.velocity.y < 0 && guy.facing == 'right')
@@ -132,7 +134,7 @@ function update_keys2(v, guy, keyPress_left, keyPress_right, key_jump, key_right
 		guy.change_sprites(guy.sprites.fallInv)
 }
 
-function detect_colision(Sprite1, Sprite2) {
+function detect_colision(Sprite1, Sprite2, g) {
 	if (Sprite1.isAttacking && Sprite1.attackbox.position.x + Sprite1.attackbox.width >= Sprite2.position.x &&
 		Sprite1.attackbox.position.x <= Sprite2.position.x + Sprite2.width &&
 		Sprite1.attackbox.position.y + Sprite1.attackbox.height >= Sprite2.position.y &&
@@ -140,7 +142,7 @@ function detect_colision(Sprite1, Sprite2) {
 	{
 		console.log(Sprite1.name + " Attacked!")
 		Sprite1.isAttacking = false
-		Sprite2.get_hit(Sprite1)
+		Sprite2.get_hit(Sprite1, g)
 	}
 } 
 

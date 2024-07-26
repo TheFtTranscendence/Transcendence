@@ -1,4 +1,4 @@
-function init_vars(canvas_width, canvas_height) {
+function init_vars(canvas_width, canvas_height, stun_time, ground_height) {
 
     return {
 
@@ -94,13 +94,20 @@ function init_vars(canvas_width, canvas_height) {
         },
 
         g: {
+            fps: 100,
+
             c: 0,
             canvas: 0,
-            gravity: 0.5, // px
-            drag: 0.5, // px
-            fps: 100,
             canvas_width: 1366,
             canvas_height: 768,
+
+
+            gravity: 0.5, // px
+            drag: 0.5, // px
+            knockback: 25, // px
+            hit_dmg: 5, // %
+            stun_time: stun_time, // ms
+            ground_height: ground_height, // px
         }
     }
 }

@@ -1,8 +1,3 @@
-const knockback = 25 // px
-const ground_height = 50 // px
-const stun_time = 150 // ms
-const hit_dmg = 5 // %
- 
 
 const Mask = {
 	hit_frame: 2,
