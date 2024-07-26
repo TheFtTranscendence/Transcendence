@@ -98,8 +98,8 @@ function init_vars(canvas_width, canvas_height, stun_time, ground_height) {
 
             c: 0,
             canvas: 0,
-            canvas_width: 1366,
-            canvas_height: 768,
+            canvas_width: canvas_width,
+            canvas_height: canvas_height,
 
 
             gravity: 0.5, // px
