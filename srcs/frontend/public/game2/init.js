@@ -1,4 +1,4 @@
-function init_vars() {
+function init_vars(canvas_width, canvas_height) {
 
     return {
 
@@ -18,7 +18,7 @@ function init_vars() {
         
         player: new Fighter({
             name: 'player',
-            position: { x: canvas.width / 4, y: canvas.height - ground_height + 250},
+            position: { x: canvas_width / 4, y: canvas_height - ground_height + 250},
             velocity: { x: 0, y: 0},
             color: 'lightblue',
             offset: { x: 0, y: 0},
@@ -51,7 +51,7 @@ function init_vars() {
         
         enemy: new Fighter({
             name: 'enemy',
-            position : { x: canvas.width * 3 / 4, y: canvas.height - ground_height + 250},
+            position : { x: canvas_width * 3 / 4, y: canvas_height - ground_height + 250},
             velocity: { x: 0, y: 0},
             color: 'white',
             offset: { x: -50, y: 0},
@@ -94,6 +94,8 @@ function init_vars() {
         },
 
         g: {
+            c: 0,
+            canvas: 0,
             fps: 100,
             canvas_width: 1366,
             canvas_height: 768,

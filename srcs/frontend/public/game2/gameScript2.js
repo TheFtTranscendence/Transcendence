@@ -1,8 +1,3 @@
-const canvas = document.getElementById('game2-area')
-const c = canvas.getContext('2d')
-canvas.width = canvas_width
-canvas.height = canvas_height
-c.fillRect(0, 0, canvas.width, canvas.height)
 
 window.addEventListener('keydown', (event) => {
 	switch (event.key) {
@@ -42,8 +37,14 @@ let gameInterval;
 let timerInterval;
 function startGame2() {
 	
-	v = init_vars()
+	const canvas_width = 1366
+	const canvas_height = 768
 	
+	v = init_vars(canvas_width, canvas_height)
+	v.g.canvas = document.getElementById('game2-area')
+	v.g.c = v.g.canvas.getContext('2d')
+	v.g.canvas.width = v.g.canvas_width
+	v.g.canvas.height = v.g.canvas_height
 	// Get usernames from the players
 	// axios.get('http://localhost:8000/data/user_info/' + data.username).then((response) => { bla bla bla })
 
@@ -65,18 +66,18 @@ function decreaseTimer(v) {
 
 
 function game_loop(v) {
-	c.fillStyle = 'black'; c.fillRect(0, 0, canvas.width, canvas.height)
+	v.g.c.fillStyle = 'black'; v.g.c.fillRect(0, 0, v.g.canvas.width, v.g.canvas.height)
 	
 	update_attackbox_offset(v.player)
 	update_attackbox_offset(v.enemy)
 	
-	v.background.update(v.g.fps)
-	v.shop.update(v.g.fps)
-	v.player.update(v.g.fps)
-	v.enemy.update(v.g.fps)
+	v.background.update(v.g.fps, v.g)
+	v.shop.update(v.g.fps, v.g)
+	v.player.update(v.g.fps, v.g)
+	v.enemy.update(v.g.fps, v.g)
 
-	update_keys2(v.player, v.keys.d.pressed, v.keys.a.pressed, v.keys.w.pressed, 'd', 'a')
-	update_keys2(v.enemy, v.keys.ArrowRight.pressed, v.keys.ArrowLeft.pressed, v.keys.ArrowUp.pressed, 'ArrowRight', 'ArrowLeft')
+	update_keys2(v, v.player, v.keys.d.pressed, v.keys.a.pressed, v.keys.w.pressed, 'd', 'a')
+	update_keys2(v, v.enemy, v.keys.ArrowRight.pressed, v.keys.ArrowLeft.pressed, v.keys.ArrowUp.pressed, 'ArrowRight', 'ArrowLeft')
 	
 	detect_colision(v.player, v.enemy)
 	detect_colision(v.enemy, v.player)
@@ -91,7 +92,7 @@ function update_attackbox_offset(guy)
 		guy.attackbox.offset.x = 50 - guy.attackbox.width
 }
 
-function update_keys2(guy, keyPress_left, keyPress_right, key_jump, key_right, key_left) {
+function update_keys2(v, guy, keyPress_left, keyPress_right, key_jump, key_right, key_left) {
 	if (guy.velocity.x > 0)
 		guy.velocity.x -= drag
 	else if (guy.velocity.x < 0)
@@ -110,7 +111,7 @@ function update_keys2(guy, keyPress_left, keyPress_right, key_jump, key_right, k
 		guy.facing = 'left'
 		guy.change_sprites(guy.sprites.runInv)
 	}
-	else if (guy.position.y === canvas.height - guy.height - ground_height)
+	else if (guy.position.y === v.g.canvas.height - guy.height - ground_height)
 	{
 		if (guy.facing === 'right')
 			guy.change_sprites(guy.sprites.idle)
@@ -118,7 +119,7 @@ function update_keys2(guy, keyPress_left, keyPress_right, key_jump, key_right, k
 			guy.change_sprites(guy.sprites.idleInv)
 	}
 
-	if (key_jump && guy.position.y === canvas.height - guy.height - ground_height && guy.stunned == false)
+	if (key_jump && guy.position.y === v.g.canvas.height - guy.height - ground_height && guy.stunned == false)
 		guy.velocity.y = -20
 	
 	if (guy.velocity.y < 0 && guy.facing == 'right')
@@ -172,23 +173,23 @@ async function game_end(v) {
 	}
 
 	
-	c.fillStyle = 'black'; c.fillRect(0, 0, canvas.width, canvas.height)
+	v.g.c.fillStyle = 'black'; v.g.c.fillRect(0, 0, v.g.canvas.width, v.g.canvas.height)
 	
-	v.background.update_game_end()
-	v.shop.update_game_end()
-	v.player.draw()
-	v.enemy.draw()
+	v.background.update_game_end(v.g.c)
+	v.shop.update_game_end(v.g.c)
+	v.player.draw(v.g.c)
+	v.enemy.draw(v.g.c)
 	console.log('Players drawn')
 	await sleep(1000)
 
 	while (loser.framesCurrent < loser.framesMax - 1) {
 
-		c.fillStyle = 'black'; c.fillRect(0, 0, canvas.width, canvas.height)
+		v.g.c.fillStyle = 'black'; v.g.c.fillRect(0, 0, v.g.canvas.width, v.g.canvas.height)
 
-		v.background.update_game_end()
-		v.shop.update_game_end()
-		v.player.update_game_end()
-		v.enemy.update_game_end()
+		v.background.update_game_end(v.g.c)
+		v.shop.update_game_end(v.g.c)
+		v.player.update_game_end(v.g.c)
+		v.enemy.update_game_end(v.g.c)
 		
 		await sleep(1000)
 	}
@@ -196,8 +197,8 @@ async function game_end(v) {
 	winner.velocity.x = 0;
 	reset_keys(v)
 	
-	update_keys2(v.player, v.keys.d.pressed, v.keys.a.pressed, v.keys.w.pressed, 'd', 'a')
-	update_keys2(v.enemy, v.keys.ArrowRight.pressed, v.keys.ArrowLeft.pressed, v.keys.ArrowUp.pressed, 'ArrowRight', 'ArrowLeft')
+	update_keys2(v, v.player, v.keys.d.pressed, v.keys.a.pressed, v.keys.w.pressed, 'd', 'a')
+	update_keys2(v, v.enemy, v.keys.ArrowRight.pressed, v.keys.ArrowLeft.pressed, v.keys.ArrowUp.pressed, 'ArrowRight', 'ArrowLeft')
 	
 	winner.framesCurrent = winner.framesMax
 
@@ -213,11 +214,11 @@ async function game_end(v) {
 		winner.change_sprites(winner.sprites.idleInv)
 
 	backgroundInterval = setInterval(() => {
-		c.fillStyle = 'black'; c.fillRect(0, 0, canvas.width, canvas.height)
-		v.background.update(v.g.fps)
-		v.shop.update(v.g.fps)
-		winner.update(v.g.fps)
-		loser.death_update(v.g.fps)
+		v.g.c.fillStyle = 'black'; v.g.c.fillRect(0, 0, v.g.canvas.width, v.g.canvas.height)
+		v.background.update(v.g.fps, v.g)
+		v.shop.update(v.g.fps, v.g)
+		winner.update(v.g.fps, v.g)
+		loser.death_update(v.g.fps, v.g)
 	}, 1000 / v.g.fps)
 	
 	console.log('Game ending sequence ended')

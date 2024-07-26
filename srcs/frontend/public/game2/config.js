@@ -1,6 +1,3 @@
-const canvas_width = 1366
-const canvas_height = 768
- 
 const gravity = 0.5 // px
 const drag = .50 // px
 const knockback = 25 // px

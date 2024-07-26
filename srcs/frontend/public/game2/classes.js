@@ -13,7 +13,7 @@ class Sprite {
 		this.framesElapsed = 0
 		this.img_offset = img_offset
 	}
-	draw() {
+	draw(c) {
 		c.drawImage(
 			this.image,
 			this.framesCurrent * (this.image.width / this.framesMax),
@@ -40,13 +40,13 @@ class Sprite {
 		}
 	}
 
-	update(fps) {
-		this.draw()
+	update(fps, g) {
+		this.draw(g.c)
 		this.animateFrames(fps)
 	}
 
-	update_game_end() {
-		this.draw()
+	update_game_end(c) {
+		this.draw(c)
 		
 		if (this.framesCurrent < this.framesMax - 1)
 			this.framesCurrent++
@@ -118,7 +118,7 @@ class Fighter extends Sprite {
 		}
 	}
 
-	draw() {
+	draw(c) {
 		c.drawImage(
 			this.image,
 			this.framesCurrent * (this.image.width / this.framesMax),
@@ -154,9 +154,9 @@ class Fighter extends Sprite {
 			setTimeout(() => {this.attackCD = false}, 250)
 		}
 	}
-	update(fps) {
+	update(fps, g) {
 				
-		this.draw()
+		this.draw(g.c)
 		this.animateFrames(fps)
 
 			
@@ -171,22 +171,22 @@ class Fighter extends Sprite {
 
 		this.velocity.y += gravity
 
-		if (this.position.y + this.velocity.y + this.height >= canvas.height - ground_height) {
-			this.position.y = canvas.height - this.height - ground_height
+		if (this.position.y + this.velocity.y + this.height >= g.canvas.height - ground_height) {
+			this.position.y = g.canvas.height - this.height - ground_height
 			this.velocity.y = 0
 		}
 		
 
-		if (this.position.y + this.velocity.y + this.height >= canvas.height - ground_height)
-			this.position.y = canvas.height - this.height - ground_height
+		if (this.position.y + this.velocity.y + this.height >= g.canvas.height - ground_height)
+			this.position.y = g.canvas.height - this.height - ground_height
 		else if (this.position.y + this.velocity.y <= 0) {
 			this.position.y = 0; this.velocity.y = 0
 		}
 		else
 			this.position.y += this.velocity.y
 		
-		if (this.position.x + this.velocity.x + this.width >= canvas.width)
-			this.position.x = canvas.width - this.width
+		if (this.position.x + this.velocity.x + this.width >= g.canvas.width)
+			this.position.x = g.canvas.width - this.width
 		else if (this.position.x + this.velocity.x <= 0)
 			this.position.x = 0
 		else		
@@ -194,29 +194,28 @@ class Fighter extends Sprite {
 
 	}
 
-	death_update(fps) {
-		this.draw()
+	death_update(fps, g) {
+		this.draw(g.c)
 		if (this.framesCurrent < this.framesMax - 1)
 			this.animateFrames(fps)
 
 		this.velocity.y += gravity
 
-		if (this.position.y + this.velocity.y + this.height >= canvas.height - ground_height) {
-			this.position.y = canvas.height - this.height - ground_height
+		if (this.position.y + this.velocity.y + this.height >= g.canvas.height - ground_height) {
+			this.position.y = g.canvas.height - this.height - ground_height
 			this.velocity.y = 0
 		}
 		
-
-		if (this.position.y + this.velocity.y + this.height >= canvas.height - ground_height)
-			this.position.y = canvas.height - this.height - ground_height
+		if (this.position.y + this.velocity.y + this.height >= g.canvas.height - ground_height)
+			this.position.y = g.canvas.height - this.height - ground_height
 		else if (this.position.y + this.velocity.y <= 0) {
 			this.position.y = 0; this.velocity.y = 0
 		}
 		else
 			this.position.y += this.velocity.y
 		
-		if (this.position.x + this.velocity.x + this.width >= canvas.width)
-			this.position.x = canvas.width - this.width
+		if (this.position.x + this.velocity.x + this.width >= g.canvas.width)
+			this.position.x = g.canvas.width - this.width
 		else if (this.position.x + this.velocity.x <= 0)
 			this.position.x = 0
 		else		
@@ -224,8 +223,8 @@ class Fighter extends Sprite {
 	
 	}
 
-	update_game_end() {
-		this.draw()
+	update_game_end(c) {
+		this.draw(c)
 		
 		if (this.framesCurrent < this.framesMax - 1)
 			this.framesCurrent++
