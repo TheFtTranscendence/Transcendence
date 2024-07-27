@@ -37,7 +37,7 @@ contract Score is Ownable {
 
     // Custom events
     event InstanceAdded(uint256 indexed instanceIndex);
-    event GameAdded(uint256 indexed instanceIndex, uint256 timestamp, string player1, string player2, uint8 score1, uint8 score2, int8 tournament);
+    event GameAdded(uint256 indexed instanceIndex, uint256 timestamp, string player1, string player2, uint8 score1, uint8 score2, int256 tournamentIndex);
     event TournamentAdded(uint256 indexed instanceIndex, uint8 numberOfPlayers, string[] players);
     event PlayerLost(uint256 indexed instanceIndex, uint256 tournamentIndex, string player);
 
@@ -47,7 +47,7 @@ contract Score is Ownable {
         string player2;
         uint8 score1;
         uint8 score2;
-        int8 tournamentIndex;    // -1: not a tournament, then the index of the tournament
+        int256 tournamentIndex;    // -1: not a tournament, then the index of the tournament
     }
 
     struct Tournament {
@@ -124,19 +124,21 @@ contract Score is Ownable {
         emit TournamentAdded(instanceIndex, uint8(_players.length), _players);
     }
 
-    function addGameToTournament(uint256 _instanceIndex, uint8 _tournamentIndex, string memory _player1, string memory _player2, uint8 _score1, uint8 _score2) public onlyOwner {
+    function addGameToTournament(uint256 _instanceIndex, string memory _player1, string memory _player2, uint8 _score1, uint8 _score2) public onlyOwner {
+        uint256 _tournamentIndex = getCurrentTournamentIndex(_instanceIndex);
+        
         if (_instanceIndex < 0 || _instanceIndex >= instanceIndex)
             revert wrongInstanceIndex();
-        if (_tournamentIndex < 0 || _tournamentIndex >= instancesTournament[_instanceIndex].length)
-            revert wrongTournamentIndex();
         if (instancesTournament[_instanceIndex][_tournamentIndex].finished)
             revert tournamentAlreadyFinished();
 
-        instancesTournament[_instanceIndex][_tournamentIndex].games.push(Game(block.timestamp, _player1, _player2, _score1, _score2, int8(_tournamentIndex)));
-        // also add the game to the general list
-        instancesGame[_instanceIndex].push(Game(block.timestamp, _player1, _player2, _score1, _score2, int8(_tournamentIndex)));
+        // check expected players
 
-        emit GameAdded(_instanceIndex, block.timestamp, _player1, _player2, _score1, _score2, int8(_tournamentIndex));
+        instancesTournament[_instanceIndex][_tournamentIndex].games.push(Game(block.timestamp, _player1, _player2, _score1, _score2, int256(_tournamentIndex)));
+        // also add the game to the general list
+        instancesGame[_instanceIndex].push(Game(block.timestamp, _player1, _player2, _score1, _score2, int256(_tournamentIndex)));
+
+        emit GameAdded(_instanceIndex, block.timestamp, _player1, _player2, _score1, _score2, int256(_tournamentIndex));
 
         // add the looser to the reversedRanking
         if (_score1 > _score2)
@@ -196,9 +198,9 @@ contract Score is Ownable {
     }
 
     // fetching next game to play
-    function getNextPlayersTournament(uint256 _instanceIndex, uint256 _tournamentIndex) public view returns (string memory, string memory) {
-        if (_tournamentIndex < 0 || _tournamentIndex >= instancesTournament[_instanceIndex].length)
-            revert wrongTournamentIndex();
+    function getNextPlayersTournament(uint256 _instanceIndex) public view returns (string memory, string memory) {
+        uint256 _tournamentIndex = getCurrentTournamentIndex(_instanceIndex);
+
         if (instancesTournament[_instanceIndex][_tournamentIndex].games.length >= instancesTournament[_instanceIndex][_tournamentIndex].numberOfGames)
             revert tournamentAlreadyFinished();
 
