@@ -134,6 +134,11 @@ contract Score is Ownable {
 
         // check expected players
 
+
+
+
+
+
         instancesTournament[_instanceIndex][_tournamentIndex].games.push(Game(block.timestamp, _player1, _player2, _score1, _score2, int256(_tournamentIndex)));
         // also add the game to the general list
         instancesGame[_instanceIndex].push(Game(block.timestamp, _player1, _player2, _score1, _score2, int256(_tournamentIndex)));
@@ -201,11 +206,36 @@ contract Score is Ownable {
     function getNextPlayersTournament(uint256 _instanceIndex) public view returns (string memory, string memory) {
         uint256 _tournamentIndex = getCurrentTournamentIndex(_instanceIndex);
 
-        if (instancesTournament[_instanceIndex][_tournamentIndex].games.length >= instancesTournament[_instanceIndex][_tournamentIndex].numberOfGames)
+        Tournament storage currentTournament = instancesTournament[_instanceIndex][_tournamentIndex];
+
+        if (currentTournament.games.length >= currentTournament.numberOfGames)
             revert tournamentAlreadyFinished();
 
         // need to write the logic to get the next players to play
-        return (instancesTournament[_instanceIndex][_tournamentIndex].players[0], instancesTournament[_instanceIndex][_tournamentIndex].players[1]);
+        // 4 players tournament
+        if (currentTournament.numberOfPlayers == 4) {
+            if (currentTournament.games.length == 0)
+                return (currentTournament.players[0], currentTournament.players[1]);
+            else if (currentTournament.games.length == 1)
+                return (currentTournament.players[2], currentTournament.players[3]);
+            else if (currentTournament.games.length == 2)
+                return (getWinner(currentTournament.games[0]), getWinner(currentTournament.games[1]));
+        }
+        // 8 players tournament
+        if (currentTournament.games.length == 0)
+            return (currentTournament.players[0], currentTournament.players[1]);
+        else if (currentTournament.games.length == 1)
+            return (currentTournament.players[2], currentTournament.players[3]);
+        else if (currentTournament.games.length == 2)
+            return (currentTournament.players[4], currentTournament.players[5]);
+        else if (currentTournament.games.length == 3)
+            return (currentTournament.players[6], currentTournament.players[7]);
+        else if (currentTournament.games.length == 4)
+            return (getWinner(currentTournament.games[0]), getWinner(currentTournament.games[1]));
+        else if (currentTournament.games.length == 5)
+            return (getWinner(currentTournament.games[2]), getWinner(currentTournament.games[3]));
+        else if (currentTournament.games.length == 6)
+            return (getWinner(currentTournament.games[4]), getWinner(currentTournament.games[5]));
     }
 
     // fetching the ranking of a tournament
@@ -216,6 +246,13 @@ contract Score is Ownable {
             revert tournamentNotFinished();
 
         return instancesTournament[_instanceIndex][_tournamentIndex].reversedRanking;
+    }
+
+    // internal function to check who is the winner of a game
+    function getWinner(Game memory game) internal pure returns (string memory) {
+        if (game.score1 > game.score2)
+            return game.player1;
+        return game.player2;
     }
 
 }
