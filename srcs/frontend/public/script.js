@@ -11,7 +11,7 @@ const routes = {
 								<div id="game2-bar1"></div>
 							</div>
 							<!-- timer -->
-							<div id="game2-timer"> 5 </div>
+							<div id="game2-timer"> 50 </div>
 							<!-- Player 2 health -->
 							<div id="game2-bar2-parent">
 								<div id="game2-bar2-background"></div>
