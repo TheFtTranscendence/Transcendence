@@ -9,6 +9,7 @@ error wrongTournamentIndex();
 error AlreadyInTournament();
 error tournamentNotFinished();
 error tournamentAlreadyFinished();
+error wrongPlayers();
 
 /**
  * @title Ownable
@@ -133,11 +134,9 @@ contract Score is Ownable {
             revert tournamentAlreadyFinished();
 
         // check expected players
-
-
-
-
-
+        (string memory expectedPlayer1, string memory expectedPlayer2) = getNextPlayersTournament(_instanceIndex);
+        if (keccak256(abi.encodePacked(expectedPlayer1)) != keccak256(abi.encodePacked(_player1)) || keccak256(abi.encodePacked(expectedPlayer2)) != keccak256(abi.encodePacked(_player2)))
+            revert wrongPlayers();
 
         instancesTournament[_instanceIndex][_tournamentIndex].games.push(Game(block.timestamp, _player1, _player2, _score1, _score2, int256(_tournamentIndex)));
         // also add the game to the general list
@@ -211,7 +210,6 @@ contract Score is Ownable {
         if (currentTournament.games.length >= currentTournament.numberOfGames)
             revert tournamentAlreadyFinished();
 
-        // need to write the logic to get the next players to play
         // 4 players tournament
         if (currentTournament.numberOfPlayers == 4) {
             if (currentTournament.games.length == 0)
@@ -222,20 +220,24 @@ contract Score is Ownable {
                 return (getWinner(currentTournament.games[0]), getWinner(currentTournament.games[1]));
         }
         // 8 players tournament
-        if (currentTournament.games.length == 0)
-            return (currentTournament.players[0], currentTournament.players[1]);
-        else if (currentTournament.games.length == 1)
-            return (currentTournament.players[2], currentTournament.players[3]);
-        else if (currentTournament.games.length == 2)
-            return (currentTournament.players[4], currentTournament.players[5]);
-        else if (currentTournament.games.length == 3)
-            return (currentTournament.players[6], currentTournament.players[7]);
-        else if (currentTournament.games.length == 4)
-            return (getWinner(currentTournament.games[0]), getWinner(currentTournament.games[1]));
-        else if (currentTournament.games.length == 5)
-            return (getWinner(currentTournament.games[2]), getWinner(currentTournament.games[3]));
-        else if (currentTournament.games.length == 6)
-            return (getWinner(currentTournament.games[4]), getWinner(currentTournament.games[5]));
+        else if (currentTournament.numberOfPlayers == 8) {
+            if (currentTournament.games.length == 0)
+                return (currentTournament.players[0], currentTournament.players[1]);
+            else if (currentTournament.games.length == 1)
+                return (currentTournament.players[2], currentTournament.players[3]);
+            else if (currentTournament.games.length == 2)
+                return (currentTournament.players[4], currentTournament.players[5]);
+            else if (currentTournament.games.length == 3)
+                return (currentTournament.players[6], currentTournament.players[7]);
+            else if (currentTournament.games.length == 4)
+                return (getWinner(currentTournament.games[0]), getWinner(currentTournament.games[1]));
+            else if (currentTournament.games.length == 5)
+                return (getWinner(currentTournament.games[2]), getWinner(currentTournament.games[3]));
+            else if (currentTournament.games.length == 6)
+                return (getWinner(currentTournament.games[4]), getWinner(currentTournament.games[5]));
+        }
+        // should never reach this line
+        return (currentTournament.players[0], currentTournament.players[1]);
     }
 
     // fetching the ranking of a tournament
