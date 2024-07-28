@@ -52,7 +52,10 @@ def add_instance(request):
         tx_hash = web3.eth.send_raw_transaction(signed_tx.raw_transaction)
         return tx_hash
     
-    tx_hash = add_instance_func()
+    try:
+        tx_hash = add_instance_func()
+    except Exception as e:
+        return JsonResponse({'message': str(e)}, status=400)
 
     # Wait for the transaction to be mined
     tx_receipt = web3.eth.wait_for_transaction_receipt(tx_hash)
@@ -64,7 +67,7 @@ def add_instance(request):
 
 # Add a game
 @api_view(['POST'])
-def add_new_game(request, instanceIndex):
+def add_game(request, instanceIndex):
     data = request.data
     player1 = data.get('player1')
     player2 = data.get('player2')
@@ -74,7 +77,7 @@ def add_new_game(request, instanceIndex):
     if player1 is None or player2 is None or score1 is None or score2 is None:
         return JsonResponse({'message': 'Missing data'}, status=400)
 
-    def add_new_game_func():
+    def add_game_func():
         # Estimate gas and gas price
         base_gas_price = web3.eth.gas_price
         gas_price = int(base_gas_price * 2)
@@ -94,7 +97,10 @@ def add_new_game(request, instanceIndex):
         tx_hash = web3.eth.send_raw_transaction(signed_tx.raw_transaction)
         return tx_hash
 
-    tx_hash = add_new_game_func()
+    try:
+        tx_hash = add_game_func()
+    except Exception as e:
+        return JsonResponse({'message': str(e)}, status=400)
 
     # Wait for the transaction to be mined
     tx_receipt = web3.eth.wait_for_transaction_receipt(tx_hash)
@@ -103,14 +109,14 @@ def add_new_game(request, instanceIndex):
 
 # Add tournament (4 or 8 players)
 @api_view(['POST'])
-def add_new_tournament(request, instanceIndex):
+def add_tournament(request, instanceIndex):
     data = request.data
     players = data.get('players')
 
     if players is None:
         return JsonResponse({'message': 'Missing data'}, status=400)
 
-    def add_new_tournament_func():
+    def add_tournament_func():
         # Estimate gas and gas price
         base_gas_price = web3.eth.gas_price
         gas_price = int(base_gas_price * 2)
@@ -130,7 +136,10 @@ def add_new_tournament(request, instanceIndex):
         tx_hash = web3.eth.send_raw_transaction(signed_tx.raw_transaction)
         return tx_hash
 
-    tx_hash = add_new_tournament_func()
+    try:
+        tx_hash = add_tournament_func()
+    except Exception as e:
+        return JsonResponse({'message': str(e)}, status=400)
 
     # Wait for the transaction to be mined
     tx_receipt = web3.eth.wait_for_transaction_receipt(tx_hash)
@@ -139,7 +148,7 @@ def add_new_tournament(request, instanceIndex):
 
 # Add a tournament game
 @api_view(['POST'])
-def add_new_tournament_game(request, instanceIndex):
+def add_tournament_game(request, instanceIndex):
     data = request.data
     player1 = data.get('player1')
     player2 = data.get('player2')
@@ -149,7 +158,7 @@ def add_new_tournament_game(request, instanceIndex):
     if player1 is None or player2 is None or score1 is None or score2 is None:
         return JsonResponse({'message': 'Missing data'}, status=400)
 
-    def add_new_tournament_game_func():
+    def add_tournament_game_func():
         # Estimate gas and gas price
         base_gas_price = web3.eth.gas_price
         gas_price = int(base_gas_price * 2)
@@ -169,7 +178,10 @@ def add_new_tournament_game(request, instanceIndex):
         tx_hash = web3.eth.send_raw_transaction(signed_tx.raw_transaction)
         return tx_hash
 
-    tx_hash = add_new_tournament_game_func()
+    try:
+        tx_hash = add_tournament_game_func()
+    except Exception as e:
+        return JsonResponse({'message': str(e)}, status=400)
 
     # Wait for the transaction to be mined
     tx_receipt = web3.eth.wait_for_transaction_receipt(tx_hash)
@@ -178,18 +190,32 @@ def add_new_tournament_game(request, instanceIndex):
 
 ### GETTER FUNCTIONS ###
 
-# Get the number of games
-# @api_view(['GET'])
-# def get_number_of_games(request, instanceIndex):
-#     number_of_games = contract.functions.getNumberOfGames(instanceIndex).call()
-#     return JsonResponse({'number_of_games': number_of_games}, status=200)
-
 # Get all the games from an instance (for the history)
 @api_view(['GET'])
 def get_games(request, instanceIndex):
-    games = contract.functions.getGames(instanceIndex).call()
+    try:
+        games = contract.functions.getGames(instanceIndex).call()
+    except Exception as e:
+        return JsonResponse({'message': str(e)}, status=400)
+
     return JsonResponse({'games': games}, status=200)
 
 # Get the next tournament game to play (returns 2 players)
+@api_view(['GET'])
+def get_next_tournament_player(request, instanceIndex):
+    try:
+        players = contract.functions.getNextTournamentPlayers(instanceIndex).call()
+    except Exception as e:
+        return JsonResponse({'message': str(e)}, status=400)
+
+    return JsonResponse({'players': players}, status=200)
 
 # Get a tournament ranking
+@api_view(['GET'])
+def get_tournament_ranking(request, instanceIndex, tournamentIndex):
+    try:
+        ranking = contract.functions.getTournamentRanking(instanceIndex, tournamentIndex).call()
+    except Exception as e:
+        return JsonResponse({'message': str(e)}, status=400)
+
+    return JsonResponse({'ranking': ranking}, status=200)

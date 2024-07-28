@@ -183,7 +183,7 @@ contract Score is Ownable {
         if (_instanceIndex < 0 || _instanceIndex >= instanceIndex)
             revert wrongInstanceIndex();
         if (instancesTournament[_instanceIndex].length == 0)
-            return 0;
+            revert noCurrentTournament();
         return instancesTournament[_instanceIndex].length - 1;
     }
 
@@ -216,9 +216,10 @@ contract Score is Ownable {
         * @return returns The names of the next players.
     */
     function getNextTournamentPlayers(uint256 _instanceIndex) public view returns (string memory, string memory) {
-        uint256 _tournamentIndex = getCurrentTournamentIndex(_instanceIndex);
+        if (_instanceIndex < 0 || _instanceIndex >= instanceIndex)
+            revert wrongInstanceIndex();
 
-        Tournament storage currentTournament = instancesTournament[_instanceIndex][_tournamentIndex];
+        Tournament memory currentTournament = instancesTournament[_instanceIndex][getCurrentTournamentIndex(_instanceIndex)];
 
         if (currentTournament.games.length >= currentTournament.numberOfGames)
             revert noCurrentTournament();
@@ -249,8 +250,7 @@ contract Score is Ownable {
             else if (currentTournament.games.length == 6)
                 return (getWinner(currentTournament.games[4]), getWinner(currentTournament.games[5]));
         }
-        // should never reach this line
-        return (currentTournament.players[0], currentTournament.players[1]);
+        revert noCurrentTournament();
     }
 
     /**
