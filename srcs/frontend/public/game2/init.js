@@ -102,7 +102,7 @@ function init_vars() {
         },
 
         g: {
-            fps: 50,
+            fps: 100,
 
             gameInterval: 0,
             timerInterval: 0,
