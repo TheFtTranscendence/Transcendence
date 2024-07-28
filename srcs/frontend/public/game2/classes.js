@@ -198,6 +198,7 @@ class Fighter extends Sprite {
 
 	death_update(g) {
 		this.draw(g.c)
+		
 		if (this.framesCurrent < this.framesMax - 1)
 			this.animateFrames(g.fps)
 
