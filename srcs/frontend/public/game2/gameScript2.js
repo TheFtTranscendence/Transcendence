@@ -1,53 +1,14 @@
-window.addEventListener('keydown', (event) => {
-	switch (event.key) {
-		case 'd':v.keys.d.pressed = true; v.player.lastKey = 'd'; break
-		case 'a':v.keys.a.pressed = true; v.player.lastKey = 'a'; break
-		case 'w':v.keys.w.pressed = true; break
-		case ' ':v.player.attack(); break
-		
-		case 'ArrowRight':v.keys.ArrowRight.pressed = true; v.enemy.lastKey = 'ArrowRight'; break
-		case 'ArrowLeft':v.keys.ArrowLeft.pressed = true; v.enemy.lastKey = 'ArrowLeft'; break
-		case 'ArrowUp':v.keys.ArrowUp.pressed = true; break
-		case 'Enter':v.enemy.attack(); break
-	}
-})
-
-// Fixed! wasn't before unload, but hashchange
-window.addEventListener('hashchange', (event) => {
-    console.log('leaving game')
-	leave_game(v)
-})
-	
-window.addEventListener('keyup', (event) => {
-	switch (event.key) {
-		case 'd': v.keys.d.pressed = false; break
-		case 'a': v.keys.a.pressed = false; break
-		case 'w': v.keys.w.pressed = false; break
-		
-		case 'ArrowRight': v.keys.ArrowRight.pressed = false; break
-		case 'ArrowLeft': v.keys.ArrowLeft.pressed = false; break
-		case 'ArrowUp': v.keys.ArrowUp.pressed = false; break
-	}
-})
 
 
 function startGame2() {
-
-	canvas_width = 1366
-	canvas_height = 768
-	stun_time = 150 // ms
-	ground_height = 50 // px
 	
-	v = init_vars(canvas_width, canvas_height, stun_time, ground_height)
-	v.g.canvas = document.getElementById('game2-area')
-	v.g.c = v.g.canvas.getContext('2d')
-	v.g.canvas.width = v.g.canvas_width
-	v.g.canvas.height = v.g.canvas_height
+	v = init_vars()
+	setup_canvas(v)
 
-	v.g.timer = document.querySelector('#game2-timer')
-	v.g.time = parseInt(v.g.timer.innerHTML)
+	window.addEventListener('keydown', game2_keydown)
+	window.addEventListener('keyup', game2_keyup)
+	window.addEventListener('hashchange', game2_hashchange)
 
-	console.log(v)
 	// Get usernames from the players
 	// axios.get('http://localhost:8000/data/user_info/' + data.username).then((response) => { bla bla bla })
 
@@ -72,10 +33,10 @@ function game_loop(v) {
 	update_attackbox_offset(v.player)
 	update_attackbox_offset(v.enemy)
 	
-	v.background.update(v.g.fps, v.g)
-	v.shop.update(v.g.fps, v.g)
-	v.player.update(v.g.fps, v.g)
-	v.enemy.update(v.g.fps, v.g)
+	v.background.update(v.g)
+	v.shop.update(v.g)
+	v.player.update(v.g)
+	v.enemy.update(v.g)
 
 	update_keys2(v, v.player, v.keys.d.pressed, v.keys.a.pressed, v.keys.w.pressed, 'd', 'a')
 	update_keys2(v, v.enemy, v.keys.ArrowRight.pressed, v.keys.ArrowLeft.pressed, v.keys.ArrowUp.pressed, 'ArrowRight', 'ArrowLeft')

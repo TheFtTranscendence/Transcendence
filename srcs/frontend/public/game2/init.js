@@ -1,7 +1,11 @@
-function init_vars(canvas_width, canvas_height, stun_time, ground_height) {
+function init_vars() {
 
+    canvas_width = 1366
+	canvas_height = 768
+	stun_time = 150 // ms
+	ground_height = 50 // px
+    
     return {
-
         background: new Sprite({
             position: { x: 0, y: 0 },
             imageSrc: './game2/assets/background.png',
@@ -122,6 +126,19 @@ function init_vars(canvas_width, canvas_height, stun_time, ground_height) {
     }
 }
 
+function setup_canvas(v)
+{
+    v.g.canvas = document.getElementById('game2-area')
+	v.g.c = v.g.canvas.getContext('2d')
+	v.g.canvas.width = v.g.canvas_width
+	v.g.canvas.height = v.g.canvas_height
+
+	v.g.timer = document.querySelector('#game2-timer')
+	v.g.time = parseInt(v.g.timer.innerHTML)
+
+	console.log(v)
+}
+
 function reset_keys(v) {
 	v.keys.d.pressed = false
 	v.keys.a.pressed = false
@@ -135,16 +152,20 @@ function reset_keys(v) {
 
 function leave_game(v) {
 
-    console.log('fps = ' + v.g.fps)
-
     clearInterval(v.g.gameInterval)
     clearInterval(v.g.timerInterval)
     clearInterval(v.g.backgroundInterval)
         
+    window.removeEventListener('keydown', game2_keydown)
+	window.removeEventListener('keyup', game2_keyup)
+	window.removeEventListener('hashchange', game2_hashchange)
 	
-	document.querySelector('#game2-end-text').style.display = 'none'
+    // Not working for some reason
+	// document.querySelector('#game2-end-text').style.display = "none"
+    // But also not needed, dunno why
+
     v.g.timer.innerHTML = 50
         
-    reset_keys(v)
+    // reset_keys(v)
     v = 0
 }

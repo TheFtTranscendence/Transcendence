@@ -6,29 +6,31 @@ async function game_end(v) {
 	clearInterval(v.g.gameInterval);
     clearInterval(v.g.timerInterval);
 
-	
-	if (v.player.health > v.enemy.health) {
-		loser = v.enemy
-		winner = v.player
-		if (v.player.facing == 'right')
-			v.player.framesCurrent = v.player.hit_frame	
-		else
-			v.player.framesCurrent = v.player.hit_frameInv
-	}
-	else {
-		loser = v.player
-		winner = v.enemy
-		if (v.enemy.facing == 'right')
-			v.enemy.framesCurrent = v.enemy.hit_frame
-		else
-			v.enemy.framesCurrent = v.enemy.hit_frameInv
-	}
+	window.removeEventListener('keydown', game2_keydown)
+	window.removeEventListener('keyup', game2_keyup)
+	window.removeEventListener('hashchange', game2_hashchange)
 
+	
+	if (v.player.health > v.enemy.health)
+		game_end_winner(v, v.player, v.enemy)
+	else if (v.player.health < v.enemy.health)
+		game_end_winner(v, v.enemy, v.player)
+	else
+		game_end_tie(v)
+}
+
+async function game_end_winner(v, winner, loser) {
+
+	if (winner.facing == 'right')
+		winner.framesCurrent = winner.hit_frame
+	else
+		winner.framesCurrent = winner.hit_frameInv
+	
 	
 	v.g.c.fillStyle = 'black'; v.g.c.fillRect(0, 0, v.g.canvas.width, v.g.canvas.height)
 	
-	v.background.update_game_end(v.g.c)
-	v.shop.update_game_end(v.g.c)
+	v.background.update_frame(v.g.c)
+	v.shop.update_frame(v.g.c)
 	v.player.draw(v.g.c)
 	v.enemy.draw(v.g.c)
 	console.log('Players drawn')
@@ -38,17 +40,18 @@ async function game_end(v) {
 
 		v.g.c.fillStyle = 'black'; v.g.c.fillRect(0, 0, v.g.canvas.width, v.g.canvas.height)
 
-		v.background.update_game_end(v.g.c)
-		v.shop.update_game_end(v.g.c)
-		v.player.update_game_end(v.g.c)
-		v.enemy.update_game_end(v.g.c)
+		v.background.update_frame(v.g.c)
+		v.shop.update_frame(v.g.c)
+		v.player.update_frame(v.g.c)
+		v.enemy.update_frame(v.g.c)
 		
 		await sleep(1000)
 	}
 
 	winner.velocity.x = 0;
+	loser.velocity.x = 0;
 	reset_keys(v)
-	
+
 	update_keys2(v, v.player, v.keys.d.pressed, v.keys.a.pressed, v.keys.w.pressed, 'd', 'a')
 	update_keys2(v, v.enemy, v.keys.ArrowRight.pressed, v.keys.ArrowLeft.pressed, v.keys.ArrowUp.pressed, 'ArrowRight', 'ArrowLeft')
 	
@@ -67,29 +70,24 @@ async function game_end(v) {
 
 	v.g.backgroundInterval = setInterval(() => {
 		v.g.c.fillStyle = 'black'; v.g.c.fillRect(0, 0, v.g.canvas.width, v.g.canvas.height)
-		v.background.update(v.g.fps, v.g)
-		v.shop.update(v.g.fps, v.g)
-		winner.update(v.g.fps, v.g)
-		loser.death_update(v.g.fps, v.g)
+		v.background.update(v.g)
+		v.shop.update(v.g)
+		winner.update(v.g)
+		loser.death_update(v.g)
 	}, 1000 / v.g.fps)
 	
 	console.log('Game ending sequence ended')
 
-	if (v.player.health > v.enemy.health)
-		document.querySelector('#game2-end-text').innerHTML = 'Player 1 Wins!'
-	else if (v.player.health < v.enemy.health)
-		document.querySelector('#game2-end-text').innerHTML = 'Player 2 Wins!'
-	else
-		document.querySelector('#game2-end-text').innerHTML = 'Tie!'
-
+	document.querySelector('#game2-end-text').innerHTML = winner.name + ' wins!'
 	document.querySelector('#game2-end-text').style.display = 'flex'
+
 
 	// Reset variables!
 	// Do we really?
 	// YES!!!
 	// Not going global!
 
-	leave_game(v)
+	// leave_game(v)
 
 	// Para registar na blockchain o jogo
 	// axios.post('http://localhost:8001/solidity/addgame')
@@ -98,3 +96,38 @@ async function game_end(v) {
 	
 	console.log('Game Ended!')
 }
+
+async function game_end_tie(v) {
+	
+	await sleep(1000)
+	
+	if (v.player.position.x > v.enemy.position.x)
+	{
+		v.player.change_sprites(v.player.sprites.idleInv)
+		v.enemy.change_sprites(v.enemy.sprites.idle)
+
+	}
+	else {
+		v.player.change_sprites(v.player.sprites.idle)
+		v.enemy.change_sprites(v.enemy.sprites.idleInv)
+	}
+
+	
+	v.player.velocity.x = 0;
+	v.enemy.velocity.x = 0;
+	reset_keys(v)
+
+	
+	v.g.backgroundInterval = setInterval(() => {
+		v.g.c.fillStyle = 'black'; v.g.c.fillRect(0, 0, v.g.canvas.width, v.g.canvas.height)
+		v.background.update(v.g)
+		v.shop.update(v.g)
+		v.player.update(v.g)
+		v.enemy.update(v.g)
+	}
+	, 1000 / v.g.fps)
+	
+	document.querySelector('#game2-end-text').innerHTML = 'Tie!'
+	document.querySelector('#game2-end-text').style.display = 'flex'
+}
+

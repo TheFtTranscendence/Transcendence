@@ -11,7 +11,7 @@ const routes = {
 								<div id="game2-bar1"></div>
 							</div>
 							<!-- timer -->
-							<div id="game2-timer"> 50 </div>
+							<div id="game2-timer"> 5 </div>
 							<!-- Player 2 health -->
 							<div id="game2-bar2-parent">
 								<div id="game2-bar2-background"></div>
@@ -62,16 +62,11 @@ function loadScript(src) {
 let first = true
 // Function to load all scripts
 function loadGameScript2() {
-	scripts = [
-		'game2/init.js',
-		'game2/game_end.js',
-		'game2/gameScript2.js'
-	];
 	if (first == true)
 	{
 		console.log("lool")
 		scripts = [
-		
+			'game2/events.js',
 			'game2/classes.js',
 			'game2/init.js',
 			'game2/game_end.js',
@@ -79,14 +74,25 @@ function loadGameScript2() {
 		];
 		first = false
 	}
+	else {
+		scripts = [
+			'game2/events.js',
+			'game2/init.js',
+			'game2/game_end.js',
+			'game2/gameScript2.js'
+		];
+	}
+	
     scripts.reduce((promise, src) => {
+		
         return promise.then(() => loadScript(src));
     }, Promise.resolve()).then(() => {
-        if (typeof startGame2 === 'function') {
+
+        if (typeof startGame2 === 'function')
             startGame2();
-        } else {
-            console.error("startGame2 function not found");
-        }
+		else
+            console.error("startGame2 function not found")
+
     }).catch(error => {
         console.error(error);
     });
