@@ -8,7 +8,6 @@ async function game_end(v) {
 
 	window.removeEventListener('keydown', game2_keydown)
 	window.removeEventListener('keyup', game2_keyup)
-	window.removeEventListener('hashchange', game2_hashchange)
 
 	
 	if (v.player.health > v.enemy.health)
@@ -36,20 +35,23 @@ async function game_end_winner(v, winner, loser) {
 	console.log('Players drawn')
 	await sleep(1000)
 
-	while (loser.framesCurrent < loser.framesMax - 1) {
+	// if (winner.attacking == true) {
 
-		v.g.c.fillStyle = 'black'; v.g.c.fillRect(0, 0, v.g.canvas.width, v.g.canvas.height)
-
-		v.background.update_frame(v.g.c)
-		v.shop.update_frame(v.g.c)
-		v.player.update_frame(v.g.c)
-		v.enemy.update_frame(v.g.c)
+		while (loser.framesCurrent < loser.framesMax - 1) {
+			
+			v.g.c.fillStyle = 'black'; v.g.c.fillRect(0, 0, v.g.canvas.width, v.g.canvas.height)
+			
+			v.background.update_frame(v.g.c)
+			v.shop.update_frame(v.g.c)
+			v.player.update_frame(v.g.c)
+			v.enemy.update_frame(v.g.c)
+			
+			await sleep(1000)
+		}
+	// }
 		
-		await sleep(1000)
-	}
-
-	winner.velocity.x = 0;
-	loser.velocity.x = 0;
+	v.player.velocity.x = 0;
+	v.enemy.velocity.x = 0;
 	reset_keys(v)
 
 	update_keys2(v, v.player, v.keys.d.pressed, v.keys.a.pressed, v.keys.w.pressed, 'd', 'a')
@@ -57,7 +59,6 @@ async function game_end_winner(v, winner, loser) {
 	
 	winner.framesCurrent = winner.framesMax
 
-	
 	if (loser.facing == 'right')
 		loser.change_sprites(loser.sprites.death)
 	else
@@ -74,6 +75,10 @@ async function game_end_winner(v, winner, loser) {
 		v.shop.update(v.g)
 		winner.update(v.g)
 		loser.death_update(v.g)
+
+		// update_keys2(v, v.player, v.keys.d.pressed, v.keys.a.pressed, v.keys.w.pressed, 'd', 'a')
+		// update_keys2(v, v.enemy, v.keys.ArrowRight.pressed, v.keys.ArrowLeft.pressed, v.keys.ArrowUp.pressed, 'ArrowRight', 'ArrowLeft')
+		
 	}, 1000 / v.g.fps)
 	
 	console.log('Game ending sequence ended')
