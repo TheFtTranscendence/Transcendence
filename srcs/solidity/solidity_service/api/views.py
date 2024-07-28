@@ -137,7 +137,7 @@ def add_new_tournament(request, instanceIndex):
 
     return JsonResponse({'message': 'Tournament added'}, status=200)
 
-# Add a tournament game (it also adds it to the array of games with a index of the tournament)
+# Add a tournament game
 @api_view(['POST'])
 def add_new_tournament_game(request, instanceIndex):
     data = request.data
@@ -179,10 +179,10 @@ def add_new_tournament_game(request, instanceIndex):
 ### GETTER FUNCTIONS ###
 
 # Get the number of games
-@api_view(['GET'])
-def get_number_of_games(request, instanceIndex):
-    number_of_games = contract.functions.getNumberOfGames(instanceIndex).call()
-    return JsonResponse({'number_of_games': number_of_games}, status=200)
+# @api_view(['GET'])
+# def get_number_of_games(request, instanceIndex):
+#     number_of_games = contract.functions.getNumberOfGames(instanceIndex).call()
+#     return JsonResponse({'number_of_games': number_of_games}, status=200)
 
 # Get all the games from an instance (for the history)
 @api_view(['GET'])

@@ -6,9 +6,8 @@ error onlyOwnerError();
 error wrongInstanceIndex();
 error wrongNumberOfPlayers();
 error wrongTournamentIndex();
-error AlreadyInTournament();
-error tournamentNotFinished();
-error tournamentAlreadyFinished();
+error ongoingTournament();
+error noCurrentTournament();
 error wrongPlayers();
 
 /**
@@ -60,9 +59,9 @@ contract Score is Ownable {
     }
 
     /* ========== STATE VARIABLES ========== */
-    uint256 public instanceIndex;
-    mapping(uint256 => Game[]) public instancesGame;
-    mapping(uint256 => Tournament[]) public instancesTournament;
+    uint256 private instanceIndex;
+    mapping(uint256 => Game[]) private instancesGame;
+    mapping(uint256 => Tournament[]) private instancesTournament;
 
     /* ========== CONSTRUCTOR ========== */
     constructor() {
@@ -110,7 +109,7 @@ contract Score is Ownable {
         // check if a tournament is not already in progress
         if (instancesTournament[_instanceIndex].length > 0) {
             if (instancesTournament[_instanceIndex][instancesTournament[_instanceIndex].length - 1].finished == false)
-                revert AlreadyInTournament();
+                revert ongoingTournament();
         }
 
         Tournament storage newTournament = instancesTournament[_instanceIndex].push();
@@ -132,16 +131,16 @@ contract Score is Ownable {
         * @param _score2 The score of the second player.
         * @dev checks for instance, tournament flag, expected players. Then add the game, handle ranking and check if the tournament is finished.
     **/
-    function addGameToTournament(uint256 _instanceIndex, string memory _player1, string memory _player2, uint8 _score1, uint8 _score2) public onlyOwner {
+    function addTournamentGame(uint256 _instanceIndex, string memory _player1, string memory _player2, uint8 _score1, uint8 _score2) public onlyOwner {
         uint256 _tournamentIndex = getCurrentTournamentIndex(_instanceIndex);
         
         if (_instanceIndex < 0 || _instanceIndex >= instanceIndex)
             revert wrongInstanceIndex();
         if (instancesTournament[_instanceIndex][_tournamentIndex].finished)
-            revert tournamentAlreadyFinished();
+            revert noCurrentTournament();
 
         // check expected players
-        (string memory expectedPlayer1, string memory expectedPlayer2) = getNextPlayersTournament(_instanceIndex);
+        (string memory expectedPlayer1, string memory expectedPlayer2) = getNextTournamentPlayers(_instanceIndex);
         if (keccak256(abi.encodePacked(expectedPlayer1)) != keccak256(abi.encodePacked(_player1)) || keccak256(abi.encodePacked(expectedPlayer2)) != keccak256(abi.encodePacked(_player2)))
             revert wrongPlayers();
 
@@ -171,16 +170,16 @@ contract Score is Ownable {
     /* ========== GETTER FUNCTIONS ========== */
 
     // fetching games and tournaments
-    function getNumberOfGames(uint256 _instanceIndex) public view returns (uint256) {
-        return instancesGame[_instanceIndex].length;
-    }
+    // function getNumberOfGames(uint256 _instanceIndex) public view returns (uint256) {
+    //     return instancesGame[_instanceIndex].length;
+    // }
 
-    function getNumberOfTournaments(uint256 _instanceIndex) public view returns (uint256) {
-        return instancesTournament[_instanceIndex].length;
-    }
+    // function getNumberOfTournaments(uint256 _instanceIndex) public view returns (uint256) {
+    //     return instancesTournament[_instanceIndex].length;
+    // }
 
     // get the current tournament index
-    function getCurrentTournamentIndex(uint256 _instanceIndex) public view returns (uint256) {
+    function getCurrentTournamentIndex(uint256 _instanceIndex) internal view returns (uint256) {
         if (_instanceIndex < 0 || _instanceIndex >= instanceIndex)
             revert wrongInstanceIndex();
         if (instancesTournament[_instanceIndex].length == 0)
@@ -195,34 +194,34 @@ contract Score is Ownable {
         return instancesGame[_instanceIndex];
     }
 
-    function getTournament(uint256 _instanceIndex, uint256 _tournamentIndex) public view returns (Tournament memory) {
-        return instancesTournament[_instanceIndex][_tournamentIndex];
-    }
+    // function getTournament(uint256 _instanceIndex, uint256 _tournamentIndex) public view returns (Tournament memory) {
+    //     return instancesTournament[_instanceIndex][_tournamentIndex];
+    // }
 
-    function getTournaments(uint256 _instanceIndex) public view returns (Tournament[] memory) {
-        return instancesTournament[_instanceIndex];
-    }
+    // function getTournaments(uint256 _instanceIndex) public view returns (Tournament[] memory) {
+    //     return instancesTournament[_instanceIndex];
+    // }
 
-    function getTournamentGame(uint256 _instanceIndex, uint256 _tournamentIndex, uint256 _gameIndex) public view returns (Game memory) {
-        return instancesTournament[_instanceIndex][_tournamentIndex].games[_gameIndex];
-    }
+    // function getTournamentGame(uint256 _instanceIndex, uint256 _tournamentIndex, uint256 _gameIndex) public view returns (Game memory) {
+    //     return instancesTournament[_instanceIndex][_tournamentIndex].games[_gameIndex];
+    // }
 
-    function getTournamentGames(uint256 _instanceIndex, uint256 _tournamentIndex) public view returns (Game[] memory) {
-        return instancesTournament[_instanceIndex][_tournamentIndex].games;
-    }
+    // function getTournamentGames(uint256 _instanceIndex, uint256 _tournamentIndex) public view returns (Game[] memory) {
+    //     return instancesTournament[_instanceIndex][_tournamentIndex].games;
+    // }
 
     /**
         * @notice Get the next players of a tournament.
         * @param _instanceIndex The index of the instance in the database.
         * @return returns The names of the next players.
     */
-    function getNextPlayersTournament(uint256 _instanceIndex) public view returns (string memory, string memory) {
+    function getNextTournamentPlayers(uint256 _instanceIndex) public view returns (string memory, string memory) {
         uint256 _tournamentIndex = getCurrentTournamentIndex(_instanceIndex);
 
         Tournament storage currentTournament = instancesTournament[_instanceIndex][_tournamentIndex];
 
         if (currentTournament.games.length >= currentTournament.numberOfGames)
-            revert tournamentAlreadyFinished();
+            revert noCurrentTournament();
 
         // 4 players tournament
         if (currentTournament.numberOfPlayers == 4) {
@@ -260,11 +259,11 @@ contract Score is Ownable {
         * @param _tournamentIndex The index of the tournament in the instance.
         * @return returns The ranking of the tournament.
     */
-    function getRankingTournament(uint256 _instanceIndex, uint256 _tournamentIndex) public view returns (string[] memory) {
+    function getTournamentRanking(uint256 _instanceIndex, uint256 _tournamentIndex) public view returns (string[] memory) {
         if (_tournamentIndex < 0 || _tournamentIndex >= instancesTournament[_instanceIndex].length)
             revert wrongTournamentIndex();
         if (instancesTournament[_instanceIndex][_tournamentIndex].games.length < instancesTournament[_instanceIndex][_tournamentIndex].numberOfGames)
-            revert tournamentNotFinished();
+            revert ongoingTournament();
 
         return instancesTournament[_instanceIndex][_tournamentIndex].reversedRanking;
     }
