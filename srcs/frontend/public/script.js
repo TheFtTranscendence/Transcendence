@@ -20,7 +20,6 @@ window.game2Scripts = [
 	'game2/gameScript2.js'
 ];
 
-
 // Function to handle navigation
 function navigate() {
 	// const contentDiv = document.getElementById('content');
@@ -95,7 +94,7 @@ function UnloadScripts(scripts) {
 function loadScript(filePath)
 {
 	const script = document.createElement('script');
-	script.src = 'game/gameScript.js';
+	script.src = filePath;
 	script.type = 'text/javascript';
 
     script.onload = function() {
@@ -160,15 +159,11 @@ function handleRegister() {
 	const username = document.getElementById('registerUsername').value;
 	const password = document.getElementById('registerPassword').value;
 	const email = document.getElementById('registerEmail').value;
-	const first_name = document.getElementById('registerFirstName').value;
-	const last_name = document.getElementById('registerLastName').value;
 
 	const data = {
 		username: username,
 		password: password,
 		email: email,
-		first_name: first_name,
-		last_name: last_name,
 	}
 
 	// console.log('Sending JSON:', JSON.stringify(data, null, 2));
@@ -177,6 +172,7 @@ function handleRegister() {
 	.then((response) => {
 		console.log(response.data);
 		alert('Registration successful');
+        window.usernameInstance = data.username;
 	})
 	.catch((error) => {
 		console.error(error);
@@ -193,12 +189,6 @@ function handleRegister() {
 				}
 				if (missing_fields.includes('email')) {
 					console.log('Email is required.');
-				}
-				if (missing_fields.includes('first_name')) {
-					console.log('First name is required.');
-				}
-				if (missing_fields.includes('last_name')) {
-					console.log('Last name is required.');
 				}
 			} else if (status === 409) {
 				console.log('Username already exists');

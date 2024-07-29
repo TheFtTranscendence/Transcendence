@@ -61,7 +61,8 @@ function initVars()
         gameReset: false,
         pointScored: false,
         p1Score: 0,
-        p2Score: 0
+        p2Score: 0,
+        maxPoints: 1
     }
 
     const paddleHeight = 80;
@@ -151,9 +152,15 @@ function handleCanvasClick(event, vars)
     {
         if (vars.gameVars.gameFinish)
         {
-            const canvas = document.getElementById('gameArea');
-            canvas.classList.add('hidden');
-            loadScript("gameMenu/gameMenuScript.js");
+            console.log(window.tournamentOn);
+            if (window.tournamentOn)
+            {
+                let index = window.shuflledNickList.indexOf(window.winner);
+                window.shuflledNickList.splice(index, 1);
+                loadScript("gameMenu/tournament/tournamentScript.js");
+            }
+            else
+                loadScript("gameMenu/gameMenuScript.js");
         }
         vars.gameVars.gameStart = true;
         vars.gameVars.p1Score = 0;
@@ -296,7 +303,7 @@ function resetGame(vars)
     vars.ballVars.ballHitCounter = 0;
     vars.ballVars.ballSpeedIncY = 3;
 
-    if (vars.gameVars.p1Score >= 5 || vars.gameVars.p2Score >= 5)
+    if (vars.gameVars.p1Score >= vars.gameVars.maxPoints || vars.gameVars.p2Score >= vars.gameVars.maxPoints)
     {
         vars.gameVars.gameStart = false;
         return ;
@@ -373,10 +380,47 @@ function drawButton(text, x, y, width, height, size, font, vars)
 
 function endGame(vars)
 {
-    if (vars.gameVars.p1Score === 5)
-        drawText("red", "50px ARCADECLASSIC", window.nickList[0] + " WINS !", (vars.canvasVars.canvasWidth / 2) - 160, (vars.canvasVars.canvasHeight / 2) - 130, vars)
-    else if (vars.gameVars.p2Score === 5)
-        drawText("blue", "50px ARCADECLASSIC", window.nickList[1] + " WINS !", (vars.canvasVars.canvasWidth / 2) - 160, (vars.canvasVars.canvasHeight / 2) - 130, vars)
+    window.finalGameStats = {
+        player1: window.nextMatch.player1,
+        player2: window.nextMatch.player2,
+        score1: vars.gameVars.p1Score,
+        score2: vars.gameVars.p2Score,
+    }
+
+    // axios.get('http://localhost:8000/data/user_info/' + window.usernameInstance)
+    // .then((response) => {
+	// 	console.log(response.data);
+    //     const sc_id = response.data.sc_id;
+	// })
+	// .catch((error) => {
+	// 	console.error(error);
+	// 	if (error.response)	{
+	// 		const status = error.response.status;
+	// 	}
+	// });
+
+    // window.newId = sc_id;
+    
+    // axios.post('http://localhost:8001/solidity/addgame/' + sc_id, finalGameStats)
+    // .then((response) => {
+	// 	console.log(response.data);
+	// })
+	// .catch((error) => {
+	// 	console.error(error);
+	// 	if (error.response)	{
+	// 		const status = error.response.status;
+	// 	}
+	// });
+    if (vars.gameVars.p1Score === vars.gameVars.maxPoints)
+    {
+        window.winner = window.nextMatch.player1;
+        drawText("red", "50px ARCADECLASSIC", window.nextMatch.player1 + " WINS !", (vars.canvasVars.canvasWidth / 2) - 160, (vars.canvasVars.canvasHeight / 2) - 130, vars)
+    }
+    else if (vars.gameVars.p2Score === vars.gameVars.maxPoints)
+    {
+        window.winner = window.nextMatch.player2;
+        drawText("blue", "50px ARCADECLASSIC", window.nextMatch.player2 + " WINS !", (vars.canvasVars.canvasWidth / 2) - 160, (vars.canvasVars.canvasHeight / 2) - 130, vars)
+    }
     vars.gameVars.gameFinish = true;
     drawButton("FINISH", (vars.canvasVars.canvasWidth / 2) - 80, (vars.canvasVars.canvasHeight / 2) - 35, 160, 70, 30, "ARCADECLASSIC", vars);
 }
@@ -406,8 +450,8 @@ function gameLoop(vars)
             return ;
         }
 
-        drawText("white", "30px ARCADECLASSIC", window.nickList[0], 50, 50, vars);
-        drawText("white", "30px ARCADECLASSIC", window.nickList[1], (vars.canvasVars.canvasWidth - 100), 50, vars);
+        drawText("white", "30px ARCADECLASSIC", window.nextMatch.player1, 50, 50, vars);
+        drawText("white", "30px ARCADECLASSIC", window.nextMatch.player2, (vars.canvasVars.canvasWidth - 100), 50, vars);
         updatePaddles(vars);
         ballMovement(vars);
         drawGame(vars);
@@ -416,7 +460,16 @@ function gameLoop(vars)
 
 function loadScript(filePath)
 {
+    // let existingGameScript = document.getElementById("gameMenuS");
+
+    // if (existingGameScript)
+    //     existingGameScript.parentNode.removeChild(existingGameScript);
+
+    window.removeScripts();
+
+
     const script = document.createElement('script');
+    script.id = 'gameMenuS'
     script.src = filePath;
     script.type = 'text/javascript';
 

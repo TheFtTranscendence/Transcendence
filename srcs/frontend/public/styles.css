@@ -93,14 +93,14 @@ body {
 
 /* Game Page */
 
-#gamePageBg {
+#menuPage {
 	display: flex;
     justify-content: center;
     align-items: center;
     height: 50vh;
 }
 
-#gameMenu {
+#menuButtonDiv {
 	display: flex;
 	flex-direction: column; 
 	justify-content: center;

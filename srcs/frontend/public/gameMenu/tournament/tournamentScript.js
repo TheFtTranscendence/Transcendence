@@ -1,23 +1,35 @@
 function init() {
  
-    let shuflledNickList = [];
 
-    shuflledNickList = shuffleNickNames();
+    if (window.tournamentOn) // tournament ongoing
+    {
+        window.restoreGameCanvas();
+        document.getElementById("gameBracket").classList.remove('hidden');
+
+        window.findNextMatch();
+
+
+    }
+    else // create tournament
+    {
+        window.shuflledNickList = shuffleNickNames();
     
-    createPageElements(shuflledNickList);
+        createPageElements(window.shuflledNickList);
 
-
+    }
 }
 
 function createPageElements(shuflledNickList)
 {
+    const menuPage = document.getElementById("menuPage");
+
     // Create Div for Bracket
     const gameBracketDiv = document.createElement('div');
     gameBracketDiv.id = 'gameBracket';
 
     gameBracketDiv.innerHTML = '<h1 id="textBracket" class="selectText">Tournament Bracket</h1>'
     
-    document.body.appendChild(gameBracketDiv);
+    menuPage.appendChild(gameBracketDiv);
 
     createBracket(shuflledNickList);
 
@@ -31,7 +43,8 @@ function createPageElements(shuflledNickList)
     startGameBtn.addEventListener('click', (event) => {
         event.preventDefault();
         gameBracketDiv.classList.add('hidden');
-        loadScript("../game/gameScript.js")
+        document.getElementById("gameArea").classList.remove('hidden');
+        loadScript("gameMenu/game/gameScript.js")
     });
 
 }
@@ -49,8 +62,8 @@ function createBracket(players) {
     let firstRoundMatches = (players.length / 2) / 2;
     let matchDivider = 1;
 
-    console.log(players);
-    console.log(players.length);
+    // console.log(players);
+    // console.log(players.length);
 
     for (let i = 0; i < middleDiv - 1; i++) {
         const roundDiv = document.createElement('div');
@@ -106,6 +119,9 @@ function createBracket(players) {
 
     const gameBracketDiv = document.getElementById('gameBracket');
     gameBracketDiv.appendChild(bracket);
+
+    window.findNextMatch();
+    window.tournamentOn = true;
 }
 
 
@@ -122,6 +138,13 @@ function shuffleNickNames()
 
 function loadScript(filePath)
 {
+    // let existingGameScript = document.getElementById("gameS");
+
+    // if (existingGameScript)
+    //     existingGameScript.parentNode.removeChild(existingGameScript);
+
+    window.removeScripts();
+
     const script = document.createElement('script');
     script.src = filePath;
     script.type = 'text/javascript';
