@@ -14,6 +14,8 @@ function navigate() {
 
 	if (hash === '#game')
 		loadGameScript();
+	if (hash === '#home')
+		getAvater('esali');
 }
 
 // Starts game script
@@ -126,12 +128,25 @@ function handleRegister() {
 	});
 }
 
+function getAvater(username) {
+
+	axios.get('http://localhost:8000/data/avatar/' + username)
+    .then((response) => {
+        console.log(response.data);
+        alert('Avatar getting successful');
+    })
+    .catch((error) => {
+        console.error(error);
+        alert('Error getting avatar');
+    });
+}
+
 // Handle login and register forms
 document.getElementById('loginForm').addEventListener('submit', (event) => {
 	event.preventDefault();
 
 	handleLogin();
-	
+
 	document.getElementById('auth').classList.add('hidden');
 	document.querySelector('nav').classList.remove('hidden');
 	window.location.hash = '#home';
