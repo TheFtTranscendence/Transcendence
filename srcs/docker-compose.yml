@@ -12,15 +12,16 @@ volumes:
       type: none
       o: bind
       device: ${POSTGRES_DATA_PATH}
+  shared_static:
 
 services:
-  django:
-    container_name: django
-    build: ./django
+  user-management:
+    container_name: user-management
+    build: ./userManagement
     env_file:
       - .env  # Adjust the path to your .env file if needed
     environment:
-      - DATABASE_HOST=${DATABASE_HOST}
+      - DATABASE_HOST=${POSTGRES_HOST}
       - DATABASE_NAME=${POSTGRES_DB}
       - DATABASE_USER=${POSTGRES_USER}
       - DATABASE_PASSWORD=${POSTGRES_PASSWORD}
@@ -50,6 +51,23 @@ services:
     build: ./frontend
     ports:
       - "3000:80"
+    networks:
+      - app-network
+    volumes:
+      - shared_static:/usr/share/nginx/html
+    restart: unless-stopped
+
+  solidity:
+    container_name: solidity_service
+    build: ./solidity
+    environment:
+      - ETHEREUM_NODE_URL=${ETHEREUM_NODE_URL}
+      - CONTRACT_ADDRESS=${CONTRACT_ADDRESS}
+      - PRIVATE_KEY=${PRIVATE_KEY}
+    # env_file:
+      # - .env
+    ports:
+      - "8001:8001"
     networks:
       - app-network
     restart: unless-stopped
