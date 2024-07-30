@@ -89,8 +89,9 @@ def register_view(request):
 				response.raise_for_status() # Raises exceptions for http errors
 				
 				data = response.json()
-				number = data.get('message')
+				number = data.get('success')
 				user.sc_id = number
+				logger.exception(f'HERE: {user.sc_id}')
 				user.save()
 
 			except requests.exceptions.HTTPError as e:

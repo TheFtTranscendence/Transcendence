@@ -26,7 +26,7 @@ clean:
     	docker network rm $$network; \
     done
 
-deepclean:
+deepclean: clean
 	rm -rf $(POSTGRES_DATA_PATH)/*
 	make clean
 	yes | docker system prune
