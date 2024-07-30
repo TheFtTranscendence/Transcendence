@@ -92,14 +92,15 @@ function update_keys2(v, guy, keyPress_left, keyPress_right, key_jump, key_right
 		guy.change_sprites(guy.sprites.fallInv)
 }
 
-function detect_colision(Sprite1, Sprite2, g) {
-	if (Sprite1.isAttacking && Sprite1.attackbox.position.x + Sprite1.attackbox.width >= Sprite2.position.x &&
-		Sprite1.attackbox.position.x <= Sprite2.position.x + Sprite2.width &&
-		Sprite1.attackbox.position.y + Sprite1.attackbox.height >= Sprite2.position.y &&
-		Sprite1.attackbox.position.y <= Sprite2.position.y + Sprite2.height)
+function detect_colision(Attacker, Victim, g) {
+	if (Attacker.isAttacking && 
+		Attacker.attackbox.position.x + Attacker.attackbox.width >= Victim.position.x &&
+		Attacker.attackbox.position.x <= Victim.position.x + Victim.width &&
+		Attacker.attackbox.position.y + Attacker.attackbox.height >= Victim.position.y &&
+		Attacker.attackbox.position.y <= Victim.position.y + Victim.height)
 	{
-		console.log(Sprite1.name + " Attacked!")
-		Sprite1.isAttacking = false
-		Sprite2.get_hit(Sprite1, g)
+		console.log(Attacker.name + " attacked!")
+		Attacker.isAttacking = false
+		Victim.get_hit(Attacker, g)
 	}
 } 

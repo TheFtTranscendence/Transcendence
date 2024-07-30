@@ -135,8 +135,6 @@ function setup_canvas(v)
 
 	v.g.timer = document.querySelector('#game2-timer')
 	v.g.time = parseInt(v.g.timer.innerHTML)
-
-	console.log(v)
 }
 
 function reset_keys(v) {
