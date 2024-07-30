@@ -59,29 +59,14 @@ function loadScript(src) {
     });
 }
 
-let first = true
 // Function to load all scripts
 function loadGameScript2() {
-	if (first == true)
-	{
-		console.log("lool")
-		scripts = [
-			'game2/events.js',
-			'game2/classes.js',
-			'game2/init.js',
-			'game2/game_end.js',
-			'game2/gameScript2.js'
-		];
-		first = false
-	}
-	else {
-		scripts = [
-			'game2/events.js',
-			'game2/init.js',
-			'game2/game_end.js',
-			'game2/gameScript2.js'
-		];
-	}
+	scripts = [
+		'game2/events.js',
+		'game2/init.js',
+		'game2/game_end.js',
+		'game2/gameScript2.js'
+	];
 	
     scripts.reduce((promise, src) => {
 		

@@ -1,5 +1,3 @@
-
-
 function startGame2() {
 	
 	v = init_vars()
