@@ -157,13 +157,10 @@ function leave_game(v) {
     window.removeEventListener('keydown', game2_keydown)
 	window.removeEventListener('keyup', game2_keyup)
 	window.removeEventListener('hashchange', game2_hashchange)
-	
+
     // Not working for some reason
 	// document.querySelector('#game2-end-text').style.display = "none"
     // But also not needed, dunno why
 
     v.g.timer.innerHTML = 50
-        
-    // reset_keys(v)
-    v = 0
 }
