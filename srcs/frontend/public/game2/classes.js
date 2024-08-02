@@ -102,11 +102,11 @@ class Fighter extends Sprite {
 
 		if (other.facing == 'right') {
 			this.velocity.x = g.knockback
-			this.change_sprites(this.sprites.hit)
+			this.change_sprites(this.sprites.hit, true)
 		}
 		else {
 			this.velocity.x = -1 * g.knockback
-			this.change_sprites(this.sprites.hitInv)
+			this.change_sprites(this.sprites.hitInv, true)
 		}
 
 		this.stunned = true
@@ -165,11 +165,12 @@ class Fighter extends Sprite {
 		this.attackbox.position.x = this.position.x + this.attackbox.offset.x;
 		this.attackbox.position.y = this.position.y;
 
-		// c.fillStyle = 'red'
-		// c.fillRect(this.attackbox.position.x, this.attackbox.position.y, this.attackbox.width, this.attackbox.height, 'red')
+		// Draw hitboxes
+		// g.c.fillStyle = 'red'
+		// g.c.fillRect(this.attackbox.position.x, this.attackbox.position.y, this.attackbox.width, this.attackbox.height, 'red')
 
-		// c.fillStyle = 'green'
-		// c.fillRect(this.position.x, this.position.y, this.width, this.height)
+		// g.c.fillStyle = 'green'
+		// g.c.fillRect(this.position.x, this.position.y, this.width, this.height)
 
 		this.velocity.y += g.gravity
 
