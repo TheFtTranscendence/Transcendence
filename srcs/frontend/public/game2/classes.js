@@ -119,21 +119,6 @@ class Fighter extends Sprite {
 			game_end(v)
 		}
 	}
-
-	draw(c) {
-		c.drawImage(
-			this.image,
-			this.framesCurrent * (this.image.width / this.framesMax),
-			0,
-			this.image.width / this.framesMax,
-			this.image.height,
-
-			this.position.x - this.img_offset.x,
-			this.position.y - this.img_offset.y,
-			(this.image.width / this.framesMax) * this.scale,
-			this.image.height * this.scale
-		)
-	}
 	
 	attack() {
 		
