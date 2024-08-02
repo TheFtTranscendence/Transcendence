@@ -1,10 +1,32 @@
 // Sample content for each route
 const routes = {
-	'#home': '<h1>Home Page</h1><p>Welcome to the home page!</p>',
-	'#game': '<h1>Game</h1><canvas id="game-area"></canvas>',
-	'#chat': '<h1>Chat</h1><p>Here can be eventually the chat</p>'
+	'#home': `<h1>Home Page</h1><p>Welcome to the home page!</p>`,
+	'#game': `<h1>Game</h1><canvas id="game-area"></canvas>`,
+	'#game2': `<h1>Game2</h1>
+					<div id="div-game2-area">
+						<div id="div-game2-top">
+							<!-- Player 1 health -->
+							<div id="game2-bar1-parent">
+								<div id="game2-bar1-background"></div>
+								<div id="game2-bar1"></div>
+							</div>
+							<!-- timer -->
+							<div id="game2-timer"> 50 </div>
+							<!-- Player 2 health -->
+							<div id="game2-bar2-parent">
+								<div id="game2-bar2-background"></div>
+								<div id="game2-bar2"></div>
+							</div>
+						</div>
+						<div id= "game2-end-text"> Tie </div>
+						<div>
+							<canvas id="game2-area"></canvas>
+						</div>
+					</div>
+					`,
+	'#chat': `<h1>Chat</h1><p>Here can be eventually the chat</p>`
 };
-
+				
 
 // Function to handle navigation
 function navigate() {
@@ -14,6 +36,51 @@ function navigate() {
 
 	if (hash === '#game')
 		loadGameScript();
+	if (hash === '#game2')
+		loadGameScript2();
+}
+
+// Function to load a script and return a Promise
+function loadScript(src) {
+	return new Promise((resolve, reject) => {
+		const script = document.createElement('script');
+		script.src = src;
+		script.type = 'text/javascript';
+		
+		script.onload = () => {
+			resolve();
+		};
+		
+		script.onerror = () => {
+			reject(new Error(`Failed to load script: ${src}`));
+		};
+
+		document.body.appendChild(script);
+	});
+}
+
+// Function to load all scripts
+function loadGameScript2() {
+	scripts = [
+		'game2/events.js',
+		'game2/init.js',
+		'game2/game_end.js',
+		'game2/gameScript2.js'
+	];
+	
+	scripts.reduce((promise, src) => {
+		
+		return promise.then(() => loadScript(src));
+	}, Promise.resolve()).then(() => {
+
+		if (typeof startGame2 === 'function')
+			startGame2();
+		else
+			console.error("startGame2 function not found")
+
+	}).catch(error => {
+		console.error(error);
+	});
 }
 
 // Starts game script
