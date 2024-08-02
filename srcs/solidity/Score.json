@@ -1,0 +1,332 @@
+[
+	{
+		"inputs": [],
+		"name": "noCurrentTournament",
+		"type": "error"
+	},
+	{
+		"inputs": [],
+		"name": "ongoingTournament",
+		"type": "error"
+	},
+	{
+		"inputs": [],
+		"name": "onlyOwnerError",
+		"type": "error"
+	},
+	{
+		"inputs": [],
+		"name": "wrongInstanceIndex",
+		"type": "error"
+	},
+	{
+		"inputs": [],
+		"name": "wrongNumberOfPlayers",
+		"type": "error"
+	},
+	{
+		"inputs": [],
+		"name": "wrongPlayers",
+		"type": "error"
+	},
+	{
+		"inputs": [],
+		"name": "wrongTournamentIndex",
+		"type": "error"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "instanceIndex",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "timestamp",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "player1",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "player2",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint8",
+				"name": "score1",
+				"type": "uint8"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint8",
+				"name": "score2",
+				"type": "uint8"
+			},
+			{
+				"indexed": false,
+				"internalType": "int256",
+				"name": "tournamentIndex",
+				"type": "int256"
+			}
+		],
+		"name": "GameAdded",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "instanceIndex",
+				"type": "uint256"
+			}
+		],
+		"name": "InstanceAdded",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "instanceIndex",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint8",
+				"name": "numberOfPlayers",
+				"type": "uint8"
+			},
+			{
+				"indexed": false,
+				"internalType": "string[]",
+				"name": "players",
+				"type": "string[]"
+			}
+		],
+		"name": "TournamentAdded",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_instanceIndex",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_player1",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_player2",
+				"type": "string"
+			},
+			{
+				"internalType": "uint8",
+				"name": "_score1",
+				"type": "uint8"
+			},
+			{
+				"internalType": "uint8",
+				"name": "_score2",
+				"type": "uint8"
+			}
+		],
+		"name": "addGame",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "addInstance",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_instanceIndex",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string[]",
+				"name": "_players",
+				"type": "string[]"
+			}
+		],
+		"name": "addTournament",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_instanceIndex",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_player1",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_player2",
+				"type": "string"
+			},
+			{
+				"internalType": "uint8",
+				"name": "_score1",
+				"type": "uint8"
+			},
+			{
+				"internalType": "uint8",
+				"name": "_score2",
+				"type": "uint8"
+			}
+		],
+		"name": "addTournamentGame",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_instanceIndex",
+				"type": "uint256"
+			}
+		],
+		"name": "getGames",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "player1",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "player2",
+						"type": "string"
+					},
+					{
+						"internalType": "uint8",
+						"name": "score1",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint8",
+						"name": "score2",
+						"type": "uint8"
+					},
+					{
+						"internalType": "int256",
+						"name": "tournamentIndex",
+						"type": "int256"
+					}
+				],
+				"internalType": "struct Score.Game[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_instanceIndex",
+				"type": "uint256"
+			}
+		],
+		"name": "getNextTournamentPlayers",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_instanceIndex",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_tournamentIndex",
+				"type": "uint256"
+			}
+		],
+		"name": "getTournamentRanking",
+		"outputs": [
+			{
+				"internalType": "string[]",
+				"name": "",
+				"type": "string[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "owner",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+]

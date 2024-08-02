@@ -57,5 +57,20 @@ services:
       - shared_static:/usr/share/nginx/html
     restart: unless-stopped
 
+  solidity:
+    container_name: solidity_service
+    build: ./solidity
+    environment:
+      - ETHEREUM_NODE_URL=${ETHEREUM_NODE_URL}
+      - CONTRACT_ADDRESS=${CONTRACT_ADDRESS}
+      - PRIVATE_KEY=${PRIVATE_KEY}
+    # env_file:
+      # - .env
+    ports:
+      - "8001:8001"
+    networks:
+      - app-network
+    restart: unless-stopped
+
 # Define other services here
 

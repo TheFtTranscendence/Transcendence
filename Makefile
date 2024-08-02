@@ -1,3 +1,5 @@
+include srcs/.env
+
 # '-f' specify the file to use. 'up' start the containers. '-d' detached mode. '--build' build the images before starting the containers.
 all:
 	@docker compose -f ./srcs/docker-compose.yml up --build
@@ -27,7 +29,8 @@ clean:
     	docker network rm $$network; \
     done
 
-deepclean:
+deepclean: clean
+	rm -rf $(POSTGRES_DATA_PATH)/*
 	make clean
 	yes | docker system prune
 

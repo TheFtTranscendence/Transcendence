@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,8 +30,6 @@ ALLOWED_HOSTS = ['*']
 
 import logging
 
-import logging
-
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -43,12 +42,12 @@ LOGGING = {
     'loggers': {
         'django': {
             'handlers': ['console'],
-            'level': 'ERROR',  # Adjust level as needed
+            'level': 'INFO',  # Adjust level as needed
             'propagate': False,
         },
         'authentication': {
             'handlers': ['console'],
-            'level': 'ERROR',  # Adjust level as needed
+            'level': 'INFO',  # Adjust level as needed
             'propagate': False,
         },
     },
@@ -70,7 +69,8 @@ INSTALLED_APPS = [
 
 	#My apps
 	'authentication',
-	'data'
+	'data',
+	'config',
 ]
 
 AUTH_USER_MODEL = 'authentication.User'
@@ -81,12 +81,12 @@ REST_FRAMEWORK = {
 	),
 }
 
-# CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = True
 
 #! this is not working i think
-CORS_ALLOWED_ORIGINS = [
-	"http://0.0.0.0:3000",
-]
+# CORS_ALLOWED_ORIGINS = [
+# 	"http://0.0.0.0:3000",
+# ]
 
 CORS_ALLOW_METHODS = [
 	"DELETE",
@@ -111,6 +111,9 @@ CORS_ALLOW_HEADERS = [
 
 CORS_ALLOW_CREDENTIALS = True
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'images')
+MEDIA_URL = '/images/'
+
 MIDDLEWARE = [
 	'django.middleware.security.SecurityMiddleware',
 	'django.contrib.sessions.middleware.SessionMiddleware',
@@ -127,7 +130,7 @@ ROOT_URLCONF = 'userManagementAPP.urls'
 TEMPLATES = [
 	{
 		'BACKEND': 'django.template.backends.django.DjangoTemplates',
-		'DIRS': [],
+		'DIRS': [os.path.join(BASE_DIR, 'templates')],
 		'APP_DIRS': True,
 		'OPTIONS': {
 			'context_processors': [
