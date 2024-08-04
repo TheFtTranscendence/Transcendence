@@ -155,7 +155,7 @@ function handleCanvasClick(event, vars)
             console.log(window.tournamentOn);
             if (window.tournamentOn)
             {
-                let index = window.shuflledNickList.indexOf(window.winner);
+                let index = window.shuflledNickList.indexOf(window.loser);
                 window.shuflledNickList.splice(index, 1);
                 loadScript("gameMenu/tournament/tournamentScript.js");
             }
@@ -387,38 +387,16 @@ function endGame(vars)
         score2: vars.gameVars.p2Score,
     }
 
-    // axios.get('http://localhost:8000/data/user_info/' + window.usernameInstance)
-    // .then((response) => {
-	// 	console.log(response.data);
-    //     const sc_id = response.data.sc_id;
-	// })
-	// .catch((error) => {
-	// 	console.error(error);
-	// 	if (error.response)	{
-	// 		const status = error.response.status;
-	// 	}
-	// });
-
-    // window.newId = sc_id;
-    
-    // axios.post('http://localhost:8001/solidity/addgame/' + sc_id, finalGameStats)
-    // .then((response) => {
-	// 	console.log(response.data);
-	// })
-	// .catch((error) => {
-	// 	console.error(error);
-	// 	if (error.response)	{
-	// 		const status = error.response.status;
-	// 	}
-	// });
     if (vars.gameVars.p1Score === vars.gameVars.maxPoints)
     {
         window.winner = window.nextMatch.player1;
+        window.loser = window.nextMatch.player2;
         drawText("red", "50px ARCADECLASSIC", window.nextMatch.player1 + " WINS !", (vars.canvasVars.canvasWidth / 2) - 160, (vars.canvasVars.canvasHeight / 2) - 130, vars)
     }
     else if (vars.gameVars.p2Score === vars.gameVars.maxPoints)
     {
         window.winner = window.nextMatch.player2;
+        window.loser = window.nextMatch.player1;
         drawText("blue", "50px ARCADECLASSIC", window.nextMatch.player2 + " WINS !", (vars.canvasVars.canvasWidth / 2) - 160, (vars.canvasVars.canvasHeight / 2) - 130, vars)
     }
     vars.gameVars.gameFinish = true;

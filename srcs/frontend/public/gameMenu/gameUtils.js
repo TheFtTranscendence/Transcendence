@@ -7,6 +7,7 @@ window.nextMatch =  {
     player1: "",
     player2: ""
 }
+window.loser = "";
 window.winner = "";
 
 // window.nextPlayer1 = "";
@@ -56,11 +57,11 @@ function findNextMatch()
     // }
     console.log("gameRondMax", window.gameRoundMax);
     console.log("gameRond", window.gameRound);
-    if (window.shuflledNickList.lenght === 1)
-    {
-        window.loadScript("gameMenu/gameMenuScript.js");
-        console.log("END OF TORUNAMENT");
-    }
+    // if (window.shuflledNickList.lenght === 1)
+    // {
+    //     window.loadScript("gameMenu/gameMenuScript.js");
+    //     console.log("END OF TORUNAMENT");
+    // }
     if (!window.shuflledNickList[window.gamesPerRound])
     {
         window.gamesPerRound = 0;

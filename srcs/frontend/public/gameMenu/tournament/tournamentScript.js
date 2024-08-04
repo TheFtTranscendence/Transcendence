@@ -4,10 +4,29 @@ function init() {
     if (window.tournamentOn) // tournament ongoing
     {
         window.restoreGameCanvas();
-        document.getElementById("gameBracket").classList.remove('hidden');
+        
+        // console.log(window.shuflledNickList.lenght);
+        
+        if (window.shuflledNickList.length === 1)
+        {
+            showFinalScreen();
+            
+            finishGameBtn.addEventListener('click', (event) => {
+                event.preventDefault();
+                window.tournamentOn = false;
+                const finalScreenDiv = document.getElementById('finalDiv');
+                finalScreenDiv.parentNode.removeChild(finalScreenDiv);
+                window.loadScript("gameMenu/gameMenuScript.js");
+            });
+        }
+        else
+        {
 
-        window.findNextMatch();
-
+            document.getElementById("gameBracket").classList.remove('hidden');
+                
+            window.findNextMatch();
+        }
+        
 
     }
     else // create tournament
@@ -17,6 +36,33 @@ function init() {
         createPageElements(window.shuflledNickList);
 
     }
+}
+
+function showFinalScreen()
+{
+    const menuPage = document.getElementById("menuPage");
+    
+    const gameBracketDiv = document.getElementById("gameBracket");
+    gameBracketDiv.parentNode.removeChild(gameBracketDiv);
+
+    const finalScreenDiv = document.createElement('div');
+    finalScreenDiv.id = 'finalDiv';
+    
+    menuPage.appendChild(finalScreenDiv);
+
+    const finalScreen = document.createElement('div');
+    finalScreen.id = 'finalScreen';
+    finalScreen.innerHTML = '<h1 id="textBracket" class="selectText">Winner:' +  window.winner + '</h1>';
+    
+    finalScreenDiv.appendChild(finalScreen);
+
+    
+    const finishGameBtn = document.createElement('button');
+    finishGameBtn.id = 'finishGameBtn';
+    finishGameBtn.textContent = 'Finish';
+    finishGameBtn.classList.add('button', 'blue-button');
+
+    finalScreenDiv.appendChild(finishGameBtn);
 }
 
 function createPageElements(shuflledNickList)

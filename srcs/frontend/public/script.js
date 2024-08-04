@@ -31,7 +31,6 @@ function navigate() {
 			scripts = window.homeScripts
 			startFunction = 'home'
 			break;
-
 		case '#game':
 			element = 'game'
 			scripts = window.gameScripts
