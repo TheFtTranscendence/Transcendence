@@ -30,7 +30,6 @@ clean:
     done
 
 deepclean: clean
-	rm -rf $(POSTGRES_DATA_PATH)/*
 	make clean
 	yes | docker system prune
 
