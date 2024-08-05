@@ -38,6 +38,18 @@ services:
     depends_on:
       - db
     restart: unless-stopped
+  chat:
+    container_name: chat
+    build: ./chat
+    env_file:
+      - .env
+    ports:
+      - "8002:8002"
+    networks:
+      - app-network
+    depends_on:
+      - db
+    restart: unless-stopped
 
   db:
     container_name: postgres_db
@@ -48,6 +60,19 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data  # Mount a volume for PostgreSQL data
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  chat_db:
+    container_name: chat_db
+    image: postgres:13
+    environment:
+      POSTGRES_DB: chat_data
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - chat_data:/var/lib/postgresql/data  # Mount a volume for PostgreSQL data
     networks:
       - app-network
     restart: unless-stopped
