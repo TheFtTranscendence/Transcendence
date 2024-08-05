@@ -12,6 +12,12 @@ volumes:
       type: none
       o: bind
       device: ${POSTGRES_DATA_PATH}
+  chat_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${CHAT_DATA_PATH}
   shared_static:
 
 services:
