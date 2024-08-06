@@ -1,17 +1,17 @@
-version: '3.5'
-
 networks:
   app-network:
     name: app-network
     driver: bridge
 
 volumes:
-  postgres_data:  # Define the volume for PostgreSQL data
+  #Usermanagement database volume
+  usermanagement_data:
     driver: local
     driver_opts:
       type: none
       o: bind
-      device: ${POSTGRES_DATA_PATH}
+      device: ${USERMANAGEMENT_DATA_PATH}
+  #Chat database volume
   chat_data:
     driver: local
     driver_opts:
@@ -21,60 +21,60 @@ volumes:
   shared_static:
 
 services:
+  #Container for the usermanagement database
+  usermanagement_db:
+    container_name: usermanagement_db
+    image: postgres:13
+    environment:
+      POSTGRES_DB: ${USERMANAGEMENT_DATA_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - usermanagement_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    restart: unless-stopped
+  #Container for the chat database
+  chat_db:
+    container_name: chat_db
+    image: postgres:13
+    environment:
+      POSTGRES_DB: ${CHAT_DATA_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - chat_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    restart: unless-stopped
+
   user-management:
     container_name: user-management
     build: ./userManagement
     env_file:
-      - .env  # Adjust the path to your .env file if needed
+      - .env
     environment:
-      - DATABASE_HOST=${POSTGRES_HOST}
-      - DATABASE_NAME=${POSTGRES_DB}
-      - DATABASE_USER=${POSTGRES_USER}
-      - DATABASE_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_HOST=usermanagement_db
     ports:
-      - "8000:8000"  # Adjust the port mapping as needed
+      - "8000:8000"
     networks:
       - app-network
     depends_on:
-      - db
+      - usermanagement_db
     restart: unless-stopped
   chat:
     container_name: chat
     build: ./chat
     env_file:
       - .env
+    environment:
+      - POSTGRES_HOST=chat_db
     ports:
       - "8002:8002"
     networks:
       - app-network
     depends_on:
-      - db
-    restart: unless-stopped
-
-  db:
-    container_name: postgres_db
-    image: postgres:13
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    volumes:
-      - postgres_data:/var/lib/postgresql/data  # Mount a volume for PostgreSQL data
-    networks:
-      - app-network
-    restart: unless-stopped
-
-  chat_db:
-    container_name: chat_db
-    image: postgres:13
-    environment:
-      POSTGRES_DB: chat_data
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    volumes:
-      - chat_data:/var/lib/postgresql/data  # Mount a volume for PostgreSQL data
-    networks:
-      - app-network
+      - chat_db
     restart: unless-stopped
 
   frontend:
