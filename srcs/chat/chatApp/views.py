@@ -6,6 +6,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import AllowAny
+from django.db.models import Q
 
 class ChatViewSet(viewsets.ModelViewSet):
 	queryset = Chat.objects.all()
@@ -28,4 +29,22 @@ class MessageViewSet(viewsets.ModelViewSet):
 	permission_classes = [AllowAny]
 
 	def perform_create(self, serializer):
-		serializer.save(sender_id=self.request.user.id)
+		sender_id = self.request.data.get('sender_id')
+		serializer.save(sender_id=sender_id)
+
+	@action(detail=False, methods=['get'], url_path='by_users/(?P<user1_id>[^/.]+)/(?P<user2_id>[^/.]+)')
+	def by_users(self, request, user1_id=None, user2_id=None):
+		chat = Chat.objects.get(user1_id=user1_id, user2_id=user2_id)
+		if not chat:
+			chat = Chat.objects.get(user1_id=user2_id, user2_id=user1_id)
+		# chat = Chat.objects.filter(
+		# 	(Q(user1_id=user1_id) & Q(user2_id=user2_id)) |
+		# 	(Q(user1_id=user2_id) & Q(user2_id=user1_id))
+		# ).first()
+
+		if chat is not None:
+			messages = self.queryset.filter(chat_id=chat.id)
+			serializer = self.get_serializer(messages, many=True)
+			return Response(serializer.data)
+		else:
+			return Response({"detail": "Chat not found"}, status=404)
