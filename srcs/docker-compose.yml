@@ -80,6 +80,8 @@ services:
   frontend:
     container_name: frontend
     build: ./frontend
+    environment:
+      - VITE_IP=${IP}
     ports:
       - "3000:80"
     networks:

@@ -13,15 +13,20 @@ class ChatViewSet(viewsets.ModelViewSet):
 	serializer_class = ChatSerializer
 	permission_classes = [AllowAny]
 
+	@csrf_exempt
 	@action(detail=False, methods=['post'])
 	def create_chat(self, request):
 		user1_id = request.data['user1_id']
 		user2_id = request.data['user2_id']
-		chat, created = Chat.objects.get_or_create(user1_id=user1_id, user2_id=user2_id)
-		if not created:
-			chat, created = Chat.objects.get_or_create(user1_id=user2_id, user2_id=user1_id)
+		chat = Chat.objects.filter(
+			(Q(user1_id=user1_id) & Q(user2_id=user2_id)) | 
+			(Q(user1_id=user2_id) & Q(user2_id=user1_id))
+		).first()
+		if not chat:
+			chat = Chat.objects.create(user1_id=user1_id, user2_id=user2_id)
 		serializer = self.get_serializer(chat)
 		return Response(serializer.data)
+			
 
 class MessageViewSet(viewsets.ModelViewSet):
 	queryset = Message.objects.all()
@@ -32,19 +37,3 @@ class MessageViewSet(viewsets.ModelViewSet):
 		sender_id = self.request.data.get('sender_id')
 		serializer.save(sender_id=sender_id)
 
-	@action(detail=False, methods=['get'], url_path='by_users/(?P<user1_id>[^/.]+)/(?P<user2_id>[^/.]+)')
-	def by_users(self, request, user1_id=None, user2_id=None):
-		chat = Chat.objects.get(user1_id=user1_id, user2_id=user2_id)
-		if not chat:
-			chat = Chat.objects.get(user1_id=user2_id, user2_id=user1_id)
-		# chat = Chat.objects.filter(
-		# 	(Q(user1_id=user1_id) & Q(user2_id=user2_id)) |
-		# 	(Q(user1_id=user2_id) & Q(user2_id=user1_id))
-		# ).first()
-
-		if chat is not None:
-			messages = self.queryset.filter(chat_id=chat.id)
-			serializer = self.get_serializer(messages, many=True)
-			return Response(serializer.data)
-		else:
-			return Response({"detail": "Chat not found"}, status=404)
