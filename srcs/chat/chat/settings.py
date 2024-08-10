@@ -15,11 +15,15 @@ DEBUG = True
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 ALLOWED_HOSTS = ['*']
-STATIC_URL = 'templates/'
+STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 ASGI_APPLICATION = 'chat.asgi.application'
 WSGI_APPLICATION = 'chat.wsgi.application'
 ROOT_URLCONF = 'chat.urls'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'chatApp/static'),
+]
 
 INSTALLED_APPS = [
 	'daphne',
@@ -53,7 +57,7 @@ MIDDLEWARE = [
 TEMPLATES = [
 	{
 		'BACKEND': 'django.template.backends.django.DjangoTemplates',
-		'DIRS': [os.path.join(BASE_DIR, 'templates')],
+		'DIRS': [os.path.join(BASE_DIR, 'chatApp/templates')],
 		'APP_DIRS': True,
 		'OPTIONS': {
 			'context_processors': [
