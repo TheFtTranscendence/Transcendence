@@ -21,10 +21,6 @@ ASGI_APPLICATION = 'chat.asgi.application'
 WSGI_APPLICATION = 'chat.wsgi.application'
 ROOT_URLCONF = 'chat.urls'
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'chatApp/static'),
-]
-
 INSTALLED_APPS = [
 	'daphne',
 

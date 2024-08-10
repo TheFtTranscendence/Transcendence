@@ -8,7 +8,7 @@ class Chat(models.Model):
 		return f"Chat between {self.user1_id} and {self.user2_id}"
 
 class Message(models.Model):
-	chat = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name='messages')
+	chat_id = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name='messages')
 	sender_id = models.IntegerField()
 	content = models.TextField()
 	timestamp = models.DateTimeField(auto_now_add=True)
