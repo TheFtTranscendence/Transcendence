@@ -8,11 +8,10 @@ function get_or_create_chat(user1_id = 0 , user2_id = 0) {
 		user2_id: user2_id,
 	}
 
-	axios.post(`http://${IP}:8002/chats/create_chat/`, data)
+	axios.post('http://localhost:8002/chats/create_chat/', data)
 	.then((response) => {
 		return {
 			chat_id: response.data.chat_id,
-			chat_ws: new WebSocket(`ws://${IP}/ws/chat/${chat_id}/`),
 		};
 	})
 	.catch((error) => {
