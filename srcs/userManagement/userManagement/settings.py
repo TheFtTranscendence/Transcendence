@@ -17,6 +17,7 @@ TIME_ZONE = 'UTC'
 ALLOWED_HOSTS = ['*']
 STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+ASGI_APPLICATION = 'userManagement.asgi.application'
 WSGI_APPLICATION = 'userManagement.wsgi.application'
 AUTH_USER_MODEL = 'authentication.User'
 ROOT_URLCONF = 'userManagement.urls'
@@ -24,6 +25,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'images')
 MEDIA_URL = '/images/'
 
 INSTALLED_APPS = [
+	'daphne',
+	
 	'django.contrib.admin',
 	'django.contrib.auth',
 	'django.contrib.contenttypes',
@@ -33,8 +36,11 @@ INSTALLED_APPS = [
 
 	'corsheaders',
 	'rest_framework',
+	'rest_framework.authtoken',
+	'channels',
 
-	'authentication'
+	'authentication',
+	'friends',
 
 ]
 
@@ -114,7 +120,9 @@ LOGGING = {
 }
 
 REST_FRAMEWORK = {
-	'DEFAULT_AUTHENTICATION_CLASSES': [],
+	'DEFAULT_AUTHENTICATION_CLASSES': [
+		'rest_framework.authentication.TokenAuthentication',
+	],
 	'DEFAULT_PERMISSION_CLASSES': [
 		'rest_framework.permissions.AllowAny',
 	],
@@ -141,3 +149,9 @@ CORS_ALLOW_HEADERS = [
 	'x-csrftoken',
 	'x-requested-with',
 ]
+
+CHANNEL_LAYERS = {
+	"default": {
+		"BACKEND": "channels.layers.InMemoryChannelLayer"
+	}
+}

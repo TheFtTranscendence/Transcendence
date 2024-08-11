@@ -1,26 +1,31 @@
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth import authenticate, login
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from rest_framework import viewsets, status
+from rest_framework.decorators import action
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
+from .serializers import UserSerializer
+from friends.serializers import FriendActionSerializer
+from .models import User
 import logging
 import json
 import requests
-from django.contrib.auth import authenticate, login
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework import status
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from .models import User
-from .serializers import UserSerializer
-from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 
 logger = logging.getLogger(__name__)
 
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+class TestTokenView(APIView):
+    permission_classes = [IsAuthenticated]
 
-    def get_permissions(self):
-        self.permission_classes = [AllowAny]
-        return super().get_permissions()
+    def get(self, request):
+        return Response({'message': 'Token is valid'})
+
+class UserViewSet(viewsets.ModelViewSet):
+	queryset = User.objects.all()
+	serializer_class = UserSerializer
+	permission_classes = [AllowAny]
 
 class UserService:
 	@staticmethod
@@ -42,6 +47,8 @@ class UserService:
 
 
 class LoginView(APIView):
+	permission_classes = [AllowAny]
+
 	def post(self, request):
 		data = request.data
 		username = data.get('username')
@@ -59,6 +66,8 @@ class LoginView(APIView):
 
 
 class RegisterView(APIView):
+	permission_classes = [AllowAny]
+
 	def post(self, request):
 		data = request.data
 		email = data.get('email')

@@ -284,3 +284,55 @@ document.addEventListener('DOMContentLoaded', () => {
 		handleClick(rightSide, leftSide, rightContent, leftContent, rightForm, leftForm);
 	});
 })
+
+
+
+
+
+// Open a WebSocket connection
+const socket = new WebSocket('ws://localhost:8000/ws/friends/');
+
+// Listen for messages from the server
+socket.onmessage = function(e) {
+    const data = JSON.parse(e.data);
+    if (data.type === 'friend_request_received') {
+        console.log('Friend request received from user ID:', data.sender_id);
+        // Handle displaying the friend request in your UI
+    } else {
+        console.log(data.detail);
+    }
+};
+
+// Send a friend request
+function sendFriendRequest(friendId) {
+    socket.send(JSON.stringify({
+        action: 'send_request',
+        friend_id: friendId
+    }));
+}
+
+// Respond to a friend request
+function respondToRequest(requestId, accept) {
+    socket.send(JSON.stringify({
+        action: 'respond_request',
+        request_id: requestId,
+        accept: accept
+    }));
+}
+
+// Add a friend (directly, if needed)
+function addFriend(friendId) {
+    socket.send(JSON.stringify({
+        action: 'add_friend',
+        friend_id: friendId
+    }));
+}
+
+// Remove a friend (directly, if needed)
+function removeFriend(friendId) {
+    socket.send(JSON.stringify({
+        action: 'remove_friend',
+        friend_id: friendId
+    }));
+}
+

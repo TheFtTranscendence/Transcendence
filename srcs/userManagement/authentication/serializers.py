@@ -6,3 +6,4 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'email', 'username', 'smartcontract_id', 'avatar', 'is_staff', 'is_superuser', 'friends']
         read_only_fields = ['id', 'is_staff', 'is_superuser']
+
