@@ -9,7 +9,7 @@ WORKDIR /usr/src/app
 
 COPY requirements.txt .
 COPY init_django_project.sh .
-COPY . .
+COPY userManagementProject/ userManagementProject/
 
 RUN pip install --no-cache-dir -r requirements.txt
 RUN chmod +x init_django_project.sh
