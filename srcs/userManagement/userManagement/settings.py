@@ -111,7 +111,7 @@ LOGGING = {
 			'level': 'INFO',
 			'propagate': False,
 		},
-		'authentication': {
+		'friends': {
 			'handlers': ['console'],
 			'level': 'INFO',
 			'propagate': False,

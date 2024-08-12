@@ -4,6 +4,7 @@ export PYTHONPATH=./userManagementProject
 
 python manage.py makemigrations > /dev/null 2>&1
 python manage.py makemigrations authentication > /dev/null 2>&1
+python manage.py makemigrations friends > /dev/null 2>&1
 python manage.py migrate
 
 create_superuser() {
