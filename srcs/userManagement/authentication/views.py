@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from .serializers import UserSerializer
-from friends.serializers import FriendActionSerializer
+from friends.serializers import FriendRequestSerializer
 from .models import User
 import logging
 import json

@@ -42,16 +42,20 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			try:
 				target = await sync_to_async(User.objects.get)(id=target_id)
 				user = await sync_to_async(User.objects.get)(id=sender_id)
-				request = await sync_to_async(FriendRequest.objects.create)(sender=user, receiver=target)
-				target_group_name = f'user_{target_id}'
-				await self.channel_layer.group_send(
-					target_group_name,
-					{
-						'type': 'friend_request_received',
-						'sender_id': sender_id,
-						'request_id': request.id
-					}
-				)
+				try:
+					existing_request = await sync_to_async(FriendRequest.objects.get)(sender=user, receiver=target)
+					await self.send(text_data=json.dumps({'detail': 'Friend Request already exists.'}))
+				except FriendRequest.DoesNotExist:
+					request = await sync_to_async(FriendRequest.objects.create)(sender=user, receiver=target)
+					target_group_name = f'user_{target_id}'
+					await self.channel_layer.group_send(
+						target_group_name,
+						{
+							'type': 'friend_request_received',
+							'sender_id': sender_id,
+							'request_id': request.id
+						}
+					)
 			except User.DoesNotExist:
 				await self.send(text_data=json.dumps({'detail': 'User not found.'}))
 			except ValueError:
@@ -60,20 +64,21 @@ class ChatConsumer(AsyncWebsocketConsumer):
 				logger.exception(f'exception: {e}')
 				await self.send(text_data=json.dumps({'detail': 'Error'}))
 
-
-
 		elif action == 'respond_request':
 			request_id = text_data_json['request_id']
 			accept = text_data_json['accept']
 			try:
 				request = await sync_to_async(FriendRequest.objects.get)(id=request_id)
 				if (accept):
-					await sync_to_async(request.sender.friends.add)(request.receiver)
-					await sync_to_async(request.receiver.friends.add)(request.sender)
+					sender = await sync_to_async(lambda: request.sender)()
+					receiver = await sync_to_async(lambda: request.receiver)()
+					await sync_to_async(sender.friends.add)(receiver)
+					await sync_to_async(receiver.friends.add)(sender)
 					request.accepted = True
 				else:
 					request.accepted = False
 				await sync_to_async(request.save)()
+				await sync_to_async(request.delete)()
 				response = {'detail': 'Friend request responded to successfully.'}
 			except ObjectDoesNotExist:
 				response = {'detail': 'Friend request not found.'}

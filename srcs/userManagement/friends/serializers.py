@@ -1,6 +1,9 @@
 from rest_framework import serializers
-from .models import User
-        
-class FriendActionSerializer(serializers.Serializer):
-    friend_id = serializers.IntegerField()
+from .models import FriendRequest
+		
+class FriendRequestSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = FriendRequest
+		fields = ['id', 'sender', 'receiver', 'created_at', 'accepted', 'rejected']
+		
 

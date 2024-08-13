@@ -8,7 +8,7 @@ router = DefaultRouter()
 router.register(r'users', UserViewSet)
 
 urlpatterns = [
-    path('', include(router.urls)),
+	path('', include(router.urls)),
 	path('login/', LoginView.as_view(), name='login'),
 	path('register/', RegisterView.as_view(), name='register'),
 	path('token/', obtain_auth_token, name='token'),
