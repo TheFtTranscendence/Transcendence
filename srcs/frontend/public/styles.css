@@ -239,7 +239,100 @@ body {
 	z-index: 6;
 }
 
+#chat-main-div {
+    width: 80%;
+    height: 80vh;
+    display: flex;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: white;
+}
 
+#chat-left-parent {
+    width: 250px;
+    background-color: #f0f0f0;
+    border-right: 1px solid #ccc;
+    display: flex;
+    flex-direction: column;
+}
+
+#chat-contacts-history {
+    flex-grow: 1;
+    padding: 10px;
+}
+
+#chat-contacts-history h2 {
+    margin-bottom: 10px;
+}
+
+.chat-list, ul {
+    list-style: none;
+}
+
+.chat-item {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.chat-item:hover {
+    background-color: #ddd;
+}
+
+#chat-right-parent {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+#toggle-friend-list {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin: 10px;
+}
+
+#toggle-friend-list:hover {
+    background-color: #444;
+}
+
+#chat-friend-div {
+    flex-grow: 1;
+    padding: 10px;
+    display: none;
+    overflow-y: auto;
+}
+
+#chat-right-top {
+    flex-grow: 1;
+    padding: 10px;
+    overflow-y: auto;
+}
+
+.message {
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+#chat-right-bottom {
+    padding: 10px;
+    border-top: 1px solid #ccc;
+    background-color: #f0f0f0;
+}
+
+#chat-right-bottom textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: none;
+}
 #auth {
 	border: 7px solid var(--background-color);
     display: flex;

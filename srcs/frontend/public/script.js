@@ -2,29 +2,69 @@
 const routes = {
 	'#home': `<h1>Home Page</h1><p>Welcome to the home page!</p>`,
 	'#game': `<h1>Game</h1><canvas id="game-area"></canvas>`,
-	'#game2': `<h1>Game2</h1>
-					<div id="div-game2-area">
-						<div id="div-game2-top">
-							<!-- Player 1 health -->
-							<div id="game2-bar1-parent">
-								<div id="game2-bar1-background"></div>
-								<div id="game2-bar1"></div>
-							</div>
-							<!-- timer -->
-							<div id="game2-timer"> 50 </div>
-							<!-- Player 2 health -->
-							<div id="game2-bar2-parent">
-								<div id="game2-bar2-background"></div>
-								<div id="game2-bar2"></div>
-							</div>
-						</div>
-						<div id= "game2-end-text"> Tie </div>
-						<div>
-							<canvas id="game2-area"></canvas>
-						</div>
-					</div>
-					`,
-	'#chat': `<h1>Chat</h1><p>Here can be eventually the chat</p>`
+	'#game2': `
+<div id="div-game2-area">
+	<div id="div-game2-top">
+		<!-- Player 1 health -->
+		<div id="game2-bar1-parent">
+			<div id="game2-bar1-background"></div>
+			<div id="game2-bar1"></div>
+		</div>
+		<!-- timer -->
+		<div id="game2-timer"> 50 </div>
+		<!-- Player 2 health -->
+		<div id="game2-bar2-parent">
+			<div id="game2-bar2-background"></div>
+			<div id="game2-bar2"></div>
+		</div>
+	</div>
+	<div id= "game2-end-text"> Tie </div>
+	<div>
+		<canvas id="game2-area"></canvas>
+	</div>
+</div>
+`,
+	'#chat': `
+<div id="chat-main-div">
+        <div id="chat-left-parent">
+            <div id="chat-contacts-history">
+                <h2>Chat History</h2>
+                <ul class="chat-list">
+                    <li class="chat-item">Chat 1</li>
+                    <li class="chat-item">Chat 2</li>
+                    <li class="chat-item">Chat 3</li>
+                    <!-- Add more chats as needed -->
+                </ul>
+            </div>
+        </div>
+
+        <div id="chat-right-parent">
+            <button id="toggle-friend-list" onclick="toggleFriendList()">Friends</button>
+
+            <div id="chat-friend-div">
+                <h2>Friends</h2>
+                <ul>
+                    <li class="friend-item">Friend 1</li>
+                    <li class="friend-item">Friend 2</li>
+                    <li class="friend-item">Friend 3</li>
+                    <!-- Add more friends as needed -->
+                </ul>
+            </div>
+
+            <div id="chat-right-top">
+                <h2>Messages</h2>
+                <div class="message">Hello, how are you?</div>
+                <div class="message">I'm fine, thanks!</div>
+                <!-- Add more messages as needed -->
+            </div>
+
+            <div id="chat-right-bottom">
+                <!-- This can be used for message input or additional controls -->
+                <textarea placeholder="Type a message..."></textarea>
+            </div>
+        </div>
+    </div>
+`
 };
 				
 
@@ -38,6 +78,16 @@ function navigate() {
 		loadGameScript();
 	if (hash === '#game2')
 		loadGameScript2();
+	if (hash === '#chat')
+		loadChatScript();
+}
+
+function loadChatScript() {
+	const script = document.createElement('script');
+	script.src = 'chat/chat.js';
+	script.type = 'text/javascript';
+
+	document.body.appendChild(script);
 }
 
 // Function to load a script and return a Promise
