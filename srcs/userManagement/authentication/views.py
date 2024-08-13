@@ -27,7 +27,7 @@ class UserViewSet(viewsets.ModelViewSet):
 	serializer_class = UserSerializer
 	permission_classes = [AllowAny]
 
-	@action(detail=False, methods=['get'], url_path='users/<str:username>/')
+	@action(detail=False, methods=['get'], url_path='by_username/(?P<username>[^/.]+)')
 	def get_user_by_username(self, request, username):
 		user = User.objects.get(username=username)
 		serializer = UserSerializer(user)
