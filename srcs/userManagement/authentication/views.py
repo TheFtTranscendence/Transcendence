@@ -27,11 +27,14 @@ class UserViewSet(viewsets.ModelViewSet):
 	serializer_class = UserSerializer
 	permission_classes = [AllowAny]
 
-	@action(detail=False, methods=['get'], url_path='by_username/(?P<username>[^/.]+)')
+	@action(detail=False, methods=['get'], url_path='(?P<username>[^/.]+)')
 	def get_user_by_username(self, request, username):
-		user = User.objects.get(username=username)
-		serializer = UserSerializer(user)
-		return Response(serializer.data)
+		try:
+			user = User.objects.get(username=username)
+			serializer = UserSerializer(user)
+			return Response(serializer.data)
+		except User.DoesNotExist:
+			return Response({'message': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
 		
 		
 
