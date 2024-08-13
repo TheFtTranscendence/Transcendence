@@ -119,9 +119,14 @@ function handleLogin() {
 		console.log(response.data);
 		alert('Login successful');
 
-		const user = {
-			
-		}
+		axios.get('http://localhost:8000/auth/users/' + username + '/')
+		.then((response) => {
+			window.user = response.data;
+			console.log('User:', window.user);
+		})
+		.catch((error) => {
+			console.error(error);
+		});
 	})
 	.catch((error) => {
 		console.error(error);
