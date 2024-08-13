@@ -27,6 +27,14 @@ class UserViewSet(viewsets.ModelViewSet):
 	serializer_class = UserSerializer
 	permission_classes = [AllowAny]
 
+	@action(detail=False, methods=['get'], url_path='users/<str:username>/')
+	def get_user_by_username(self, request, username):
+		user = User.objects.get(username=username)
+		serializer = UserSerializer(user)
+		return Response(serializer.data)
+		
+		
+
 class UserService:
 	@staticmethod
 	def create_user(username, password, email):

@@ -118,6 +118,10 @@ function handleLogin() {
 	.then((response) => {
 		console.log(response.data);
 		alert('Login successful');
+
+		const user = {
+			
+		}
 	})
 	.catch((error) => {
 		console.error(error);

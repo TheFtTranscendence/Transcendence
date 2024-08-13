@@ -3,7 +3,6 @@ from rest_framework.routers import DefaultRouter
 from .views import UserViewSet, LoginView, RegisterView, TestTokenView
 from rest_framework.authtoken.views import obtain_auth_token
 
-
 router = DefaultRouter()
 router.register(r'users', UserViewSet)
 
@@ -13,4 +12,6 @@ urlpatterns = [
 	path('register/', RegisterView.as_view(), name='register'),
 	path('token/', obtain_auth_token, name='token'),
 	path('test-token/', TestTokenView.as_view(), name='test-token'),
+	# path('users/<str:username>/', UserViewSet.as_view({'get':'get_user_by_username'}), name='get-user-by-username'),
+
 ]
