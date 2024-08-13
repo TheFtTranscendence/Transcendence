@@ -87,8 +87,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		accept = data['accept']
 		try:
 			request = await self.get_friend_request(id=request_id)
-			sender = request.sender
-			receiver = request.receiver
+			sender = await self.get_sender(request)
+			receiver = await self.get_receiver(request)
 			if accept:
 				await self.add_friend(sender=sender, receiver=receiver)
 				request.accepted = True
@@ -169,6 +169,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
 	@database_sync_to_async
 	def get_sender(self, friend_request):
 		return friend_request.sender
+	
+	@database_sync_to_async
+	def get_receiver(self, friend_request):
+		return friend_request.receiver
 
 	@database_sync_to_async
 	def get_user(self, user_id):
