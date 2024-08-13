@@ -3,6 +3,8 @@ from django.db import models
 class Chat(models.Model):
 	user1_id = models.IntegerField()
 	user2_id = models.IntegerField()
+	user1_unread_messages = models.IntegerField(default=0)
+	user2_unread_messages = models.IntegerField(default=0)
 
 	def __str__(self):
 		return f"Chat between {self.user1_id} and {self.user2_id}"

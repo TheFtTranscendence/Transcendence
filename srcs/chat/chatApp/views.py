@@ -25,6 +25,11 @@ class ChatViewSet(viewsets.ModelViewSet):
 		if not chat:
 			chat = Chat.objects.create(user1_id=user1_id, user2_id=user2_id)
 		serializer = self.get_serializer(chat)
+		if (chat.user1_id == user1_id):
+			chat.user1_unread_messages = 0
+		else:
+			chat.user2_unread_messages = 0
+		chat.save()			
 		return Response(serializer.data)
 			
 
