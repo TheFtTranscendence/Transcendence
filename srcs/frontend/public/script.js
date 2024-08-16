@@ -112,6 +112,7 @@ function loadScript(src) {
 // Function to load all scripts
 function loadGameScript2() {
 	scripts = [
+		'game2/before_game.js',
 		'game2/events.js',
 		'game2/init.js',
 		'game2/game_end.js',
@@ -123,8 +124,8 @@ function loadGameScript2() {
 		return promise.then(() => loadScript(src));
 	}, Promise.resolve()).then(() => {
 
-		if (typeof startGame2 === 'function')
-			startGame2();
+		if (typeof before_game === 'function')
+			before_game();
 		else
 			console.error("startGame2 function not found")
 
