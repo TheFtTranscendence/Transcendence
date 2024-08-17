@@ -169,46 +169,12 @@ contract Score is Ownable {
 
     /* ========== GETTER FUNCTIONS ========== */
 
-    // fetching games and tournaments
-    // function getNumberOfGames(uint256 _instanceIndex) public view returns (uint256) {
-    //     return instancesGame[_instanceIndex].length;
-    // }
-
-    // function getNumberOfTournaments(uint256 _instanceIndex) public view returns (uint256) {
-    //     return instancesTournament[_instanceIndex].length;
-    // }
-
-    // get the current tournament index
-    function getCurrentTournamentIndex(uint256 _instanceIndex) internal view returns (uint256) {
-        if (_instanceIndex < 0 || _instanceIndex >= instanceIndex)
-            revert wrongInstanceIndex();
-        if (instancesTournament[_instanceIndex].length == 0)
-            revert noCurrentTournament();
-        return instancesTournament[_instanceIndex].length - 1;
-    }
-
     /**
         * @notice Get all the games of an instance.
     **/
     function getGames(uint256 _instanceIndex) public view returns (Game[] memory) {
         return instancesGame[_instanceIndex];
     }
-
-    // function getTournament(uint256 _instanceIndex, uint256 _tournamentIndex) public view returns (Tournament memory) {
-    //     return instancesTournament[_instanceIndex][_tournamentIndex];
-    // }
-
-    // function getTournaments(uint256 _instanceIndex) public view returns (Tournament[] memory) {
-    //     return instancesTournament[_instanceIndex];
-    // }
-
-    // function getTournamentGame(uint256 _instanceIndex, uint256 _tournamentIndex, uint256 _gameIndex) public view returns (Game memory) {
-    //     return instancesTournament[_instanceIndex][_tournamentIndex].games[_gameIndex];
-    // }
-
-    // function getTournamentGames(uint256 _instanceIndex, uint256 _tournamentIndex) public view returns (Game[] memory) {
-    //     return instancesTournament[_instanceIndex][_tournamentIndex].games;
-    // }
 
     /**
         * @notice Get the next players of a tournament.
@@ -254,18 +220,48 @@ contract Score is Ownable {
     }
 
     /**
-        * @notice Get the ranking of a tournament.
+        * @notice Get the ranking of all the tournaments of an instance.
         * @param _instanceIndex The index of the instance in the database.
-        * @param _tournamentIndex The index of the tournament in the instance.
-        * @return returns The ranking of the tournament.
+        * @return returns The ranking of all the tournaments.
     */
-    function getTournamentRanking(uint256 _instanceIndex, uint256 _tournamentIndex) public view returns (string[] memory) {
-        if (_tournamentIndex < 0 || _tournamentIndex >= instancesTournament[_instanceIndex].length)
-            revert wrongTournamentIndex();
-        if (instancesTournament[_instanceIndex][_tournamentIndex].games.length < instancesTournament[_instanceIndex][_tournamentIndex].numberOfGames)
-            revert ongoingTournament();
+    function getAllTournamentsRankings(uint256 _instanceIndex) public view returns (string[][] memory) {
+        if (_instanceIndex < 0 || _instanceIndex >= instanceIndex)
+            revert wrongInstanceIndex();
+        if (instancesTournament[_instanceIndex].length == 0)
+            revert noCurrentTournament();
+        string[][] memory rankings = new string[][](instancesTournament[_instanceIndex].length);
+        for (uint256 i = 0; i < instancesTournament[_instanceIndex].length; i++) {
+            rankings[i] = instancesTournament[_instanceIndex][i].reversedRanking;
+        }
+        return rankings;
+    }
 
+    /**
+        * @notice Get the last tournament ranking of an instance.
+        * @param _instanceIndex The index of the instance in the database.
+        * @return returns The last tournament ranking.
+    */
+    function getLastTournamentRanking(uint256 _instanceIndex) public view returns (string[] memory) {
+        if (_instanceIndex < 0 || _instanceIndex >= instanceIndex)
+            revert wrongInstanceIndex();
+        if (instancesTournament[_instanceIndex].length == 0)
+            revert noCurrentTournament();
+        uint256 _tournamentIndex = getCurrentTournamentIndex(_instanceIndex);
         return instancesTournament[_instanceIndex][_tournamentIndex].reversedRanking;
+    }
+
+
+    /* ========== INTERNAL FUNCTIONS ========== */
+
+    /**
+        * @notice Get the current tournament index.
+    */
+    function getCurrentTournamentIndex(uint256 _instanceIndex) internal view returns (uint256) {
+        if (_instanceIndex < 0 || _instanceIndex >= instanceIndex)
+            revert wrongInstanceIndex();
+        if (instancesTournament[_instanceIndex].length == 0)
+            revert noCurrentTournament();
+        return instancesTournament[_instanceIndex].length - 1;
     }
 
     /**

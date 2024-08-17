@@ -108,7 +108,7 @@ Returns:
 |exception| catched exception | 400 |
 
 
-## /solidity/gettournamentranking/\<instanceIndex>/\<tournamentIndex>/
+## /solidity/getlasttournamentranking/\<instanceIndex>/
 
 Request Method: **GET**
 
@@ -121,3 +121,15 @@ Returns:
 |success| Returns the ranking of the tournament | 200 |
 |exception| catched exception | 400 |
 
+## /solidity/getalltournamentsrankings/\<instanceIndex>/
+
+Request Method: **GET**
+
+JSON file: *(null)*
+
+Returns:
+
+| Message | Description | Status |
+|--------|-------------|:-----:|
+|success| Returns the ranking of the tournament | 200 |
+|exception| catched exception | 400 |

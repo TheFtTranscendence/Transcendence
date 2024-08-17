@@ -30,11 +30,6 @@
 		"type": "error"
 	},
 	{
-		"inputs": [],
-		"name": "wrongTournamentIndex",
-		"type": "error"
-	},
-	{
 		"anonymous": false,
 		"inputs": [
 			{
@@ -225,6 +220,25 @@
 				"type": "uint256"
 			}
 		],
+		"name": "getAllTournamentsRankings",
+		"outputs": [
+			{
+				"internalType": "string[][]",
+				"name": "",
+				"type": "string[][]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_instanceIndex",
+				"type": "uint256"
+			}
+		],
 		"name": "getGames",
 		"outputs": [
 			{
@@ -276,17 +290,12 @@
 				"type": "uint256"
 			}
 		],
-		"name": "getNextTournamentPlayers",
+		"name": "getLastTournamentRanking",
 		"outputs": [
 			{
-				"internalType": "string",
+				"internalType": "string[]",
 				"name": "",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
+				"type": "string[]"
 			}
 		],
 		"stateMutability": "view",
@@ -298,19 +307,19 @@
 				"internalType": "uint256",
 				"name": "_instanceIndex",
 				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_tournamentIndex",
-				"type": "uint256"
 			}
 		],
-		"name": "getTournamentRanking",
+		"name": "getNextTournamentPlayers",
 		"outputs": [
 			{
-				"internalType": "string[]",
+				"internalType": "string",
 				"name": "",
-				"type": "string[]"
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
 			}
 		],
 		"stateMutability": "view",

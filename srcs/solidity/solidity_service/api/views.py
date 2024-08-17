@@ -210,12 +210,22 @@ def get_next_tournament_player(request, instanceIndex):
 
     return JsonResponse({'success': players}, status=200)
 
-# Get a tournament ranking
+# Get the last tournament ranking
 @api_view(['GET'])
-def get_tournament_ranking(request, instanceIndex, tournamentIndex):
+def get_last_tournament_ranking(request, instanceIndex):
     try:
-        ranking = contract.functions.getTournamentRanking(instanceIndex, tournamentIndex).call()
+        ranking = contract.functions.getLastTournamentRanking(instanceIndex).call()
     except Exception as e:
         return JsonResponse({'exception': str(e)}, status=400)
 
     return JsonResponse({'success': ranking}, status=200)
+
+# Get all the tournaments rankings
+@api_view(['GET'])
+def get_all_tournaments_rankings(request, instanceIndex):
+    try:
+        rankings = contract.functions.getAllTournamentsRankings(instanceIndex).call()
+    except Exception as e:
+        return JsonResponse({'exception': str(e)}, status=400)
+
+    return JsonResponse({'success': rankings}, status=200)
