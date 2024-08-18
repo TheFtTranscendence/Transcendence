@@ -1,25 +1,20 @@
 from pathlib import Path
-import os
-import logging
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-&83+_h#fn5d7e&+0=$jc7lb9)vj$-yu(5i3v=-j#2i714jg%-n'
-
-CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_ALL_ORIGINS = True
 USE_I18N = True
 USE_TZ = True
 DEBUG = True
 
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
-ALLOWED_HOSTS = ['*']
-STATIC_URL = '/static/'
+STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-ASGI_APPLICATION = 'chat.asgi.application'
-WSGI_APPLICATION = 'chat.wsgi.application'
-ROOT_URLCONF = 'chat.urls'
+SECRET_KEY = 'django-insecure-@!*v%a*&f##z1agdq1#!*^w23+h89ouabyw7lez1(98r8=m&p8'
+ASGI_APPLICATION = 'remote_players.asgi.application'
+ROOT_URLCONF = 'remote_players.urls'
+
+ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
 	'daphne',
@@ -33,10 +28,10 @@ INSTALLED_APPS = [
 
 	'corsheaders',
 	'rest_framework',
+	'rest_framework.authtoken',
 	'channels',
-    
-	'chatApp'
 
+	'remote_access'
 ]
 
 MIDDLEWARE = [
@@ -50,10 +45,11 @@ MIDDLEWARE = [
 	'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+
 TEMPLATES = [
 	{
 		'BACKEND': 'django.template.backends.django.DjangoTemplates',
-		'DIRS': [os.path.join(BASE_DIR, 'chatApp/templates')],
+		'DIRS': [],
 		'APP_DIRS': True,
 		'OPTIONS': {
 			'context_processors': [
@@ -66,14 +62,12 @@ TEMPLATES = [
 	},
 ]
 
+WSGI_APPLICATION = 'remote_players.wsgi.application'
+
 DATABASES = {
 	'default': {
-		'ENGINE': 'django.db.backends.postgresql',
-		'NAME': os.environ.get('CHAT_DATA_NAME'),
-		'USER': os.environ.get('POSTGRES_USER'),
-		'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-		'HOST': os.environ.get('POSTGRES_HOST'),
-		'PORT': os.environ.get('POSTGRES_PORT'),
+		'ENGINE': 'django.db.backends.sqlite3',
+		'NAME': BASE_DIR / 'db.sqlite3',
 	}
 }
 
@@ -92,40 +86,15 @@ AUTH_PASSWORD_VALIDATORS = [
 	},
 ]
 
-CHANNEL_LAYERS = {
-	"default": {
-		"BACKEND": "channels.layers.InMemoryChannelLayer"
-	}
-}
-
-LOGGING = {
-	'version': 1,
-	'handlers': {
-		'console': {
-			'level': 'INFO',
-			'class': 'logging.StreamHandler',
-		},
-	},
-	'loggers': {
-		'django': {
-			'handlers': ['console'],
-			'level': 'INFO', 
-			'propagate': False,
-		},
-		'chatApp': {
-			'handlers': ['console'],
-			'level': 'INFO',
-			'propagate': False
-		}
-	},
-}
-
-
 REST_FRAMEWORK = {
-	'DEFAULT_RENDERER_CLASSES': (
-		'rest_framework.renderers.JSONRenderer',
-	),
+	'DEFAULT_AUTHENTICATION_CLASSES': [
+		'rest_framework.authentication.TokenAuthentication',
+	],
+	'DEFAULT_PERMISSION_CLASSES': [
+		'rest_framework.permissions.AllowAny',
+	],
 }
+
 
 CORS_ALLOW_METHODS = [
 	"DELETE",
@@ -148,3 +117,8 @@ CORS_ALLOW_HEADERS = [
 	'x-requested-with',
 ]
 
+CHANNEL_LAYERS = {
+	"default": {
+		"BACKEND": "channels.layers.InMemoryChannelLayer"
+	}
+}

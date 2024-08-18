@@ -62,6 +62,14 @@ services:
     depends_on:
       - usermanagement_db
     restart: unless-stopped
+  remote-players:
+    container_name: remote-players
+    build: ./remote_players
+    ports:
+      - "8004:8004"
+    networks:
+      - app-network
+    restart: unless-stopped
   chat:
     container_name: chat
     build: ./chat
