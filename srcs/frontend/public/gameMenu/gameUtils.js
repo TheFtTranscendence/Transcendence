@@ -78,7 +78,7 @@ function findNextMatch()
 
 }
 
-function loadScript(filePath)
+function loadScriptGlobal(filePath)
 {
     // let existingGameScript = document.getElementById("gameS");
 

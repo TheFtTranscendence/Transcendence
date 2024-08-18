@@ -49,9 +49,28 @@ function navigate() {
 			startFunction = 'chat'
 			break
 	}
-	
 	document.getElementById(element).classList.remove("hidden");
 	loadScripts(scripts, startFunction);
+}
+
+// Starts scripts (Script has to start with init() function)
+function loadGameScript(filePath)
+{
+	const script = document.createElement('script');
+	script.src = filePath;
+	script.type = 'text/javascript';
+
+    script.onload = function() {
+        if (typeof init === 'function') {
+            init();
+        } else {
+            console.error("init function not found" + filePath);
+        }
+    };
+
+	// if (typeof startGame === 'function')
+	//     startGame();
+	document.body.appendChild(script);
 }
 
 // Function to load all scripts
@@ -77,7 +96,6 @@ function loadScripts(scripts, functionName) {
 	});
 }
 
-
 function UnloadScripts(scripts) {
 
 	scripts.forEach(script => {
@@ -88,26 +106,6 @@ function UnloadScripts(scripts) {
 	});
 }
 
-
-// Starts game script
-function loadScript(filePath)
-{
-	const script = document.createElement('script');
-	script.src = filePath;
-	script.type = 'text/javascript';
-
-    script.onload = function() {
-        if (typeof init === 'function') {
-            init();
-        } else {
-            console.error("init function not found" + filePath);
-        }
-    };
-
-	// if (typeof startGame === 'function')
-	//     startGame();
-	document.body.appendChild(script);
-}
 
 function handleLogin() {
 	const username = document.getElementById('loginUsername').value;

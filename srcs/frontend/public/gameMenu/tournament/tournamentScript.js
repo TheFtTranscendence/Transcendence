@@ -16,7 +16,7 @@ function init() {
                 window.tournamentOn = false;
                 const finalScreenDiv = document.getElementById('finalDiv');
                 finalScreenDiv.parentNode.removeChild(finalScreenDiv);
-                window.loadScript("gameMenu/gameMenuScript.js");
+                window.loadScriptGlobal("gameMenu/gameMenuScript.js");
             });
         }
         else
