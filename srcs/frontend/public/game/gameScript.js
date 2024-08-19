@@ -1,16 +1,21 @@
-function game_hashchange(event, vars)
+function game_hashchange(vars)
 {
-	console.log('hashchange game');
-	document.getElementById('game').classList.add('hidden');
+	if (vars.running == true)
+	{
+		console.log('hashchange game');
+		window.removeEventListener("hashchange", game_hashchange);
+	
+		document.getElementById('game').classList.add('hidden');
+	
+		window.removeEventListener("keydown", handleKeyDown);
+		window.removeEventListener("keyup", handleKeyUp);
+		vars.canvasVars.canvas.removeEventListener("click", handleCanvasClick);
+	
+		clearInterval(vars.IntervalVars.gameLoop);
+		UnloadScripts(window.gameScripts);
 
-	window.removeEventListener("keydown", handleKeyDown);
-	window.removeEventListener("keyup", handleKeyUp);
-	vars.canvasVars.canvas.removeEventListener("click", handleCanvasClick);
-	clearInterval(vars.IntervalVars.gameLoop);
-	
-	window.removeEventListener("hashchange", game_hashchange);
-	
-	UnloadScripts(window.gameScripts);
+		vars.running = false;
+	}
 }
 
 function startGame()
@@ -21,7 +26,7 @@ function startGame()
 	document.getElementById('game').classList.remove('hidden');
 
 	// When leaving this hash (#game), trigger game_hashchange function
-	window.addEventListener("hashchange", (event) => game_hashchange(event, vars));
+	window.addEventListener("hashchange", (event) => {game_hashchange(vars)});
 	
 	
     window.addEventListener("keydown", (event) => handleKeyDown(event, vars));
@@ -100,7 +105,8 @@ function initVars()
         paddleVars: paddleVars,
         ballVars: ballVars,
         buttonVars: buttonVars,
-		IntervalVars: IntervalVars
+		IntervalVars: IntervalVars,
+		running: true
     }
 
     return vars;
