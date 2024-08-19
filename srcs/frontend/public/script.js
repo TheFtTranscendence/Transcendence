@@ -67,7 +67,7 @@ function navigate() {
 			break
 	}
 	
-	document.getElementById(element).classList.remove("hidden");
+	document.getElementById(element).classList.remove('hidden');
 	loadScripts(scripts, startFunction);
 }
 
