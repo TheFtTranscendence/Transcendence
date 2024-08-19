@@ -124,7 +124,14 @@ function init_vars() {
             ground_height: ground_height, // px
 
 			backgroundMusic: 0,
-        }
+        },
+
+		s: {
+			game_socket: 0,
+			gameId: 1,
+			player1: 2,
+			player2: 3
+		}
     }
 }
 
@@ -139,7 +146,37 @@ function setup_canvas(v)
 	v.g.time = parseInt(v.g.timer.innerHTML)
 }
 
-function setup_
+function setup_socket(v) {
+
+	v.s.player1 = 2
+	v.s.player2 = 3
+	v.s.gameId = 1
+	
+	v.s.game_socket = new WebSocket('ws://localhost:8004/ws/remote_access/' + v.s.gameId + '/');
+
+	
+	v.s.game_socket.onmessage = function(event) {
+		msg = JSON.parse(event.data)
+		if (msg.player_id != window.user.id)
+		{
+			if (msg.player_id == v.s.player1)
+			{
+				switch (msg.action) {
+					case 'attack': v.player.attack(); break;
+				}
+			}
+
+			else if (msg.player_id == v.s.player2)
+			{
+				switch (msg.action) {
+					case 'attack': v.enemy.attack(); break;
+				}
+			}
+
+		}
+			
+	}
+}
 
 function setup_music(v) {
 	v.g.backgroundMusic = new Audio('./game2/assets/background.mp3')
@@ -175,6 +212,6 @@ function leave_game(v) {
 
 	
 	document.getElementById('game2').classList.add("hidden");
-	UnloadScripts(window.game2Scripts);
+	UnloadScripts(window.matchmakingScripts);
 
 }

@@ -20,6 +20,15 @@ window.game2Scripts = [
 	'game2/gameScript2.js'
 ];
 
+window.matchmakingScripts = [
+	'matchmaking/before_game.js',
+	'matchmaking/classes.js',
+	'matchmaking/events.js',
+	'matchmaking/init.js',
+	'matchmaking/game_end.js',
+	'matchmaking/gameScript2.js'
+];
+
 
 // Function to handle navigation
 function navigate() {
@@ -49,6 +58,12 @@ function navigate() {
 			element = 'chat'
 			scripts = window.chatScripts
 			startFunction = 'chat'
+			break
+
+		case '#matchmaking':
+			element = 'game2'
+			scripts = window.matchmakingScripts
+			startFunction = 'before_game'
 			break
 	}
 	
