@@ -144,16 +144,16 @@ function handleLogin() {
 function handleRegister() {
 	const username = document.getElementById('registerUsername').value;
 	const password = document.getElementById('registerPassword').value;
+	const confirm_password = document.getElementById('registerPasswordConfirm').value;
 	const email = document.getElementById('registerEmail').value;
 	const first_name = document.getElementById('registerFirstName').value;
 	const last_name = document.getElementById('registerLastName').value;
 
 	const data = {
+		email: email,
 		username: username,
 		password: password,
-		email: email,
-		first_name: first_name,
-		last_name: last_name,
+		confirm_password: confirm_password
 	}
 
 	// console.log('Sending JSON:', JSON.stringify(data, null, 2));
