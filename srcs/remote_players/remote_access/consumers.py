@@ -2,6 +2,7 @@ from channels.db import database_sync_to_async
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 import logging
+from .models import Game
 
 logger = logging.getLogger(__name__)
 
@@ -47,3 +48,99 @@ class GameConsumer(AsyncWebsocketConsumer):
 			'player_id': player_id,
 			'action': action
 		}))
+
+class QueueConsumer(AsyncWebsocketConsumer):
+	queue_Pong = []
+	queue_FightyFighters = []
+	game_size = 2
+
+	async def connect(self):
+		self.game = self.scope['url_route']['kwargs']['game']
+		self.user_id = self.scope['url_route']['kwargs']['user_id']
+
+		if self.is_user_in_any_queue(self.user_id):
+			await self.send(json.dumps({
+				'status': 'error',
+				'message': 'User is already in a queue!'
+			}))
+			await self.close()
+			return
+
+		await self.accept()
+
+		if self.game == 'Pong':
+				
+			self.queue_Pong.append(self)
+
+			if (len(self.queue_Pong) >= 2):
+				await self.start_game()
+		elif self.game == 'FightyFighters':
+			self.queue_FightyFighters.append(self)
+
+			if (len(self.queue_FightyFighters) >= 2):
+				await self.start_game()
+
+
+	async def disconnect(self, close_code):
+		if self in self.queue_Pong:
+			self.queue_Pong.remove(self)
+		if self in self.queue_FightyFighters:
+			self.queue_FightyFighters.remove(self)
+
+
+	async def start_game(self):
+		logger.exception('Entered start_game')
+		if self.game == 'Pong':
+			players = self.queue_Pong[:self.game_size]
+			self.queue_Pong = self.queue_Pong[self.game_size:]
+		elif self.game == 'FightyFighters':
+			players = self.queue_FightyFighters[:self.game_size]
+			self.queue_FightyFighters = self.queue_FightyFighters[self.game_size:]
+
+		logger.exception('reached here')
+		data = {
+			"player_1": players[0].user_id,
+			"player_2": players[1].user_id,
+		}
+		logger.exception('created data')
+		game = await self.create_game(data)
+		logger.exception('created game')
+
+		for player in players:
+			await player.send(json.dumps({
+				'status': 'match_found',
+				'game': self.game,
+				'game_id': game.id,
+				'player1': players[0].user_id,
+				'player2': players[1].user_id,
+			}))
+
+		for player in players:
+			await player.close()
+
+	def is_user_in_any_queue(self, user_id):
+		for player in self.queue_Pong:
+			if player.user_id == user_id:
+				return True
+		
+		for player in self.queue_FightyFighters:
+			if player.user_id == user_id:
+				return True
+
+		return False
+
+	@database_sync_to_async
+	def create_game(self, data):
+		info1 = data['player_1']
+		info2 = data['player_2']
+		logger.exception(f'1: {info1}')
+		logger.exception(f'2: {info2}')
+		try:
+			game = Game.objects.create(
+				player_1 = data['player_1'],
+				player_2 = data['player_2'],
+			)
+		except Exception as e:
+			logger.exception(f'exception: {e}')
+		logger.exception('!!!')
+		return game
