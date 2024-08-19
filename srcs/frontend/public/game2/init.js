@@ -142,7 +142,7 @@ function setup_canvas(v)
 function setup_music(v) {
 	v.g.backgroundMusic = new Audio('./game2/assets/background.mp3')
 	v.g.backgroundMusic.loop = true;
-	v.g.backgroundMusic.volume = 0.1;
+	v.g.backgroundMusic.volume = 0.02;
 }
 
 function reset_keys(v) {
@@ -166,11 +166,12 @@ function leave_game(v) {
 	window.removeEventListener('keyup', game2_keyup)
 	window.removeEventListener('hashchange', game2_hashchange)
 
-    // Not working for some reason
-	// document.querySelector('#game2-end-text').style.display = "none"
-    // But also not needed, dunno why
-
 	v.g.backgroundMusic.pause()
 	v.g.backgroundMusic = null
     v.g.timer.innerHTML = 50
+
+	document.getElementById('div-game2-area').classList.add("hidden");
+
+	UnloadScripts(window.game2Scripts);
+
 }

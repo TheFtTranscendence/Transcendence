@@ -1,3 +1,8 @@
+function chat_hashchange(event) {
+	document.getElementById("chat").classList.add("hidden");
+	UnloadScripts(window.chatScripts);
+}
+
 function toggleFriendList() {
 	var friendDiv = document.getElementById("chat-friend-div");
 	var chatMessagesTop = document.getElementById("chat-right-top");
@@ -12,4 +17,12 @@ function toggleFriendList() {
 		chatMessagesTop.style.display = "none";
 		chatMessagesBottom.style.display = "none";
 	}
+}
+
+function chat()
+{
+
+	document.getElementById("chat").classList.remove("hidden");
+	
+	window.addEventListener('hashchange', chat_hashchange);
 }

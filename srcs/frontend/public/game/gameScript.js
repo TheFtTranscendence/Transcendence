@@ -1,14 +1,23 @@
-window.onload = startGame;
+function game_hashchange(event)
+{
+	document.getElementById('game').classList.add('hidden');
+	UnloadScripts(window.gameScripts);
+}
 
 function startGame()
 {
     const vars = initVars();
 
+	// When leaving this hash (#game), trigger game_hashchange function, for now will only hide the canvas
+	window.addEventListener('hashchange', game_hashchange);
+
+	
     document.addEventListener("keydown", (event) => handleKeyDown(event, vars));
     document.addEventListener("keyup", (event) => handleKeyUp(event, vars));
     vars.canvasVars.canvas.addEventListener("click", (event) => handleCanvasClick(event, vars));
     setInterval(() => gameLoop(vars), 1000 / 60);
 }
+
 
 function initVars()
 {

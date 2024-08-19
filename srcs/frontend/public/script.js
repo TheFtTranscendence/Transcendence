@@ -1,93 +1,52 @@
-// Sample content for each route
-const routes = {
-	'#home': `<h1>Home Page</h1><p>Welcome to the home page!</p>`,
-	'#game': `<h1>Game</h1><canvas id="game-area"></canvas>`,
-	'#game2': `
-<div id="div-game2-area">
-	<div id="div-game2-top">
-		<!-- Player 1 health -->
-		<div id="game2-bar1-parent">
-			<div id="game2-bar1-background"></div>
-			<div id="game2-bar1"></div>
-		</div>
-		<!-- timer -->
-		<div id="game2-timer"> 50 </div>
-		<!-- Player 2 health -->
-		<div id="game2-bar2-parent">
-			<div id="game2-bar2-background"></div>
-			<div id="game2-bar2"></div>
-		</div>
-	</div>
-	<div id= "game2-end-text"> Tie </div>
-	<div>
-		<canvas id="game2-area"></canvas>
-	</div>
-</div>
-`,
-	'#chat': `
-<div id="chat-main-div">
-        <div id="chat-left-parent">
-            <div id="chat-contacts-history">
-                <h2>Chat History</h2>
-                <ul class="chat-list">
-                    <li class="chat-item">Chat 1</li>
-                    <li class="chat-item">Chat 2</li>
-                    <li class="chat-item">Chat 3</li>
-                    <!-- Add more chats as needed -->
-                </ul>
-            </div>
-        </div>
+window.chatScripts = [
+	'chat/chat.js',
+];
 
-        <div id="chat-right-parent">
-            <button id="toggle-friend-list" onclick="toggleFriendList()">Friends</button>
+window.homeScripts = [
 
-            <div id="chat-friend-div">
-                <h2>Friends</h2>
-                <ul>
-                    <li class="friend-item">Friend 1</li>
-                    <li class="friend-item">Friend 2</li>
-                    <li class="friend-item">Friend 3</li>
-                    <!-- Add more friends as needed -->
-                </ul>
-            </div>
+	'home/init.js',
+];
 
-            <div id="chat-right-top">
-                <h2>Messages</h2>
-                <div class="message">Hello, how are you?</div>
-                <div class="message">I'm fine, thanks!</div>
-                <!-- Add more messages as needed -->
-            </div>
+window.gameScripts = [
+	'game/gameScript.js',
+];
 
-            <div id="chat-right-bottom">
-                <!-- This can be used for message input or additional controls -->
-                <textarea placeholder="Type a message..."></textarea>
-            </div>
-        </div>
-    </div>
-`
-};
-				
+window.game2Scripts = [
+	'game2/before_game.js',
+	'game2/classes.js',
+	'game2/events.js',
+	'game2/init.js',
+	'game2/game_end.js',
+	'game2/gameScript2.js'
+];
 
 // Function to handle navigation
 function navigate() {
 	const hash = window.location.hash;
 	const contentDiv = document.getElementById('content');
-	contentDiv.innerHTML = routes[hash] || '<h1>404 Not Found</h1><p>Page not found.</p>';
-
+	// contentDiv.innerHTML = routes[hash] || '<h1>404 Not Found</h1><p>Page not found.</p>';
+	
+	if (hash === '#home')
+	{
+		document.getElementById('home').classList.remove("hidden");
+		loadScripts(window.homeScripts, 'home');
+	}
 	if (hash === '#game')
-		loadGameScript();
+	{
+		document.getElementById('game').classList.remove("hidden");
+		loadScripts(window.gameScripts, 'startGame');
+	}
 	if (hash === '#game2')
-		loadGameScript2();
+	{
+		document.getElementById('div-game2-area').classList.remove("hidden");
+		loadScripts(window.game2Scripts, 'before_game');
+
+	}
 	if (hash === '#chat')
-		loadChatScript();
-}
-
-function loadChatScript() {
-	const script = document.createElement('script');
-	script.src = 'chat/chat.js';
-	script.type = 'text/javascript';
-
-	document.body.appendChild(script);
+	{
+		document.getElementById('chat').classList.remove("hidden");
+		loadScripts(window.chatScripts, 'chat');
+	}
 }
 
 // Function to load a script and return a Promise
@@ -110,29 +69,38 @@ function loadScript(src) {
 }
 
 // Function to load all scripts
-function loadGameScript2() {
-	scripts = [
-		'game2/before_game.js',
-		'game2/events.js',
-		'game2/init.js',
-		'game2/game_end.js',
-		'game2/gameScript2.js'
-	];
+function loadScripts(scripts, functionName) {
 	
 	scripts.reduce((promise, src) => {
 		
 		return promise.then(() => loadScript(src));
-	}, Promise.resolve()).then(() => {
+	}, Promise.resolve())
+	.then(() => {
 
-		if (typeof before_game === 'function')
-			before_game();
-		else
-			console.error("startGame2 function not found")
+		switch(functionName) {
+			case 'before_game': before_game(); break;
+			case 'startGame': startGame(); break;
+			case 'home': home(); break;
+			case 'chat': chat(); break;
+			default: console.error("Function " + functionName + " not found");
+		}
 
-	}).catch(error => {
+	})
+	.catch(error => {
 		console.error(error);
 	});
 }
+
+function UnloadScripts(scripts) {
+
+	scripts.forEach(script => {
+		const scriptElement = document.querySelector(`script[src="${script}"]`);
+		if (scriptElement) {
+			scriptElement.remove();
+		}
+	});
+}
+
 
 // Starts game script
 function loadGameScript()

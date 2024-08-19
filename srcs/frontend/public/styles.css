@@ -23,6 +23,10 @@ body {
     display: none !important;
 }
 
+.invisible {
+	visibility: hidden;
+}
+
 #auth {
 	border: 7px solid var(--background-color);
     display: flex;

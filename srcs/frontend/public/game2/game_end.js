@@ -144,5 +144,8 @@ async function game_end_tie(v) {
 		score1: v.player.health,
 		score2: v.enemy.health
 	})
+
+	leave_game(v)
+	
 }
 
