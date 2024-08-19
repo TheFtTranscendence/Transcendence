@@ -157,6 +157,7 @@ function reset_keys(v) {
 }
 
 function leave_game(v) {
+	console.log('hashchange game2');
 
     clearInterval(v.g.gameInterval)
     clearInterval(v.g.timerInterval)
