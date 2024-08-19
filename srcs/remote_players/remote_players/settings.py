@@ -1,4 +1,5 @@
 from pathlib import Path
+import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -66,8 +67,12 @@ WSGI_APPLICATION = 'remote_players.wsgi.application'
 
 DATABASES = {
 	'default': {
-		'ENGINE': 'django.db.backends.sqlite3',
-		'NAME': BASE_DIR / 'db.sqlite3',
+		'ENGINE': 'django.db.backends.postgresql',
+		'NAME': os.environ.get('REMOTE_PLAYERS_DATA_DB'),
+		'USER': os.environ.get('POSTGRES_USER'),
+		'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+		'HOST': os.environ.get('POSTGRES_HOST'),
+		'PORT': os.environ.get('POSTGRES_PORT'),
 	}
 }
 
@@ -85,6 +90,28 @@ AUTH_PASSWORD_VALIDATORS = [
 		'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
 	},
 ]
+
+LOGGING = {
+	'version': 1,
+	'handlers': {
+		'console': {
+			'level': 'INFO',
+			'class': 'logging.StreamHandler',
+		},
+	},
+	'loggers': {
+		'django': {
+			'handlers': ['console'],
+			'level': 'INFO',
+			'propagate': False,
+		},
+		'remote_access': {
+			'handlers': ['console'],
+			'level': 'INFO',
+			'propagate': False,
+		},
+	},
+}
 
 REST_FRAMEWORK = {
 	'DEFAULT_AUTHENTICATION_CLASSES': [

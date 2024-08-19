@@ -19,6 +19,13 @@ volumes:
       o: bind
       device: ${CHAT_DATA_PATH}
   shared_static:
+  #Remote Players database volume
+  remote_players_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${REMOTE_PLAYERS_DATA_PATH}
 
 services:
   #Container for the usermanagement database
@@ -47,6 +54,19 @@ services:
     networks:
       - app-network
     restart: unless-stopped
+    #Container for the Remote Players database
+  remoteplayers_db:
+    container_name: remoteplayers_db
+    image: postgres:13
+    environment:
+      POSTGRES_DB: ${REMOTE_PLAYERS_DATA_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - remote_players_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    restart: unless-stopped
 
   user-management:
     container_name: user-management
@@ -65,10 +85,16 @@ services:
   remote-players:
     container_name: remote-players
     build: ./remote_players
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_HOST=remoteplayers_db
     ports:
       - "8004:8004"
     networks:
       - app-network
+    depends_on:
+      - remoteplayers_db
     restart: unless-stopped
   chat:
     container_name: chat
