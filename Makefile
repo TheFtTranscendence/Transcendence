@@ -16,9 +16,6 @@ status :
 	@docker ps
 	@docker images
 
-perms:
-	sudo chown hiper:hiper */**
-
 # 'stop' stop the containers. 'rm' remove the containers. 'rmi' remove the images. 'volume rm' remove the volumes. 'network rm' remove the networks and keeps the defaults bridge|host|none.
 clean:
 	@docker stop $$(docker ps -qa);\
