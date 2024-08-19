@@ -1,15 +1,32 @@
 #!/bin/bash
 
-# Source the .env file to make environment variables available
-# source .env
+source .env
 
+export PYTHONPATH=./userManagementProject
 
-# sed -i "s/'ENGINE': 'django.db.backends.sqlite3',/'ENGINE': 'django.db.backends.postgresql',/" authProject/authProject/settings.py
-# sed -i "s/'NAME': BASE_DIR \/ 'db.sqlite3',/'NAME': '${POSTGRES_DB}',/" authProject/authProject/settings.py
+python userManagementProject/manage.py makemigrations > /dev/null 2>&1
+python userManagementProject/manage.py makemigrations authentication > /dev/null 2>&1
+python userManagementProject/manage.py migrate
 
-# sed -i "/'NAME': '${POSTGRES_DB}',/a \        'USER': '${POSTGRES_USER}'," authProject/authProject/settings.py
-# sed -i "/'USER': '${POSTGRES_USER}',/a \        'PASSWORD': '${POSTGRES_PASSWORD}'," authProject/authProject/settings.py
-# sed -i "/'PASSWORD': '${POSTGRES_PASSWORD}',/a \        'HOST': '${POSTGRES_HOST}'," authProject/authProject/settings.py
-# sed -i "/'HOST': '${POSTGRES_HOST}',/a \        'PORT': ${POSTGRES_PORT}," authProject/authProject/settings.py
+create_superuser() {
+    python -c "
+import os
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'userManagementProject.userManagementAPP.settings')
+import django
+django.setup()
+
+from django.contrib.auth import get_user_model;
+from django.db.utils import IntegrityError;
+User = get_user_model();
+try:
+    if not User.objects.filter(username='$DJANGO_SUPERUSER_USERNAME').exists():
+        User.objects.create_superuser(username='$DJANGO_SUPERUSER_USERNAME', email='$DJANGO_SUPERUSER_EMAIL', password='$DJANGO_SUPERUSER_PASSWORD')
+        print('Superuser created successfully.')
+except IntegrityError as e:
+    print(f'Error creating superuser: {e}')
+    "
+}
+
+create_superuser
 
 python userManagementProject/manage.py runserver 0.0.0.0:8000
