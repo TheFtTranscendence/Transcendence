@@ -5,7 +5,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-class ChatConsumer(AsyncWebsocketConsumer):
+class GameConsumer(AsyncWebsocketConsumer):
 	async def connect(self):
 		self.game_id = self.scope['url_route']['kwargs']['game_id']
 		self.room_group_name = f'game_{self.game_id}'
