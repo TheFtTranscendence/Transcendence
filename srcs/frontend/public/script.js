@@ -196,16 +196,27 @@ function handleRegister() {
 }
 
 function getAvater(username) {
-
+	const imgElement = document.querySelector('#profile-img img');
 	axios.get('http://localhost:8000/data/avatar/' + username)
     .then((response) => {
-        console.log(response.data);
-        alert('Avatar getting successful');
+        console.log("Get avatar successfull, Data: " + response.data);
+		const imageUrl = response.data.url;
+		// Set the src attribute of the img element to the image URL
+		if (imgElement) {
+			imgElement.src = imageUrl;
+		} else {
+			console.error("Image element not found.");
+		}
     })
     .catch((error) => {
         console.error(error);
-        alert('Error getting avatar');
+        if (imgElement) {
+			imgElement.src = 'img/red.jpg';
+		} else {
+			console.error("Image element not found.");
+		}
     });
+	document.getElementById('profile-img').classList.remove('hidden');
 }
 
 // Handle login and register forms
@@ -231,31 +242,6 @@ document.getElementById('registerForm').addEventListener('submit', (event) => {
 	navigate();
 });
 
-// // Show the appropriate auth page (login or register)
-// function showAuthPage(page) {
-//     document.querySelectorAll('.auth-page').forEach(el => el.classList.add('hidden'));
-//     document.getElementById(page).classList.remove('hidden');
-// }
-
-//     document.getElementById('toRegister').addEventListener('click', () => {
-//         showAuthPage('register');
-//     });
-
-//     document.getElementById('toLogin').addEventListener('click', () => {
-//         showAuthPage('login');
-//     });
-// }
-
-// // Initial page load
-// window.addEventListener('load', () => {
-//     // Show login page initially
-//     showAuthPage('login');
-//     handleAuthForms();
-// });
-
-// Event listener for hash changes
-window.addEventListener('hashchange', navigate);
-
 // Optional: Adding click event listeners to navigation links (not necessary if links have hrefs with hashes)
 document.querySelectorAll('.nav-link').forEach(link => {
 	link.addEventListener('click', (event) => {
@@ -266,7 +252,6 @@ document.querySelectorAll('.nav-link').forEach(link => {
 
 
 //AUTH ANIMATION
-
 document.addEventListener('DOMContentLoaded', () => {
 	const leftSide = document.querySelector('.left-side');
 	const rightSide = document.querySelector('.right-side');
@@ -299,3 +284,46 @@ document.addEventListener('DOMContentLoaded', () => {
 		handleClick(rightSide, leftSide, rightContent, leftContent, rightForm, leftForm);
 	});
 })
+
+
+document.addEventListener('click', function(event) {
+    const sidebar = document.getElementById('sidebar');
+    const isClickInsideSidebar = sidebar.contains(event.target);
+	const isClickProfile = document.getElementById('profile-img').contains(event.target);
+
+    if (!isClickInsideSidebar && !isClickProfile) {
+        // Hide the sidebar when clicking outside of it
+		console.log("not inside")
+        sidebar.classList.add('hidden');
+    }
+	else {
+		console.log("inside")
+	}
+});
+
+function toggleSidebar() {
+	console.log("Toggle Sidebar");
+	event.stopPropagation();
+	const sidebar = document.getElementById('sidebar');
+	sidebar.classList.toggle('hidden');
+}
+
+// Function to handle logout
+function handleLogout() {
+	alert('Logging out...');
+	// ToDo: Logout operations
+	window.location.hash = '#home';
+	navigate();
+}
+
+// Function to handle profile update
+function handleProfileUpdate() {
+	alert('Updating profile...');
+	// ToDo
+}
+
+// Event listener for hash changes
+window.addEventListener('hashchange', navigate);
+
+// Toggle sidebar on menu icon click
+document.getElementById('profile-img').addEventListener('click', toggleSidebar);

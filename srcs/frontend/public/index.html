@@ -10,9 +10,11 @@
 </head>
 <body style="background-color: var(--background-color);">
 
+	<!-- LOGO
 	<div class="logo-container">
-        <img src="path/to/your/logo.png" alt="Logo" class="logo">
+        <img src="img/logo.svg" alt="Logo" class="logo">
     </div>
+	-->
 
     <div class="container-fluid">
 		<div class="row vh-100" id="auth">
@@ -69,35 +71,27 @@
 				</div>
 			</div>
 		</div>
-
 	</div>
 
-	<!--
-	<div id="auth">
-		<div id="login" class="auth-page hidden">
-			<h1>Login</h1>
-			<form id="loginForm">
-				<label for="loginUsername">Username:</label>
-				<input type="text" id="loginUsername" name="username">
-				<label for="loginPassword">Password:</label>
-				<input type="password" id="loginPassword" name="password">
-				<button type="submit">Login</button>
-			</form>
-			<button id="toRegister">Not a user yet?</button>
-		</div>
-		<div id="register" class="auth-page hidden">
-			<h1>Register</h1>
-			<form id="registerForm">
-				<label for="registerUsername">Username:</label>
-				<input type="text" id="registerUsername" name="username">
-				<label for="registerPassword">Password:</label>
-				<input type="password" id="registerPassword" name="password">
-				<button type="submit">Register</button>
-			</form>
-			<button id="toLogin">Already a user?</button>
+	<div id="profile-img" class="img-thumbnail img-circle hidden">
+		<div style="position: relative; padding: 0; cursor: pointer;" type="file">
+		  <img class="img-circle" style="width: 140px; height: 140px;">
 		</div>
 	</div>
--->
+
+	<!-- Menu Icon
+	<div id="menu-icon" class="menu-icon">
+		<img src="img/menu-icon.svg" alt="Menu Icon">
+	</div>
+	-->
+
+	<!-- Sidebar -->
+	<div id="sidebar" class="sidebar hidden">
+		<ul>
+			<li><a href="#profile">Change Profile Information</a></li>
+			<li><a href="#logout" id="logoutButton">Logout</a></li>
+		</ul>
+	</div>
 
 	<nav class="hidden">
 		<a href="#home" class="nav-link">Home</a>
