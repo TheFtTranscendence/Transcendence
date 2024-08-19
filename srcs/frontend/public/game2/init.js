@@ -171,8 +171,8 @@ function leave_game(v) {
 	v.g.backgroundMusic = null
     v.g.timer.innerHTML = 50
 
-	document.getElementById('div-game2-area').classList.add("hidden");
-
+	
+	document.getElementById('game2').classList.add("hidden");
 	UnloadScripts(window.game2Scripts);
 
 }

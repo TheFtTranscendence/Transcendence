@@ -20,33 +20,40 @@ window.game2Scripts = [
 	'game2/gameScript2.js'
 ];
 
+
 // Function to handle navigation
 function navigate() {
-	const hash = window.location.hash;
-	const contentDiv = document.getElementById('content');
-	// contentDiv.innerHTML = routes[hash] || '<h1>404 Not Found</h1><p>Page not found.</p>';
+	// const contentDiv = document.getElementById('content');
+	// contentDiv.innerHTML = '<h1>404 Not Found</h1><p>Page not found.</p>';
 	
-	if (hash === '#home')
-	{
-		document.getElementById('home').classList.remove("hidden");
-		loadScripts(window.homeScripts, 'home');
-	}
-	if (hash === '#game')
-	{
-		document.getElementById('game').classList.remove("hidden");
-		loadScripts(window.gameScripts, 'startGame');
-	}
-	if (hash === '#game2')
-	{
-		document.getElementById('div-game2-area').classList.remove("hidden");
-		loadScripts(window.game2Scripts, 'before_game');
+	switch (window.location.hash) {
+		case '#home':
+			element = 'home'
+			scripts = window.homeScripts
+			startFunction = 'home'
+			break;
 
+		case '#game':
+			element = 'game'
+			scripts = window.gameScripts
+			startFunction = 'startGame'
+			break
+
+		case '#game2':
+			element = 'game2'
+			scripts = window.game2Scripts
+			startFunction = 'before_game'
+			break
+
+		case '#chat': 
+			element = 'chat'
+			scripts = window.chatScripts
+			startFunction = 'chat'
+			break
 	}
-	if (hash === '#chat')
-	{
-		document.getElementById('chat').classList.remove("hidden");
-		loadScripts(window.chatScripts, 'chat');
-	}
+	
+	document.getElementById(element).classList.remove("hidden");
+	loadScripts(scripts, startFunction);
 }
 
 // Function to load a script and return a Promise
