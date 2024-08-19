@@ -1,3 +1,5 @@
 from django.db import models
 
-# Create your models here.
+class Game(models.Model):
+	user1_id = models.IntegerField()
+	user2_id = models.IntegerField()
