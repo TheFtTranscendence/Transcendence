@@ -118,8 +118,12 @@ function handleLogin() {
 	axios.post('http://localhost:8000/auth/login/', data)
 	.then((response) => {
 		console.log(response.data);
-		alert('Login successful');
-		return true;
+		document.getElementById('auth').classList.add('hidden');
+		document.querySelector('nav').classList.remove('hidden');
+		window.location.hash = '#home';
+		if (!errorField.classList.contains('hidden'))
+			errorField.classList.add('hidden');
+		navigate();
 	})
 	.catch((error) => {
 		var errorMsg = error;
@@ -135,12 +139,11 @@ function handleLogin() {
 					errorMsg = "Password is required";
 				}
 			} else {
-				errorMsg = "An error occurred: " + error.response.json().message;
+				//errorMsg = error.response.json().message;
 			}
 		}
 		errorField.textContent = errorMsg;
 		errorField.classList.remove('hidden');
-		return false;
 	})
 }
 
@@ -164,7 +167,12 @@ function handleRegister() {
 	.then((response) => {
 		console.log(response.data);
 		alert('Registration successful');
-		return true;
+		document.getElementById('auth').classList.add('hidden');
+		document.querySelector('nav').classList.remove('hidden');
+		window.location.hash = '#home';
+		if (!errorField.classList.contains('hidden'))
+			errorField.classList.add('hidden');
+		navigate();
 	})
 	.catch((error) => {
 		var errorMsg = error;
@@ -197,44 +205,18 @@ function handleRegister() {
 		}
 		errorField.textContent = errorMsg;
 		errorField.classList.remove('hidden');
-		return false;
 	})
-}
-
-function getAvater(username) {
-	const imgElement = document.querySelector('#profile-img img');
-	axios.get('http://localhost:8000/data/avatar/' + username)
-    .then((response) => {
-		const imageUrl = response.data.url;
-		imgElement.src = imageUrl;
-		// TODO: Check if imnageUrl is working and show default if not
-    })
-    .catch((error) => {
-        console.error(error);
-		imgElement.src = 'img/red.jpg';
-    });
-	document.getElementById('profile-img').classList.remove('hidden');
 }
 
 // Handle login and register forms
 document.getElementById('loginForm').addEventListener('submit', (event) => {
 	event.preventDefault();
-	if (handleLogin()) {
-		document.getElementById('auth').classList.add('hidden');
-		document.querySelector('nav').classList.remove('hidden');
-		window.location.hash = '#home';
-		navigate();
-	}
+	handleLogin()
 });
 
 document.getElementById('registerForm').addEventListener('submit', (event) => {
 	event.preventDefault();
-	if (handleRegister()) {
-		document.getElementById('auth').classList.add('hidden');
-		document.querySelector('nav').classList.remove('hidden');
-		window.location.hash = '#home';
-		navigate();
-	}
+	handleRegister()
 });
 
 // Optional: Adding click event listeners to navigation links (not necessary if links have hrefs with hashes)
@@ -278,6 +260,20 @@ document.addEventListener('DOMContentLoaded', () => {
 	});
 })
 
+function getAvater(username) {
+	const imgElement = document.querySelector('#profile-img img');
+	axios.get('http://localhost:8000/data/avatar/' + username)
+    .then((response) => {
+		const imageUrl = response.data.url;
+		imgElement.src = imageUrl;
+		// TODO: Check if imnageUrl is working and show default if not
+    })
+    .catch((error) => {
+        console.error(error);
+		imgElement.src = 'img/red.jpg';
+    });
+	document.getElementById('profile-img').classList.remove('hidden');
+}
 
 // document.addEventListener('click', function(event) {
 //     const sidebar = document.getElementById('sidebar');
