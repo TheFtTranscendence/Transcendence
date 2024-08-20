@@ -32,9 +32,7 @@ window.matchmakingScripts = [
 
 // Function to handle navigation
 function navigate() {
-	// const contentDiv = document.getElementById('content');
-	// contentDiv.innerHTML = '<h1>404 Not Found</h1><p>Page not found.</p>';
-	
+
 	switch (window.location.hash) {
 		case '#home':
 			element = 'home'
@@ -46,25 +44,25 @@ function navigate() {
 			element = 'game'
 			scripts = window.gameScripts
 			startFunction = 'startGame'
-			break
+			break;
 
 		case '#game2':
 			element = 'game2'
 			scripts = window.game2Scripts
 			startFunction = 'before_game'
-			break
+			break;
 
 		case '#chat': 
 			element = 'chat'
 			scripts = window.chatScripts
 			startFunction = 'chat'
-			break
+			break;
 
 		case '#matchmaking':
 			element = 'game2'
 			scripts = window.matchmakingScripts
 			startFunction = 'before_game'
-			break
+			break;
 	}
 	
 	document.getElementById(element).classList.remove('hidden');

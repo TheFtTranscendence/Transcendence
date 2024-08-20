@@ -93,7 +93,7 @@ function game2_keyup(event) {
 		
 				case 'w':
 					v.keys.ArrowUp.pressed = false;
-					v.s.game_socket.send(JSON.stringify({player_id: window.user.id, action: 'w_keyup'}))
+					v.s.game_socket.send(JSON.stringify({player_id: window.user.id, action: 'ArrowUp_keyup'}))
 					break
 			}
 		}

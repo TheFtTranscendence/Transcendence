@@ -1,10 +1,5 @@
-function startGame2() {
+function startGame2(v) {
 	
-	v = init_vars()
-	setup_canvas(v)
-	setup_music(v)
-
-
 	window.addEventListener('keydown', game2_keydown)
 	window.addEventListener('keyup', game2_keyup)
 	window.addEventListener('hashchange', game2_hashchange)

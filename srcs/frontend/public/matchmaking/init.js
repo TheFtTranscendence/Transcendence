@@ -159,25 +159,54 @@ function setup_socket(v) {
 		msg = JSON.parse(event.data)
 		if (msg.player_id != window.user.id)
 		{
-			if (msg.player_id == v.s.player1)
-			{
-				switch (msg.action) {
-					case 'attack': v.player.attack(); break;
-				}
-			}
-
-			else if (msg.player_id == v.s.player2)
-			{
-				switch (msg.action) {
-					case 'attack': v.enemy.attack(); break;
-				}
-			}
-
-		}
+			console.log("received: ", msg)
 			
+			if (msg.action == 'attack')
+			{
+				if (msg.player_id == v.s.player1)
+					v.player.attack()
+				else
+					v.enemy.attack()
+			}
+			
+			// else if (window.user.id == v.s.player1)				
+			// {
+			// 	switch (msg.action) {
+			// 		case 'ArrowRight_keydown': v.keys.ArrowRight.pressed = true; v.enemy.lastKey = 'ArrowRight'; break;
+			// 		case 'ArrowLeft_keydown': v.keys.ArrowLeft.pressed = true; v.enemy.lastKey = 'ArrowLeft'; break;
+			// 		case 'ArrowUp_keydown': v.keys.ArrowUp.pressed = true; break;
+
+			// 		case 'ArrowRight_keyup': v.keys.ArrowRight.pressed = false; break;
+			// 		case 'ArrowLeft_keyup': v.keys.ArrowLeft.pressed = false; break;
+			// 		case 'ArrowUp_keyup': v.keys.ArrowUp.pressed = false; break;
+			// 	}
+			// }
+			// else if (window.user.id == v.s.player2)
+			// 	{
+			// 		switch (msg.action) {
+			// 		case 'd_keydown': v.keys.d.pressed = true; v.player.lastKey = 'd'; break;
+			// 		case 'a_keydown': v.keys.a.pressed = true; v.player.lastKey = 'a'; break;
+			// 		case 'w_keydown': v.keys.w.pressed = true; break;
+
+			// 		case 'd_keyup': v.keys.d.pressed = false; break;
+			// 		case 'a_keyup': v.keys.a.pressed = false; break;
+			// 		case 'w_keyup': v.keys.w.pressed = false; break;
+			// 	}
+			// }
+		}
 	}
 }
 
+// 	case 'ArrowRight_keydown': v.keys.ArrowRight.pressed = true; v.player.lastKey = 'ArrowRight'; break;
+// 	case 'ArrowLeft_keydown': v.keys.ArrowLeft.pressed = true; v.player.lastKey = 'ArrowLeft'; break;
+// 	case 'ArrowUp_keydown': v.keys.ArrowUp.pressed = true; break;
+	
+// 	case 'd_keyup': v.keys.d.pressed = false; break;
+// 	case 'a_keyup': v.keys.a.pressed = false; break;
+// 	case 'w_keyup': v.keys.w.pressed = false; break;
+// 	case 'ArrowRight_keyup': v.keys.ArrowRight.pressed = false; break;
+// 	case 'ArrowLeft_keyup': v.keys.ArrowLeft.pressed = false; break;
+// 	case 'ArrowUp_keyup': v.keys.ArrowUp.pressed = false; break;
 function setup_music(v) {
 	v.g.backgroundMusic = new Audio('./game2/assets/background.mp3')
 	v.g.backgroundMusic.loop = true;
@@ -192,7 +221,6 @@ function reset_keys(v) {
 	v.keys.ArrowRight.pressed = false
 	v.keys.ArrowLeft.pressed = false
 	v.keys.ArrowUp.pressed = false
-
 }
 
 function leave_game(v) {
@@ -206,7 +234,7 @@ function leave_game(v) {
 	window.removeEventListener('keyup', game2_keyup)
 	window.removeEventListener('hashchange', game2_hashchange)
 
-	v.g.backgroundMusic.pause()
+	// v.g.backgroundMusic.pause()
 	v.g.backgroundMusic = null
     v.g.timer.innerHTML = 50
 
