@@ -63,6 +63,7 @@ function navigate() {
 			scripts = window.matchmakingScripts
 			startFunction = 'before_game'
 			break;
+
 	}
 	
 	document.getElementById(element).classList.remove('hidden');
