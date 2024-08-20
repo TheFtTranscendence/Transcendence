@@ -219,6 +219,16 @@ function getAvater(username) {
 	document.getElementById('profile-img').classList.remove('hidden');
 }
 
+function putAvater() {
+	console.log("upload image clicked");
+	var loadFile = function(event) {
+		var image = document.querySelector('#profile-img img');
+		image.src = URL.createObjectURL(event.target.files[0]);
+	};
+}
+
+document.getElementById('changeProfilePicture').addEventListener('change', putAvater());
+
 // Handle login and register forms
 document.getElementById('loginForm').addEventListener('submit', (event) => {
 	event.preventDefault();
@@ -301,11 +311,25 @@ document.addEventListener('click', function(event) {
 	}
 });
 
-function toggleSidebar() {
-	console.log("Toggle Sidebar");
-	event.stopPropagation();
-	const sidebar = document.getElementById('sidebar');
-	sidebar.classList.toggle('hidden');
+function showSideBar() {
+	//event.stopPropagation();
+	document.getElementById('sidebar').classList.toggle('hidden');
+	document.addEventListener('click', handleOutsideClick);
+}
+
+function handleOutsideClick(event) {
+    const sidebar = document.getElementById('sidebar');
+    const isClickInsideSidebar = sidebar.contains(event.target);
+    const isClickProfile = document.getElementById('profile-img').contains(event.target);
+
+    if (!isClickInsideSidebar && !isClickProfile) {
+        console.log("Clicked outside, hiding sidebar");
+        sidebar.classList.add('hidden');
+        // Remove the event listener after hiding the sidebar
+        document.removeEventListener('click', handleOutsideClick);
+    } else {
+        console.log("Clicked inside sidebar or profile image");
+    }
 }
 
 // Function to handle logout
@@ -326,4 +350,4 @@ function handleProfileUpdate() {
 window.addEventListener('hashchange', navigate);
 
 // Toggle sidebar on menu icon click
-document.getElementById('profile-img').addEventListener('click', toggleSidebar);
+document.getElementById('profile-img').addEventListener('click', showSideBar);
