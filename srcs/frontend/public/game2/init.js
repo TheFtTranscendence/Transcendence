@@ -139,8 +139,6 @@ function setup_canvas(v)
 	v.g.time = parseInt(v.g.timer.innerHTML)
 }
 
-function setup_
-
 function setup_music(v) {
 	v.g.backgroundMusic = new Audio('./game2/assets/background.mp3')
 	v.g.backgroundMusic.loop = true;

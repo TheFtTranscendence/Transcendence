@@ -1,8 +1,8 @@
 function game_hashchange(vars)
 {
-	console.log('hashchange game');
 	if (vars.running == true)
-		{
+	{
+		console.log('hashchange game');
 		window.removeEventListener("hashchange", game_hashchange);
 	
 		document.getElementById('game').classList.add('hidden');

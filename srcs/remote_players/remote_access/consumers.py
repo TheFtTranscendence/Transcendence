@@ -51,7 +51,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 
 class QueueConsumer(AsyncWebsocketConsumer):
 	queue_Pong = []
-	queue_FightyFighters = []
+	queue_Fighty = []
 	game_size = 2
 
 	async def connect(self):
@@ -74,18 +74,18 @@ class QueueConsumer(AsyncWebsocketConsumer):
 
 			if (len(self.queue_Pong) >= 2):
 				await self.start_game()
-		elif self.game == 'FightyFighters':
-			self.queue_FightyFighters.append(self)
+		elif self.game == 'Fighty':
+			self.queue_Fighty.append(self)
 
-			if (len(self.queue_FightyFighters) >= 2):
+			if (len(self.queue_Fighty) >= 2):
 				await self.start_game()
 
 
 	async def disconnect(self, close_code):
 		if self in self.queue_Pong:
 			self.queue_Pong.remove(self)
-		if self in self.queue_FightyFighters:
-			self.queue_FightyFighters.remove(self)
+		if self in self.queue_Fighty:
+			self.queue_Fighty.remove(self)
 
 
 	async def start_game(self):
@@ -93,9 +93,9 @@ class QueueConsumer(AsyncWebsocketConsumer):
 		if self.game == 'Pong':
 			players = self.queue_Pong[:self.game_size]
 			self.queue_Pong = self.queue_Pong[self.game_size:]
-		elif self.game == 'FightyFighters':
-			players = self.queue_FightyFighters[:self.game_size]
-			self.queue_FightyFighters = self.queue_FightyFighters[self.game_size:]
+		elif self.game == 'Fighty':
+			players = self.queue_Fighty[:self.game_size]
+			self.queue_Fighty = self.queue_Fighty[self.game_size:]
 
 		logger.exception('reached here')
 		data = {
@@ -123,7 +123,7 @@ class QueueConsumer(AsyncWebsocketConsumer):
 			if player.user_id == user_id:
 				return True
 		
-		for player in self.queue_FightyFighters:
+		for player in self.queue_Fighty:
 			if player.user_id == user_id:
 				return True
 

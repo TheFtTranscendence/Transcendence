@@ -26,7 +26,8 @@ window.matchmakingScripts = [
 	'matchmaking/events.js',
 	'matchmaking/init.js',
 	'matchmaking/game_end.js',
-	'matchmaking/gameScript2.js'
+	'matchmaking/gameScript2.js',
+	'matchmaking/matchmaking.js'
 ];
 
 
@@ -61,7 +62,7 @@ function navigate() {
 		case '#matchmaking':
 			element = 'game2'
 			scripts = window.matchmakingScripts
-			startFunction = 'before_game'
+			startFunction = 'Matchmaking_before_game'
 			break;
 
 	}
@@ -103,6 +104,7 @@ function loadScripts(scripts, functionName) {
 			case 'startGame': startGame(); break;
 			case 'home': home(); break;
 			case 'chat': chat(); break;
+			case 'Matchmaking_before_game': Matchmaking_before_game(); break;
 			default: console.error("Function " + functionName + " not found");
 		}
 

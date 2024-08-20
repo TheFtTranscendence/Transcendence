@@ -1,33 +1,33 @@
-function startGame2(v) {
+function Matchmaking_startGame2(v) {
 	
-	window.addEventListener('keydown', game2_keydown)
-	window.addEventListener('keyup', game2_keyup)
-	window.addEventListener('hashchange', game2_hashchange)
+	window.addEventListener('keydown', Matchmaking_game2_keydown)
+	window.addEventListener('keyup', Matchmaking_game2_keyup)
+	window.addEventListener('hashchange', Matchmaking_game2_hashchange)
 
 	// v.g.backgroundMusic.play();
 
-	v.g.gameInterval = window.setInterval(() => game_loop(v), 1000 / v.g.fps)
-	v.g.timerInterval = window.setInterval(() => decreaseTimer(v), 1000)
+	v.g.gameInterval = window.setInterval(() => Matchmaking_game_loop(v), 1000 / v.g.fps)
+	v.g.timerInterval = window.setInterval(() => Matchmaking_decreaseTimer(v), 1000)
 }
 	
 	
-function decreaseTimer(v) {
+function Matchmaking_decreaseTimer(v) {
 	if (v.g.time > 0)
 		v.g.time -= 1
 	v.g.timer.innerHTML = v.g.time
 	if (v.g.time == 0) {
-		game_end(v)
+		Matchmaking_game_end(v)
 	}
 }
 
 
-function game_loop(v) {
+function Matchmaking_game_loop(v) {
 	// Not needed but keep it just in case
 	v.g.c.fillStyle = 'black'; v.g.c.fillRect(0, 0, v.g.canvas.width, v.g.canvas.height)
 	
 	// Calculating if attackbox changes direction
-	update_attackbox_offset(v.player)
-	update_attackbox_offset(v.enemy)
+	Matchmaking_update_attackbox_offset(v.player)
+	Matchmaking_update_attackbox_offset(v.enemy)
 	
 	// Draw and update all objects
 	v.background.update(v.g)
@@ -36,15 +36,15 @@ function game_loop(v) {
 	v.enemy.update(v.g)
 
 	// Update keys of fighters
-	update_keys2(v, v.player, v.keys.d.pressed, v.keys.a.pressed, v.keys.w.pressed, 'd', 'a')
-	update_keys2(v, v.enemy, v.keys.ArrowRight.pressed, v.keys.ArrowLeft.pressed, v.keys.ArrowUp.pressed, 'ArrowRight', 'ArrowLeft')
+	Matchmaking_update_keys2(v, v.player, v.keys.d.pressed, v.keys.a.pressed, v.keys.w.pressed, 'd', 'a')
+	Matchmaking_update_keys2(v, v.enemy, v.keys.ArrowRight.pressed, v.keys.ArrowLeft.pressed, v.keys.ArrowUp.pressed, 'ArrowRight', 'ArrowLeft')
 	
 	// Detect attackbox colision if attacking
-	detect_colision(v.player, v.enemy, v.g)
-	detect_colision(v.enemy, v.player, v.g)
+	Matchmaking_detect_colision(v.player, v.enemy, v.g)
+	Matchmaking_detect_colision(v.enemy, v.player, v.g)
 }
 
-function update_attackbox_offset(guy)
+function Matchmaking_update_attackbox_offset(guy)
 {
 	if (guy.velocity.x > 1)
 		guy.attackbox.offset.x = 0
@@ -52,7 +52,7 @@ function update_attackbox_offset(guy)
 		guy.attackbox.offset.x = 50 - guy.attackbox.width
 }
 
-function update_keys2(v, guy, keyPress_left, keyPress_right, key_jump, key_right, key_left) {
+function Matchmaking_update_keys2(v, guy, keyPress_left, keyPress_right, key_jump, key_right, key_left) {
 	// Drag update
 	if (guy.velocity.x > 0)
 		guy.velocity.x -= v.g.drag
@@ -96,7 +96,7 @@ function update_keys2(v, guy, keyPress_left, keyPress_right, key_jump, key_right
 		guy.change_sprites(guy.sprites.fallInv)
 }
 
-function detect_colision(Attacker, Victim, g) {
+function Matchmaking_detect_colision(Attacker, Victim, g) {
 	if (Attacker.isAttacking && 
 		Attacker.attackbox.position.x + Attacker.attackbox.width >= Victim.position.x &&
 		Attacker.attackbox.position.x <= Victim.position.x + Victim.width &&

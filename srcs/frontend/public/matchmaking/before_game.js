@@ -1,4 +1,4 @@
-function before_game()
+function Matchmaking_before_game()
 {
 	// Ask nickname from the players
 	// v.player.name = nickname1
@@ -6,17 +6,9 @@ function before_game()
 	
 	console.log('before game 2')
 
-	v = init_vars()
-	setup_canvas(v)
-	setup_socket(v)
-	
-	// setup_music(v)
-	
-	
+	v = Matchmaking_init_vars()
+	Matchmaking_setup_canvas(v)
 
-	
-	
-	startGame2(v)
-
+	Matchmaking_queue(v)
 
 }

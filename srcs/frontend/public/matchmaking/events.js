@@ -1,4 +1,4 @@
-function game2_keydown(event) {
+function Matchmaking_game2_keydown(event) {
 	console.log('user_id = ' + window.user.id)
 	console.log('player 1 = ' + v.s.player1)
 	console.log('player 2 = ' + v.s.player2)
@@ -58,7 +58,7 @@ function game2_keydown(event) {
 
 }
 
-function game2_keyup(event) {
+function Matchmaking_game2_keyup(event) {
 	if (window.user.id == v.s.player1)
 		{
 			switch (event.key) {
@@ -99,8 +99,8 @@ function game2_keyup(event) {
 		}
 }
 
-function game2_hashchange(event) {
+function Matchmaking_game2_hashchange(event) {
 	console.log('leaving game')
-	leave_game(v)
+	Matchmaking_leave_game(v)
 	
 }

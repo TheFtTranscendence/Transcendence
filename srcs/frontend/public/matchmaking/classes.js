@@ -116,7 +116,7 @@ class Fighter extends Sprite {
 		if (this.health <= 0)
 		{
 			this.bar.style.width = '0%'
-			game_end(v)
+			Matchmaking_game_end(v)
 		}
 	}
 	
