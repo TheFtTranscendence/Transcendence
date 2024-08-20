@@ -3,6 +3,7 @@ pragma solidity ^0.8.19;
 
 // Custom errors
 error onlyOwnerError();
+error onlyPongyFightyError();
 error wrongInstanceIndex();
 error wrongNumberOfPlayers();
 error wrongTournamentIndex();
@@ -37,8 +38,8 @@ contract Score is Ownable {
 
     // Custom events
     event InstanceAdded(uint256 indexed instanceIndex);
-    event GameAdded(uint256 indexed instanceIndex, uint256 timestamp, string player1, string player2, uint8 score1, uint8 score2, int256 tournamentIndex);
-    event TournamentAdded(uint256 indexed instanceIndex, uint8 numberOfPlayers, string[] players);
+    event GameAdded(uint256 indexed instanceIndex, string gameType, uint256 timestamp, string player1, string player2, uint8 score1, uint8 score2, int256 tournamentIndex);
+    event TournamentAdded(uint256 indexed instanceIndex, string gameType, uint8 numberOfPlayers, string[] players);
 
     struct Game {
         uint256 timestamp;
@@ -58,14 +59,23 @@ contract Score is Ownable {
         bool finished;
     }
 
+    enum GameType { PONGY, FIGHTY }
+
     /* ========== STATE VARIABLES ========== */
     uint256 private instanceIndex;
-    mapping(uint256 => Game[]) private instancesGame;
-    mapping(uint256 => Tournament[]) private instancesTournament;
+    mapping(string => mapping(uint256 => Game[])) private instancesGame;
+    mapping(string => mapping(uint256 => Tournament[])) private instancesTournament;
 
     /* ========== CONSTRUCTOR ========== */
     constructor() {
         instanceIndex = 0;
+    }
+
+    /* ========== MODIFIERS ========== */
+    modifier onlyPongyFighty(string calldata _gameType) {
+        if (keccak256(abi.encodePacked(_gameType)) != keccak256(abi.encodePacked("Pongy")) && keccak256(abi.encodePacked(_gameType)) != keccak256(abi.encodePacked("Fighty")))
+            revert onlyPongyFightyError();
+        _;
     }
 
     /* ========== SETTER FUNCTIONS ========== */
@@ -80,46 +90,48 @@ contract Score is Ownable {
     /**
         * @notice Add a new game to the database.
         * @param _instanceIndex The index of the instance in the database.
+        * @param _gameType The type of the game (Pongy or Fighty).
         * @param _player1 The name of the first player.
         * @param _player2 The name of the second player.
         * @param _score1 The score of the first player.
         * @param _score2 The score of the second player.
         * @dev The tournament index is -1 if it's not a tournament, otherwise it's the index of the tournament.
     **/
-    function addGame(uint256 _instanceIndex, string memory _player1, string memory _player2, uint8 _score1, uint8 _score2) public onlyOwner {
+    function addGame(uint256 _instanceIndex, string calldata _gameType, string memory _player1, string memory _player2, uint8 _score1, uint8 _score2) public onlyOwner onlyPongyFighty(_gameType) {
         if (_instanceIndex < 0 || _instanceIndex >= instanceIndex)
             revert wrongInstanceIndex();
-        instancesGame[_instanceIndex].push(Game(block.timestamp, _player1, _player2, _score1, _score2, -1));
+        instancesGame[_gameType][_instanceIndex].push(Game(block.timestamp, _player1, _player2, _score1, _score2, -1));
 
-        emit GameAdded(_instanceIndex, block.timestamp, _player1, _player2, _score1, _score2, -1);
+        emit GameAdded(_instanceIndex, _gameType, block.timestamp, _player1, _player2, _score1, _score2, -1);
     }
 
     /**
         * @notice Add a new 4 or 8 players tournament to the database.
         * @param _instanceIndex The index of the instance in the database.
+        * 
         * @param _players The list of players in the tournament. 4 or 8 players only.
         * @dev Only one tournament can be in progress at a time.
     **/
-    function addTournament(uint256 _instanceIndex, string[] memory _players) public onlyOwner {
+    function addTournament(uint256 _instanceIndex, string calldata _gameType, string[] memory _players) public onlyOwner onlyPongyFighty(_gameType) {
         if (_instanceIndex < 0 || _instanceIndex >= instanceIndex)
             revert wrongInstanceIndex();
         // check if the number of players is correct
         if (_players.length != 4 && _players.length != 8)
             revert wrongNumberOfPlayers();
         // check if a tournament is not already in progress
-        if (instancesTournament[_instanceIndex].length > 0) {
-            if (instancesTournament[_instanceIndex][instancesTournament[_instanceIndex].length - 1].finished == false)
+        if (instancesTournament[_gameType][_instanceIndex].length > 0) {
+            if (instancesTournament[_gameType][_instanceIndex][instancesTournament[_gameType][_instanceIndex].length - 1].finished == false)
                 revert ongoingTournament();
         }
 
-        Tournament storage newTournament = instancesTournament[_instanceIndex].push();
+        Tournament storage newTournament = instancesTournament[_gameType][_instanceIndex].push();
         newTournament.numberOfPlayers = uint8(_players.length);
         newTournament.numberOfGames = uint8(_players.length - 1);
         for (uint256 i = 0; i < _players.length; i++) {
             newTournament.players.push(_players[i]);
         }
 
-        emit TournamentAdded(instanceIndex, uint8(_players.length), _players);
+        emit TournamentAdded(_instanceIndex, _gameType, uint8(_players.length), _players);
     }
 
     /**
@@ -131,39 +143,40 @@ contract Score is Ownable {
         * @param _score2 The score of the second player.
         * @dev checks for instance, tournament flag, expected players. Then add the game, handle ranking and check if the tournament is finished.
     **/
-    function addTournamentGame(uint256 _instanceIndex, string memory _player1, string memory _player2, uint8 _score1, uint8 _score2) public onlyOwner {
-        uint256 _tournamentIndex = getCurrentTournamentIndex(_instanceIndex);
-        
+    function addTournamentGame(uint256 _instanceIndex, string calldata _gameType, string memory _player1, string memory _player2, uint8 _score1, uint8 _score2) public onlyOwner onlyPongyFighty(_gameType) {
         if (_instanceIndex < 0 || _instanceIndex >= instanceIndex)
             revert wrongInstanceIndex();
-        if (instancesTournament[_instanceIndex][_tournamentIndex].finished)
+            
+        uint256 _tournamentIndex = getCurrentTournamentIndex(_instanceIndex, _gameType);
+        
+        if (instancesTournament[_gameType][_instanceIndex][_tournamentIndex].finished)
             revert noCurrentTournament();
 
         // check expected players
-        (string memory expectedPlayer1, string memory expectedPlayer2) = getNextTournamentPlayers(_instanceIndex);
+        (string memory expectedPlayer1, string memory expectedPlayer2) = getNextTournamentPlayers(_instanceIndex, _gameType);
         if (keccak256(abi.encodePacked(expectedPlayer1)) != keccak256(abi.encodePacked(_player1)) || keccak256(abi.encodePacked(expectedPlayer2)) != keccak256(abi.encodePacked(_player2)))
             revert wrongPlayers();
 
-        instancesTournament[_instanceIndex][_tournamentIndex].games.push(Game(block.timestamp, _player1, _player2, _score1, _score2, int256(_tournamentIndex)));
+        instancesTournament[_gameType][_instanceIndex][_tournamentIndex].games.push(Game(block.timestamp, _player1, _player2, _score1, _score2, int256(_tournamentIndex)));
         // also add the game to the general list
-        instancesGame[_instanceIndex].push(Game(block.timestamp, _player1, _player2, _score1, _score2, int256(_tournamentIndex)));
+        instancesGame[_gameType][_instanceIndex].push(Game(block.timestamp, _player1, _player2, _score1, _score2, int256(_tournamentIndex)));
 
-        emit GameAdded(_instanceIndex, block.timestamp, _player1, _player2, _score1, _score2, int256(_tournamentIndex));
+        emit GameAdded(_instanceIndex, _gameType, block.timestamp, _player1, _player2, _score1, _score2, int256(_tournamentIndex));
 
         // add the looser to the reversedRanking
         if (_score1 > _score2)
-            instancesTournament[_instanceIndex][_tournamentIndex].reversedRanking.push(_player2);
+            instancesTournament[_gameType][_instanceIndex][_tournamentIndex].reversedRanking.push(_player2);
         else
-            instancesTournament[_instanceIndex][_tournamentIndex].reversedRanking.push(_player1);
+            instancesTournament[_gameType][_instanceIndex][_tournamentIndex].reversedRanking.push(_player1);
 
         // check if the tournament is finished
-        if (instancesTournament[_instanceIndex][_tournamentIndex].games.length == instancesTournament[_instanceIndex][_tournamentIndex].numberOfGames) {
+        if (instancesTournament[_gameType][_instanceIndex][_tournamentIndex].games.length == instancesTournament[_gameType][_instanceIndex][_tournamentIndex].numberOfGames) {
             // add the winner to the reversedRanking
             if (_score1 > _score2)
-                instancesTournament[_instanceIndex][_tournamentIndex].reversedRanking.push(_player1);
+                instancesTournament[_gameType][_instanceIndex][_tournamentIndex].reversedRanking.push(_player1);
             else
-                instancesTournament[_instanceIndex][_tournamentIndex].reversedRanking.push(_player2);
-            instancesTournament[_instanceIndex][_tournamentIndex].finished = true;
+                instancesTournament[_gameType][_instanceIndex][_tournamentIndex].reversedRanking.push(_player2);
+            instancesTournament[_gameType][_instanceIndex][_tournamentIndex].finished = true;
         }
     }
 
@@ -172,8 +185,12 @@ contract Score is Ownable {
     /**
         * @notice Get all the games of an instance.
     **/
-    function getGames(uint256 _instanceIndex) public view returns (Game[] memory) {
-        return instancesGame[_instanceIndex];
+    function getGames(uint256 _instanceIndex, string calldata _gameType) public view returns (Game[] memory) {
+        if (_instanceIndex < 0 || _instanceIndex >= instanceIndex)
+            revert wrongInstanceIndex();
+        if (keccak256(abi.encodePacked(_gameType)) != keccak256(abi.encodePacked("Pongy")) && keccak256(abi.encodePacked(_gameType)) != keccak256(abi.encodePacked("Fighty")))
+            revert onlyPongyFightyError();
+        return instancesGame[_gameType][_instanceIndex];
     }
 
     /**
@@ -181,11 +198,13 @@ contract Score is Ownable {
         * @param _instanceIndex The index of the instance in the database.
         * @return returns The names of the next players.
     */
-    function getNextTournamentPlayers(uint256 _instanceIndex) public view returns (string memory, string memory) {
+    function getNextTournamentPlayers(uint256 _instanceIndex, string calldata _gameType) public view returns (string memory, string memory) {
         if (_instanceIndex < 0 || _instanceIndex >= instanceIndex)
             revert wrongInstanceIndex();
+        if (keccak256(abi.encodePacked(_gameType)) != keccak256(abi.encodePacked("Pongy")) && keccak256(abi.encodePacked(_gameType)) != keccak256(abi.encodePacked("Fighty")))
+            revert onlyPongyFightyError();
 
-        Tournament memory currentTournament = instancesTournament[_instanceIndex][getCurrentTournamentIndex(_instanceIndex)];
+        Tournament memory currentTournament = instancesTournament[_gameType][_instanceIndex][getCurrentTournamentIndex(_instanceIndex, _gameType)];
 
         if (currentTournament.games.length >= currentTournament.numberOfGames)
             revert noCurrentTournament();
@@ -224,14 +243,16 @@ contract Score is Ownable {
         * @param _instanceIndex The index of the instance in the database.
         * @return returns The ranking of all the tournaments.
     */
-    function getAllTournamentsRankings(uint256 _instanceIndex) public view returns (string[][] memory) {
+    function getAllTournamentsRankings(uint256 _instanceIndex, string calldata _gameType) public view returns (string[][] memory) {
         if (_instanceIndex < 0 || _instanceIndex >= instanceIndex)
             revert wrongInstanceIndex();
-        if (instancesTournament[_instanceIndex].length == 0)
+        if (keccak256(abi.encodePacked(_gameType)) != keccak256(abi.encodePacked("Pongy")) && keccak256(abi.encodePacked(_gameType)) != keccak256(abi.encodePacked("Fighty")))
+            revert onlyPongyFightyError();
+        if (instancesTournament[_gameType][_instanceIndex].length == 0)
             revert noCurrentTournament();
-        string[][] memory rankings = new string[][](instancesTournament[_instanceIndex].length);
-        for (uint256 i = 0; i < instancesTournament[_instanceIndex].length; i++) {
-            rankings[i] = instancesTournament[_instanceIndex][i].reversedRanking;
+        string[][] memory rankings = new string[][](instancesTournament[_gameType][_instanceIndex].length);
+        for (uint256 i = 0; i < instancesTournament[_gameType][_instanceIndex].length; i++) {
+            rankings[i] = instancesTournament[_gameType][_instanceIndex][i].reversedRanking;
         }
         return rankings;
     }
@@ -241,13 +262,15 @@ contract Score is Ownable {
         * @param _instanceIndex The index of the instance in the database.
         * @return returns The last tournament ranking.
     */
-    function getLastTournamentRanking(uint256 _instanceIndex) public view returns (string[] memory) {
+    function getLastTournamentRanking(uint256 _instanceIndex, string calldata _gameType) public view returns (string[] memory) {
         if (_instanceIndex < 0 || _instanceIndex >= instanceIndex)
             revert wrongInstanceIndex();
-        if (instancesTournament[_instanceIndex].length == 0)
+        if (keccak256(abi.encodePacked(_gameType)) != keccak256(abi.encodePacked("Pongy")) && keccak256(abi.encodePacked(_gameType)) != keccak256(abi.encodePacked("Fighty")))
+            revert onlyPongyFightyError();
+        if (instancesTournament[_gameType][_instanceIndex].length == 0)
             revert noCurrentTournament();
-        uint256 _tournamentIndex = getCurrentTournamentIndex(_instanceIndex);
-        return instancesTournament[_instanceIndex][_tournamentIndex].reversedRanking;
+        uint256 _tournamentIndex = getCurrentTournamentIndex(_instanceIndex, _gameType);
+        return instancesTournament[_gameType][_instanceIndex][_tournamentIndex].reversedRanking;
     }
 
 
@@ -256,12 +279,14 @@ contract Score is Ownable {
     /**
         * @notice Get the current tournament index.
     */
-    function getCurrentTournamentIndex(uint256 _instanceIndex) internal view returns (uint256) {
+    function getCurrentTournamentIndex(uint256 _instanceIndex, string calldata _gameType) internal view returns (uint256) {
         if (_instanceIndex < 0 || _instanceIndex >= instanceIndex)
             revert wrongInstanceIndex();
-        if (instancesTournament[_instanceIndex].length == 0)
+        if (keccak256(abi.encodePacked(_gameType)) != keccak256(abi.encodePacked("Pongy")) && keccak256(abi.encodePacked(_gameType)) != keccak256(abi.encodePacked("Fighty")))
+            revert onlyPongyFightyError();
+        if (instancesTournament[_gameType][_instanceIndex].length == 0)
             revert noCurrentTournament();
-        return instancesTournament[_instanceIndex].length - 1;
+        return instancesTournament[_gameType][_instanceIndex].length - 1;
     }
 
     /**
@@ -272,5 +297,4 @@ contract Score is Ownable {
             return game.player1;
         return game.player2;
     }
-
 }
