@@ -108,37 +108,40 @@ function loadGameScript()
 function handleLogin() {
 	const username = document.getElementById('loginUsername').value;
 	const password = document.getElementById('loginPassword').value;
+	const errorField = document.getElementById('loginError')
 
 	const data = {
 		username: username,
 		password: password,
 	}
 
-	// console.log('Sending JSON:', JSON.stringify(data, null, 2));
-
 	axios.post('http://localhost:8000/auth/login/', data)
 	.then((response) => {
 		console.log(response.data);
 		alert('Login successful');
+		return true;
 	})
 	.catch((error) => {
-		console.error(error);
+		var errorMsg = error;
 		if (error.response)	{
 			const status = error.response.status;
 			const missing_fields = error.response.data.missing_fields;
 
 			if (status === 400 && missing_fields) {
 				if (missing_fields.includes('username')) {
-					console.log('Username is required.');
+					errorMsg = "Username is required"
 				}
 				if (missing_fields.includes('password')) {
-					console.log('Password is required.');
+					errorMsg = "Password is required";
 				}
 			} else {
-				console.log('An error occurred: ' + error.response.json().message);
+				errorMsg = "An error occurred: " + error.response.json().message;
 			}
 		}
-	});
+		errorField.textContent = errorMsg;
+		errorField.classList.remove('hidden');
+		return false;
+	})
 }
 
 function handleRegister() {
@@ -148,6 +151,7 @@ function handleRegister() {
 	const email = document.getElementById('registerEmail').value;
 	const first_name = document.getElementById('registerFirstName').value;
 	const last_name = document.getElementById('registerLastName').value;
+	const errorField = document.getElementById('registerError')
 
 	const data = {
 		email: email,
@@ -156,100 +160,81 @@ function handleRegister() {
 		confirm_password: confirm_password
 	}
 
-	// console.log('Sending JSON:', JSON.stringify(data, null, 2));
-
 	axios.post('http://localhost:8000/auth/register/', data)
 	.then((response) => {
 		console.log(response.data);
 		alert('Registration successful');
+		return true;
 	})
 	.catch((error) => {
-		console.error(error);
+		var errorMsg = error;
 		if (error.response)	{
 			const status = error.response.status;
 			const missing_fields = error.response.data.missing_fields;
 
 			if (status === 400 && missing_fields) {
 				if (missing_fields.includes('username')) {
-					console.log('Username is required.');
+					errorMsg = "Username is required";
 				}
 				if (missing_fields.includes('password')) {
-					console.log('Password is required.');
+					errorMsg = "Password is required";
 				}
 				if (missing_fields.includes('email')) {
-					console.log('Email is required.');
+					errorMsg = "Email is required";
 				}
 				if (missing_fields.includes('first_name')) {
-					console.log('First name is required.');
+					errorMsg = "First name is required";
 				}
 				if (missing_fields.includes('last_name')) {
-					console.log('Last name is required.');
+					errorMsg = "Last name is required";
 				}
 			} else if (status === 409) {
-				console.log('Username already exists');
+				errorMsg = "Username already exists";
 			} else {
-				console.log('An error occurred: ' + error.response.data.message);
-				console.log('An error occurred: ' + error.response.message);
+				errorMsg = "An error occurred: ' + error.response.data.message";
+				errorMsg = "An error occurred: ' + error.response.message";
 			}
 		}
-	});
+		errorField.textContent = errorMsg;
+		errorField.classList.remove('hidden');
+		return false;
+	})
 }
 
 function getAvater(username) {
 	const imgElement = document.querySelector('#profile-img img');
 	axios.get('http://localhost:8000/data/avatar/' + username)
     .then((response) => {
-        console.log("Get avatar successfull, Data: " + response.data);
 		const imageUrl = response.data.url;
-		// Set the src attribute of the img element to the image URL
-		if (imgElement) {
-			imgElement.src = imageUrl;
-		} else {
-			console.error("Image element not found.");
-		}
+		imgElement.src = imageUrl;
+		// TODO: Check if imnageUrl is working and show default if not
     })
     .catch((error) => {
         console.error(error);
-        if (imgElement) {
-			imgElement.src = 'img/red.jpg';
-		} else {
-			console.error("Image element not found.");
-		}
+		imgElement.src = 'img/red.jpg';
     });
 	document.getElementById('profile-img').classList.remove('hidden');
 }
 
-function putAvater() {
-	console.log("upload image clicked");
-	var loadFile = function(event) {
-		var image = document.querySelector('#profile-img img');
-		image.src = URL.createObjectURL(event.target.files[0]);
-	};
-}
-
-document.getElementById('changeProfilePicture').addEventListener('change', putAvater());
-
 // Handle login and register forms
 document.getElementById('loginForm').addEventListener('submit', (event) => {
 	event.preventDefault();
-
-	handleLogin();
-
-	document.getElementById('auth').classList.add('hidden');
-	document.querySelector('nav').classList.remove('hidden');
-	window.location.hash = '#home';
-	navigate();
+	if (handleLogin()) {
+		document.getElementById('auth').classList.add('hidden');
+		document.querySelector('nav').classList.remove('hidden');
+		window.location.hash = '#home';
+		navigate();
+	}
 });
 
 document.getElementById('registerForm').addEventListener('submit', (event) => {
 	event.preventDefault();
-
-	handleRegister();
-
-	document.getElementById('auth').classList.add('hidden');
-	document.querySelector('nav').classList.remove('hidden');
-	window.location.hash = '#home';
-	navigate();
+	if (handleRegister()) {
+		document.getElementById('auth').classList.add('hidden');
+		document.querySelector('nav').classList.remove('hidden');
+		window.location.hash = '#home';
+		navigate();
+	}
 });
 
 // Optional: Adding click event listeners to navigation links (not necessary if links have hrefs with hashes)
@@ -285,31 +270,30 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	leftSide.addEventListener('click', () => {
-		console.log("Left side clicked");
 		handleClick(leftSide, rightSide, leftContent, rightContent, leftForm, rightForm);
 	});
 
 	rightSide.addEventListener('click', () => {
-		console.log("Right side clicked");
 		handleClick(rightSide, leftSide, rightContent, leftContent, rightForm, leftForm);
 	});
 })
 
 
-document.addEventListener('click', function(event) {
-    const sidebar = document.getElementById('sidebar');
-    const isClickInsideSidebar = sidebar.contains(event.target);
-	const isClickProfile = document.getElementById('profile-img').contains(event.target);
+// document.addEventListener('click', function(event) {
+//     const sidebar = document.getElementById('sidebar');
+//     const isClickInsideSidebar = sidebar.contains(event.target);
+// 	const isClickProfile = document.getElementById('profile-img').contains(event.target);
 
-    if (!isClickInsideSidebar && !isClickProfile) {
-        // Hide the sidebar when clicking outside of it
-		console.log("not inside")
-        sidebar.classList.add('hidden');
-    }
-	else {
-		console.log("inside")
-	}
-});
+//     if (!isClickInsideSidebar && !isClickProfile) {
+//         // Hide the sidebar when clicking outside of it
+// 		console.log("not inside")
+//         sidebar.classList.add('hidden');
+//     }
+// 	else {
+// 		console.log("inside")
+// 	}
+// });
+
 
 function showSideBar() {
 	//event.stopPropagation();
@@ -325,7 +309,6 @@ function handleOutsideClick(event) {
     if (!isClickInsideSidebar && !isClickProfile) {
         console.log("Clicked outside, hiding sidebar");
         sidebar.classList.add('hidden');
-        // Remove the event listener after hiding the sidebar
         document.removeEventListener('click', handleOutsideClick);
     } else {
         console.log("Clicked inside sidebar or profile image");
@@ -351,3 +334,12 @@ window.addEventListener('hashchange', navigate);
 
 // Toggle sidebar on menu icon click
 document.getElementById('profile-img').addEventListener('click', showSideBar);
+
+function putAvater() {
+	var loadFile = function(event) {
+		var image = document.querySelector('#profile-img img');
+		image.src = URL.createObjectURL(event.target.files[0]);
+	};
+}
+
+document.getElementById('changeProfilePicture').addEventListener('change', putAvater);
