@@ -1,7 +1,9 @@
 # Solidity
 
-<em> - <strong>instanceIndex</strong> has to be fetch into the Postgres database.
-- <strong>gameType</strong> can only be "Pongy" or "Fighty".</em>
+<em>
+- <strong>instanceIndex</strong> has to be fetch into the Postgres database.
+- <strong>gameType</strong> can only be "Pongy" or "Fighty".
+</em>
 
 ## /solidity/addinstance/
 
