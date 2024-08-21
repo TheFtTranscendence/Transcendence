@@ -2,7 +2,7 @@ include srcs/.env
 
 # '-f' specify the file to use. 'up' start the containers. '-d' detached mode. '--build' build the images before starting the containers.
 all:
-	@docker compose -f ./srcs/docker-compose.yml up --build
+	@docker compose  -f  ./srcs/docker-compose.yml up  --build 
 
 # 'down' stop and remove the containers.
 down:
