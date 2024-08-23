@@ -1,3 +1,8 @@
+const currentUser = {
+	username: ""
+};
+
+
 // Sample content for each route
 const routes = {
 	'#home': `<h1>Home Page</h1><p>Welcome to the home page!</p>`,
@@ -30,16 +35,27 @@ const routes = {
 
 // Function to handle navigation
 function navigate() {
-	const hash = window.location.hash;
-	const contentDiv = document.getElementById('content');
-	contentDiv.innerHTML = routes[hash] || '<h1>404 Not Found</h1><p>Page not found.</p>';
+    const hash = window.location.hash;
+    const contentDiv = document.getElementById('content');
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
-	if (hash === '#home')
-		getAvater('esali');
-	if (hash === '#game')
-		loadGameScript();
-	if (hash === '#game2')
-		loadGameScript2();
+    if (!currentUser) {
+        // If the user is not logged in, ensure they are directed to the home (login/register) screen
+        window.location.hash = '#home';
+        contentDiv.innerHTML = routes['#home'];
+        document.getElementById('profile-img').classList.add('hidden'); // Ensure profile image is hidden
+    } else {
+        contentDiv.innerHTML = routes[hash] || '<h1>404 Not Found</h1><p>Page not found.</p>';
+
+        // Only run this if the user is logged in
+        if (hash === '#home') {
+            getAvater(currentUser.username);
+        } else if (hash === '#game') {
+            loadGameScript();
+        } else if (hash === '#game2') {
+            loadGameScript2();
+        }
+    }
 }
 
 // Function to load a script and return a Promise
@@ -105,6 +121,17 @@ function loadGameScript()
 	document.body.appendChild(script);
 }
 
+function handleSuccessAuth(errorField, username) {
+	document.getElementById('auth').classList.add('hidden');
+	document.querySelector('nav').classList.remove('hidden');
+	window.location.hash = '#home';
+	if (!errorField.classList.contains('hidden'))
+		errorField.classList.add('hidden');
+	currentUser.username = username;
+	localStorage.setItem('currentUser', JSON.stringify(currentUser));
+	navigate();
+}
+
 function handleLogin() {
 	const username = document.getElementById('loginUsername').value;
 	const password = document.getElementById('loginPassword').value;
@@ -118,12 +145,7 @@ function handleLogin() {
 	axios.post('http://localhost:8000/auth/login/', data)
 	.then((response) => {
 		console.log(response.data);
-		document.getElementById('auth').classList.add('hidden');
-		document.querySelector('nav').classList.remove('hidden');
-		window.location.hash = '#home';
-		if (!errorField.classList.contains('hidden'))
-			errorField.classList.add('hidden');
-		navigate();
+		handleSuccessAuth(errorField, data.username);
 	})
 	.catch((error) => {
 		var errorMsg = error;
@@ -144,6 +166,7 @@ function handleLogin() {
 		}
 		errorField.textContent = errorMsg;
 		errorField.classList.remove('hidden');
+		handleSuccessAuth(errorField, "unkown");
 	})
 }
 
@@ -167,12 +190,7 @@ function handleRegister() {
 	.then((response) => {
 		console.log(response.data);
 		alert('Registration successful');
-		document.getElementById('auth').classList.add('hidden');
-		document.querySelector('nav').classList.remove('hidden');
-		window.location.hash = '#home';
-		if (!errorField.classList.contains('hidden'))
-			errorField.classList.add('hidden');
-		navigate();
+		handleSuccessAuth(errorField, data.username)
 	})
 	.catch((error) => {
 		var errorMsg = error;
@@ -205,7 +223,21 @@ function handleRegister() {
 		}
 		errorField.textContent = errorMsg;
 		errorField.classList.remove('hidden');
+		handleSuccessAuth(errorField, "unkown");
 	})
+}
+
+function handleLogout() {
+	localStorage.removeItem('currentUser');
+
+	document.querySelector('nav').classList.add('hidden');
+	document.getElementById('auth').classList.remove('hidden');
+	sidebar.classList.add('hidden');
+	document.removeEventListener('click', handleOutsideClick);
+	// document.getElementById('profile-img').classList.add('hidden');
+
+	// window.location.hash = '#home';
+	navigate();
 }
 
 // Handle login and register forms
@@ -275,22 +307,6 @@ function getAvater(username) {
 	document.getElementById('profile-img').classList.remove('hidden');
 }
 
-// document.addEventListener('click', function(event) {
-//     const sidebar = document.getElementById('sidebar');
-//     const isClickInsideSidebar = sidebar.contains(event.target);
-// 	const isClickProfile = document.getElementById('profile-img').contains(event.target);
-
-//     if (!isClickInsideSidebar && !isClickProfile) {
-//         // Hide the sidebar when clicking outside of it
-// 		console.log("not inside")
-//         sidebar.classList.add('hidden');
-//     }
-// 	else {
-// 		console.log("inside")
-// 	}
-// });
-
-
 function showSideBar() {
 	//event.stopPropagation();
 	document.getElementById('sidebar').classList.toggle('hidden');
@@ -311,14 +327,6 @@ function handleOutsideClick(event) {
     }
 }
 
-// Function to handle logout
-function handleLogout() {
-	alert('Logging out...');
-	// ToDo: Logout operations
-	window.location.hash = '#home';
-	navigate();
-}
-
 // Function to handle profile update
 function handleProfileUpdate() {
 	alert('Updating profile...');
@@ -337,5 +345,7 @@ function putAvater() {
 		image.src = URL.createObjectURL(event.target.files[0]);
 	};
 }
+
+document.getElementById('logoutButton').addEventListener('click', handleLogout);
 
 document.getElementById('changeProfilePicture').addEventListener('change', putAvater);
