@@ -128,6 +128,7 @@ function Matchmaking_init_vars() {
 
 		s: {
 			game_socket: 0,
+			queue_socket: 0,
 			gameId: 0,
 			player1: 0,
 			player2: 0
@@ -178,7 +179,8 @@ function Matchmaking_leave_game(v) {
 	v.g.timer.innerHTML = 50
 
 	v.s.game_socket.close()
-	
+	v.s.queue_socket.close()
+
 	document.getElementById('game2').classList.add("hidden");
 	UnloadScripts(window.matchmakingScripts);
 
