@@ -6,6 +6,8 @@ function before_game()
 	
 	console.log('before game 2')
 
+	document.getElementById('game2-menu-area').classList.remove("hidden");
+	
 	const changeSkinButton = document.getElementById('change-skin');
 	const matchmakingButton = document.getElementById('matchmaking');
 	const localButton = document.getElementById('local');
@@ -25,7 +27,6 @@ function before_game()
 		console.log('Local button clicked');
 		// Add functionality for local play
 	});
-
-	document.getElementById('game2-menu-area').classList.remove("hidden");
+	
 	// startGame2()
 }

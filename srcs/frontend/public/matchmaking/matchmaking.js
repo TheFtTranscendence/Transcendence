@@ -10,6 +10,8 @@ function Matchmaking_queue(v)
 		v.s.gameId = msg.game_id
 		
 		Matchmaking_setup_socket(v)
+		
+		document.getElementById('div-game2-area').classList.remove("hidden");
 		Matchmaking_startGame2(v)
 
 	}
