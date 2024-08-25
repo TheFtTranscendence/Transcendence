@@ -106,7 +106,32 @@
 		</div>
 
 		<div id="game2" class="hidden">
-			<div id="div-game2-area">
+			
+			<div id="game2-menu-area" class="hidden">
+				<!-- Game Title -->
+				<div id="game2-menu-title">Fighty Fighters</div>
+				
+				<!-- Game Menu -->
+				<div id="game2-menu-area2">
+					<!-- Left Side: Player Info and Buttons -->
+					<div id="game2-menu-player-info">
+						<h2>Player Name</h2>
+						<div id="game2-menu-player-buttons">
+							<button>Change Skin</button>
+						</div>
+						<div id="game2-menu-selected-skin"></div>
+					</div>
+			
+					<!-- Right Side: Game Options -->
+					<div id="game2-menu-game-options">
+						<button>Matchmaking</button>
+						<button>Local</button>
+					</div>
+				</div>
+			</div>
+
+			
+			<div id="div-game2-area" class="hidden">
 				<div id="div-game2-top">
 					<!-- Player 1 health -->
 					<div id="game2-bar1-parent">
@@ -125,7 +150,9 @@
 				<div>
 					<canvas id="game2-area"></canvas>
 				</div>
+				
 			</div>
+			
 		</div>
 
 		<div id="chat" class="hidden">

@@ -167,11 +167,16 @@ function leave_game(v) {
 	window.removeEventListener('keyup', game2_keyup)
 	window.removeEventListener('hashchange', game2_hashchange)
 
-	v.g.backgroundMusic.pause()
-	v.g.backgroundMusic = null
-    v.g.timer.innerHTML = 50
-
+	try {
+		v.g.backgroundMusic.pause()
+		v.g.backgroundMusic = null
+	}
+	catch {}
 	
+	v.g.timer.innerHTML = 50
+	
+	document.getElementById('div-game2-area').classList.add("hidden");
+	document.getElementById('game2-menu').classList.add("hidden");
 	document.getElementById('game2').classList.add("hidden");
 	UnloadScripts(window.game2Scripts);
 
