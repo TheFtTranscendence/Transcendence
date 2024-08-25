@@ -8,7 +8,7 @@ all:
 down:
 	@docker compose -f ./srcs/docker-compose.yml down
 
-re:
+re: deepclean
 	@docker compose -f srcs/docker-compose.yml up --build
 
 # 'ps' list the containers. 'images' list the images.

@@ -20,12 +20,20 @@ window.game2Scripts = [
 	'game2/gameScript2.js'
 ];
 
+window.matchmakingScripts = [
+	'matchmaking/before_game.js',
+	'matchmaking/classes.js',
+	'matchmaking/events.js',
+	'matchmaking/init.js',
+	'matchmaking/game_end.js',
+	'matchmaking/gameScript2.js',
+	'matchmaking/matchmaking.js'
+];
+
 
 // Function to handle navigation
 function navigate() {
-	// const contentDiv = document.getElementById('content');
-	// contentDiv.innerHTML = '<h1>404 Not Found</h1><p>Page not found.</p>';
-	
+
 	switch (window.location.hash) {
 		case '#home':
 			element = 'home'
@@ -37,22 +45,29 @@ function navigate() {
 			element = 'game'
 			scripts = window.gameScripts
 			startFunction = 'startGame'
-			break
+			break;
 
 		case '#game2':
 			element = 'game2'
 			scripts = window.game2Scripts
 			startFunction = 'before_game'
-			break
+			break;
 
 		case '#chat': 
 			element = 'chat'
 			scripts = window.chatScripts
 			startFunction = 'chat'
-			break
+			break;
+
+		case '#matchmaking':
+			element = 'game2'
+			scripts = window.matchmakingScripts
+			startFunction = 'Matchmaking_before_game'
+			break;
+
 	}
 	
-	document.getElementById(element).classList.remove("hidden");
+	document.getElementById(element).classList.remove('hidden');
 	loadScripts(scripts, startFunction);
 }
 
@@ -89,6 +104,7 @@ function loadScripts(scripts, functionName) {
 			case 'startGame': startGame(); break;
 			case 'home': home(); break;
 			case 'chat': chat(); break;
+			case 'Matchmaking_before_game': Matchmaking_before_game(); break;
 			default: console.error("Function " + functionName + " not found");
 		}
 
