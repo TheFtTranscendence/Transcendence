@@ -83,6 +83,7 @@
 -->
 	<nav class="hidden">
 		<a href="#home" class="nav-link">Home</a>
+		<a href="#menu" class="nav-link">Menu</a>
 		<a href="#game" class="nav-link">Game</a>
 		<a href="#game2" class="nav-link">Game2</a>
 		<a href="#chat" class="nav-link">Chat</a>
@@ -93,8 +94,29 @@
 			<p>Click on the links above to navigate to the different sections of the website.</p>
 			<p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Architecto quaerat alias, adipisci laborum labore reprehenderit quae doloremque repellendus magnam consectetur, dolore necessitatibus explicabo ipsum tenetur accusantium minus iste! Sed, voluptas.</p>
 		</div>
+
+		<div id="menuPage" class="hidden">
+			<div id="menuButtons">
+				<h1 id="gameMode" class="selectText">Select Game Mode</h1>
+				<button id="normalGameBtn" class="button red-button">Normal Game</button>
+				<button id="tournamentGameBtn" class="button blue-button">Tournament Game</button>
+			</div>
+			<div id="tournamentButton" class="hidden">
+				<h1 id="tModeText" class="SelectText">Select Tournament Mode</h1>
+				<button id="4p" class="button red-button">4 Players</button>
+				<button id="8p" class="button blue-button">8 Players</button>
+			</div>
+		</div>
+
+		<!-- <div id="tournamentPage" class="hidden">
+			<div id="gameBracketDiv">
+				<h1 id="textBracket" class="selectText">Tournament Bracket</h1>
+
+			</div>
+		</div> -->
+
 		<div id="game" class="hidden">
-			<canvas id="game-area"></canvas>
+			<canvas id="gameArea"></canvas>
 		</div>
 
 		<div id="game2" class="hidden">

@@ -28,6 +28,8 @@ function removeScripts()
     })
 }
 
+
+
 function restoreGameCanvas()
 {
     const gameMenuDiv = document.getElementById("menuPage");
@@ -100,4 +102,42 @@ function loadScriptGlobal(filePath)
     };
 
     document.body.appendChild(script);
+}
+
+function resetMenu()
+{
+    document.getElementById('menuPage').classList.add('hidden');
+    document.getElementById('menuButtons').classList.remove('hidden');
+    document.getElementById('tournamentButton').classList.add('hidden');
+}
+
+function resetTournament()
+{
+    const nForm = document.getElementById('nForm');
+
+    if (nForm) {
+        // The div exists, so remove it
+        nForm.remove();
+    }
+
+    // const gameBracketDiv = document.getElementById('gameBracketDiv');
+
+    // if (gameBracketDiv) {
+    //     // The div exists, so remove it
+    //     gameBracketDiv.remove();
+    // }
+}
+
+function menu_hashchange()
+{
+    window.removeEventListener("hashchange", menu_hashchange);
+    // if (window.location.hash !== '#menu')
+    // {
+    resetMenu();
+    resetTournament();
+    UnloadScripts(window.menuScript);
+    console.log("menu reset hash!");
+
+    // }
+    // UnloadScripts(window.tournamentScripts);
 }

@@ -1,9 +1,11 @@
-function init() {
+
+function startTournament() {
  
+    window.addEventListener("hashchange", (event) => {window.menu_hashchange()});
 
     if (window.tournamentOn) // tournament ongoing
     {
-        window.restoreGameCanvas();
+        // window.restoreGameCanvas();
         
         // console.log(window.shuflledNickList.lenght);
         
@@ -90,7 +92,7 @@ function createPageElements(shuflledNickList)
         event.preventDefault();
         gameBracketDiv.classList.add('hidden');
         document.getElementById("gameArea").classList.remove('hidden');
-        loadScript("gameMenu/game/gameScript.js")
+        loadScripts(window.gameScripts, 'startGame');
     });
 
 }
@@ -180,28 +182,4 @@ function shuffleNickNames()
     }
 
     return window.nickList;
-}
-
-function loadScript(filePath)
-{
-    // let existingGameScript = document.getElementById("gameS");
-
-    // if (existingGameScript)
-    //     existingGameScript.parentNode.removeChild(existingGameScript);
-
-    window.removeScripts();
-
-    const script = document.createElement('script');
-    script.src = filePath;
-    script.type = 'text/javascript';
-
-    script.onload = function() {
-        if (typeof init === 'function') {
-            init();
-        } else {
-            console.error("init function not found" + filePath);
-        }
-    };
-
-    document.body.appendChild(script);
 }

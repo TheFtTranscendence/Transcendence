@@ -7,8 +7,16 @@ window.homeScripts = [
 	'home/init.js',
 ];
 
+window.menuScript = [
+	'gameMenu/gameMenuScript.js',
+],
+
+window.tournamentScript = [
+	'gameMenu/tournament/tournamentScript.js',
+],
+
 window.gameScripts = [
-	'game/gameScript.js',
+	'gameMenu/game/gameScript.js',
 ];
 
 window.game2Scripts = [
@@ -25,16 +33,24 @@ function navigate() {
 	// const contentDiv = document.getElementById('content');
 	// contentDiv.innerHTML = '<h1>404 Not Found</h1><p>Page not found.</p>';
 	
+
 	switch (window.location.hash) {
 		case '#home':
 			element = 'home'
 			scripts = window.homeScripts
 			startFunction = 'home'
 			break;
+		
+		case '#menu':
+			element = 'menuPage'
+			scripts = window.menuScript
+			startFunction = 'startMenu'
+			break
+
 		case '#game':
-			element = 'game'
-			scripts = window.gameScripts
-			startFunction = 'startGame'
+			element = 'menuPage' // if we go this way I have to make a var to diff between games
+			scripts = window.menuScript
+			startFunction = 'startMenu'
 			break
 
 		case '#game2':
@@ -50,32 +66,37 @@ function navigate() {
 			break
 	}
 	document.getElementById(element).classList.remove("hidden");
-	loadScripts(scripts, startFunction);
+	loadScripts(element, scripts, startFunction);
 }
 
-// Starts scripts (Script has to start with init() function)
-function loadGameScript(filePath)
-{
-	const script = document.createElement('script');
-	script.src = filePath;
-	script.type = 'text/javascript';
+// Function to load a script and return a Promise
+function loadScript(src) {
+	return new Promise((resolve, reject) => {
+		const script = document.createElement('script');
+		script.src = src;
+		script.type = 'text/javascript';
+		
+		script.onload = () => {
+			resolve();
+		};
+		
+		script.onerror = () => {
+			reject(new Error(`Failed to load script: ${src}`));
+		};
 
-    script.onload = function() {
-        if (typeof init === 'function') {
-            init();
-        } else {
-            console.error("init function not found" + filePath);
-        }
-    };
-
-	// if (typeof startGame === 'function')
-	//     startGame();
-	document.body.appendChild(script);
+		document.body.appendChild(script);
+	});
 }
 
 // Function to load all scripts
-function loadScripts(scripts, functionName) {
+function loadScripts(element, scripts, functionName) {
 	
+	// if (element !== '') {
+	// 	const el = document.getElementById(element).classList.remove("hidden");
+
+	// 	// if
+	// }
+	console.log(element);
 	scripts.reduce((promise, src) => {
 		
 		return promise.then(() => loadScript(src));
@@ -83,8 +104,10 @@ function loadScripts(scripts, functionName) {
 	.then(() => {
 
 		switch(functionName) {
-			case 'before_game': before_game(); break;
+			case 'startMenu': startMenu(); break;
+			case 'startTournament': startTournament(); break;
 			case 'startGame': startGame(); break;
+			case 'before_game': before_game(); break;
 			case 'home': home(); break;
 			case 'chat': chat(); break;
 			default: console.error("Function " + functionName + " not found");

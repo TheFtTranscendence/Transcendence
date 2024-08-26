@@ -1,41 +1,63 @@
-function game_hashchange(vars)
+function game_hashchange(event)
 {
-	if (vars.running == true)
-	{
-		console.log('hashchange game');
-		window.removeEventListener("hashchange", game_hashchange);
-	
-		document.getElementById('game').classList.add('hidden');
-	
-		window.removeEventListener("keydown", handleKeyDown);
-		window.removeEventListener("keyup", handleKeyUp);
-		vars.canvasVars.canvas.removeEventListener("click", handleCanvasClick);
-	
-		clearInterval(vars.IntervalVars.gameLoop);
-		UnloadScripts(window.gameScripts);
+    console.log('hashchange game');
+    window.removeEventListener("hashchange", game_hashchange);
 
-		vars.running = false;
-	}
+    document.getElementById('game').classList.add('hidden');
+
+    window.removeEventListener("keydown", handleKeyDown);
+    window.removeEventListener("keyup", handleKeyUp);
+    vars.canvasVars.canvas.removeEventListener("click", handleCanvasClick);
+
+    resetMenu();
+    clearInterval(vars.IntervalVars.gameLoop);
+    UnloadScripts(window.gameScripts);
+
+    vars.running = false;
 }
 
+function gameCleanUp(vars, element, scripts, functionName)
+{
+    if (vars.running == true)
+    {
+        console.log('hashchange game');
+        window.removeEventListener("hashchange", game_hashchange);
+    
+        document.getElementById('game').classList.add('hidden');
+    
+        window.removeEventListener("keydown", handleKeyDown);
+        window.removeEventListener("keyup", handleKeyUp);
+        vars.canvasVars.canvas.removeEventListener("click", handleCanvasClick);
+    
+        clearInterval(vars.IntervalVars.gameLoop);
+        UnloadScripts(window.gameScripts);
 
-function init()
+        vars.running = false;
+    }
+    // resetMenu();
+    document.getElementById('menuPage').classList.remove('hidden');
+    document.getElementById('menuButtons').classList.remove('hidden');
+    loadScripts(element, scripts, functionName);
+}
+
+function startGame()
 {
     const vars = initVars();
 
-	console.log('initing game');
+
+	// console.log('initing game');
 	document.getElementById('game').classList.remove('hidden');
 
+    // window.UnloadScripts(window.menuScript);
+    // window.UnloadScripts(window.tournamentScript);
 	// When leaving this hash (#game), trigger game_hashchange function
-	window.addEventListener("hashchange", (event) => {game_hashchange(vars)});
-	
+	window.addEventListener("hashchange", game_hashchange);
 	
     window.addEventListener("keydown", (event) => handleKeyDown(event, vars));
     window.addEventListener("keyup", (event) => handleKeyUp(event, vars));
     vars.canvasVars.canvas.addEventListener("click", (event) => handleCanvasClick(event, vars));
    	vars.IntervalVars.gameLoop = setInterval(() => gameLoop(vars), 1000 / 60);
 }
-
 
 function initVars()
 {
@@ -157,10 +179,10 @@ function handleCanvasClick(event, vars)
             {
                 let index = window.shuflledNickList.indexOf(window.loser);
                 window.shuflledNickList.splice(index, 1);
-                loadScript("gameMenu/tournament/tournamentScript.js");
+                gameCleanUp(vars, 'startTournament', window.tournamentScript, 'startTournament')
             }
             else
-                loadScript("gameMenu/gameMenuScript.js");
+                gameCleanUp(vars, 'startMenu', window.menuScript, 'startMenu')
         }
         vars.gameVars.gameStart = true;
         vars.gameVars.p1Score = 0;
@@ -436,29 +458,29 @@ function gameLoop(vars)
     }
 }
 
-function loadScript(filePath)
-{
-    // let existingGameScript = document.getElementById("gameMenuS");
+// function loadScript(filePath)
+// {
+//     // let existingGameScript = document.getElementById("gameMenuS");
 
-    // if (existingGameScript)
-    //     existingGameScript.parentNode.removeChild(existingGameScript);
+//     // if (existingGameScript)
+//     //     existingGameScript.parentNode.removeChild(existingGameScript);
 
-    window.removeScripts();
+//     window.removeScripts();
 
 
-    const script = document.createElement('script');
-    script.id = 'gameMenuS'
-    script.src = filePath;
-    script.type = 'text/javascript';
+//     const script = document.createElement('script');
+//     script.id = 'gameMenuS'
+//     script.src = filePath;
+//     script.type = 'text/javascript';
 
-    script.onload = function() {
-        if (typeof init === 'function') {
-            init();
-        } else {
-            console.error("init function not found" + filePath);
-        }
-    };
+//     script.onload = function() {
+//         if (typeof init === 'function') {
+//             init();
+//         } else {
+//             console.error("init function not found" + filePath);
+//         }
+//     };
 
-    document.body.appendChild(script);
-}
+//     document.body.appendChild(script);
+// }
 
