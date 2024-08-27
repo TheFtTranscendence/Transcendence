@@ -1,61 +1,81 @@
+
 const currentUser = {
 	username: ""
 };
 
+window.chatScripts = [
+	'chat/chat.js',
+];
 
-// Sample content for each route
-const routes = {
-	'#home': `<h1>Home Page</h1><p>Welcome to the home page!</p>`,
-	'#game': `<h1>Game</h1><canvas id="game-area"></canvas>`,
-	'#game2': `<h1>Game2</h1>
-					<div id="div-game2-area">
-						<div id="div-game2-top">
-							<!-- Player 1 health -->
-							<div id="game2-bar1-parent">
-								<div id="game2-bar1-background"></div>
-								<div id="game2-bar1"></div>
-							</div>
-							<!-- timer -->
-							<div id="game2-timer"> 50 </div>
-							<!-- Player 2 health -->
-							<div id="game2-bar2-parent">
-								<div id="game2-bar2-background"></div>
-								<div id="game2-bar2"></div>
-							</div>
-						</div>
-						<div id= "game2-end-text"> Tie </div>
-						<div>
-							<canvas id="game2-area"></canvas>
-						</div>
-					</div>
-					`,
-	'#chat': `<h1>Chat</h1><p>Here can be eventually the chat</p>`
-};
+window.homeScripts = [
 
+	'home/init.js',
+];
+
+window.gameScripts = [
+	'game/gameScript.js',
+];
+
+window.game2Scripts = [
+	'game2/before_game.js',
+	'game2/classes.js',
+	'game2/events.js',
+	'game2/init.js',
+	'game2/game_end.js',
+	'game2/gameScript2.js'
+];
 
 // Function to handle navigation
 function navigate() {
-    const hash = window.location.hash;
-    const contentDiv = document.getElementById('content');
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    // const contentDiv = document.getElementById('content');
+    // const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
-    if (!currentUser) {
-        // If the user is not logged in, ensure they are directed to the home (login/register) screen
-        window.location.hash = '#home';
-        contentDiv.innerHTML = routes['#home'];
-        document.getElementById('profile-img').classList.add('hidden'); // Ensure profile image is hidden
-    } else {
-        contentDiv.innerHTML = routes[hash] || '<h1>404 Not Found</h1><p>Page not found.</p>';
+    // if (!currentUser) {
+    //     // If the user is not logged in, ensure they are directed to the home (login/register) screen
+    //     window.location.hash = '#home';
+    //     contentDiv.innerHTML = routes['#home'];
+    //     document.getElementById('profile-img').classList.add('hidden'); // Ensure profile image is hidden
+    // } else {
+    //     contentDiv.innerHTML = routes[hash] || '<h1>404 Not Found</h1><p>Page not found.</p>';
 
-        // Only run this if the user is logged in
-        if (hash === '#home') {
-            getAvater(currentUser.username);
-        } else if (hash === '#game') {
-            loadGameScript();
-        } else if (hash === '#game2') {
-            loadGameScript2();
-        }
-    }
+    //     // Only run this if the user is logged in
+    //     if (hash === '#home') {
+    //         getAvater(currentUser.username);
+    //     } else if (hash === '#game') {
+    //         loadGameScript();
+    //     } else if (hash === '#game2') {
+    //         loadGameScript2();
+    //     }
+    // }
+
+	switch (window.location.hash) {
+		case '#home':
+			element = 'home'
+			scripts = window.homeScripts
+			startFunction = 'home'
+			break;
+
+		case '#game':
+			element = 'game'
+			scripts = window.gameScripts
+			startFunction = 'startGame'
+			break
+
+		case '#game2':
+			element = 'game2'
+			scripts = window.game2Scripts
+			startFunction = 'before_game'
+			break
+
+		case '#chat':
+			element = 'chat'
+			scripts = window.chatScripts
+			startFunction = 'chat'
+			break
+	}
+
+	document.getElementById(element).classList.remove("hidden");
+	loadScripts(scripts, startFunction);
 }
 
 // Function to load a script and return a Promise
@@ -78,28 +98,38 @@ function loadScript(src) {
 }
 
 // Function to load all scripts
-function loadGameScript2() {
-	scripts = [
-		'game2/events.js',
-		'game2/init.js',
-		'game2/game_end.js',
-		'game2/gameScript2.js'
-	];
+function loadScripts(scripts, functionName) {
 
 	scripts.reduce((promise, src) => {
 
 		return promise.then(() => loadScript(src));
-	}, Promise.resolve()).then(() => {
+	}, Promise.resolve())
+	.then(() => {
 
-		if (typeof startGame2 === 'function')
-			startGame2();
-		else
-			console.error("startGame2 function not found")
+		switch(functionName) {
+			case 'before_game': before_game(); break;
+			case 'startGame': startGame(); break;
+			case 'home': home(); break;
+			case 'chat': chat(); break;
+			default: console.error("Function " + functionName + " not found");
+		}
 
-	}).catch(error => {
+	})
+	.catch(error => {
 		console.error(error);
 	});
 }
+
+function UnloadScripts(scripts) {
+
+	scripts.forEach(script => {
+		const scriptElement = document.querySelector(`script[src="${script}"]`);
+		if (scriptElement) {
+			scriptElement.remove();
+		}
+	});
+}
+
 
 // Starts game script
 function loadGameScript()
@@ -145,7 +175,18 @@ function handleLogin() {
 	axios.post('http://localhost:8000/auth/login/', data)
 	.then((response) => {
 		console.log(response.data);
+		// ToDo: Look into window.user
 		handleSuccessAuth(errorField, data.username);
+		alert('Login successful');
+
+		axios.get('http://localhost:8000/auth/users/' + username + '/')
+		.then((response) => {
+			window.user = response.data;
+			console.log('User:', window.user);
+		})
+		.catch((error) => {
+			console.error(error);
+		});
 	})
 	.catch((error) => {
 		var errorMsg = error;
@@ -349,3 +390,54 @@ function putAvater() {
 document.getElementById('logoutButton').addEventListener('click', handleLogout);
 
 document.getElementById('changeProfilePicture').addEventListener('change', putAvater);
+
+
+
+
+// Open a WebSocket connection
+const socket = new WebSocket('ws://localhost:8000/ws/friends/');
+
+// Listen for messages from the server
+socket.onmessage = function(e) {
+    const data = JSON.parse(e.data);
+    if (data.type === 'friend_request_received') {
+        console.log('Friend request received from user ID:', data.sender_id);
+        // Handle displaying the friend request in your UI
+    } else {
+        console.log(data.detail);
+    }
+};
+
+// Send a friend request
+function sendFriendRequest(friendId) {
+    socket.send(JSON.stringify({
+        action: 'send_request',
+        friend_id: friendId
+    }));
+}
+
+// Respond to a friend request
+function respondToRequest(requestId, accept) {
+    socket.send(JSON.stringify({
+        action: 'respond_request',
+        request_id: requestId,
+        accept: accept
+    }));
+}
+
+// Add a friend (directly, if needed)
+function addFriend(friendId) {
+    socket.send(JSON.stringify({
+        action: 'add_friend',
+        friend_id: friendId
+    }));
+}
+
+// Remove a friend (directly, if needed)
+function removeFriend(friendId) {
+    socket.send(JSON.stringify({
+        action: 'remove_friend',
+        friend_id: friendId
+    }));
+}
+

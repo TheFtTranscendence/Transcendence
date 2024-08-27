@@ -2,14 +2,14 @@ function startGame2() {
 	
 	v = init_vars()
 	setup_canvas(v)
+	setup_music(v)
+
 
 	window.addEventListener('keydown', game2_keydown)
 	window.addEventListener('keyup', game2_keyup)
 	window.addEventListener('hashchange', game2_hashchange)
 
-	// Ask nickname from the players
-	// v.player.name = nickname1
-	// v.enemy.name = nickname2
+	v.g.backgroundMusic.play();
 
 	v.g.gameInterval = window.setInterval(() => game_loop(v), 1000 / v.g.fps)
 	v.g.timerInterval = window.setInterval(() => decreaseTimer(v), 1000)

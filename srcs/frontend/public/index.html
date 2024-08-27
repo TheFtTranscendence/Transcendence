@@ -80,13 +80,6 @@
 		  <img class="img-circle" style="width: 140px; height: 140px;">
 		</div>
 	</div>
-
-	<!-- Menu Icon
-	<div id="menu-icon" class="menu-icon">
-		<img src="img/menu-icon.svg" alt="Menu Icon">
-	</div>
-	-->
-
 	<!-- Sidebar -->
 	<div id="sidebar" class="sidebar hidden">
 		<ul>
@@ -104,19 +97,83 @@
 		<a href="#chat" class="nav-link">Chat</a>
 	</nav>
 	<div id="content">
+		<div id="home" class="hidden">
+			<h1>Home</h1>
+			<p>Click on the links above to navigate to the different sections of the website.</p>
+			<p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Architecto quaerat alias, adipisci laborum labore reprehenderit quae doloremque repellendus magnam consectetur, dolore necessitatibus explicabo ipsum tenetur accusantium minus iste! Sed, voluptas.</p>
+		</div>
 		<div id="game" class="hidden">
-			<canvas id="game-area" class="hidden"></canvas>
+			<canvas id="game-area"></canvas>
 		</div>
+
 		<div id="game2" class="hidden">
-			<canvas id="game2-area" class="hidden"></canvas>
+			<div id="div-game2-area">
+				<div id="div-game2-top">
+					<!-- Player 1 health -->
+					<div id="game2-bar1-parent">
+						<div id="game2-bar1-background"></div>
+						<div id="game2-bar1"></div>
+					</div>
+					<!-- timer -->
+					<div id="game2-timer"> 50 </div>
+					<!-- Player 2 health -->
+					<div id="game2-bar2-parent">
+						<div id="game2-bar2-background"></div>
+						<div id="game2-bar2"></div>
+					</div>
+				</div>
+				<div id= "game2-end-text"> Tie </div>
+				<div>
+					<canvas id="game2-area"></canvas>
+				</div>
+			</div>
 		</div>
+
+		<div id="chat" class="hidden">
+			<div id="chat-left-parent">
+				<div id="chat-contacts-history">
+					<h2>Chat History</h2>
+					<ul class="chat-list">
+						<li class="chat-item">Chat 1</li>
+						<li class="chat-item">Chat 2</li>
+						<li class="chat-item">Chat 3</li>
+						<!-- Add more chats as needed -->
+					</ul>
+				</div>
+			</div>
+
+			<div id="chat-right-parent">
+				<button id="toggle-friend-list" onclick="toggleFriendList()">Friends</button>
+
+				<div id="chat-friend-div">
+					<h2>Friends</h2>
+					<ul>
+						<li class="friend-item">Friend 1</li>
+						<li class="friend-item">Friend 2</li>
+						<li class="friend-item">Friend 3</li>
+					</ul>
+				</div>
+
+				<div id="chat-right-top">
+					<h2>Messages</h2>
+					<div class="message">Hello, how are you?</div>
+					<div class="message">I'm fine, thanks!</div>
+				</div>
+
+				<div id="chat-right-bottom">
+					<!-- This can be used for message input or additional controls -->
+					<textarea placeholder="Type a message..."></textarea>
+				</div>
+			</div>
+		</div>
+
 	</div>
 
 	<!-- Bootstrap JS and dependencies -->
 	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.6.0/dist/umd/popper.min.js"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-	<script src="game2/classes.js"></script>
+
 	<script src="script.js"></script>
 
 </body>
