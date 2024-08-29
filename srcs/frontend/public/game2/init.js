@@ -1,4 +1,4 @@
-function init_vars() {
+function init_vars(player1, player2) {
 
     canvas_width = 1366
 	canvas_height = 768
@@ -21,7 +21,7 @@ function init_vars() {
         }),
         
         player: new Fighter({
-            name: 'player',
+            name: player1,
             position: { x: canvas_width / 4, y: canvas_height - ground_height + 250},
             velocity: { x: 0, y: 0},
             color: 'lightblue',
@@ -56,7 +56,7 @@ function init_vars() {
         }),
         
         enemy: new Fighter({
-            name: 'enemy',
+            name: player2,
             position : { x: canvas_width * 3 / 4, y: canvas_height - ground_height + 250},
             velocity: { x: 0, y: 0},
             color: 'white',

@@ -11,6 +11,10 @@ window.gameScripts = [
 	'game/gameScript.js',
 ];
 
+window.menuScripts = [
+	'games_menu/main.js',
+];
+
 window.game2Scripts = [
 	'game2/before_game.js',
 	'game2/classes.js',
@@ -47,10 +51,16 @@ function navigate() {
 			startFunction = 'startGame'
 			break;
 
-		case '#game2':
-			element = 'game2'
-			scripts = window.game2Scripts
-			startFunction = 'before_game'
+		// case '#game2':
+		// 	element = 'game2'
+		// 	scripts = window.game2Scripts
+		// 	startFunction = 'before_game'
+		// 	break;
+
+		case '#fighters':
+			element = 'games'
+			scripts = window.menuScripts
+			startFunction = 'main_menu'
 			break;
 
 		case '#chat': 
@@ -98,16 +108,11 @@ function loadScripts(scripts, functionName) {
 		return promise.then(() => loadScript(src));
 	}, Promise.resolve())
 	.then(() => {
-
-		switch(functionName) {
-			case 'before_game': before_game(); break;
-			case 'startGame': startGame(); break;
-			case 'home': home(); break;
-			case 'chat': chat(); break;
-			case 'Matchmaking_before_game': Matchmaking_before_game(); break;
-			default: console.error("Function " + functionName + " not found");
+		if (typeof window[functionName] === 'function') {
+			window[functionName]();
+		} else {
+			console.error("Function " + functionName + " not found");
 		}
-
 	})
 	.catch(error => {
 		console.error(error);

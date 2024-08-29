@@ -13,15 +13,12 @@ function Matchmaking_queue(v)
 		
 		document.getElementById('div-game2-area').classList.remove("hidden");
 		Matchmaking_startGame2(v)
-
 	}
 }
 
 function Matchmaking_setup_socket(v) {
-
 	
 	v.s.game_socket = new WebSocket('ws://localhost:8004/ws/remote_access/' + v.s.gameId + '/');
-
 	
 	v.s.game_socket.onmessage = function(event) {
 		msg = JSON.parse(event.data)
@@ -50,7 +47,6 @@ function Matchmaking_setup_socket(v) {
 					case 'w_keyup': v.keys.w.pressed = false; break;
 				}
 			}
-			
 			
 			if (msg.action == 'attack')
 			{

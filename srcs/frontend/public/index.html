@@ -92,7 +92,7 @@
 	<nav class="hidden">
 		<a href="#home" class="nav-link">Home</a>
 		<a href="#game" class="nav-link">Game</a>
-		<a href="#game2" class="nav-link">Game2</a>
+		<a href="#fighters" class="nav-link">Fighty Fighters</a>
 		<a href="#matchmaking" class="nav-link">Matchmaking :D</a>
 		<a href="#chat" class="nav-link">Chat</a>
 	</nav>
@@ -106,27 +106,56 @@
 			<canvas id="game-area"></canvas>
 		</div>
 
-		<div id="game2" class="hidden">
-			
-			<div id="game2-menu-area" class="hidden">
+		<div id="games" class="hidden">
+			<div id="games-menu-area" class="hidden">
 				<!-- Game Title -->
-				<div id="game2-menu-title">Fighty Fighters</div>
+				<div id="games-menu-title">Fighty Fighters</div>
 				
 				<!-- Game Menu -->
-				<div id="game2-menu-area2">
+				<div id="games-menu-area2">
 					<!-- Left Side: Player Info and Buttons -->
-					<div id="game2-menu-player-info">
-						<h2>Player Name</h2>
-						<div id="game2-menu-player-buttons">
-							<button>Change Skin</button>
+					<div id="games-menu-player-info">
+						<h2 id="games-menu-player-name">Player Name</h2>
+						<div id="games-menu-player-buttons">
+							<button id="games-button-skin">Change Skin</button>
 						</div>
-						<div id="game2-menu-selected-skin"></div>
+						<div id="games-menu-selected-skin"></div>
 					</div>
 			
 					<!-- Right Side: Game Options -->
-					<div id="game2-menu-game-options">
-						<button>Matchmaking</button>
-						<button>Local</button>
+					<div id="games-menu-game-options">
+						<button id="games-button-Matchmaking">Matchmaking</button>
+						<button id="games-button-local">Local</button>
+						<button id="games-button-tournament">Tournament</button>
+					</div>
+				</div>
+			</div>
+
+			<div id="games-local-menu" class="hidden">
+				<div id="games-menu-title">Local Game</div>
+			
+				<div id="games-local-menu-area">
+					<!-- Left Side: Player 1 Info -->
+					<div id="games-local-player1-info">
+						<input type="text" id="games-player1-name" placeholder="Player 1 Name" class="player-name-input">
+						<div id="games-local-player1-buttons">
+							<button id="games-button-skin1">Change Skin</button>
+						</div>
+						<div id="games-local-player1-skin"></div>
+					</div>
+			
+					<!-- Center: Play Button -->
+					<div id="games-local-play-button">
+						<button id="games-button-play">Play</button>
+					</div>
+			
+					<!-- Right Side: Player 2 Info -->
+					<div id="games-local-player2-info">
+						<input type="text" id="games-player2-name" placeholder="Player 2 Name" class="player-name-input">
+						<div id="games-local-player2-buttons">
+							<button id="games-button-skin2">Change Skin</button>
+						</div>
+						<div id="games-local-player2-skin"></div>
 					</div>
 				</div>
 			</div>
@@ -148,12 +177,10 @@
 					</div>
 				</div>
 				<div id= "game2-end-text"> Tie </div>
-				<div>
+				<div>	
 					<canvas id="game2-area"></canvas>
 				</div>
-				
 			</div>
-			
 		</div>
 
 		<div id="chat" class="hidden">

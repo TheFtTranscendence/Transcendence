@@ -108,7 +108,8 @@ body {
 	font-style: normal;
 }
 
-#game2-menu-area {
+#games-menu-area,
+#games-local-menu {
 	width: 1366px;
     height: 768px;
 	position: fixed;
@@ -126,7 +127,7 @@ body {
 
 }
 
-#game2-menu-title {
+#games-menu-title {
     font-size: 48px;
     font-weight: bold;
     text-align: center;
@@ -135,13 +136,13 @@ body {
     letter-spacing: 2px;
 }
 
-#game2-menu-area2 {
+#games-menu-area2 {
     display: flex;
     justify-content: space-between;
     width: 100%;
 }
 
-#game2-menu-player-info  {
+#games-menu-player-info  {
     width: 35%;
     text-align: center;
 }
@@ -152,14 +153,15 @@ body {
     color: #ffcc00;
 }
 
-#game2-menu-player-buttons {
+#games-menu-player-buttons {
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
-	margin-bottom: 20px;
+	margin-top: 20px;
 }
 
-#game2-menu-selected-skin {
+
+
+#games-menu-selected-skin {
     width: 300px;
     height: 500px;
     background-color: #444;
@@ -179,14 +181,17 @@ body {
 	
 }
 
-#game2-menu-game-options {
-    width: 35%;
+#games-menu-game-options {
+    width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 100px;
+	align-items: center;
+	margin: 50px auto 0;
 }
 
-#game2-menu-game-options button {
+#games-menu-game-options button {
+    width: 80%; /* Adjust the width of the buttons */
     padding: 15px;
     font-size: 18px;
     background-color: #ff4444;
@@ -197,7 +202,79 @@ body {
     transition: background-color 0.3s;
 }
 
-#game2-menu-game-options button:hover {
+#games-menu-game-options button:hover {
+    background-color: #ffcc00;
+    color: #2c2c2c;
+}
+
+#games-local-menu-area {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0 20px;  /* Added horizontal padding for more spacing */
+    margin-top: 40px;
+}
+
+#games-local-player1-info, 
+#games-local-player2-info {
+    width: 35%;
+    text-align: center;
+}
+
+.player-name-input {
+    width: 80%;
+    padding: 10px;
+    margin-bottom: 30px;  /* Increased margin for more space below input */
+    font-size: 16px;
+    border: 2px solid #ff4444;
+    border-radius: 5px;
+    background-color: #2c2c2c;
+    color: white;
+    text-align: center;
+}
+
+#games-local-player1-buttons,
+#games-local-player2-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;  /* Increased gap between buttons */
+    margin-bottom: 30px;  /* Increased margin for more space below buttons */
+}
+
+#games-local-player1-skin,
+#games-local-player2-skin {
+    width: 200px;
+    height: 300px;
+    background-color: #444;
+    border: 3px solid #ffcc00;
+    border-radius: 10px;
+	background-image: url('game2/assets/Mask/Sprites/preview.gif');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+#games-local-play-button {
+    width: 20%;
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;  /* Increased margin to create more space above the play button */
+}
+
+#games-local-play-button button {
+    width: 100%;
+    padding: 20px;
+    font-size: 24px;
+    background-color: #ff4444;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#games-local-play-button button:hover {
     background-color: #ffcc00;
     color: #2c2c2c;
 }

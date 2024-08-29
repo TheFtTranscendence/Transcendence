@@ -1,6 +1,6 @@
-function startGame2() {
+function startGame2(player1, player2) {
 	
-	v = init_vars()
+	v = init_vars(player1, player2)
 	setup_canvas(v)
 	// setup_music(v)
 
