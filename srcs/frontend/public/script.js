@@ -1,5 +1,5 @@
 
-window.authScript = [
+window.authScripts = [
 	'auth/init.js'
 ]
 
@@ -8,7 +8,6 @@ window.chatScripts = [
 ];
 
 window.homeScripts = [
-
 	'home/init.js',
 ];
 
@@ -25,11 +24,15 @@ window.game2Scripts = [
 	'game2/gameScript2.js'
 ];
 
+navigate();
+
 // Function to handle navigation
 function navigate() {
+	console.log("navigate() called")
 	let element, scripts, startFunction;
 
 	if (!window.location.hash) {
+		console.log("set hash to auth")
         window.location.hash = '#auth';
     }
 
@@ -100,6 +103,7 @@ function loadScripts(scripts, functionName) {
 	.then(() => {
 
 		switch(functionName) {
+			case 'auth' : auth(); break;
 			case 'before_game': before_game(); break;
 			case 'startGame': startGame(); break;
 			case 'home': home(); break;
@@ -144,6 +148,10 @@ function loadGameScript()
 }
 
 function handleSuccessAuth(errorField, username) {
+	setTimeout(() => {
+		window.location.hash = '#home';
+	}, 100);
+	console.log("handleSuccessAuth() called")
 	document.getElementById('auth').classList.add('hidden');
 	document.querySelector('nav').classList.remove('hidden');
 	window.location.hash = '#home';
