@@ -28,7 +28,6 @@ navigate();
 
 // Function to handle navigation
 function navigate() {
-	console.log("navigate() called")
 	let element, scripts, startFunction;
 
 	if (!window.location.hash) {
