@@ -25,8 +25,16 @@ function getAvater(username) {
 	axios.get('http://localhost:8000/data/avatar/' + username)
     .then((response) => {
 		const imageUrl = response.data.url;
-		imgElement.src = imageUrl;
-		// TODO: Check if imnageUrl is working and show default if not
+		//Check if imageUrl is working, if not show default
+		const img = new Image();
+		img.onload = function() {
+			imgElement.src = imageUrl;
+		};
+		img.onerror = function() {
+			imgElement.src = 'img/red.jpg';
+		};
+		img.src = imageUrl;
+
     })
     .catch((error) => {
         console.error(error);
