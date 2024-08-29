@@ -46,7 +46,7 @@ Returns:
 |Sucess| Registration was sucessfull| 201|
 |Missing fields|Returns a list with the name of the fields missing from the json file| 450 |
 |Passwords are different| password is different from confirm_password | 409 |
-|Username already exists| Username already exists| 400|
+|name already exists| Username already exists| 400|
 |Invalid Json| Json file provided has some kind of error | 401 |
 |Internal Server Error| Something in the server went wrong| 500 |
 |Invalid Request Method| The request method provided is incorrect| 405 |

@@ -1,6 +1,6 @@
 function chat_hashchange(event) {
 	document.getElementById("chat").classList.add("hidden");
-	UnloadScripts(window.chatScripts);
+	unloadScripts(window.chatScripts);
 }
 
 function toggleFriendList() {
@@ -23,6 +23,6 @@ function chat()
 {
 
 	document.getElementById("chat").classList.remove("hidden");
-	
+
 	window.addEventListener('hashchange', chat_hashchange);
 }

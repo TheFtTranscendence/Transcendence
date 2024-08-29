@@ -4,7 +4,7 @@ function init_vars() {
 	canvas_height = 768
 	stun_time = 150 // ms
 	ground_height = 50 // px
-    
+
     return {
         background: new Sprite({
             position: { x: 0, y: 0 },
@@ -19,7 +19,7 @@ function init_vars() {
             scale: 3,
             framesMax: 6
         }),
-        
+
         player: new Fighter({
             name: 'player',
             position: { x: canvas_width / 4, y: canvas_height - ground_height + 250},
@@ -54,7 +54,7 @@ function init_vars() {
             hit_frameInv: 0,
             facing : 'right',
         }),
-        
+
         enemy: new Fighter({
             name: 'enemy',
             position : { x: canvas_width * 3 / 4, y: canvas_height - ground_height + 250},
@@ -89,13 +89,13 @@ function init_vars() {
             hit_frameInv: 1,
             facing : 'left',
         }),
-        
+
 
         keys:  {
             d: { pressed: false },
             a: { pressed: false },
             w: { pressed: false },
-            
+
             ArrowRight: { pressed: false },
             ArrowLeft: { pressed: false },
             ArrowUp: { pressed: false },
@@ -109,7 +109,7 @@ function init_vars() {
             backgroundInterval: 0,
             timer: 0,
             time: 0,
-            
+
             c: 0,
             canvas: 0,
             canvas_width: canvas_width,
@@ -149,7 +149,7 @@ function reset_keys(v) {
 	v.keys.d.pressed = false
 	v.keys.a.pressed = false
 	v.keys.w.pressed = false
-	
+
 	v.keys.ArrowRight.pressed = false
 	v.keys.ArrowLeft.pressed = false
 	v.keys.ArrowUp.pressed = false
@@ -162,7 +162,7 @@ function leave_game(v) {
     clearInterval(v.g.gameInterval)
     clearInterval(v.g.timerInterval)
     clearInterval(v.g.backgroundInterval)
-        
+
     window.removeEventListener('keydown', game2_keydown)
 	window.removeEventListener('keyup', game2_keyup)
 	window.removeEventListener('hashchange', game2_hashchange)
@@ -171,8 +171,8 @@ function leave_game(v) {
 	v.g.backgroundMusic = null
     v.g.timer.innerHTML = 50
 
-	
+
 	document.getElementById('game2').classList.add("hidden");
-	UnloadScripts(window.game2Scripts);
+	unloadScripts(window.game2Scripts);
 
 }

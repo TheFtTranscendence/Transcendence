@@ -1,7 +1,7 @@
 
-const currentUser = {
-	username: ""
-};
+window.authScript = [
+	'auth/init.js'
+]
 
 window.chatScripts = [
 	'chat/chat.js',
@@ -27,28 +27,21 @@ window.game2Scripts = [
 
 // Function to handle navigation
 function navigate() {
-    // const contentDiv = document.getElementById('content');
-    // const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+	let element, scripts, startFunction;
 
-    // if (!currentUser) {
-    //     // If the user is not logged in, ensure they are directed to the home (login/register) screen
-    //     window.location.hash = '#home';
-    //     contentDiv.innerHTML = routes['#home'];
-    //     document.getElementById('profile-img').classList.add('hidden'); // Ensure profile image is hidden
-    // } else {
-    //     contentDiv.innerHTML = routes[hash] || '<h1>404 Not Found</h1><p>Page not found.</p>';
-
-    //     // Only run this if the user is logged in
-    //     if (hash === '#home') {
-    //         getAvater(currentUser.username);
-    //     } else if (hash === '#game') {
-    //         loadGameScript();
-    //     } else if (hash === '#game2') {
-    //         loadGameScript2();
-    //     }
-    // }
+	if (!window.location.hash) {
+        window.location.hash = '#auth';
+    }
 
 	switch (window.location.hash) {
+
+		case '#auth':
+			element = 'auth'
+			scripts = window.authScripts
+			startFunction = 'auth'
+			break;
+
+
 		case '#home':
 			element = 'home'
 			scripts = window.homeScripts
@@ -120,7 +113,7 @@ function loadScripts(scripts, functionName) {
 	});
 }
 
-function UnloadScripts(scripts) {
+function unloadScripts(scripts) {
 
 	scripts.forEach(script => {
 		const scriptElement = document.querySelector(`script[src="${script}"]`);
@@ -131,7 +124,6 @@ function UnloadScripts(scripts) {
 }
 
 
-// Starts game script
 function loadGameScript()
 {
 	const script = document.createElement('script');
@@ -157,9 +149,16 @@ function handleSuccessAuth(errorField, username) {
 	window.location.hash = '#home';
 	if (!errorField.classList.contains('hidden'))
 		errorField.classList.add('hidden');
-	currentUser.username = username;
-	localStorage.setItem('currentUser', JSON.stringify(currentUser));
-	navigate();
+	//currentUser.username = username;
+	//localStorage.setItem('currentUser', JSON.stringify(currentUser));
+	axios.get('http://localhost:8000/auth/user_info/' + username + '/')
+	.then((response) => {
+		window.user = response.data;
+		console.log('Users:', window.user);
+	})
+	.catch((error) => {
+		console.error(error);
+	});
 }
 
 function handleLogin() {
@@ -175,18 +174,8 @@ function handleLogin() {
 	axios.post('http://localhost:8000/auth/login/', data)
 	.then((response) => {
 		console.log(response.data);
-		// ToDo: Look into window.user
-		handleSuccessAuth(errorField, data.username);
+		handleSuccessAuth(errorField, username);
 		alert('Login successful');
-
-		axios.get('http://localhost:8000/auth/users/' + username + '/')
-		.then((response) => {
-			window.user = response.data;
-			console.log('User:', window.user);
-		})
-		.catch((error) => {
-			console.error(error);
-		});
 	})
 	.catch((error) => {
 		var errorMsg = error;
@@ -207,7 +196,7 @@ function handleLogin() {
 		}
 		errorField.textContent = errorMsg;
 		errorField.classList.remove('hidden');
-		handleSuccessAuth(errorField, "unkown");
+		handleSuccessAuth(errorField, username);
 	})
 }
 
@@ -264,21 +253,7 @@ function handleRegister() {
 		}
 		errorField.textContent = errorMsg;
 		errorField.classList.remove('hidden');
-		handleSuccessAuth(errorField, "unkown");
 	})
-}
-
-function handleLogout() {
-	localStorage.removeItem('currentUser');
-
-	document.querySelector('nav').classList.add('hidden');
-	document.getElementById('auth').classList.remove('hidden');
-	sidebar.classList.add('hidden');
-	document.removeEventListener('click', handleOutsideClick);
-	// document.getElementById('profile-img').classList.add('hidden');
-
-	// window.location.hash = '#home';
-	navigate();
 }
 
 // Handle login and register forms
@@ -333,65 +308,10 @@ document.addEventListener('DOMContentLoaded', () => {
 	});
 })
 
-function getAvater(username) {
-	const imgElement = document.querySelector('#profile-img img');
-	axios.get('http://localhost:8000/data/avatar/' + username)
-    .then((response) => {
-		const imageUrl = response.data.url;
-		imgElement.src = imageUrl;
-		// TODO: Check if imnageUrl is working and show default if not
-    })
-    .catch((error) => {
-        console.error(error);
-		imgElement.src = 'img/red.jpg';
-    });
-	document.getElementById('profile-img').classList.remove('hidden');
-}
 
-function showSideBar() {
-	//event.stopPropagation();
-	document.getElementById('sidebar').classList.toggle('hidden');
-	document.addEventListener('click', handleOutsideClick);
-}
-
-function handleOutsideClick(event) {
-    const sidebar = document.getElementById('sidebar');
-    const isClickInsideSidebar = sidebar.contains(event.target);
-    const isClickProfile = document.getElementById('profile-img').contains(event.target);
-
-    if (!isClickInsideSidebar && !isClickProfile) {
-        console.log("Clicked outside, hiding sidebar");
-        sidebar.classList.add('hidden');
-        document.removeEventListener('click', handleOutsideClick);
-    } else {
-        console.log("Clicked inside sidebar or profile image");
-    }
-}
-
-// Function to handle profile update
-function handleProfileUpdate() {
-	alert('Updating profile...');
-	// ToDo
-}
 
 // Event listener for hash changes
 window.addEventListener('hashchange', navigate);
-
-// Toggle sidebar on menu icon click
-document.getElementById('profile-img').addEventListener('click', showSideBar);
-
-function putAvater() {
-	var loadFile = function(event) {
-		var image = document.querySelector('#profile-img img');
-		image.src = URL.createObjectURL(event.target.files[0]);
-	};
-}
-
-document.getElementById('logoutButton').addEventListener('click', handleLogout);
-
-document.getElementById('changeProfilePicture').addEventListener('change', putAvater);
-
-
 
 
 // Open a WebSocket connection

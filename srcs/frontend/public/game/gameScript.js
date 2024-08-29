@@ -4,15 +4,15 @@ function game_hashchange(vars)
 	{
 		console.log('hashchange game');
 		window.removeEventListener("hashchange", game_hashchange);
-	
+
 		document.getElementById('game').classList.add('hidden');
-	
+
 		window.removeEventListener("keydown", handleKeyDown);
 		window.removeEventListener("keyup", handleKeyUp);
 		vars.canvasVars.canvas.removeEventListener("click", handleCanvasClick);
-	
+
 		clearInterval(vars.IntervalVars.gameLoop);
-		UnloadScripts(window.gameScripts);
+		unloadScripts(window.gameScripts);
 
 		vars.running = false;
 	}
@@ -27,8 +27,8 @@ function startGame()
 
 	// When leaving this hash (#game), trigger game_hashchange function
 	window.addEventListener("hashchange", (event) => {game_hashchange(vars)});
-	
-	
+
+
     window.addEventListener("keydown", (event) => handleKeyDown(event, vars));
     window.addEventListener("keyup", (event) => handleKeyUp(event, vars));
     vars.canvasVars.canvas.addEventListener("click", (event) => handleCanvasClick(event, vars));
@@ -177,7 +177,7 @@ function ballMovement(vars)
             if (vars.ballVars.ballX > vars.canvasVars.canvasWidth)
             {
                 vars.gameVars.pointScored = false;
-                vars.gameVars.gameReset = true;        
+                vars.gameVars.gameReset = true;
             }
         }
         else if (vars.ballVars.ballMoveLeft)
@@ -232,7 +232,7 @@ function ballMovement(vars)
                 vars.gameVars.pointScored = true;
                 vars.ballVars.ballX += vars.ballVars.ballSpeedX;
                 vars.gameVars.p1Score++;
-            }          
+            }
         }
     }
     else if (vars.ballVars.ballMoveLeft === true)
@@ -276,11 +276,11 @@ function ballMovement(vars)
 
 function resetGame(vars)
 {
-    vars.paddleVars.p1paddleX = 40; 
+    vars.paddleVars.p1paddleX = 40;
     vars.paddleVars.p1paddleY = (vars.canvasVars.canvasHeight / 2) - (vars.paddleVars.paddleHeight / 2);
     vars.paddleVars.p2paddleX = vars.canvasVars.canvasWidth - 50;
     vars.paddleVars.p2paddleY = (vars.canvasVars.canvasHeight / 2) - (vars.paddleVars.paddleHeight / 2);
-    
+
     vars.ballVars.ballX = vars.canvasVars.canvasWidth / 2;
     vars.ballVars.ballY = vars.canvasVars.canvasHeight / 2;
     vars.ballVars.ballSpeedX = 5;
@@ -327,7 +327,7 @@ function drawBackground(vars)
             if (it === 2)
                 drawText("white", "40px ARCADECLASSIC", "SCORE", (vars.canvasVars.canvasWidth / 2) - 55, y + 20, vars);
             else
-            vars.canvasVars.ctx.fillRect((vars.canvasVars.canvasWidth / 2 - 10), y, 20, 20);        
+            vars.canvasVars.ctx.fillRect((vars.canvasVars.canvasWidth / 2 - 10), y, 20, 20);
     }
     drawText("red", "50px Verdana", vars.gameVars.p1Score, (vars.canvasVars.canvasWidth / 2) - 130, 75, vars);
     drawText("BLUE", "50px Verdana", vars.gameVars.p2Score, (vars.canvasVars.canvasWidth / 2) + 100, 75, vars);
@@ -391,7 +391,7 @@ function gameLoop(vars)
         // Reset paddle and ball position after point scored
         if (vars.gameVars.gameReset)
             resetGame(vars);
-        
+
         // Reset game and shows restart screen
         if (!vars.gameVars.gameStart)
         {

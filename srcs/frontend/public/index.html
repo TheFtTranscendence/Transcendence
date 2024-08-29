@@ -16,8 +16,15 @@
     </div>
 	-->
 
-    <div class="container-fluid">
-		<div class="row vh-100" id="auth">
+	<nav class="hidden">
+		<a href="#home" class="nav-link">Home</a>
+		<a href="#game" class="nav-link">Game</a>
+		<a href="#game2" class="nav-link">Game2</a>
+		<a href="#chat" class="nav-link">Chat</a>
+	</nav>
+
+	<div class="container-fluid">
+		<div id="auth" class="row vh-100">
 			<div class="col-sm-6 left-side">
 				<div class="left-content text-center">
 					<div class="split-screen-text">LOGIN</div>
@@ -75,38 +82,35 @@
 		</div>
 	</div>
 
-	<div id="profile-img" class="img-thumbnail img-circle hidden">
-		<div style="position: relative; padding: 0; cursor: pointer;" type="file">
-		  <img class="img-circle" style="width: 140px; height: 140px;">
+	<div id="home" class="hidden">
+		<div id="profile-img" class="img-thumbnail img-circle">
+			<div style="position: relative; padding: 0; cursor: pointer;" type="file">
+			<img class="img-circle" style="width: 140px; height: 140px;">
+			</div>
 		</div>
-	</div>
-	<!-- Sidebar -->
-	<div id="sidebar" class="sidebar hidden">
-		<ul>
-			<li id="changeProfile"><a href="#profile">Change Profile Information</a></li>
-			<li><a href="#logout" id="logoutButton">Logout</a></li>
-			<li><input id="changeProfilePicture" type="file" accept="image/*" name="image" id="file" style="display: none;">
-			<label for="file" style="cursor: pointer;">Upload Image</label></li>
-		</ul>
-	</div>
+		<!-- Sidebar -->
+		<div id="sidebar" class="sidebar hidden">
+			<ul>
+				<li id="changeProfile"><a href="#profile">Change Profile Information</a></li>
+				<li><a href="#logout" id="logoutButton">Logout</a></li>
+				<li><input id="changeProfilePicture" type="file" accept="image/*" name="image" id="file" style="display: none;">
+				<label for="file" style="cursor: pointer;">Upload Image</label></li>
+			</ul>
+		</div>
 
-	<nav class="hidden">
-		<a href="#home" class="nav-link">Home</a>
-		<a href="#game" class="nav-link">Game</a>
-		<a href="#game2" class="nav-link">Game2</a>
-		<a href="#chat" class="nav-link">Chat</a>
-	</nav>
-	<div id="content">
-		<div id="home" class="hidden">
+		<div id="content">
 			<h1>Home</h1>
 			<p>Click on the links above to navigate to the different sections of the website.</p>
 			<p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Architecto quaerat alias, adipisci laborum labore reprehenderit quae doloremque repellendus magnam consectetur, dolore necessitatibus explicabo ipsum tenetur accusantium minus iste! Sed, voluptas.</p>
 		</div>
-		<div id="game" class="hidden">
-			<canvas id="game-area"></canvas>
-		</div>
+	</div>
 
-		<div id="game2" class="hidden">
+	<div id="game" class="hidden">
+		<canvas id="game-area"></canvas>
+	</div>
+
+
+	<div id="game2" class="hidden">
 			<div id="div-game2-area">
 				<div id="div-game2-top">
 					<!-- Player 1 health -->
@@ -127,9 +131,9 @@
 					<canvas id="game2-area"></canvas>
 				</div>
 			</div>
-		</div>
+	</div>
 
-		<div id="chat" class="hidden">
+	<div id="chat" class="hidden">
 			<div id="chat-left-parent">
 				<div id="chat-contacts-history">
 					<h2>Chat History</h2>
@@ -165,9 +169,8 @@
 					<textarea placeholder="Type a message..."></textarea>
 				</div>
 			</div>
-		</div>
-
 	</div>
+
 
 	<!-- Bootstrap JS and dependencies -->
 	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
