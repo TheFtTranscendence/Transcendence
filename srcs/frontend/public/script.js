@@ -127,7 +127,6 @@ function unloadScripts(scripts) {
 	});
 }
 
-
 function loadGameScript()
 {
 	const script = document.createElement('script');
@@ -147,133 +146,6 @@ function loadGameScript()
 	document.body.appendChild(script);
 }
 
-function handleSuccessAuth(errorField, username) {
-	setTimeout(() => {
-		window.location.hash = '#home';
-	}, 100);
-	console.log("handleSuccessAuth() called")
-	document.getElementById('auth').classList.add('hidden');
-	document.querySelector('nav').classList.remove('hidden');
-	window.location.hash = '#home';
-	if (!errorField.classList.contains('hidden'))
-		errorField.classList.add('hidden');
-	//currentUser.username = username;
-	//localStorage.setItem('currentUser', JSON.stringify(currentUser));
-	axios.get('http://localhost:8000/auth/user_info/' + username + '/')
-	.then((response) => {
-		window.user = response.data;
-		console.log('Users:', window.user);
-	})
-	.catch((error) => {
-		console.error(error);
-	});
-}
-
-function handleLogin() {
-	const username = document.getElementById('loginUsername').value;
-	const password = document.getElementById('loginPassword').value;
-	const errorField = document.getElementById('loginError')
-
-	const data = {
-		username: username,
-		password: password,
-	}
-
-	axios.post('http://localhost:8000/auth/login/', data)
-	.then((response) => {
-		console.log(response.data);
-		handleSuccessAuth(errorField, username);
-		alert('Login successful');
-	})
-	.catch((error) => {
-		var errorMsg = error;
-		if (error.response)	{
-			const status = error.response.status;
-			const missing_fields = error.response.data.missing_fields;
-
-			if (status === 400 && missing_fields) {
-				if (missing_fields.includes('username')) {
-					errorMsg = "Username is required"
-				}
-				if (missing_fields.includes('password')) {
-					errorMsg = "Password is required";
-				}
-			} else {
-				//errorMsg = error.response.json().message;
-			}
-		}
-		errorField.textContent = errorMsg;
-		errorField.classList.remove('hidden');
-		handleSuccessAuth(errorField, username);
-	})
-}
-
-function handleRegister() {
-	const username = document.getElementById('registerUsername').value;
-	const password = document.getElementById('registerPassword').value;
-	const confirm_password = document.getElementById('registerPasswordConfirm').value;
-	const email = document.getElementById('registerEmail').value;
-	const first_name = document.getElementById('registerFirstName').value;
-	const last_name = document.getElementById('registerLastName').value;
-	const errorField = document.getElementById('registerError')
-
-	const data = {
-		email: email,
-		username: username,
-		password: password,
-		confirm_password: confirm_password
-	}
-
-	axios.post('http://localhost:8000/auth/register/', data)
-	.then((response) => {
-		console.log(response.data);
-		alert('Registration successful');
-		handleSuccessAuth(errorField, data.username)
-	})
-	.catch((error) => {
-		var errorMsg = error;
-		if (error.response)	{
-			const status = error.response.status;
-			const missing_fields = error.response.data.missing_fields;
-
-			if (status === 400 && missing_fields) {
-				if (missing_fields.includes('username')) {
-					errorMsg = "Username is required";
-				}
-				if (missing_fields.includes('password')) {
-					errorMsg = "Password is required";
-				}
-				if (missing_fields.includes('email')) {
-					errorMsg = "Email is required";
-				}
-				if (missing_fields.includes('first_name')) {
-					errorMsg = "First name is required";
-				}
-				if (missing_fields.includes('last_name')) {
-					errorMsg = "Last name is required";
-				}
-			} else if (status === 409) {
-				errorMsg = "Username already exists";
-			} else {
-				errorMsg = "An error occurred: ' + error.response.data.message";
-				errorMsg = "An error occurred: ' + error.response.message";
-			}
-		}
-		errorField.textContent = errorMsg;
-		errorField.classList.remove('hidden');
-	})
-}
-
-// Handle login and register forms
-document.getElementById('loginForm').addEventListener('submit', (event) => {
-	event.preventDefault();
-	handleLogin()
-});
-
-document.getElementById('registerForm').addEventListener('submit', (event) => {
-	event.preventDefault();
-	handleRegister()
-});
 
 // Optional: Adding click event listeners to navigation links (not necessary if links have hrefs with hashes)
 document.querySelectorAll('.nav-link').forEach(link => {
@@ -282,40 +154,6 @@ document.querySelectorAll('.nav-link').forEach(link => {
 		window.location.hash = link.getAttribute('href');
 	});
 });
-
-
-//AUTH ANIMATION
-document.addEventListener('DOMContentLoaded', () => {
-	const leftSide = document.querySelector('.left-side');
-	const rightSide = document.querySelector('.right-side');
-	const rightContent = document.querySelector('.right-content');
-	const leftContent = document.querySelector('.left-content');
-	const leftForm = document.getElementById('login')
-	const rightForm = document.getElementById('register')
-
-
-	function handleClick(expandedSide, collapsedSide, expandedContent, collapsedContent, expandedForm, collapsedForm) {
-		collapsedSide.classList.remove('col-sm-6', 'col-sm-10');
-		collapsedContent.classList.add('hidden');
-		collapsedSide.classList.add('col-sm-2');
-		collapsedForm.classList.add('hidden');
-
-		expandedSide.classList.remove('col-sm-2', 'col-sm-6');
-		expandedSide.classList.add('col-sm-10');
-		expandedContent.classList.remove('hidden');
-		expandedForm.classList.remove('hidden');
-
-	}
-
-	leftSide.addEventListener('click', () => {
-		handleClick(leftSide, rightSide, leftContent, rightContent, leftForm, rightForm);
-	});
-
-	rightSide.addEventListener('click', () => {
-		handleClick(rightSide, leftSide, rightContent, leftContent, rightForm, leftForm);
-	});
-})
-
 
 
 // Event listener for hash changes
