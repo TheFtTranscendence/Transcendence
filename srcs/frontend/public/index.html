@@ -91,10 +91,30 @@
 		<!-- Sidebar -->
 		<div id="sidebar" class="sidebar hidden">
 			<ul>
-				<li id="changeProfile"><a href="#profile">Change Profile Information</a></li>
-				<li><a id="logoutButton">Logout</a></li>
 				<li><input type="file" id="changeProfilePicture" style="display: none;" accept=".jpg" />
 				<button id="uploadButton">Change Profile Picture</button></li>
+				<li>
+					<button id="changePassword">Change Password</button>
+					<div id="changePasswordForm" class="hidden">
+						<form>
+							<div class="form-group">
+								<label for="currentPassword">Current password:</label>
+								<input type="password" class="form-control" id="currentPassword" name="password">
+							</div>
+							<div class="form-group">
+								<label for="newPassword">New password:</label>
+								<input type="password" class="form-control" id="newPassword" name="password">
+							</div>
+							<div class="form-group">
+								<label for="confirmNewPassword">Confirm new password:</label>
+								<input type="password" class="form-control" id="confirmNewPassword" name="password">
+							</div>
+							<button id="submitPasswordChange" type="submit" class="btn btn-primary btn-block">Change Password</button>
+						</form>
+						<div id="changePasswordError" class="text-danger bg-dark mt-3 p-2 rounded hidden"></div>
+					</div>
+				</li>
+				<li><button id="logoutButton">Logout</button></li>
 
 				<!-- <li><input id="changeProfilePicture" type="file" accept="image/*" name="image" id="file" style="display: none;">
 				<label for="file" style="cursor: pointer;">Upload Image</label></li> -->

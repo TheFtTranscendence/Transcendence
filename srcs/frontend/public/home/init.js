@@ -12,14 +12,9 @@ function home()
 	document.getElementById('profile-img').addEventListener('click', showSideBar);
 }
 
-function handleLogout() {
-	document.querySelector('nav').classList.add('hidden');
-	sidebar.classList.add('hidden');
-	document.removeEventListener('click', handleOutsideClick);
-	window.location.hash = '#auth';
-}
 
 function showSideBar() {
+	const sidebar = document.getElementById('sidebar');
 	//event.stopPropagation();
 	if (sidebar.classList.contains('hidden')) {
 		document.addEventListener('click', handleOutsideClick);
@@ -36,20 +31,12 @@ function handleOutsideClick(event) {
     const isClickProfile = document.getElementById('profile-img').contains(event.target);
 
     if (!isClickInsideSidebar && !isClickProfile) {
-        console.log("Clicked outside, hiding sidebar");
         sidebar.classList.add('hidden');
         document.removeEventListener('click', handleOutsideClick);
-    } else {
-        console.log("Clicked inside sidebar or profile image");
-    }
+	}
 }
 
-// Function to handle profile update
-function handleProfileUpdate() {
-	alert('Updating profile...');
-	// ToDo
-}
-
+//GET PROFILE PICTURE
 function getAvater(username) {
 	const imgElement = document.querySelector('#profile-img img');
 	axios.get('http://localhost:8000/data/avatar/' + username)
@@ -72,6 +59,10 @@ function getAvater(username) {
     });
 	document.getElementById('profile-img').classList.remove('hidden');
 }
+
+// CHANGE PROFILE PICTURE
+document.getElementById('uploadButton').addEventListener('click', triggerFileDialog);
+document.getElementById('changeProfilePicture').addEventListener('change', putAvatar);
 
 
 function triggerFileDialog() {
@@ -99,10 +90,60 @@ function putAvatar(event) {
 	});
 }
 
-document.getElementById('uploadButton').addEventListener('click', triggerFileDialog);
-document.getElementById('changeProfilePicture').addEventListener('change', putAvatar);
 
-
+// LOGOUT
 document.getElementById('logoutButton').addEventListener('click', handleLogout);
 
+
+function handleLogout() {
+	document.querySelector('nav').classList.add('hidden');
+	sidebar.classList.add('hidden');
+	document.removeEventListener('click', handleOutsideClick);
+	window.location.hash = '#auth';
+}
+
+// CHANGE PASSWORD
+document.getElementById('changePassword').addEventListener('click', handlePasswordChange);
+
+function handlePasswordChange() {
+	const changePasswordForm = document.getElementById('changePasswordForm')
+	if (changePasswordForm) { // Check if the element exists
+        if (changePasswordForm.classList.contains('hidden')) {
+            console.log("remove hidden");
+            changePasswordForm.classList.remove('hidden');
+            document.getElementById('submitPasswordChange').addEventListener('click', handlePasswordChangeForm);
+        } else {
+            console.log("add hidden");
+            changePasswordForm.classList.add('hidden');
+            document.getElementById('submitPasswordChange').removeEventListener('click', handlePasswordChangeForm);
+        }
+    } else {
+        console.error('Element #changePasswordForm not found');
+    }
+}
+
+function handlePasswordChangeForm() {
+	const currentPassword = document.getElementById('currentPassword').value;
+	const newPassword = document.getElementById('newPassword').value;
+	const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+	const errorField = document.getElementById('changePasswordError')
+
+	const data = {
+		old_password: currentPassword,
+		new_password: newPassword,
+		confirm_new_password: confirmNewPassword
+	}
+
+	axios.put('http://localhost:8000/config/change_avatar/' + username, data)
+	.then(response => {
+		alert("Password change successful");
+		if (!errorField.classList.contains('hidden')) {
+			errorField.classList.add('hidden');
+		}
+	})
+	.catch(error => {
+		errorField.textContent = error;
+		errorField.classList.remove('hidden');
+	});
+}
 

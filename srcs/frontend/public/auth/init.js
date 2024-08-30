@@ -74,8 +74,6 @@ function handleRegister() {
 	const password = document.getElementById('registerPassword').value;
 	const confirm_password = document.getElementById('registerPasswordConfirm').value;
 	const email = document.getElementById('registerEmail').value;
-	const first_name = document.getElementById('registerFirstName').value;
-	const last_name = document.getElementById('registerLastName').value;
 	const errorField = document.getElementById('registerError')
 
 	const data = {
