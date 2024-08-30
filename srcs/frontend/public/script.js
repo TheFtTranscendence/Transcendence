@@ -13,11 +13,12 @@ window.gameScripts = [
 
 window.menuScripts = [
 	'games_menu/main.js',
+	'games_menu/local.js',
 ];
 
 window.game2Scripts = [
 	'game2/before_game.js',
-	'game2/classes.js',
+	// 'game2/classes.js', Already loaded
 	'game2/events.js',
 	'game2/init.js',
 	'game2/game_end.js',
@@ -101,18 +102,20 @@ function loadScript(src) {
 }
 
 // Function to load all scripts
-function loadScripts(scripts, functionName) {
+function loadScripts(scripts, functionName = 'none') {
 	
 	scripts.reduce((promise, src) => {
 		
 		return promise.then(() => loadScript(src));
 	}, Promise.resolve())
 	.then(() => {
-		if (typeof window[functionName] === 'function') {
-			window[functionName]();
-		} else {
-			console.error("Function " + functionName + " not found");
-		}
+			if (functionName != 'none') {
+				if (typeof window[functionName] === 'function') {
+					window[functionName]();
+				} else {
+					console.error("Function " + functionName + " not found");
+				}
+			}
 	})
 	.catch(error => {
 		console.error(error);

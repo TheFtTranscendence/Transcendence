@@ -2,39 +2,39 @@ function games_menu_hashchange() {
 	
 	window.removeEventListener('hashchange', games_menu_hashchange)
 
-	window.changeSkinButton.removeEventListener('click', game2_changeSkinButton);
-	window.matchmakingButton.removeEventListener('click', game2_matchmakingButton);
-	window.localButton.removeEventListener('click', game2_localButton);
-	window.tournament.removeEventListener('click', game2_tournamentButton);
+	window.changeSkinButton.removeEventListener('click', main_menu_changeSkinButton);
+	window.matchmakingButton.removeEventListener('click', main_menu_matchmakingButton);
+	window.localButton.removeEventListener('click', main_menu_localButton);
+	window.tournament.removeEventListener('click', main_menu_tournamentButton);
 	
 	document.getElementById('games-menu-area').classList.add("hidden")
 	document.getElementById('games').classList.add("hidden")
 }
 
-function game2_changeSkinButton () {
+function main_menu_changeSkinButton () {
 	console.log('Change Skin button clicked');
 	// Add functionality for changing the skin
 }
 
-function game2_matchmakingButton () {
+function main_menu_matchmakingButton () {
 	console.log('Matchmaking button clicked');
 	// Add functionality for changing the skin
 }
 
-function game2_tournamentButton() {
+function main_menu_tournamentButton() {
 	console.log('Tournament button clicked');
 	// Add functionality for changing the skin
 }
 
-function game2_localButton() {
-	window.changeSkinButton.removeEventListener('click', game2_changeSkinButton);
-	window.matchmakingButton.removeEventListener('click', game2_matchmakingButton);
-	window.localButton.removeEventListener('click', game2_localButton);
+function main_menu_localButton() {
+	window.changeSkinButton.removeEventListener('click', main_menu_changeSkinButton);
+	window.matchmakingButton.removeEventListener('click', main_menu_matchmakingButton);
+	window.localButton.removeEventListener('click', main_menu_localButton);
+	window.tournament.removeEventListener('click', main_menu_tournamentButton);
 
 	document.getElementById('games-menu-area').classList.add("hidden");
-	document.getElementById('games-local-menu').classList.remove("hidden");
 	
-	// game2_local_menu();
+	games_local_menu();
 }
 
 
@@ -45,9 +45,11 @@ function main_menu() {
 	
 	
 	if (window.location.hash == '#fighters') {
+
 		document.getElementById('games-menu-title').textContent = 'Fighty Fighters'
 		document.getElementById('games-menu-selected-skin').style.backgroundImage = "url('game2/assets/Mask/Sprites/preview.gif')"
 	} else {
+		
 		document.getElementById('games-menu-title').textContent = 'Pongy'
 		document.getElementById('games-menu-selected-skin').style.backgroundImage = "url('game/path/skin.png')" // Pong Change
 	}
@@ -59,9 +61,9 @@ function main_menu() {
 	window.localButton = document.getElementById('games-button-local')
 	window.tournament = document.getElementById('games-button-tournament')
 	
-	window.changeSkinButton.addEventListener('click', game2_changeSkinButton);
-	window.matchmakingButton.addEventListener('click', game2_matchmakingButton);
-	window.localButton.addEventListener('click', game2_localButton);
-	window.tournament.addEventListener('click', game2_tournamentButton);
+	window.changeSkinButton.addEventListener('click', main_menu_changeSkinButton);
+	window.matchmakingButton.addEventListener('click', main_menu_matchmakingButton);
+	window.localButton.addEventListener('click', main_menu_localButton);
+	window.tournament.addEventListener('click', main_menu_tournamentButton);
 	
 }
