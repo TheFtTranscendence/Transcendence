@@ -51,7 +51,7 @@ function local_play() {
 		document.getElementById('div-game2-area').classList.remove("hidden")
 		startGame2(player1name, player2name)
 	} else {
-		document.getElementById('div-game-area').classList.remove("hidden") // Pong Change
+		// document.getElementById('div-game-area').classList.remove("hidden") // Pong Change
 	}
 
 }
@@ -63,7 +63,6 @@ function local_backbutton() {
 
 function games_local_menu() {
 	document.getElementById('games-local-menu').classList.remove("hidden");
-
 
 	if (window.location.hash == '#fighters') {
 		loadScripts(window.game2Scripts)

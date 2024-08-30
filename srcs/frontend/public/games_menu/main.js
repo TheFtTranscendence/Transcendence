@@ -42,8 +42,6 @@ function main_menu() {
 	
 	document.getElementById('games-menu-area').classList.remove("hidden")
 
-	
-	
 	if (window.location.hash == '#fighters') {
 
 		document.getElementById('games-menu-title').textContent = 'Fighty Fighters'
