@@ -71,6 +71,7 @@ function triggerFileDialog() {
 
 // Function to handle image selection and preview
 function putAvatar(event) {
+	const sidebar = document.getElementById('sidebar');
 	const imgElement = document.querySelector('#profile-img img');
 	const file = event.target.files[0];
 	imgElement.src = URL.createObjectURL(file);
@@ -96,6 +97,8 @@ document.getElementById('logoutButton').addEventListener('click', handleLogout);
 
 
 function handleLogout() {
+	const sidebar = document.getElementById('sidebar');
+
 	document.querySelector('nav').classList.add('hidden');
 	sidebar.classList.add('hidden');
 	document.removeEventListener('click', handleOutsideClick);
@@ -107,7 +110,7 @@ document.getElementById('changePassword').addEventListener('click', handlePasswo
 
 function handlePasswordChange() {
 	const changePasswordForm = document.getElementById('changePasswordForm')
-	if (changePasswordForm) { // Check if the element exists
+	if (changePasswordForm) {
         if (changePasswordForm.classList.contains('hidden')) {
             console.log("remove hidden");
             changePasswordForm.classList.remove('hidden');
@@ -123,10 +126,14 @@ function handlePasswordChange() {
 }
 
 function handlePasswordChangeForm() {
+	event.preventDefault();
 	const currentPassword = document.getElementById('currentPassword').value;
 	const newPassword = document.getElementById('newPassword').value;
 	const confirmNewPassword = document.getElementById('confirmNewPassword').value;
 	const errorField = document.getElementById('changePasswordError')
+	const changePasswordForm = document.getElementById('changePasswordForm')
+	const sidebar = document.getElementById('sidebar');
+	const username = "window.user.username" //ToDo: get real username
 
 	const data = {
 		old_password: currentPassword,
@@ -140,6 +147,10 @@ function handlePasswordChangeForm() {
 		if (!errorField.classList.contains('hidden')) {
 			errorField.classList.add('hidden');
 		}
+		changePasswordForm.classList.add('hidden');
+		document.getElementById('submitPasswordChange').removeEventListener('click', handlePasswordChangeForm);
+		sidebar.classList.add('hidden');
+		document.removeEventListener('click', handleOutsideClick);
 	})
 	.catch(error => {
 		errorField.textContent = error;
