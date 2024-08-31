@@ -23,11 +23,12 @@ function main_menu_changeSkinButton () {
 
 	if (window.location.hash == '#fighters') {
 
-		if (window.playerSkin == window.game2SkinsPreviews.lengh)
+		if (window.playerSkin == window.game2SkinsPreviews.lengh - 1)
 			window.playerSkin = 0
 		else
 			window.playerSkin++
 
+		console.log(window.playerSkin)
 		document.getElementById('games-menu-selected-skin').style.backgroundImage = "url('" + window.game2SkinsPreviews[window.playerSkin] + "')" 
 	}
 	else {
