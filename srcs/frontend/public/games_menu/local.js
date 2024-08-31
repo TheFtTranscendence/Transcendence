@@ -1,7 +1,5 @@
-function local_menu_hashchange() {
+function clearLocalMenu() {
 	window.removeEventListener('hashchange', local_menu_hashchange)
-
-	
 	window.changeSkinButton1.removeEventListener('click', local_changeSkinButton1)
 	window.changeSkinButton2.removeEventListener('click', local_changeSkinButton2)
 	window.playButton.removeEventListener('click', local_play)
@@ -13,18 +11,46 @@ function local_menu_hashchange() {
 	else {
 		// UnloadScripts(window.gameScripts) Pong Change
 	}
-	
+
 	document.getElementById('games-local-menu').classList.add("hidden")
+}
+
+function local_menu_hashchange() {
+	clearLocalMenu()
 }
 
 function local_changeSkinButton1() {
 	console.log('Change Skin button 1 clicked');
-	// Add functionality for changing the skin
+
+	if (window.location.hash == '#fighters') {
+		if (window.player1Skin == window.game2SkinsPreviews.length - 1)
+			window.player1Skin = 0
+		else
+			window.player1Skin++
+
+		document.getElementById('games-local-player1-skin').style.backgroundImage =  "url('" + window.game2SkinsPreviews[window.player1Skin] + "')" 
+	}
+	else 
+	{
+		// Pong Change
+	}
 }
 
 function local_changeSkinButton2() {
 	console.log('Change Skin button 2 clicked');
-	// Add functionality for changing the skin
+
+	if (window.location.hash == '#fighters') {
+		if (window.player2Skin == window.game2SkinsPreviews.length - 1)
+			window.player2Skin = 0
+		else
+			window.player2Skin++
+
+		document.getElementById('games-local-player2-skin').style.backgroundImage =  "url('" + window.game2SkinsPreviewsInverted[window.player2Skin] + "')" 
+	}
+	else 
+	{
+		// Pong Change
+	}
 }
 
 function local_play() {
@@ -49,15 +75,17 @@ function local_play() {
 
 	if (window.location.hash == '#fighters') {
 		document.getElementById('div-game2-area').classList.remove("hidden")
-		startGame2(player1name, player2name)
+		UnloadScripts(window.menuScripts)
+		startGame2(player1name, player2name, window.game2Skins[window.player1Skin], window.game2Skins[window.player2Skin])
 	} else {
 		// document.getElementById('div-game-area').classList.remove("hidden") // Pong Change
+		// Load scritps here for Pong game so there's no delay when starting// Pong Change
 	}
 
 }
 
 function local_backbutton() {
-	local_menu_hashchange()
+	clearLocalMenu()
 	main_menu()
 }
 
@@ -67,8 +95,10 @@ function games_local_menu() {
 	if (window.location.hash == '#fighters') {
 		loadScripts(window.game2Scripts)
 
-		document.getElementById('games-local-player1-skin').style.backgroundImage = "url('game2/assets/Mask/Sprites/preview.gif')"
-		document.getElementById('games-local-player2-skin').style.backgroundImage = "url('game2/assets/Mask/Sprites/preview.gif')"
+		window.player1Skin = 0
+		window.player2Skin = 0
+		document.getElementById('games-local-player1-skin').style.backgroundImage =  "url('" + window.game2SkinsPreviews[window.player1Skin] + "')" 
+		document.getElementById('games-local-player2-skin').style.backgroundImage =  "url('" + window.game2SkinsPreviewsInverted[window.player2Skin] + "')" 
 	} else {
 
 		// loadScripts(window.gameScritps) Load scripts for pong game so there's no delay when user presses play button Pong Change

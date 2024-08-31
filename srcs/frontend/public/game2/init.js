@@ -1,4 +1,4 @@
-function init_vars(player1, player2) {
+function init_vars(player1, player2, skins1, skins2) {
 
     canvas_width = 1366
 	canvas_height = 768
@@ -27,29 +27,29 @@ function init_vars(player1, player2) {
             color: 'lightblue',
             offset: { x: 0, y: 0},
             bar: 1,
-            imageSrc: './game2/assets/Mask/Sprites/normal/Idle.png',
-            framesMax: 4,
+            imageSrc: skins1.normal.idle.imageSrc,
+            framesMax: skins1.normal.idle.framesMax,
             scale: 2.5,
             img_offset: {x: 215, y: 180},
             sprites: {
-                attack1: {imageSrc: './game2/assets/Mask/Sprites/normal/Attack1.png', framesMax: 4, time: 15},
-                attack2: {imageSrc: './game2/assets/Mask/Sprites/normal/Attack2.png', framesMax: 4, time: 15},
-                death: {imageSrc:'./game2/assets/Mask/Sprites/normal/Death.png', framesMax: 7, time: 10},
-                fall: {imageSrc: './game2/assets/Mask/Sprites/normal/Fall.png', framesMax: 2, time: 10},
-                idle: {imageSrc: './game2/assets/Mask/Sprites/normal/Idle.png', framesMax: 4, time: 10},
-                jump: {imageSrc: './game2/assets/Mask/Sprites/normal/Jump.png', framesMax: 2, time: 10},
-                run: {imageSrc: './game2/assets/Mask/Sprites/normal/Run.png', framesMax: 8, time: 10},
-                hit: {imageSrc: './game2/assets/Mask/Sprites/normal/TakeHit-silhouette.png', framesMax: 4, time: stun_time / 4},
-
-                attack1Inv: {imageSrc: './game2/assets/Mask/Sprites/inverted/Attack1.png', framesMax: 4, time: 15},
-                attack2Inv: {imageSrc: './game2/assets/Mask/Sprites/inverted/Attack2.png', framesMax: 4, time: 15},
-                deathInv: {imageSrc:'./game2/assets/Mask/Sprites/inverted/Death.png', framesMax: 7, time: 10},
-                fallInv: {imageSrc: './game2/assets/Mask/Sprites/inverted/Fall.png', framesMax: 2, time: 10},
-                idleInv: {imageSrc: './game2/assets/Mask/Sprites/inverted/Idle.png', framesMax: 4, time: 10},
-                jumpInv: {imageSrc: './game2/assets/Mask/Sprites/inverted/Jump.png', framesMax: 2, time: 10},
-                runInv: {imageSrc: './game2/assets/Mask/Sprites/inverted/Run.png', framesMax: 8, time: 10},
-                hitInv: {imageSrc: './game2/assets/Mask/Sprites/inverted/TakeHit-silhouette.png', framesMax: 4, time: stun_time / 4},
-            },
+				attack1: { imageSrc: skins1.normal.attack1.imageSrc, framesMax: skins1.normal.attack1.framesMax, time: skins1.normal.attack1.time },
+				attack2: { imageSrc: skins1.normal.attack2.imageSrc, framesMax: skins1.normal.attack2.framesMax, time: skins1.normal.attack2.time },
+				death: { imageSrc: skins1.normal.death.imageSrc, framesMax: skins1.normal.death.framesMax, time: skins1.normal.death.time },
+				fall: { imageSrc: skins1.normal.fall.imageSrc, framesMax: skins1.normal.fall.framesMax, time: skins1.normal.fall.time },
+				idle: { imageSrc: skins1.normal.idle.imageSrc, framesMax: skins1.normal.idle.framesMax, time: skins1.normal.idle.time },
+				jump: { imageSrc: skins1.normal.jump.imageSrc, framesMax: skins1.normal.jump.framesMax, time: skins1.normal.jump.time },
+				run: { imageSrc: skins1.normal.run.imageSrc, framesMax: skins1.normal.run.framesMax, time: skins1.normal.run.time },
+				hit: { imageSrc: skins1.normal.hit.imageSrc, framesMax: skins1.normal.hit.framesMax, time: stun_time / skins1.normal.hit.framesMax },
+			
+				attack1Inv: { imageSrc: skins1.inverted.attack1.imageSrc, framesMax: skins1.inverted.attack1.framesMax, time: skins1.inverted.attack1.time },
+				attack2Inv: { imageSrc: skins1.inverted.attack2.imageSrc, framesMax: skins1.inverted.attack2.framesMax, time: skins1.inverted.attack2.time },
+				deathInv: { imageSrc: skins1.inverted.death.imageSrc, framesMax: skins1.inverted.death.framesMax, time: skins1.inverted.death.time },
+				fallInv: { imageSrc: skins1.inverted.fall.imageSrc, framesMax: skins1.inverted.fall.framesMax, time: skins1.inverted.fall.time },
+				idleInv: { imageSrc: skins1.inverted.idle.imageSrc, framesMax: skins1.inverted.idle.framesMax, time: skins1.inverted.idle.time },
+				jumpInv: { imageSrc: skins1.inverted.jump.imageSrc, framesMax: skins1.inverted.jump.framesMax, time: skins1.inverted.jump.time },
+				runInv: { imageSrc: skins1.inverted.run.imageSrc, framesMax: skins1.inverted.run.framesMax, time: skins1.inverted.run.time },
+				hitInv: { imageSrc: skins1.inverted.hit.imageSrc, framesMax: skins1.inverted.hit.framesMax, time: stun_time / skins1.inverted.hit.framesMax },
+			},
             hit_frame: 2,
             hit_frameInv: 0,
             facing : 'right',
@@ -62,29 +62,29 @@ function init_vars(player1, player2) {
             color: 'white',
             offset: { x: -50, y: 0},
             bar: 2,
-            imageSrc: './game2/assets/Samu/Sprites/normal/Idle.png',
-            framesMax: 8,
+            imageSrc: skins2.inverted.idle.imageSrc,
+            framesMax: skins2.inverted.idle.framesMax,
             scale: 2.5,
             img_offset: {x: 215, y: 165},
             sprites: {
-                attack1: {imageSrc: './game2/assets/Samu/Sprites/normal/Attack1.png', framesMax: 4, time: 15},
-                attack2: {imageSrc: './game2/assets/Samu/Sprites/normal/Attack2.png', framesMax: 4, time: 15},
-                death: {imageSrc:'./game2/assets/Samu/Sprites/normal/Death.png', framesMax: 6, time: 10},
-                fall: {imageSrc: './game2/assets/Samu/Sprites/normal/Fall.png', framesMax: 2, time: 10},
-                idle: {imageSrc: './game2/assets/Samu/Sprites/normal/Idle.png', framesMax: 8, time: 10},
-                jump: {imageSrc: './game2/assets/Samu/Sprites/normal/Jump.png', framesMax: 2, time: 10},
-                run: {imageSrc: './game2/assets/Samu/Sprites/normal/Run.png', framesMax: 8, time: 10},
-                hit: {imageSrc: './game2/assets/Samu/Sprites/normal/Take-Hit-white-silhouette.png', framesMax: 4, time: stun_time / 4},
-
-                attack1Inv: {imageSrc: './game2/assets/Samu/Sprites/inverted/Attack1.png', framesMax: 4, time: 15},
-                attack2Inv: {imageSrc: './game2/assets/Samu/Sprites/inverted/Attack2.png', framesMax: 4, time: 15},
-                deathInv: {imageSrc:'./game2/assets/Samu/Sprites/inverted/Death.png', framesMax: 6, time: 10},
-                fallInv: {imageSrc: './game2/assets/Samu/Sprites/inverted/Fall.png', framesMax: 2, time: 10},
-                idleInv: {imageSrc: './game2/assets/Samu/Sprites/inverted/Idle.png', framesMax: 8, time: 10},
-                jumpInv: {imageSrc: './game2/assets/Samu/Sprites/inverted/Jump.png', framesMax: 2, time: 10},
-                runInv: {imageSrc: './game2/assets/Samu/Sprites/inverted/Run.png', framesMax: 8, time: 10},
-                hitInv: {imageSrc: './game2/assets/Samu/Sprites/inverted/Take-Hit-white-silhouette.png', framesMax: 4, time: stun_time / 4},
-            },
+				attack1: { imageSrc: skins2.normal.attack1.imageSrc, framesMax: skins2.normal.attack1.framesMax, time: skins2.normal.attack1.time },
+				attack2: { imageSrc: skins2.normal.attack2.imageSrc, framesMax: skins2.normal.attack2.framesMax, time: skins2.normal.attack2.time },
+				death: { imageSrc: skins2.normal.death.imageSrc, framesMax: skins2.normal.death.framesMax, time: skins2.normal.death.time },
+				fall: { imageSrc: skins2.normal.fall.imageSrc, framesMax: skins2.normal.fall.framesMax, time: skins2.normal.fall.time },
+				idle: { imageSrc: skins2.normal.idle.imageSrc, framesMax: skins2.normal.idle.framesMax, time: skins2.normal.idle.time },
+				jump: { imageSrc: skins2.normal.jump.imageSrc, framesMax: skins2.normal.jump.framesMax, time: skins2.normal.jump.time },
+				run: { imageSrc: skins2.normal.run.imageSrc, framesMax: skins2.normal.run.framesMax, time: skins2.normal.run.time },
+				hit: { imageSrc: skins2.normal.hit.imageSrc, framesMax: skins2.normal.hit.framesMax, time: stun_time / skins2.normal.hit.framesMax },
+			
+				attack1Inv: { imageSrc: skins2.inverted.attack1.imageSrc, framesMax: skins2.inverted.attack1.framesMax, time: skins2.inverted.attack1.time },
+				attack2Inv: { imageSrc: skins2.inverted.attack2.imageSrc, framesMax: skins2.inverted.attack2.framesMax, time: skins2.inverted.attack2.time },
+				deathInv: { imageSrc: skins2.inverted.death.imageSrc, framesMax: skins2.inverted.death.framesMax, time: skins2.inverted.death.time },
+				fallInv: { imageSrc: skins2.inverted.fall.imageSrc, framesMax: skins2.inverted.fall.framesMax, time: skins2.inverted.fall.time },
+				idleInv: { imageSrc: skins2.inverted.idle.imageSrc, framesMax: skins2.inverted.idle.framesMax, time: skins2.inverted.idle.time },
+				jumpInv: { imageSrc: skins2.inverted.jump.imageSrc, framesMax: skins2.inverted.jump.framesMax, time: skins2.inverted.jump.time },
+				runInv: { imageSrc: skins2.inverted.run.imageSrc, framesMax: skins2.inverted.run.framesMax, time: skins2.inverted.run.time },
+				hitInv: { imageSrc: skins2.inverted.hit.imageSrc, framesMax: skins2.inverted.hit.framesMax, time: stun_time / skins2.inverted.hit.framesMax },
+			},
             hit_frame: 1,
             hit_frameInv: 1,
             facing : 'left',
@@ -119,7 +119,7 @@ function init_vars(player1, player2) {
             gravity: 0.5, // px
             drag: 0.5, // px
             knockback: 25, // px
-            hit_dmg: 5, // %
+            hit_dmg: 100, // %
             stun_time: stun_time, // ms
             ground_height: ground_height, // px
 
