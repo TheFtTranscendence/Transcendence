@@ -1,26 +1,22 @@
-from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login
-from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
-from .serializers import UserSerializer
-from friends.serializers import FriendRequestSerializer
-from .models import User
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.authtoken.models import Token
 import logging
-import json
 import requests
+from .serializers import UserSerializer
+from .models import User
 
 logger = logging.getLogger(__name__)
 
 class TestTokenView(APIView):
-    permission_classes = [IsAuthenticated]
+	permission_classes = [IsAuthenticated]
 
-    def get(self, request):
-        return Response({'message': 'Token is valid'})
+	def get(self, request):
+		return Response({'message': 'Token is valid'})
 
 class UserViewSet(viewsets.ModelViewSet):
 	queryset = User.objects.all()
@@ -71,15 +67,14 @@ class LoginView(APIView):
 		user = authenticate(request, username=username, password=password)
 		if user is not None:
 			login(request, user)
-			return Response({'message': 'Login successful'}, status=status.HTTP_200_OK)
+			token, created = Token.objects.get_or_create(user=user)
+			return Response({'message': 'Login successful', 'token': token.key}, status=status.HTTP_200_OK)
 		else:
 			return Response({'message': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
-
 
 class RegisterView(APIView):
 	permission_classes = [AllowAny]
 
-	#TODO: implement missing fields and already in use email/username
 	def post(self, request):
 		data = request.data
 		email = data.get('email')
@@ -93,16 +88,22 @@ class RegisterView(APIView):
 		if password != confirm_password:
 			return Response({'message': 'Passwords do not match'}, status=status.HTTP_400_BAD_REQUEST)
 
+		if User.objects.filter(email=email).exists():
+			return Response({'message': 'Email is already in use'}, status=status.HTTP_400_BAD_REQUEST)
+
+		if User.objects.filter(username=username).exists():
+			return Response({'message': 'Username is already in use'}, status=status.HTTP_400_BAD_REQUEST)
+
 		try:
 			user = UserService.create_user(username, password, email)
 			user.smartcontract_id = UserService.get_smartcontract_id()
 			user.save()
 
-			serializer = UserSerializer(user)
-			return Response({'message': 'Registration successful', 'user': serializer.data}, status=status.HTTP_201_CREATED)
+			token, created = Token.objects.get_or_create(user=user)
+
+			return Response({'message': 'Registration successful', 'token': token.key}, status=status.HTTP_201_CREATED)
 		except ValueError as e:
 			return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 		except Exception as e:
 			logger.exception("Unexpected error during registration: %s", e)
 			return Response({'message': 'Internal server error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
