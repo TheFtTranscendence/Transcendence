@@ -5,8 +5,7 @@ function clearMenu() {
 	window.changeSkinButton.removeEventListener('click', main_menu_changeSkinButton)
 	window.matchmakingButton.removeEventListener('click', main_menu_matchmakingButton)
 	window.localButton.removeEventListener('click', main_menu_localButton)
-	window.tournament4.removeEventListener('click', main_menu_tournamentButton4)
-	window.tournament8.removeEventListener('click', main_menu_tournamentButton8)
+	window.tournament.removeEventListener('click', main_menu_tournamentButton)
 
 	
 	document.getElementById('games-menu-area').classList.add("hidden")
@@ -15,6 +14,7 @@ function clearMenu() {
 function games_menu_hashchange() {
 	
 	clearMenu()
+	UnloadScripts(window.menuScripts)
 	document.getElementById('games').classList.add("hidden")
 }
 
@@ -41,27 +41,25 @@ function main_menu_matchmakingButton () {
 	if (window.location.hash == '#fighters') {
 
 		clearMenu()
-		loadScripts(window.matchmakingScripts, 'Matchmaking_before_game')
+		UnloadScripts(window.menuScripts)
+		loadScripts(window.matchmakingScripts, 'Matchmaking_before_game') // To change for optimization
 	}
 	else {
-		
+		// Load the scripts for pong matchmaking
+		// Pong change
 	}
 	// Add functionality for changing the skin
 }
 
-function main_menu_tournamentButton4() {
+function main_menu_tournamentButton() {
 	console.log('Tournament button clicked')
-	// Add functionality for changing the skin
-}
-
-function main_menu_tournamentButton8() {
-	console.log('Tournament button clicked')
+	clearMenu()
+	games_tournament_menu()
 	// Add functionality for changing the skin
 }
 
 function main_menu_localButton() {
-	
-	
+	console.log('Local button clicked')
 	clearMenu()
 	games_local_menu()
 }
@@ -86,13 +84,11 @@ function main_menu() {
 	window.changeSkinButton = document.getElementById('games-button-skin')
 	window.matchmakingButton = document.getElementById('games-button-Matchmaking')
 	window.localButton = document.getElementById('games-button-local')
-	window.tournament4 = document.getElementById('games-button-tournament4')
-	window.tournament8 = document.getElementById('games-button-tournament8')
+	window.tournament = document.getElementById('games-button-tournament')
 	
 	window.changeSkinButton.addEventListener('click', main_menu_changeSkinButton)
 	window.matchmakingButton.addEventListener('click', main_menu_matchmakingButton)
 	window.localButton.addEventListener('click', main_menu_localButton)
-	window.tournament4.addEventListener('click', main_menu_tournamentButton4)
-	window.tournament8.addEventListener('click', main_menu_tournamentButton8)
+	window.tournament.addEventListener('click', main_menu_tournamentButton)
 	
 }

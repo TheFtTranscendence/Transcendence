@@ -17,6 +17,7 @@ function clearLocalMenu() {
 
 function local_menu_hashchange() {
 	clearLocalMenu()
+	UnloadScripts(window.menuScripts)
 }
 
 function local_changeSkinButton1() {
