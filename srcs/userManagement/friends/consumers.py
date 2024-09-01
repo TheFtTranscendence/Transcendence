@@ -4,35 +4,59 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from authentication.models import User
 from .models import FriendRequest
 import logging
+from rest_framework.authtoken.models import Token
+
 
 logger = logging.getLogger(__name__)
 
 class ChatConsumer(AsyncWebsocketConsumer):
 	
 	async def connect(self):
-		self.user_id = self.scope['url_route']['kwargs']['user_id']
-		try:
-			self.user = await self.get_user(self.user_id)
-		except User.DoesNotExist:
-			await self.send(text_data=json.dumps({'detail': 'User not found.'}))
+		query_params = self.scope['query_string'].decode()
+		if 'token=' in query_params:
+			token_key = query_params.split('token=')[-1]
+		else:
+			await self.close()
+
+		user = await self.get_user_from_token(token_key)
+
+		if user:
+			self.user = user
+		else:
+			await self.close()
 			return
-		
+
 		try:
 			self.user.online_status = True
 			await self.save_user(self.user)
 		except Exception as e:
 			logger.exception(f'exception: {e}')
 
-		self.room_group_name = f'user_{self.user_id}'
+		self.room_group_name = f'user_{self.user.id}'
 
 		await self.channel_layer.group_add(
 			self.room_group_name,
 			self.channel_name
 		)
 
-		await self.accept()
-		await self.notify_friends('online')
-		await self.get_pending_self_requests()
+		try:
+			await self.accept()
+			await self.notify_friends('online')
+			await self.get_pending_self_requests()
+		except Exception as e:
+			logger.error(f"An error occurred: {e}")
+
+	@database_sync_to_async
+	def get_user_from_token(self, token_key):
+		try:
+			token = Token.objects.get(key=token_key)
+			user = token.user
+			return user
+		except Token.DoesNotExist:
+			return None
+		except Exception as e:
+			logger.error(f"An error occurred: {e}")
+			return None
 
 	async def disconnect(self, close_code):
 		if hasattr(self, 'user'):
@@ -146,7 +170,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			logger.exception(f'exception: {e}')
 
 	async def get_pending_self_requests(self):
-		friend_requests = await self.get_friend_requests(self.user_id)
+		friend_requests = await self.get_friend_requests(self.user.id)
 		if friend_requests:
 			for friend_request in friend_requests:
 				sender = await self.get_sender(friend_request)
