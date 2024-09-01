@@ -1,5 +1,6 @@
 function clearTournamentMenu() {
 	document.getElementById('games-tournament-menu').classList.add('hidden')
+	
 	window.removeEventListener('hashchange', tournament_menu_hashchange)
 
 	window.toogle58Button.removeEventListener('click', tournament_extendPlayers)
