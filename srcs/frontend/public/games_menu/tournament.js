@@ -39,8 +39,9 @@ function tournament_play() {
 	console.log(playerSkins)
 	
 	
-	clearTournamentMenu()
-	UnloadScripts(window.menuScripts)
+	// Uncomment when scripts apply
+	// clearTournamentMenu()
+	// UnloadScripts(window.menuScripts)
 	if (window.location.hash == '#fighters') {
 		// Load scripts for tournament
 	} else {
