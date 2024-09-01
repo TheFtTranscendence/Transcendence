@@ -124,8 +124,13 @@ class LoginView(APIView):
 		username = data.get('username')
 		password = data.get('password')
 
+		missing_fields = []
+		if not username:
+			missing_fields.append('username')
+		if not password:
+			missing_fields.append('password')
 		if not username or not password:
-			return Response({'message': 'All fields are required'}, status=status.HTTP_400_BAD_REQUEST)
+			return Response({'message': 'All fields are required', 'missing_fields': missing_fields}, status=status.HTTP_400_BAD_REQUEST)
 
 		user = authenticate(request, username=username, password=password)
 		if user is not None:
@@ -145,8 +150,17 @@ class RegisterView(APIView):
 		password = data.get('password')
 		confirm_password = data.get('confirm_password')
 
+		missing_fields = []
+		if not email:
+			missing_fields.append('email')
+		if not username:
+			missing_fields.append('username')
+		if not password:
+			missing_fields.append('password')
+		if not confirm_password:
+			missing_fields.append('confirm_password')
 		if not email or not username or not password or not confirm_password:
-			return Response({'message': 'All fields are required'}, status=status.HTTP_400_BAD_REQUEST)
+			return Response({'message': 'All fields are required', 'missing_fields': missing_fields}, status=status.HTTP_400_BAD_REQUEST)
 
 		if password != confirm_password:
 			return Response({'message': 'Passwords do not match'}, status=status.HTTP_400_BAD_REQUEST)
