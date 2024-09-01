@@ -21,18 +21,81 @@ class TestTokenView(APIView):
 class UserViewSet(viewsets.ModelViewSet):
 	queryset = User.objects.all()
 	serializer_class = UserSerializer
-	permission_classes = [AllowAny]
+	permission_classes = [IsAuthenticated]
 
-	@action(detail=False, methods=['get'], url_path='(?P<username>[^/.]+)')
-	def get_user_by_username(self, request, username):
-		try:
-			user = User.objects.get(username=username)
-			serializer = UserSerializer(user)
+	def list(self, request, *args, **kwargs):
+		user = request.user
+		
+		if user.is_staff:
+			queryset = self.get_queryset()
+			serializer = self.get_serializer(queryset, many=True)
 			return Response(serializer.data)
-		except User.DoesNotExist:
-			return Response({'message': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
 		
+		serializer = self.get_serializer(user)
+		return Response(serializer.data)
+
+	@action(detail=False, methods=['get'], url_path='me')
+	def get_self_info(self, request):
+		user = request.user
+		serializer = self.get_serializer(user)
+		return Response(serializer.data)
+
+	def destroy(self, request, *args, **kwargs):
+		user_id = kwargs.get('pk')
+		current_user = request.user
+
+		if user_id:
+			user_to_delete = self.get_object()
+			if user_to_delete != current_user and not current_user.is_staff:
+				return Response({'message': 'You do not have permission to delete this user.'}, status=status.HTTP_400_BAD_REQUEST)
+		else:
+			user_to_delete = current_user
+
+		if user_to_delete == current_user:
+			Token.objects.filter(user=current_user).delete()
+
+		self.perform_destroy(user_to_delete)
 		
+		if user_to_delete == current_user:
+			return Response({'message': 'Your account has been deleted and you have been logged out'}, status=status.HTTP_204_NO_CONTENT)
+		else :
+			return Response({'message': f'User {user_to_delete.username} has been deleted'}, status=status.HTTP_204_NO_CONTENT)
+		
+	def partial_update(self, request, *args, **kwargs):
+		user_id = kwargs.get('pk')
+		current_user = request.user
+
+		if user_id:
+			user_to_update = self.get_object()
+			if user_to_update != current_user and not current_user.is_staff:
+				return Response({'message': 'You do not have permission to update this user.'}, status=status.HTTP_400_BAD_REQUEST)
+		else:
+			user_to_update = current_user
+
+		password = request.data.get('password')
+		confirm_password = request.data.get('confirm_password')
+
+		if password:
+			if confirm_password and password != confirm_password:
+				return Response({'message': 'Passwords do not match.'}, status=status.HTTP_400_BAD_REQUEST)
+			
+			user_to_update.set_password(password)
+			user_to_update.save()
+
+			# Clear the request data to prevent the password from being serialized
+			request.data._mutable = True
+			request.data.pop('password', None)
+			request.data.pop('confirm_password', None)
+			request.data._mutable = False
+
+		serializer = self.get_serializer(user_to_update, data=request.data, partial=True)
+		serializer.is_valid(raise_exception=True)
+		serializer.save()
+
+		if user_to_update == current_user:
+			return Response({'message': f'User {user_to_update.username} has been updated', 'user': serializer.data})
+		else:
+			return Response({'message': 'Your information has been updated', 'user': serializer.data})
 
 class UserService:
 	@staticmethod
