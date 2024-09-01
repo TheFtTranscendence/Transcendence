@@ -27,7 +27,7 @@ function navigate() {
 			break;
 
 		case '#matchmaking':
-			element = 'game2'
+			element = 'games'
 			scripts = window.matchmakingScripts
 			startFunction = 'Matchmaking_before_game'
 			break;

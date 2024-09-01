@@ -6,6 +6,10 @@ function Matchmaking_before_game()
 	
 	console.log('before game 2')
 
+	
+	document.getElementById('div-game2-area').classList.remove('hidden');
+
+
 	v = Matchmaking_init_vars()
 	Matchmaking_setup_canvas(v)
 

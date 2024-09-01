@@ -34,11 +34,18 @@ function main_menu_changeSkinButton () {
 	else {
 		// Add functionality for changing the skin Pong Change
 	}
-	// Add functionality for changing the skin
 }
 
 function main_menu_matchmakingButton () {
 	console.log('Matchmaking button clicked')
+	if (window.location.hash == '#fighters') {
+
+		clearMenu()
+		loadScripts(window.matchmakingScripts, 'Matchmaking_before_game')
+	}
+	else {
+		
+	}
 	// Add functionality for changing the skin
 }
 
