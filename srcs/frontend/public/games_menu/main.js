@@ -23,7 +23,7 @@ function main_menu_changeSkinButton () {
 
 	if (window.location.hash == '#fighters') {
 
-		if (window.playerSkin == window.game2SkinsPreviews.lengh - 1)
+		if (window.playerSkin == window.game2SkinsPreviews.length - 1)
 			window.playerSkin = 0
 		else
 			window.playerSkin++
