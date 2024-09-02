@@ -10,7 +10,6 @@ function clearTournamentMenu() {
 	window.tournamentskinButton.forEach(function(button) {
 		button.removeEventListener('click', handleButtonClick);
 	})
-	
 }
 
 function tournament_play() {

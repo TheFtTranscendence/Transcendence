@@ -28,7 +28,6 @@ function main_menu_changeSkinButton () {
 		else
 			window.playerSkin++
 
-		console.log(window.playerSkin)
 		document.getElementById('games-menu-selected-skin').style.backgroundImage = "url('" + window.game2SkinsPreviews[window.playerSkin] + "')" 
 	}
 	else {
@@ -68,8 +67,8 @@ function main_menu() {
 	
 	if (window.location.hash == '#fighters') {
 		
-		document.getElementById('games-menu-title').textContent = 'Fighty Fighters'
 		window.playerSkin = 0 // Get from database when implemented
+		document.getElementById('games-menu-title').textContent = 'Fighty Fighters'
 		document.getElementById('games-menu-selected-skin').style.backgroundImage = "url('" + window.game2SkinsPreviews[window.playerSkin] + "')" 
 	} else {
 		
