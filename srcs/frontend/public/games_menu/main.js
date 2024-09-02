@@ -48,14 +48,12 @@ function main_menu_matchmakingButton () {
 		// Load the scripts for pong matchmaking
 		// Pong change
 	}
-	// Add functionality for changing the skin
 }
 
 function main_menu_tournamentButton() {
 	console.log('Tournament button clicked')
 	clearMenu()
 	games_tournament_menu()
-	// Add functionality for changing the skin
 }
 
 function main_menu_localButton() {

@@ -25,13 +25,6 @@ function navigate() {
 			scripts = window.chatScripts
 			startFunction = 'chat'
 			break;
-
-		case '#matchmaking':
-			element = 'games'
-			scripts = window.matchmakingScripts
-			startFunction = 'Matchmaking_before_game'
-			break;
-
 	}
 	
 	document.getElementById(element).classList.remove('hidden');
