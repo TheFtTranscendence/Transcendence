@@ -39,6 +39,18 @@ class UserViewSet(viewsets.ModelViewSet):
 		user = request.user
 		serializer = self.get_serializer(user)
 		return Response(serializer.data)
+	
+	@action(detail=False, methods=['get'], url_path='get_info/<str:username>')
+	def get_user_info(self, request, username):
+		user = User.objects.filter(username=username)
+		serializer = self.get_serializer(user)
+
+		fields_to_remove = ['email', 'smartcontract_id', 'is_staff', 'is_superuser', 'friends']
+		for field in fields_to_remove:
+			serializer.data.pop(field, None)
+
+		return Response(serializer.data)
+
 
 	def destroy(self, request, *args, **kwargs):
 		user_id = kwargs.get('pk')
