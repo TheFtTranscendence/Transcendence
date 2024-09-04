@@ -4,25 +4,34 @@ from django.utils.translation import gettext_lazy as _
 
 class UserManager(BaseUserManager):
 	def create_user(self, email, username, password=None, **extra_fields):
+		if not email:
+			raise ValueError(_('The Email field must be set'))
+		if not username:
+			raise ValueError(_('The Username field must be set'))
+		
 		email = self.normalize_email(email)
-		user = self.model(email=email, username=username, **extra_fields)
+		
+		preferences = Preferences.objects.create()
+
+		user = self.model(email=email, username=username, preferences=preferences, **extra_fields)
 		user.set_password(password)
 		user.save(using=self._db)
 		return user
 
 	def create_superuser(self, email, username, password=None, **extra_fields):
-		extra_fields.setdefault('is_staff', True)
-		extra_fields.setdefault('is_superuser', True)
+		extra_fields.setdefault('staff', True)
+		extra_fields.setdefault('superuser', True)
 
-		if extra_fields.get('is_staff') is not True:
-			raise ValueError(_('Superuser must have is_staff=True.'))
-		if extra_fields.get('is_superuser') is not True:
-			raise ValueError(_('Superuser must have is_superuser=True.'))
+		if extra_fields.get('staff') is not True:
+			raise ValueError(_('Superuser must have staff=True.'))
+		if extra_fields.get('superuser') is not True:
+			raise ValueError(_('Superuser must have superuser=True.'))
 
 		return self.create_user(email, username, password, **extra_fields)
+
 	
 class Preferences(models.Model):
-	pong_skin = models.IntegerField(default=1)
+	pongy_skin = models.IntegerField(default=1)
 	fighty_skin = models.IntegerField(default=1)
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -35,7 +44,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 	avatar = models.ImageField(upload_to='images/', blank=True, null=True)
 	
 	friend_list = models.ManyToManyField('self', symmetrical=False, related_name='friend_of', blank=True)
-	block_list = models.ManyToManyField('self', symmetrical=False, related_name='friend_of', blank=True)
+	block_list = models.ManyToManyField('self', symmetrical=False, related_name='blocked_by', blank=True)
 
 	staff = models.BooleanField(default=False)
 	superuser = models.BooleanField(default=False)

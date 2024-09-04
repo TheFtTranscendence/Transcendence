@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.views import APIView
@@ -26,7 +26,7 @@ class UserViewSet(viewsets.ModelViewSet):
 	def list(self, request, *args, **kwargs):
 		user = request.user
 		
-		if user.is_staff:
+		if user.staff:
 			queryset = self.get_queryset()
 			serializer = self.get_serializer(queryset, many=True)
 			return Response(serializer.data)
@@ -45,7 +45,7 @@ class UserViewSet(viewsets.ModelViewSet):
 		user = User.objects.filter(username=username)
 		serializer = self.get_serializer(user)
 
-		fields_to_remove = ['email', 'smartcontract_id', 'is_staff', 'is_superuser', 'friends']
+		fields_to_remove = ['email', 'blockchain_id', 'is_staff', 'is_superuser', 'friend_list']
 		for field in fields_to_remove:
 			serializer.data.pop(field, None)
 
@@ -117,15 +117,15 @@ class UserService:
 		return User.objects.create_user(username=username, password=password, email=email)
 
 	@staticmethod
-	def get_smartcontract_id():
+	def get_blockchain_id():
 		try:
 			response = requests.post('http://solidity:8001/solidity/addinstance/')
 			response.raise_for_status()
 			data = response.json()
 			return data.get('success')
 		except requests.exceptions.RequestException as e:
-			logger.exception("Error while fetching smartcontract ID: %s", e)
-			raise ValueError("Error fetching smartcontract ID") from e
+			logger.exception("Error while fetching blockchain ID: %s", e)
+			raise ValueError("Error fetching blockchain ID") from e
 
 
 class LoginView(APIView):
@@ -151,6 +151,14 @@ class LoginView(APIView):
 			return Response({'message': 'Login successful', 'token': token.key}, status=status.HTTP_200_OK)
 		else:
 			return Response({'message': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
+
+class LogoutView(APIView):
+	permission_classes = [AllowAny]
+
+	def post(self, request):
+		user = request.user
+		logout(request)
+
 
 class RegisterView(APIView):
 	permission_classes = [AllowAny]
@@ -185,7 +193,7 @@ class RegisterView(APIView):
 
 		try:
 			user = UserService.create_user(username, password, email)
-			user.smartcontract_id = UserService.get_smartcontract_id()
+			user.blockchain_id = UserService.get_blockchain_id()
 			user.save()
 
 			token, created = Token.objects.get_or_create(user=user)

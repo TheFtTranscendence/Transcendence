@@ -27,7 +27,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			return
 
 		try:
-			self.user.online_status = True
+			self.user.online = True
 			await self.save_user(self.user)
 		except Exception as e:
 			logger.exception(f'exception: {e}')
@@ -62,7 +62,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		if hasattr(self, 'user'):
 			await self.notify_friends('offline')
 		try:
-			self.user.online_status = False
+			self.user.online = False
 			await self.save_user(self.user)
 		except Exception as e:
 			logger.exception(f'exception: {e}')
