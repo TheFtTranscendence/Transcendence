@@ -34,24 +34,6 @@ class UserViewSet(viewsets.ModelViewSet):
 		serializer = self.get_serializer(user)
 		return Response(serializer.data)
 
-	@action(detail=False, methods=['get'], url_path='me')
-	def get_self_info(self, request):
-		user = request.user
-		serializer = self.get_serializer(user)
-		return Response(serializer.data)
-	
-	@action(detail=False, methods=['get'], url_path='get_info/<str:username>')
-	def get_user_info(self, request, username):
-		user = User.objects.filter(username=username)
-		serializer = self.get_serializer(user)
-
-		fields_to_remove = ['email', 'blockchain_id', 'is_staff', 'is_superuser', 'friend_list']
-		for field in fields_to_remove:
-			serializer.data.pop(field, None)
-
-		return Response(serializer.data)
-
-
 	def destroy(self, request, *args, **kwargs):
 		user_id = kwargs.get('pk')
 		current_user = request.user
@@ -108,6 +90,25 @@ class UserViewSet(viewsets.ModelViewSet):
 			return Response({'message': f'User {user_to_update.username} has been updated', 'user': serializer.data})
 		else:
 			return Response({'message': 'Your information has been updated', 'user': serializer.data})
+		
+	@action(detail=False, methods=['get'], url_path='me')
+	def get_self_info(self, request):
+		user = request.user
+		serializer = self.get_serializer(user)
+		return Response(serializer.data)
+	
+	@action(detail=False, methods=['get'], url_path='get_info/<str:username>')
+	def get_user_info(self, request, username):
+		user = User.objects.filter(username=username)
+		serializer = self.get_serializer(user)
+
+		fields_to_remove = ['email', 'blockchain_id', 'is_staff', 'is_superuser', 'friend_list', 'block_list']
+		for field in fields_to_remove:
+			serializer.data.pop(field, None)
+
+		return Response(serializer.data)
+
+
 
 class UserService:
 	@staticmethod
@@ -126,7 +127,6 @@ class UserService:
 		except requests.exceptions.RequestException as e:
 			logger.exception("Error while fetching blockchain ID: %s", e)
 			raise ValueError("Error fetching blockchain ID") from e
-
 
 class LoginView(APIView):
 	permission_classes = [AllowAny]
@@ -151,14 +151,6 @@ class LoginView(APIView):
 			return Response({'message': 'Login successful', 'token': token.key}, status=status.HTTP_200_OK)
 		else:
 			return Response({'message': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
-
-class LogoutView(APIView):
-	permission_classes = [AllowAny]
-
-	def post(self, request):
-		user = request.user
-		logout(request)
-
 
 class RegisterView(APIView):
 	permission_classes = [AllowAny]
