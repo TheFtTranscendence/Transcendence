@@ -20,16 +20,28 @@ class UserManager(BaseUserManager):
 			raise ValueError(_('Superuser must have is_superuser=True.'))
 
 		return self.create_user(email, username, password, **extra_fields)
+	
+class Preferences(models.Model):
+	pong_skin = models.IntegerField(default=1)
+	fighty_skin = models.IntegerField(default=1)
 
 class User(AbstractBaseUser, PermissionsMixin):
+
 	email = models.EmailField(_('email address'), unique=True)
 	username = models.CharField(max_length=150, unique=True)
-	smartcontract_id = models.IntegerField(blank=True, null=True)
+	blockchain_id = models.IntegerField(blank=True, null=True)
+
+	# todo: add default
 	avatar = models.ImageField(upload_to='images/', blank=True, null=True)
-	is_staff = models.BooleanField(default=False)
-	is_superuser = models.BooleanField(default=False)
-	friends = models.ManyToManyField('self', symmetrical=False, related_name='friend_of', blank=True)
-	online_status = models.BooleanField(default=False)
+	
+	friend_list = models.ManyToManyField('self', symmetrical=False, related_name='friend_of', blank=True)
+	block_list = models.ManyToManyField('self', symmetrical=False, related_name='friend_of', blank=True)
+
+	staff = models.BooleanField(default=False)
+	superuser = models.BooleanField(default=False)
+	online = models.BooleanField(default=False)
+
+	preferences = models.OneToOneField(Preferences, on_delete=models.CASCADE)
 
 	objects = UserManager()
 
@@ -37,10 +49,4 @@ class User(AbstractBaseUser, PermissionsMixin):
 	REQUIRED_FIELDS = []
 
 	def __str__(self):
-		return self.email
-
-	def get_full_name(self):
-		return self.username
-
-	def get_short_name(self):
 		return self.username
