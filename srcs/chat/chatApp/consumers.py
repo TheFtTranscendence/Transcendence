@@ -5,10 +5,9 @@ from channels.db import database_sync_to_async
 
 class ChatConsumer(AsyncWebsocketConsumer):
 	async def connect(self):
-		self.chat_id = self.scope['url_route']['kwargs']['chat_id']
 		query_param = self.scope['query_string'].decode()
-		if ('user=') in query_param:
-			self.user = query_param.split('user=')[-1]
+		if ('chat_id=') in query_param:
+			self.chat_id = query_param.split('chat_id=')[-1]
 		if ('user=') in query_param:
 			self.user = query_param.split('user=')[-1]
 		else:
@@ -29,26 +28,24 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
 	async def receive(self, text_data):
 		text_data_json = json.loads(text_data)
-		chat_id = text_data_json["chat_id"]
 		sender = text_data_json["sender"]
 		content = text_data_json["content"]
 		
 		await self.channel_layer.group_send(
 			self.roomGroupName, {
 				"type": "sendMessage",
-				"chat_id": chat_id,
+				"chat_id": self.chat_id,
 				"sender": sender,
 				"content": content,
 			})
 		
 	async def sendMessage(self, event): 
-		chat_id = event["chat_id"]
 		sender = event["sender"]
 		content = event["content"]
 
 		#todo: remove chat_id, the socket already knows it
 		data = {
-			"chat_id": chat_id,
+			"chat_id": self.chat_id,
 			"sender": sender,
 			"content": content,
 		}
@@ -56,10 +53,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		if (sender != self.user):
 			await self.add_message_to_chat(data)
 		
-			await self.increment_unread_messages(chat_id, sender)
+			await self.increment_unread_messages(self.chat_id, sender)
 		
 			await self.send(text_data=json.dumps({
-				"chat_id": chat_id,
+				"chat_id": self.chat_id,
 				"sender": sender,
 				"content": content,
 			}))
