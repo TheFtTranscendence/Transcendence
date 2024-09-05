@@ -1,8 +1,8 @@
 from django.db import models
 
 class Chat(models.Model):
-	user1_id = models.IntegerField()
-	user2_id = models.IntegerField()
+	user1 = models.CharField(max_length=150)
+	user2 = models.CharField(max_length=150)
 	user1_unread_messages = models.IntegerField(default=0)
 	user2_unread_messages = models.IntegerField(default=0)
 
@@ -11,7 +11,7 @@ class Chat(models.Model):
 
 class Message(models.Model):
 	chat = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name='messages')
-	sender_id = models.IntegerField()
+	sender = models.CharField(max_length=150)
 	content = models.TextField()
 	timestamp = models.DateTimeField(auto_now_add=True)
 
