@@ -49,24 +49,29 @@ function sendChatMessage() {
 
 function getMessages(friend) {
 	
-	try {
-		axios.get('http://localhost:8002/chats/' + friend[1].chat_id + '/')
+	return new Promise((resolve, reject) => {
+		axios.get('http://localhost:8002/chats/' + friend[1].chat_id + '/?user=' + window.user.username)
 		.then((response) => {
 			console.log('data ', response.data)
 			console.log('messages ', response.data.messages)
 			window.Messages = response.data.messages
+			resolve()
 		})
-	} catch (error) {
-		console.error('Error getting messages')
-		alert('Error getting messages')
-		return
-	}
-	
+		.catch((error) => {
+			console.error('Error getting messages')
+			alert('Error getting messages')
+			reject()
+		})
+	});
 }
 
-function openChat(friend) {
+async function openChat(friend) {
 	console.log(friend)
+	
+	// Clear previous chat content
+    window.chatContent.innerHTML = ''
 
+		await getMessages(friend)
 	window.CurrentChatting = friend[0]
 
 	window.user.friend_list[window.CurrentChatting].socket.onmessage = function(e) {
@@ -87,7 +92,6 @@ function openChat(friend) {
 	// Clear previous chat content
     window.chatContent.innerHTML = ''
 	
-	getMessages(friend)
 
 	console.log('window messages ', window.Messages)
 
