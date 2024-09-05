@@ -52,17 +52,35 @@ function openChat(friend) {
 	// Clear previous chat content
     window.chatContent.innerHTML = ''
 	
-	window.Messages = axios.get('http://localhost:8002/messages/' + friend[1].chat_id + '/')	
+	
+	try {
+
+		axios.get('http://localhost:8002/chats/' + friend[1].chat_id + '/')
+		.then((response) => {
+			console.log('data ', response.data)
+			window.Messages = Object.entries(response.data.messages)
+		})
+	} catch (error) {
+		console.error('Error getting messages')
+		alert('Error getting messages')
+		return
+	}
+
+	console.log('window messages ', window.Messages)
 
 	// get message from database
-	window.Messages = [	
-		{ sender: 'My man Bob', msg: 'Hey, how are you?' },
-		{ sender: 'You', msg: 'I\'m good, thanks! What about you?' },
-		{ sender: 'My man Bob', msg: 'Doing great, just checking in. Bitch' },
+	window.Messages2 = [	
+		{ sender: 'user2', content: 'Hey, how are you?' },
+		{ sender: 'user3', content: 'I\'m good, thanks! What about you?' },
+		{ sender: 'user2', content: 'Doing great, just checking in. Bitch' },
 	]
 	
     // Filter the messages for the selected friend
-    const filteredMessages = window.Messages.filter(message => message.sender === friend[0] || message.sender === 'You')
+    const filteredMessages = window.Messages.filter(message => message.sender === friend[0] || message.sender === window.user.username)
+    const filteredMessages2 = window.Messages2.filter(message => message.sender === friend[0] || message.sender === window.user.username)
+	
+	console.log('filtered messages ', filteredMessages)
+	console.log('filtered messages2 ', filteredMessages2)
 	
     // Display the messages in the chat content div
     filteredMessages.forEach(message => {
@@ -77,7 +95,7 @@ function openChat(friend) {
         }
 		
         messageDiv.innerHTML = `
-		<strong>${message.sender}:</strong> ${message.msg}
+		<strong>${message.sender}:</strong> ${message.content}
         `
 		
         window.chatContent.appendChild(messageDiv)
