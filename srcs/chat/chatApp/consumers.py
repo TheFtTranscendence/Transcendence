@@ -59,11 +59,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			"content": content,
 		}
 		
-		if (sender != self.user):
+		if (sender == self.user):
 			await self.add_message_to_chat(data)
-		
 			await self.increment_unread_messages(self.chat_id, sender)
-		
+		else:
 			await self.send(text_data=json.dumps({
 				"chat_id": self.chat_id,
 				"sender": sender,
