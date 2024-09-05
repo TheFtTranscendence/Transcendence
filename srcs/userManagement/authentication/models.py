@@ -1,6 +1,12 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+import requests
+from rest_framework.response import Response
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 class UserManager(BaseUserManager):
 	def create_user(self, email, username, password=None, **extra_fields):
@@ -35,6 +41,49 @@ class Preferences(models.Model):
 	fighty_skin = models.IntegerField(default=1)
 
 class User(AbstractBaseUser, PermissionsMixin):
+
+	def get_friends_data(self):
+		friends = self.friend_list.all()
+		friends_data = {}
+
+		logger.info("friends:")
+		logger.info(friends)
+		print(friends)
+		for friend in friends:
+			friend_name = friend.username
+			json_payload = {
+				"user1": self.username,
+				"user2": friend_name
+			}
+
+			try:
+				response = requests.post("http://chat:8002/chats/create_chat/", json=json_payload)
+				response.raise_for_status()  # Raises HTTPError for bad responses
+				data = response.json()  # Get JSON data from requests response
+			except requests.exceptions.RequestException as e:
+				# Log the error and return an empty dictionary or handle as needed
+				logger.info(f'API request failed: {e}')
+				continue  # Skip this friend if the API request fails
+
+			except ValueError:
+				# Log the error and return an empty dictionary or handle as needed
+				logger.info('Invalid JSON in response')
+				continue  # Skip this friend if JSON parsing fails
+
+			# Determine unread messages based on the response
+			if data.get("user1") == self.username:
+				unread_msgs = data.get("user1_unread_messages", 0)
+			else:
+				unread_msgs = data.get("user2_unread_messages", 0)
+
+			friends_data[friend.username] = {
+				"id": friend.id,
+				"chat_id": data.get("id"),
+				"unread_msgs": unread_msgs,
+				"socket": None  # Placeholder for future socket info
+			}
+
+		return friends_data
 
 	email = models.EmailField(_('email address'), unique=True)
 	username = models.CharField(max_length=150, unique=True)
