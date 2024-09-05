@@ -82,6 +82,50 @@ class UserViewSet(viewsets.ModelViewSet):
 			request.data.pop('confirm_password', None)
 			request.data._mutable = False
 
+		new_username = request.data.get('username', None)
+
+
+		if new_username and new_username != current_user.username:
+			if User.objects.filter(username=new_username).exists():
+				return Response({'message': 'Username is already in use'}, status=status.HTTP_400_BAD_REQUEST)
+			friends = user_to_update.friend_list.all()
+
+			for friend in friends:
+				json_payload = {
+					"user1": current_user.username,
+					"user2": friend.username
+				}
+				try:
+					response = requests.post("http://chat:8002/chats/create_chat/", json=json_payload)
+					response.raise_for_status()
+					data = response.json()
+					logger.info(data)
+				except requests.exceptions.RequestException as e:
+					logger.info(f'API request failed: {e}')
+					continue
+				except ValueError:
+					logger.info('Invalid JSON in response')
+					continue
+
+				chat_id = data.get("id")
+				if data.get("user1") == user_to_update.username:
+					json_payload = {
+						"user1": new_username
+					}
+				else:
+					json_payload = {
+						"user2": new_username
+					}
+				try:
+					response = requests.patch("http://chat:8002/chats/" + str(chat_id) + "/", json=json_payload)
+					response.raise_for_status()
+				except requests.exceptions.RequestException as e:
+					logger.info(f'API request failed: {e}')
+					continue
+
+			user_to_update.username = new_username
+			user_to_update.save()
+
 		serializer = self.get_serializer(user_to_update, data=request.data, partial=True)
 		serializer.is_valid(raise_exception=True)
 		serializer.save()

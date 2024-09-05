@@ -37,6 +37,7 @@ class MessageViewSet(viewsets.ModelViewSet):
 	queryset = Message.objects.all()
 	serializer_class = MessageSerializer
 	permission_classes = [AllowAny]
+	http_method_names = ['patch', 'delete']
 
 	def perform_create(self, serializer):
 		sender = self.request.data.get('sender')
