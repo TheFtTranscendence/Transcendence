@@ -23,7 +23,7 @@ function sendChatMessage() {
 	
 	const newMessage = chatInput.value.trim()
 	if (newMessage) {
-		const messageObject = { sender: window.user.username, content: newMessage }
+		const messageObject = {sender: window.user.username, content: newMessage }
 		
 		// Add the message to the database and to chat
 		//   Messages.push_to_db(messageObject)
@@ -33,9 +33,11 @@ function sendChatMessage() {
 		const messageDiv = document.createElement('div')
 		messageDiv.classList.add('message-item', 'sent-message')
 		messageDiv.innerHTML = `
-		<strong>You:</strong> ${newMessage}
+		<strong>${window.user.username}:</strong> ${newMessage}
 		`
 		window.chatContent.appendChild(messageDiv)
+
+		window.user.friend_list[window.CurrentChatting].socket.send(JSON.stringify(messageObject))
 		
 		// Clear the input box
 		chatInput.value = ''
@@ -64,6 +66,23 @@ function getMessages(friend) {
 
 function openChat(friend) {
 	console.log(friend)
+
+	window.CurrentChatting = friend[0]
+
+	window.user.friend_list[window.CurrentChatting].socket.onmessage = function(e) {
+		const data = JSON.parse(e.data);
+		console.log(data);
+		window.Messages.push(data)
+		const messageDiv = document.createElement('div')
+		messageDiv.classList.add('message-item', 'received-message')
+		messageDiv.innerHTML = `
+		<strong>${data.sender}:</strong> ${data.content}
+		`
+
+		window.chatContent.appendChild(messageDiv)
+		window.chatContent.scrollTop = window.chatContent.scrollHeight
+	}
+
 	
 	// Clear previous chat content
     window.chatContent.innerHTML = ''
@@ -72,19 +91,11 @@ function openChat(friend) {
 
 	console.log('window messages ', window.Messages)
 
-	// get message from database
-	window.Messages2 = [	
-		{ sender: 'user2', content: 'Hey, how are you?' },
-		{ sender: 'user3', content: 'I\'m good, thanks! What about you?' },
-		{ sender: 'user2', content: 'Doing great, just checking in. Bitch' },
-	]
 	
     // Filter the messages for the selected friend
     const filteredMessages = window.Messages.filter(message => message.sender === friend[0] || message.sender === window.user.username)
-    const filteredMessages2 = window.Messages2.filter(message => message.sender === friend[0] || message.sender === window.user.username)
 	
 	console.log('filtered messages ', filteredMessages)
-	console.log('filtered messages2 ', filteredMessages2)
 	
     // Display the messages in the chat content div
     filteredMessages.forEach(message => {
@@ -97,7 +108,7 @@ function openChat(friend) {
         } else {
 			messageDiv.classList.add('received-message')
         }
-		
+
         messageDiv.innerHTML = `
 		<strong>${message.sender}:</strong> ${message.content}
         `
