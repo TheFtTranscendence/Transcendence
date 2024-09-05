@@ -38,6 +38,10 @@ window.matchmakingScripts = [
 
 
 
+
+
+/* ----------------------- Game 2 Skins ----------------------- */
+
 window.game2SkinsPreviews = [
 	Mask = 'game2/assets/Mask/Sprites/normal_preview.gif',
 	Mask2 = 'game2/assets/Mask2/Sprites/normal_preview.gif',

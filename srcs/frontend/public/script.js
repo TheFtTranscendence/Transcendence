@@ -112,17 +112,38 @@ function handleLogin() {
 	}
 
 	// console.log('Sending JSON:', JSON.stringify(data, null, 2));
-
+	
 	axios.post('http://localhost:8000/auth/login/', data)
 	.then((response) => {
 		console.log(response.data);
 		alert('Login successful');
+		
+		window.Usertoken = response.data.token;
+		
+		userheaders = {
+			'Authorization': 'Token ' + response.data.token,
+		}
 
-		axios.get('http://localhost:8000/auth/users/' + username + '/')
+		axios.get('http://localhost:8000/auth/users/', {headers: userheaders})
 		.then((response) => {
 			window.user = response.data;
 			console.log('User:', window.user);
 			console.log(response.data);
+
+			Object.entries(window.user.friend_list).forEach(([key, friend]) => {
+				// Create a WebSocket connection for each friend
+				friend.socket = new WebSocket('ws://localhost:8002/ws/chat/?user=' + window.user.username + '&chat_id=' + friend.chat_id);
+			
+				// Setup an onmessage event listener
+				friend.socket.onmessage = function(e) {
+					const data = JSON.parse(e.data);
+					console.log(data);
+				};
+			
+				console.log('Friend key:', key);
+				console.log('Friend object:', friend);
+			});
+			
 		})
 		.catch((error) => {
 			console.error(error);
