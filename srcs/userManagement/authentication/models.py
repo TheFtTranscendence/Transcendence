@@ -46,8 +46,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 		friends = self.friend_list.all()
 		friends_data = {}
 
-		logger.info("friends:")
-		logger.info(friends)
 		print(friends)
 		for friend in friends:
 			friend_name = friend.username
@@ -90,7 +88,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 	blockchain_id = models.IntegerField(blank=True, null=True)
 
 	# todo: add default
-	avatar = models.ImageField(upload_to='images/', blank=True, null=True)
+	avatar = models.ImageField(upload_to='', default='detectiveGoose.jpg', blank=True, null=True)
 	
 	friend_list = models.ManyToManyField('self', symmetrical=False, related_name='friend_of', blank=True)
 	block_list = models.ManyToManyField('self', symmetrical=False, related_name='blocked_by', blank=True)
