@@ -23,7 +23,7 @@ function sendChatMessage() {
 	
 	const newMessage = chatInput.value.trim()
 	if (newMessage) {
-		const messageObject = { sender: 'You', msg: newMessage }
+		const messageObject = { sender: window.user.username, content: newMessage }
 		
 		// Add the message to the database and to chat
 		//   Messages.push_to_db(messageObject)
@@ -45,6 +45,22 @@ function sendChatMessage() {
 	}
 }
 
+function getMessages(friend) {
+	
+	try {
+		axios.get('http://localhost:8002/chats/' + friend[1].chat_id + '/')
+		.then((response) => {
+			console.log('data ', response.data)
+			console.log('messages ', response.data.messages)
+			window.Messages = response.data.messages
+		})
+	} catch (error) {
+		console.error('Error getting messages')
+		alert('Error getting messages')
+		return
+	}
+	
+}
 
 function openChat(friend) {
 	console.log(friend)
@@ -52,19 +68,7 @@ function openChat(friend) {
 	// Clear previous chat content
     window.chatContent.innerHTML = ''
 	
-	
-	try {
-
-		axios.get('http://localhost:8002/chats/' + friend[1].chat_id + '/')
-		.then((response) => {
-			console.log('data ', response.data)
-			window.Messages = Object.entries(response.data.messages)
-		})
-	} catch (error) {
-		console.error('Error getting messages')
-		alert('Error getting messages')
-		return
-	}
+	getMessages(friend)
 
 	console.log('window messages ', window.Messages)
 
