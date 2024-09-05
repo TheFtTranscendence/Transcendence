@@ -23,7 +23,7 @@ try:
 			username='$DJANGO_SUPERUSER_USERNAME',
 			email='$DJANGO_SUPERUSER_EMAIL',
 			password='$DJANGO_SUPERUSER_PASSWORD',
-			smartcontract_id=int('-1'))
+			blockchain_id=int('-1'))
         print('Superuser created successfully.')
 except IntegrityError as e:
     print(f'Error creating superuser: {e}')
