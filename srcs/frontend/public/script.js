@@ -1,4 +1,9 @@
 
+const currentUser = {
+	username: String = "",
+	email: String = "" //Not set
+};
+
 window.authScripts = [
 	'auth/init.js'
 ]

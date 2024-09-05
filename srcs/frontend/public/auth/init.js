@@ -1,12 +1,25 @@
 function auth_hashchange(event)
 {
 	document.getElementById('auth').classList.add('hidden');
-	unloadScripts(window.homeScripts);
+	unloadScripts(window.authScripts);
 }
 
 function auth()
 {
 	console.log("Auth() called")
+	const userJSON = localStorage.getItem('currentUser');
+	const currentUserLS = userJSON ? JSON.parse(userJSON) : null;
+
+	if (currentUserLS) {
+		currentUser.name = currentUserLS.username
+		console.log(`Welcome back, ${currentUserLS.username}`);
+		window.location.hash = '#home';
+		document.getElementById('auth').classList.add('hidden');
+		unloadScripts(window.authScripts);
+	} else {
+		console.log('No user is currently logged in.');
+		window.location.hash = '#auth';
+	}
 	document.getElementById('auth').classList.remove('hidden');
 	window.addEventListener('hashchange', auth_hashchange);
 }
@@ -18,8 +31,8 @@ function handleSuccessAuth(errorField, username) {
 	window.location.hash = '#home';
 	if (!errorField.classList.contains('hidden'))
 		errorField.classList.add('hidden');
-	//currentUser.username = username;
-	//localStorage.setItem('currentUser', JSON.stringify(currentUser));
+	currentUser.username = username;
+	localStorage.setItem('currentUser', JSON.stringify(currentUser));
 	axios.get('http://localhost:8000/auth/user_info/' + username + '/')
 	.then((response) => {
 		window.user = response.data;

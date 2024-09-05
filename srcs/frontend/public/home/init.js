@@ -54,7 +54,7 @@ function getAvater(username) {
 
     })
     .catch((error) => {
-        console.error(error);
+        //console.error(error);
 		imgElement.src = 'img/red.jpg';
     });
 	document.getElementById('profile-img').classList.remove('hidden');
@@ -102,6 +102,7 @@ function handleLogout() {
 	document.querySelector('nav').classList.add('hidden');
 	sidebar.classList.add('hidden');
 	document.removeEventListener('click', handleOutsideClick);
+	localStorage.removeItem('currentUser');
 	window.location.hash = '#auth';
 }
 
