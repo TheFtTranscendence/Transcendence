@@ -2,16 +2,26 @@ import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from .models import Chat, Message
 from channels.db import database_sync_to_async
+import logging
+
+logger = logging.getLogger(__name__)
 
 class ChatConsumer(AsyncWebsocketConsumer):
 	async def connect(self):
 		query_param = self.scope['query_string'].decode()
-		if ('chat_id=') in query_param:
-			self.chat_id = query_param.split('chat_id=')[-1]
-		if ('user=') in query_param:
-			self.user = query_param.split('user=')[-1]
+		logger.info(query_param)
+		params = dict(param.split('=') for param in query_param.split('&'))
+		
+		if 'chat_id' in params:
+			self.chat_id = params['chat_id']
 		else:
 			await self.close()
+		
+		if 'user' in params:
+			self.user = params['user']
+		else:
+			await self.close()
+		
 		#todo: check if the chat that they are connecting to exists
 		self.roomGroupName = f"group_{self.chat_id}"
 		await self.channel_layer.group_add(
@@ -43,7 +53,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		sender = event["sender"]
 		content = event["content"]
 
-		#todo: remove chat_id, the socket already knows it
 		data = {
 			"chat_id": self.chat_id,
 			"sender": sender,
