@@ -19,61 +19,6 @@ function chat_hashchange(event) {
 }
 
 
-
-function openChat(friendName) {
-	// Clear previous chat content
-    window.chatContent.innerHTML = ''
-	
-	
-	// get message from database
-	window.Messages = [	
-		{ sender: 'My man Bob', msg: 'Hey, how are you?' },
-		{ sender: 'You', msg: 'I\'m good, thanks! What about you?' },
-		{ sender: 'My man Bob', msg: 'Doing great, just checking in. Bitch' },
-	]
-	
-    // Filter the messages for the selected friend
-    const filteredMessages = window.Messages.filter(message => message.sender === friendName || message.sender === 'You')
-	
-    // Display the messages in the chat content div
-    filteredMessages.forEach(message => {
-		const messageDiv = document.createElement('div')
-        messageDiv.classList.add('message-item')
-        
-        // Differentiate between sent and received messages
-        if (message.sender === 'You') {
-			messageDiv.classList.add('sent-message')
-        } else {
-			messageDiv.classList.add('received-message')
-        }
-		
-        messageDiv.innerHTML = `
-		<strong>${message.sender}:</strong> ${message.msg}
-        `
-		
-        window.chatContent.appendChild(messageDiv)
-    })
-	
-    console.log(`Chat with ${friendName} opened`)
-	
-	window.chatContent.scrollTop = window.chatContent.scrollHeight
-	
-	
-	// Add event listener for the send button
-	window.sendButton = document.getElementById('send-button')
-	window.chatInput = document.getElementById('chat-input')
-	
-	window.sendButton.addEventListener('click', sendChatMessage)
-	keypress = keypress.bind(window)
-	window.addEventListener('keydown', keypress)
-}
-
-function keypress(event) {
-	if (event.key === 'Enter') {
-		sendChatMessage()
-	}
-}
-
 function sendChatMessage() {
 	
 	const newMessage = chatInput.value.trim()
@@ -100,6 +45,64 @@ function sendChatMessage() {
 	}
 }
 
+
+function openChat(friend) {
+	console.log(friend)
+	
+	// Clear previous chat content
+    window.chatContent.innerHTML = ''
+	
+	window.Messages = axios.get('http://localhost:8002/messages/' + friend[1].chat_id + '/')	
+
+	// get message from database
+	window.Messages = [	
+		{ sender: 'My man Bob', msg: 'Hey, how are you?' },
+		{ sender: 'You', msg: 'I\'m good, thanks! What about you?' },
+		{ sender: 'My man Bob', msg: 'Doing great, just checking in. Bitch' },
+	]
+	
+    // Filter the messages for the selected friend
+    const filteredMessages = window.Messages.filter(message => message.sender === friend[0] || message.sender === 'You')
+	
+    // Display the messages in the chat content div
+    filteredMessages.forEach(message => {
+		const messageDiv = document.createElement('div')
+        messageDiv.classList.add('message-item')
+        
+        // Differentiate between sent and received messages
+        if (message.sender === 'You') {
+			messageDiv.classList.add('sent-message')
+        } else {
+			messageDiv.classList.add('received-message')
+        }
+		
+        messageDiv.innerHTML = `
+		<strong>${message.sender}:</strong> ${message.msg}
+        `
+		
+        window.chatContent.appendChild(messageDiv)
+    })
+	
+    console.log(`Chat with ${friend[0]} opened`)
+	
+	window.chatContent.scrollTop = window.chatContent.scrollHeight
+	
+	
+	// Add event listener for the send button
+	window.sendButton = document.getElementById('send-button')
+	window.chatInput = document.getElementById('chat-input')
+	
+	window.sendButton.addEventListener('click', sendChatMessage)
+	keypress = keypress.bind(window)
+	window.addEventListener('keydown', keypress)
+}
+
+function keypress(event) {
+	if (event.key === 'Enter') {
+		sendChatMessage()
+	}
+}
+
 function displayChatList(chatListContainer, friendList) {
 	window.chatDivs = []
 
@@ -112,7 +115,7 @@ function displayChatList(chatListContainer, friendList) {
 		`
 
 		// Add the click event listener
-		const listener = () => openChat(friend.name)
+		const listener = () => openChat(friend)
 		chatDiv.addEventListener('click', listener)
 
 		// Store the chatDiv and its listener
