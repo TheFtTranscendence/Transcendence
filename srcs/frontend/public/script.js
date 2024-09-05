@@ -122,6 +122,7 @@ function handleLogin() {
 		.then((response) => {
 			window.user = response.data;
 			console.log('User:', window.user);
+			console.log(response.data);
 		})
 		.catch((error) => {
 			console.error(error);

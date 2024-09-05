@@ -137,5 +137,13 @@ function chat()
 	// Get through the database when implemented
 	window.Messages = []
 
-	displayChatList(chatListContainer, window.user.friends)
+	try {
+		friendList = window.user.friend_list
+	} catch (error) {
+		console.error('Error getting friend list')
+		alert('Error getting friend list')
+		return
+	}
+	
+	displayChatList(chatListContainer, friendList)
 }
