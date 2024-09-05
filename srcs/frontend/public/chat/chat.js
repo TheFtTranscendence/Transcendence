@@ -27,7 +27,6 @@ function displayChatList(chatListContainer, friendList) {
 
         chatDiv.innerHTML = `
             <div class="friend-name">${friend.name}</div>
-            <div class="last-message">${friend.lastMessage}</div>
         `
 
         // Add the click event listener
@@ -136,13 +135,7 @@ function chat()
 	window.chatDiv = document.createElement('div')
 
 	// Get through the database when implemented
-    const friendList = [
-        { name: 'My man Bob', lastMessage: 'Hey, how are you?' },
-        { name: 'Jonhy Wicky', lastMessage: 'Ready for the mission?' },
-        { name: 'Giga minus', lastMessage: 'Let`s catch up soon!' }
-	]
-	
 	window.Messages = []
 
-	displayChatList(chatListContainer, friendList)
+	displayChatList(chatListContainer, window.user.friends)
 }
