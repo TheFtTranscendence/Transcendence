@@ -71,7 +71,7 @@ async function openChat(friend) {
 	// Clear previous chat content
     window.chatContent.innerHTML = ''
 
-		await getMessages(friend)
+	await getMessages(friend)
 	window.CurrentChatting = friend[0]
 
 	window.user.friend_list[window.CurrentChatting].socket.onmessage = function(e) {
