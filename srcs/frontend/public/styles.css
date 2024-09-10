@@ -619,6 +619,52 @@ body {
     margin-top: 5px;
 }
 
+.sent-message {
+	background-color: #4a76a8;
+	color: white;
+	border-radius: 5px;
+	padding: 5px;
+	margin-top: 5px;
+	align-self: flex-end;
+}
+
+.received-message {
+	background-color: #3a3a3a;
+	color: white;
+	border-radius: 5px;
+	padding: 5px;
+	margin-top: 5px;
+	align-self: flex-start;
+}
+
+.sent-message + .sent-message,
+.received-message + .received-message
+{
+    margin-top: -1px;
+    border-top: none;
+    border-bottom: none;
+}
+
+.sent-message + .sent-message strong, 
+.received-message + .received-message strong
+{
+    display: none;
+}
+
+.sent-message:has(+ .received-message), .sent-message:last-child,
+.received-message:has(+ .sent-message), .received-message:last-child
+{
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+}
+
+.received-message + .sent-message, .sent-message:first-child,
+.sent-message + .received-message, .received-message:first-child
+{
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+}
+
 /* ============ End Chat ============  */
 
 #auth {

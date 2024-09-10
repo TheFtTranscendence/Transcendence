@@ -87,15 +87,12 @@ async function openChat(friend) {
 		window.chatContent.appendChild(messageDiv)
 		window.chatContent.scrollTop = window.chatContent.scrollHeight
 	}
-
 	
 	// Clear previous chat content
     window.chatContent.innerHTML = ''
-	
 
 	console.log('window messages ', window.Messages)
 
-	
     // Filter the messages for the selected friend
     const filteredMessages = window.Messages.filter(message => message.sender === friend[0] || message.sender === window.user.username)
 	
@@ -107,7 +104,7 @@ async function openChat(friend) {
         messageDiv.classList.add('message-item')
         
         // Differentiate between sent and received messages
-        if (message.sender === 'You') {
+        if (message.sender === window.user.username) {
 			messageDiv.classList.add('sent-message')
         } else {
 			messageDiv.classList.add('received-message')
@@ -116,7 +113,6 @@ async function openChat(friend) {
         messageDiv.innerHTML = `
 		<strong>${message.sender}:</strong> ${message.content}
         `
-		
         window.chatContent.appendChild(messageDiv)
     })
 	

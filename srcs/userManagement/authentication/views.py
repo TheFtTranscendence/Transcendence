@@ -12,12 +12,6 @@ from .models import User
 
 logger = logging.getLogger(__name__)
 
-class TestTokenView(APIView):
-	permission_classes = [IsAuthenticated]
-
-	def get(self, request):
-		return Response({'message': 'Token is valid'})
-
 class UserViewSet(viewsets.ModelViewSet):
 	queryset = User.objects.all()
 	serializer_class = UserSerializer
