@@ -10,6 +10,4 @@ urlpatterns = [
 	path('', include(router.urls)),
 	path('login/', LoginView.as_view(), name='login'),
 	path('register/', RegisterView.as_view(), name='register'),
-	path('token/', obtain_auth_token, name='token'),
-	path('test-token/', TestTokenView.as_view(), name='test-token'),
 ]
