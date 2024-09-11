@@ -52,7 +52,6 @@ function getAvater(username) {
 			imgElement.src = 'img/red.jpg';
 		};
 		img.src = imageUrl;
-
     })
     .catch((error) => {
         //console.error(error);
@@ -83,7 +82,12 @@ function putAvatar(event) {
 	const formData = new FormData();
 	formData.append('avatar', file);
 
-	axios.put('http://localhost:8000/config/change_avatar/' + username, formData)
+	userheaders = {
+		'Authorization': 'Token ' + window.Usertoken,
+		'Content-Type': 'multipart/form-data',
+	}
+
+	axios.patch('http://localhost:8000/auth/users/' + window.user.id + '/', formData)
     .then(response => {
 		console.log('Upload successful:', response.data);
 	})

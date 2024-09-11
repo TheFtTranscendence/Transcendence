@@ -33,7 +33,7 @@ function handleSuccessAuth(errorField) {
 		errorField.classList.add('hidden');
 
 	userheaders = {
-		'Authorization': 'Token ' + response.data.token,
+		'Authorization': 'Token ' + window.Usertoken,
 	}
 
 	axios.get('http://localhost:8000/auth/users/', {headers: userheaders})
