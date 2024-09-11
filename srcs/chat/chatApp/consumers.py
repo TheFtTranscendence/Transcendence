@@ -23,6 +23,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			await self.close()
 		
 		#todo: check if the chat that they are connecting to exists
+		#? Is this needed, I belive the only way it happens an error here is if the user uses js throw the console
 		self.roomGroupName = f"group_{self.chat_id}"
 		await self.channel_layer.group_add(
 			self.roomGroupName,
