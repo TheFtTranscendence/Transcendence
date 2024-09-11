@@ -6,18 +6,17 @@ function navigate() {
 	let element, scripts, startFunction;
 
 	if (!window.location.hash) {
-		console.log("set hash to auth")
-        window.location.hash = '#auth';
-    }
+		window.location.hash = '#auth';
+	}
 
 	switch (window.location.hash) {
 
 		case '#auth':
+			document.querySelector('nav').classList.add('hidden');
 			element = 'auth'
 			scripts = window.authScripts
 			startFunction = 'auth'
 			break;
-
 
 		case '#home':
 			element = 'home'

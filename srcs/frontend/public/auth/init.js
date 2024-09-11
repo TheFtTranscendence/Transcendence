@@ -45,17 +45,17 @@ function handleSuccessAuth(errorField) {
 		Object.entries(window.user.friend_list).forEach(([key, friend]) => {
 			// Create a WebSocket connection for each friend
 			friend.socket = new WebSocket('ws://localhost:8002/ws/chat/?user=' + window.user.username + '&chat_id=' + friend.chat_id);
-		
+
 			// Setup an onmessage event listener
 			friend.socket.onmessage = function(e) {
 				const data = JSON.parse(e.data);
 				console.log(data);
 			};
-		
+
 			console.log('Friend key:', key);
 			console.log('Friend object:', friend);
 		});
-		
+
 	})
 	.catch((error) => {
 		console.error(error);
