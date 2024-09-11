@@ -1,3 +1,13 @@
+const currentUser = {
+	username: String = "",
+	email: String = "" //Not set
+};
+
+window.authScripts = [
+	'auth/init.js'
+]
+
+
 window.chatScripts = [
 	'chat/chat.js',
 ];
@@ -82,7 +92,7 @@ window.game2Skins = [
 			hit: { imageSrc: 'game2/assets/Mask/Sprites/inverted/TakeHit-silhouette.png', framesMax: 4},
 		}
 	},
-	
+
 	game2SkinMask2 = {
 		normal: {
 			attack1: { imageSrc: 'game2/assets/Mask2/Sprites/normal/Attack1.png', framesMax: 4, time: 15 },
@@ -105,7 +115,7 @@ window.game2Skins = [
 			hit: { imageSrc: 'game2/assets/Mask2/Sprites/inverted/TakeHit-silhouette.png', framesMax: 4},
 		}
 	},
-	
+
 	game2SkinMask3 = {
 		normal: {
 			attack1: { imageSrc: 'game2/assets/Mask3/Sprites/normal/Attack1.png', framesMax: 4, time: 15 },
@@ -128,7 +138,7 @@ window.game2Skins = [
 			hit: { imageSrc: 'game2/assets/Mask3/Sprites/inverted/TakeHit-silhouette.png', framesMax: 4},
 		}
 	},
-	
+
 	game2SkinSamu = {
 		normal: {
 			attack1: { imageSrc: 'game2/assets/Samu/Sprites/normal/Attack1.png', framesMax: 4, time: 15 },

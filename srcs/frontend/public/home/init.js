@@ -6,6 +6,7 @@ function home_hashchange(event)
 
 function home()
 {
+	console.log("home called")
 	getAvater("window.user.username") //ToDo: Create currentUser or similar instance
 	document.getElementById('home').classList.remove('hidden');
 	window.addEventListener('hashchange', home_hashchange);

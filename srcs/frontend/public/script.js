@@ -1,34 +1,4 @@
 
-const currentUser = {
-	username: String = "",
-	email: String = "" //Not set
-};
-
-window.authScripts = [
-	'auth/init.js'
-]
-
-window.chatScripts = [
-	'chat/chat.js',
-];
-
-window.homeScripts = [
-	'home/init.js',
-];
-
-window.gameScripts = [
-	'game/gameScript.js',
-];
-
-window.game2Scripts = [
-	'game2/before_game.js',
-	'game2/classes.js',
-	'game2/events.js',
-	'game2/init.js',
-	'game2/game_end.js',
-	'game2/gameScript2.js'
-];
-
 navigate();
 
 // Function to handle navigation
