@@ -19,11 +19,8 @@ Returns:
 | Message | Description | Status |
 |--------|-------------|:-----:|
 |Sucess| Login was sucessfull| 200|
-|Missing fields|Returns a list with the name of the fields missing from the json file| 450 |
-|Invalid Creditials| Password was incorrect| 400|
-|Invalid Json| Json file provided has some kind of error | 401 |
-|Internal Server Error| Something in the server went wrong| 500 |
-|Invalid Request Method| The request method provided is incorrect| 405 |
+|Missing fields|Returns a list with the name of the fields missing from the json file| 400 |
+|Invalid Creditials| **Password** was incorrect| 400|
 
 ### /auth/register/
 
@@ -44,198 +41,51 @@ Returns:
 | Message | Description | Status |
 |--------|-------------|:-----:|
 |Sucess| Registration was sucessfull| 201|
-|Missing fields|Returns a list with the name of the fields missing from the json file| 450 |
+|Missing fields|Returns a list with the name of the fields missing from the json file| 400 |
 |Passwords are different| password is different from confirm_password | 409 |
-|name already exists| Username already exists| 400|
-|Invalid Json| Json file provided has some kind of error | 401 |
-|Internal Server Error| Something in the server went wrong| 500 |
-|Invalid Request Method| The request method provided is incorrect| 405 |
-
-## Data
-
-### /data/user_info/\<username>/
-
-Request Method: **GET**
-
-JSON file: *(null)*
-
-Returns:
-
-| Message | Description | Status |
-|--------|-------------|:-----:|
-|Sucess| Returns the users data  | 200|
-|Invalid user| User with this username doesn't exist| 400|
-|Internal Server Error| Something in the server went wrong| 500 |
-|Invalid Request Method| The request method provided is incorrect| 405 |
-
-Sucess return Json:
-```json
-{
-	"username": "example",
-	"email": "example"
-}
-```
-
-### /data/friends/\<username>/
-
-Request Method: **GET**
-
-JSON file: *(null)*
-
-Returns:
-
-| Message | Description | Status |
-|--------|-------------|:-----:|
-|Sucess| Returns the users friend list  | 200|
-|Invalid user| User with this username doesn't exist| 400|
-|Internal Server Error| Something in the server went wrong| 500 |
-|Invalid Request Method| The request method provided is incorrect| 405 |
-
-Sucess return Json:
-```json
-{
-	"friends": ["friend1", "friend2"]
-}
-```
-
-### /data/avatar/\<username>/
-
-Request Method: **GET**
-
-JSON file: *(null)*
-
-Returns:
-
-| Message | Description | Status |
-|--------|-------------|:-----:|
-|Sucess| Returns the users avatar  | 200|
-|Invalid user| User with this username doesn't exist| 400|
-|Internal Server Error| Something in the server went wrong| 500 |
-|Invalid Request Method| The request method provided is incorrect| 405 |
-
-### /data/users/
-
-Request Method: **GET**
-
-JSON file: *(null)*
-
-Returns:
-
-| Message | Description | Status |
-|--------|-------------|:-----:|
-|Sucess| Returns a list of all users  | 200|
-|Internal Server Error| Something in the server went wrong| 500 |
-|Invalid Request Method| The request method provided is incorrect| 405 |
-
-Sucess return Json:
-```json
-[
-	"user1",
-	"user2",
-	"user3"
-]
-```
+|Username already exists| Username already exists| 400|
+|Email already exists| Email already exists| 400|
 
 ## Config
 
-### /config/rename/\<username1>/
+### /auth/users/
 
-Request Method: **PUT**
+Request Method: **GET**
+Header: Authorization - Token {user_token}
 
+if the user is admin it returns a list of all users if not admin then it returns only the info of that user, if the admin wants his info only **/auth/users/me/**
+
+### /auth/users/{user_id}/
+
+Request Method: **DELETE**
+Header: Authorization - Token {user_token}
+
+if the user is admin than he can delete anyone else it can only delete himself
+
+Returns:
+
+| Message | Description | Status |
+|--------|-------------|:-----:|
+|No premissions| You do not have permission to delete this user | 400|
+
+### /auth/users/{user_id}/
+
+Request Method: **PATCH**
+Header: Authorization - Token {user_token}
 JSON file:
 ```json
 {
-	"new_username": "example"
+	"field_name": "new value"
 }
 ```
 
-Returns:
+if the user is admin than he can change anyone else it can only change himself
 
-| Message | Description | Status |
-|--------|-------------|:-----:|
-|Sucess| Username updated sucessfully  | 200|
-|New username not provided| the json file doesn't contain a new username| 400|
-|Username already exists| the username provided is already in use | 409 |
-|User not found | Cant change the username because the user doesn't exist| 404 |
-|Invalid Json| Json file provided has some kind of error | 401 |
-|Internal Server Error| Something in the server went wrong| 500 |
-|Invalid Request Method| The request method provided is incorrect| 405 |
-
-### /config/change_password/\<username1>/
-
-Request Method: **PUT**
-
-JSON file:
-```json
-{
-	"old_password": "example",
-	"new_password": "example",
-	"confirm_new_password": "example"
-}
-```
+to change the password it needs "password" and "confirm_password"
 
 Returns:
 
 | Message | Description | Status |
 |--------|-------------|:-----:|
-|Sucess| Password updated sucessfully  | 200|
-|Missing fields|Returns a list with the name of the fields missing from the json file| 450 |
-|Passwords are different| new_password is different from confirm_new_password | 409 |
-|User not found | Cant change the username because the user doesn't exist| 404 |
-|Old password is incorrect| the old password doesn't match this user| 400|
-|Invalid Json| Json file provided has some kind of error | 401 |
-|Internal Server Error| Something in the server went wrong| 500 |
-|Invalid Request Method| The request method provided is incorrect| 405 |
-
-### /config/add_friend/\<username1>/\<username2>/
-
-Request Method: **PUT**
-
-JSON file: *(null)*
-
-Returns:
-
-| Message | Description | Status |
-|--------|-------------|:-----:|
-|Sucess| The 2 users are now friends  | 200|
-|Users are already friends| The 2 users provided are already friends | 404 |
-|User not found | Cant change the username because the user doesn't exist| 400
-|Internal Server Error| Something in the server went wrong| 500 |
-|Invalid Request Method| The request method provided is incorrect| 405 |
-
-### /config/remove_friend/\<username1>/\<username2>/
-
-Request Method: **PUT**
-
-JSON file: *(null)*
-
-Returns:
-
-| Message | Description | Status |
-|--------|-------------|:-----:|
-|Sucess| The 2 users are no longer friends | 200|
-|Users aren't already friends| The 2 users provided are not friends | 404 |
-|User not found | Cant change the username because the user doesn't exist| 400
-|Internal Server Error| Something in the server went wrong| 500 |
-|Invalid Request Method| The request method provided is incorrect| 405 |
-
-### /config/change_avatar/\<username1>/
-
-Request Method: **PUT**
-
-JSON file: *(null)*
-**but it needs an image file**
-
-Returns:
-
-| Message | Description | Status |
-|--------|-------------|:-----:|
-|Sucess| Password updated sucessfully  | 200|
-|User not found | Cant change the username because the user doesn't exist| 400 |
-|No file provided| No image file was provided | 401 |
-|Internal Server Error| Something in the server went wrong| 500 |
-|Invalid Request Method| The request method provided is incorrect| 405 |
-
-
-
-
+|No premissions| You do not have permission to delete this user | 400|
+|Passwords dont match| Passwords do not match | 400|

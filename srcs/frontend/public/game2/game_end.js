@@ -69,8 +69,6 @@ async function game_end_winner(v, winner, loser) {
 	else 
 		winner.change_sprites(winner.sprites.idleInv)
 
-	// If Mask killed facing left he stands!
-		
 	v.g.backgroundInterval = setInterval(() => {
 		v.g.c.fillStyle = 'black'; v.g.c.fillRect(0, 0, v.g.canvas.width, v.g.canvas.height)
 		v.background.update(v.g)

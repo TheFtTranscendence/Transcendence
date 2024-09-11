@@ -10,8 +10,4 @@ urlpatterns = [
 	path('', include(router.urls)),
 	path('login/', LoginView.as_view(), name='login'),
 	path('register/', RegisterView.as_view(), name='register'),
-	path('token/', obtain_auth_token, name='token'),
-	path('test-token/', TestTokenView.as_view(), name='test-token'),
-	# path('users/<str:username>/', UserViewSet.as_view({'get':'get_user_by_username'}), name='get-user-by-username'),
-
 ]

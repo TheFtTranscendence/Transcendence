@@ -59,19 +59,19 @@ function navigate() {
 			element = 'game'
 			scripts = window.gameScripts
 			startFunction = 'startGame'
-			break
+			break;
 
-		case '#game2':
-			element = 'game2'
-			scripts = window.game2Scripts
-			startFunction = 'before_game'
-			break
+		case '#fighters':
+			element = 'games'
+			scripts = window.menuScripts
+			startFunction = 'main_menu'
+			break;
 
 		case '#chat':
 			element = 'chat'
 			scripts = window.chatScripts
 			startFunction = 'chat'
-			break
+			break;
 	}
 
 	document.getElementById(element).classList.remove("hidden");
@@ -98,7 +98,7 @@ function loadScript(src) {
 }
 
 // Function to load all scripts
-function loadScripts(scripts, functionName) {
+function loadScripts(scripts, functionName = 'none') {
 
 	scripts.reduce((promise, src) => {
 
@@ -106,15 +106,22 @@ function loadScripts(scripts, functionName) {
 	}, Promise.resolve())
 	.then(() => {
 
-		switch(functionName) {
-			case 'auth' : auth(); break;
-			case 'before_game': before_game(); break;
-			case 'startGame': startGame(); break;
-			case 'home': home(); break;
-			case 'chat': chat(); break;
-			default: console.error("Function " + functionName + " not found");
-		}
+		// switch(functionName) {
+		// 	case 'auth' : auth(); break;
+		// 	case 'before_game': before_game(); break;
+		// 	case 'startGame': startGame(); break;
+		// 	case 'home': home(); break;
+		// 	case 'chat': chat(); break;
+		// 	default: console.error("Function " + functionName + " not found");
+		// }
 
+		if (functionName != 'none') {
+			if (typeof window[functionName] === 'function') {
+				window[functionName]();
+						} else {
+				console.error("Function " + functionName + " not found");
+			}
+		}
 	})
 	.catch(error => {
 		console.error(error);

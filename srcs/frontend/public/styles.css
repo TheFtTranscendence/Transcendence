@@ -120,6 +120,287 @@ body {
 	font-style: normal;
 }
 
+#games-menu-area,
+#games-local-menu,
+#games-tournament-menu {
+	width: 1366px;
+    height: 768px;
+	position: fixed;
+    top: 50%;
+    left: 50%;
+	z-index: 2;
+	display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #2c2c2c;
+    color: white;
+    border-radius: 10px;
+	transform: translate(-50%, -50%); /* Centering trick */
+	overflow-y: auto; /* Allows scrolling if needed */
+}
+
+#games-menu-title {
+    font-size: 48px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 40px;
+    color: #ff4444;
+    letter-spacing: 2px;
+}
+
+#games-menu-area2 {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+#games-menu-player-info  {
+    width: 35%;
+    text-align: center;
+}
+
+#player-info h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #ffcc00;
+}
+
+#games-menu-player-buttons {
+	display: flex;
+	flex-direction: column;
+	margin-top: 20px;
+}
+
+
+
+#games-menu-selected-skin {
+    width: 300px;
+    height: 500px;
+    background-color: #444;
+    margin: 20px auto;
+    border: 3px solid #ffcc00;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+	/* Set the background GIF */
+	
+    background-image: url('game2/assets/Mask/Sprites/preview.gif');
+    background-size: cover;
+	background-position: center;
+    background-repeat: repeat; 
+	
+}
+
+#games-menu-game-options {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 100px;
+	align-items: center;
+	margin: 50px auto 0;
+}
+
+#games-menu-game-options button {
+    width: 80%; /* Adjust the width of the buttons */
+    padding: 15px;
+    font-size: 18px;
+    background-color: #ff4444;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#games-menu-game-options button:hover {
+    background-color: #ffcc00;
+    color: #2c2c2c;
+}
+
+#games-local-menu-area {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0 20px;  /* Added horizontal padding for more spacing */
+    margin-top: 40px;
+}
+
+#games-local-player1-info, 
+#games-local-player2-info {
+    width: 35%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.player-name-input {
+    width: 80%;
+    padding: 10px;
+    margin-bottom: 30px;  /* Increased margin for more space below input */
+    font-size: 16px;
+    border: 2px solid #ff4444;
+    border-radius: 5px;
+    background-color: #2c2c2c;
+    color: white;
+    text-align: center;
+}
+
+#games-local-player1-wrapper,
+#games-local-player2-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Center content vertically */
+    width: 100%; /* Ensure the wrapper takes full width */
+    gap: 15px; /* Space between button and skin preview */
+}
+
+#games-local-player1-buttons,
+#games-local-player2-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;  /* Increased gap between buttons */
+    margin-bottom: 30px;  /* Increased margin for more space below buttons */
+}
+
+#games-local-player1-skin,
+#games-local-player2-skin {
+    width: 200px;
+    height: 300px;
+    background-color: #444;
+    border: 3px solid #ffcc00;
+    border-radius: 10px;
+    background-image: url('game2/assets/Mask/Sprites/preview.gif');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+#games-local-play-button {
+    width: 20%;
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;  /* Increased margin to create more space above the play button */
+	gap: 10px;
+}
+
+#games-local-play-button button {
+    width: 100%;
+    padding: 20px;
+    font-size: 24px;
+    background-color: #ff4444;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#games-local-play-button button:hover,
+#games-tournament-play-button button:hover {
+    background-color: #ffcc00;
+    color: #2c2c2c;
+}
+
+#games-tournament-menu-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: 20px;
+    gap: 30px;
+}
+#games-players-wrapper {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 columns */
+    grid-template-rows: repeat(2, auto);  /* 2 rows */
+    grid-gap: 20px;
+    width: 100%;
+}
+
+.games-tournament-player-info,
+.games-tournament-player-info2 {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #1c1c1c;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.player-name-input {
+    width: 80%;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    border: 2px solid #ff4444;
+    border-radius: 5px;
+    background-color: #2c2c2c;
+    color: white;
+    text-align: center;
+}
+
+.games-tournament-player-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+}
+
+.games-tournament-player-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.games-tournament-player-skin1, 
+.games-tournament-player-skin2, 
+.games-tournament-player-skin3, 
+.games-tournament-player-skin4, 
+.games-tournament-player-skin5, 
+.games-tournament-player-skin6, 
+.games-tournament-player-skin7, 
+.games-tournament-player-skin8 {
+    width: 150px;
+    height: 200px;
+    background-color: #444;
+    border: 3px solid #ffcc00;
+    border-radius: 10px;
+    background-image: url('game2/assets/Mask/Sprites/normal_preview.gif');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+#games-tournament-play-button {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+#games-tournament-play-button button {
+    padding: 10px 20px;
+    font-size: 20px;
+    background-color: #ff4444;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.games-tournament-player-info2 {
+    display: none;
+}
+
 #game2-area {
     width: 1366px;
     height: 768px;
@@ -255,100 +536,149 @@ body {
 	z-index: 6;
 }
 
-#chat-main-div {
-    width: 80%;
-    height: 80vh;
-    display: flex;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    overflow: hidden;
-    background-color: white;
+/* ============ Chat ============  */
+
+#chat {
+	width: 1366px;
+    height: 768px;
+	position: fixed;
+    top: 50%;
+    left: 50%;
+	z-index: 2;
+	display: flex;
+    flex-direction: row; /* Ensures children are laid out side by side */
+    align-items: center;
+    padding: 20px;
+    background-color: #2c2c2c;
+    color: white;
+    border-radius: 10px;
+	transform: translate(-50%, -50%); /* Centering trick */
+	overflow-y: auto; /* Allows scrolling if needed */
 }
 
-#chat-left-parent {
-    width: 250px;
-    background-color: #f0f0f0;
-    border-right: 1px solid #ccc;
+#chat-list {
+    width: 25%; /* Set the chat list to take up 25% of the container's width */
+    height: 100%;
+    border-right: 1px solid #444;
+    padding-right: 10px;
+    overflow-y: auto; /* Scroll if there are many chats */
+}
+#chat-content-container {
     display: flex;
     flex-direction: column;
+    width: 75%;
+    height: 100%;
 }
 
-#chat-contacts-history {
+#chat-content {
     flex-grow: 1;
     padding: 10px;
+    overflow-y: auto;
+    background-color: #1e1e1e;
+    box-sizing: border-box;
 }
 
-#chat-contacts-history h2 {
-    margin-bottom: 10px;
+#chat-input-container {
+    display: flex;
+    border-top: 1px solid #444;
+    padding: 10px;
+    background-color: #2c2c2c;
 }
 
-.chat-list, ul {
-    list-style: none;
+#chat-input {
+    flex-grow: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    margin-right: 10px;
+    font-size: 16px;
+    background-color: #3a3a3a;
+    color: white;
+}
+
+#send-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4a76a8;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#send-button:hover {
+    background-color: #3e6385;
 }
 
 .chat-item {
     padding: 10px;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid #444;
     cursor: pointer;
 }
 
 .chat-item:hover {
-    background-color: #ddd;
+    background-color: #3d3d3d;
 }
 
-#chat-right-parent {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
+.friend-name {
+    font-weight: bold;
+    font-size: 1.1em;
 }
 
-#toggle-friend-list {
-    background-color: #333;
-    color: white;
-    border: none;
-    padding: 10px;
-    cursor: pointer;
-    border-radius: 4px;
-    margin: 10px;
+.last-message {
+    font-size: 0.9em;
+    color: #bbb;
+    margin-top: 5px;
 }
 
-#toggle-friend-list:hover {
-    background-color: #444;
+.sent-message {
+	background-color: #4a76a8;
+	color: white;
+	border-radius: 5px;
+	padding: 5px;
+	margin-top: 5px;
+	align-self: flex-end;
 }
 
-#chat-friend-div {
-    flex-grow: 1;
-    padding: 10px;
+.received-message {
+	background-color: #3a3a3a;
+	color: white;
+	border-radius: 5px;
+	padding: 5px;
+	margin-top: 5px;
+	align-self: flex-start;
+}
+
+.sent-message + .sent-message,
+.received-message + .received-message
+{
+    margin-top: -1px;
+    border-top: none;
+    border-bottom: none;
+}
+
+.sent-message + .sent-message strong, 
+.received-message + .received-message strong
+{
     display: none;
-    overflow-y: auto;
 }
 
-#chat-right-top {
-    flex-grow: 1;
-    padding: 10px;
-    overflow-y: auto;
+.sent-message:has(+ .received-message), .sent-message:last-child,
+.received-message:has(+ .sent-message), .received-message:last-child
+{
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
 }
 
-.message {
-    padding: 10px;
-    background-color: #f0f0f0;
-    border-radius: 5px;
-    margin-bottom: 10px;
+.received-message + .sent-message, .sent-message:first-child,
+.sent-message + .received-message, .received-message:first-child
+{
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
 }
 
-#chat-right-bottom {
-    padding: 10px;
-    border-top: 1px solid #ccc;
-    background-color: #f0f0f0;
-}
+/* ============ End Chat ============  */
 
-#chat-right-bottom textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    resize: none;
-}
 #auth {
 	border: 7px solid var(--background-color);
     display: flex;

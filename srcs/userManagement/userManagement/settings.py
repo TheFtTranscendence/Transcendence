@@ -106,7 +106,7 @@ LOGGING = {
 		},
 	},
 	'loggers': {
-		'django': {
+		'authentication': {
 			'handlers': ['console'],
 			'level': 'INFO',
 			'propagate': False,

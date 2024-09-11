@@ -23,7 +23,6 @@ function startGame()
     const vars = initVars();
 
 	console.log('initing game');
-	document.getElementById('game').classList.remove('hidden');
 
 	// When leaving this hash (#game), trigger game_hashchange function
 	window.addEventListener("hashchange", (event) => {game_hashchange(vars)});
