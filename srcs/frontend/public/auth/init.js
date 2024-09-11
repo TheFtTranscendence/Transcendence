@@ -24,23 +24,45 @@ function auth()
 	window.addEventListener('hashchange', auth_hashchange);
 }
 
-function handleSuccessAuth(errorField, username) {
+function handleSuccessAuth(errorField) {
 	console.log("handleSuccessAuth() called")
 	document.getElementById('auth').classList.add('hidden');
 	document.querySelector('nav').classList.remove('hidden');
 	window.location.hash = '#home';
 	if (!errorField.classList.contains('hidden'))
 		errorField.classList.add('hidden');
-	currentUser.username = username;
-	localStorage.setItem('currentUser', JSON.stringify(currentUser));
-	axios.get('http://localhost:8000/auth/user_info/' + username + '/')
+
+	userheaders = {
+		'Authorization': 'Token ' + response.data.token,
+	}
+
+	axios.get('http://localhost:8000/auth/users/', {headers: userheaders})
 	.then((response) => {
 		window.user = response.data;
-		console.log('Users:', window.user);
+		console.log('User:', window.user);
+		console.log(response.data);
+
+		Object.entries(window.user.friend_list).forEach(([key, friend]) => {
+			// Create a WebSocket connection for each friend
+			friend.socket = new WebSocket('ws://localhost:8002/ws/chat/?user=' + window.user.username + '&chat_id=' + friend.chat_id);
+		
+			// Setup an onmessage event listener
+			friend.socket.onmessage = function(e) {
+				const data = JSON.parse(e.data);
+				console.log(data);
+			};
+		
+			console.log('Friend key:', key);
+			console.log('Friend object:', friend);
+		});
+		
 	})
 	.catch((error) => {
 		console.error(error);
 	});
+
+	currentUser.username = window.user.username;
+	localStorage.setItem('currentUser', JSON.stringify(currentUser));
 }
 
 function handleLogin() {
@@ -55,8 +77,9 @@ function handleLogin() {
 
 	axios.post('http://localhost:8000/auth/login/', data)
 	.then((response) => {
+		window.Usertoken = response.data.token;
 		console.log(response.data);
-		handleSuccessAuth(errorField, username);
+		handleSuccessAuth(errorField);
 		alert('Login successful');
 	})
 	.catch((error) => {
