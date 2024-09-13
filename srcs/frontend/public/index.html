@@ -8,20 +8,69 @@
 	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
-<body style="background-color: var(--background-color);">
+<body >
 
 	<!-- LOGO
 	<div class="logo-container">
-        <img src="img/logo.svg" alt="Logo" class="logo">
-    </div>
+		<img src="img/logo.svg" alt="Logo" class="logo">
+	</div>
 	-->
 
-	<nav class="">
-		<a href="#home" class="nav-link">Home</a>
-		<a href="#game" class="nav-link">Game</a>
-		<a href="#game2" class="nav-link">Game2</a>
-		<a href="#chat" class="nav-link">Chat</a>
+	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+		<div class="container-fluid">
+			<a class="navbar-brand" href="#home">PONG</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav ms-auto">
+					<li class="nav-item">
+						<a class="nav-link" href="#home">Home</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#game">Game</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#game2">Game2</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#chat">Chat</a>
+					</li>
+				</ul>
+				<div id="profile-img" class="img-thumbnail img-circle">
+					<img alt="Profile Image">
+				</div>
+			</div>
+		</div>
 	</nav>
+	<div id="sidebar" class="sidebar hidden">
+		<ul>
+			<li><input type="file" id="changeProfilePicture" style="display: none;" accept=".jpg" />
+			<button id="uploadButton">Change Profile Picture</button></li>
+			<li>
+				<button id="changePassword">Change Password</button>
+				<div id="changePasswordForm" class="hidden">
+					<form>
+						<div class="form-group">
+							<label for="currentPassword">Current password:</label>
+							<input type="password" class="form-control" id="currentPassword" name="password">
+						</div>
+						<div class="form-group">
+							<label for="newPassword">New password:</label>
+							<input type="password" class="form-control" id="newPassword" name="password">
+						</div>
+						<div class="form-group">
+							<label for="confirmNewPassword">Confirm new password:</label>
+							<input type="password" class="form-control" id="confirmNewPassword" name="password">
+						</div>
+						<button id="submitPasswordChange" type="submit" class="btn btn-primary btn-block">Change Password</button>
+					</form>
+					<div id="changePasswordError" class="text-danger bg-dark mt-3 p-2 rounded hidden"></div>
+				</div>
+			</li>
+			<li><button id="logoutButton">Logout</button></li>
+		</ul>
+	</div>
 
 	<div class="container-fluid">
 		<div id="auth" class="row vh-100 hidden">
@@ -84,43 +133,9 @@
 
 
 	<div id="home" class="hidden">
-		<div id="profile-img" class="img-thumbnail img-circle">
-			<div style="position: relative; padding: 0; cursor: pointer;" type="file">
-			<img class="img-circle" style="width: 140px; height: 140px;">
-			</div>
-		</div>
-		<!-- Sidebar -->
-		<div id="sidebar" class="sidebar hidden">
-			<ul>
-				<li><input type="file" id="changeProfilePicture" style="display: none;" accept=".jpg" />
-				<button id="uploadButton">Change Profile Picture</button></li>
-				<li>
-					<button id="changePassword">Change Password</button>
-					<div id="changePasswordForm" class="hidden">
-						<form>
-							<div class="form-group">
-								<label for="currentPassword">Current password:</label>
-								<input type="password" class="form-control" id="currentPassword" name="password">
-							</div>
-							<div class="form-group">
-								<label for="newPassword">New password:</label>
-								<input type="password" class="form-control" id="newPassword" name="password">
-							</div>
-							<div class="form-group">
-								<label for="confirmNewPassword">Confirm new password:</label>
-								<input type="password" class="form-control" id="confirmNewPassword" name="password">
-							</div>
-							<button id="submitPasswordChange" type="submit" class="btn btn-primary btn-block">Change Password</button>
-						</form>
-						<div id="changePasswordError" class="text-danger bg-dark mt-3 p-2 rounded hidden"></div>
-					</div>
-				</li>
-				<li><button id="logoutButton">Logout</button></li>
 
-				<!-- <li><input id="changeProfilePicture" type="file" accept="image/*" name="image" id="file" style="display: none;">
-				<label for="file" style="cursor: pointer;">Upload Image</label></li> -->
-			</ul>
-		</div>
+		<!-- Sidebar -->
+
 	</div>
 
 	<!-- <div id="content"> -->

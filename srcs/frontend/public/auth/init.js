@@ -6,7 +6,7 @@ function auth_hashchange(event)
 
 function auth()
 {
-	console.log("Auth() called")
+	document.querySelector('nav').classList.add('hidden');
 	const userJSON = localStorage.getItem('currentUser');
 	const currentUserLS = userJSON ? JSON.parse(userJSON) : null;
 

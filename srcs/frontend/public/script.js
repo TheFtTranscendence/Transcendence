@@ -12,7 +12,6 @@ function navigate() {
 	switch (window.location.hash) {
 
 		case '#auth':
-			document.querySelector('nav').classList.add('hidden');
 			element = 'auth'
 			scripts = window.authScripts
 			startFunction = 'auth'
@@ -74,16 +73,6 @@ function loadScripts(scripts, functionName = 'none') {
 		return promise.then(() => loadScript(src));
 	}, Promise.resolve())
 	.then(() => {
-
-		// switch(functionName) {
-		// 	case 'auth' : auth(); break;
-		// 	case 'before_game': before_game(); break;
-		// 	case 'startGame': startGame(); break;
-		// 	case 'home': home(); break;
-		// 	case 'chat': chat(); break;
-		// 	default: console.error("Function " + functionName + " not found");
-		// }
-
 		if (functionName != 'none') {
 			if (typeof window[functionName] === 'function') {
 				window[functionName]();

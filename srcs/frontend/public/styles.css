@@ -11,12 +11,32 @@
 }
 
 body {
+    margin: 0;
+    padding: 0;
+
     font-family: Arial, sans-serif;
     text-align: center;
 	margin: 0;
     overflow: hidden;
-	margin: 0;
     overflow: hidden;
+}
+
+body::before {
+	content: ""; /* Required for pseudo-element */
+    position: fixed; /* Make sure it covers the viewport */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    background-image: url('img/background.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+
+    filter: brightness(0.5) blur(5px) contrast(0.9) saturate(0.8); /* Apply filters */
+    z-index: -1; /* Send it behind everything else */
 }
 
 .hidden {
@@ -28,9 +48,8 @@ body {
 }
 
 #auth {
-	border: 7px solid var(--background-color);
+	border: 7px transparent;
     display: flex;
-    /* transition: all 0.5s ease; */
 }
 
 .horizontal-line {
@@ -39,12 +58,12 @@ body {
     left: 0;
     width: 100%;
     height: 4px;
-    background-color: var(--background-color);
+    background-color: transparent;
     transform: translateY(-50%);
 }
 
 .left-side, .right-side {
-	color: var(--background-color);
+	color: transparent;
 	cursor: pointer;
 	display: flex;
 	justify-content: center;
@@ -69,11 +88,10 @@ body {
 }
 
 .left-side {
-	background-color: var(--blue);
-	border-right: 7px solid var(--background-color);
+	background-color: rgba(var(--blue), 0.5);
 }
 .right-side {
-	background-color: var(--red);
+	background-color: rgba(var(--red), 0.5);
 }
 .full-height {
 	height: 100%;
@@ -92,6 +110,7 @@ body {
 	/* transition: all 0.5s ease; */
 }
 
+/*
 .logo-container {
     position: absolute;
     top: 20px;
@@ -102,7 +121,8 @@ body {
 .logo {
     width: 50px;
     height: auto;
-}
+} */
+
 #game-area {
 	width: 800px;
     height: 600px;
@@ -186,12 +206,12 @@ body {
     align-items: center;
 
 	/* Set the background GIF */
-	
+
     background-image: url('game2/assets/Mask/Sprites/preview.gif');
     background-size: cover;
 	background-position: center;
-    background-repeat: repeat; 
-	
+    background-repeat: repeat;
+
 }
 
 #games-menu-game-options {
@@ -229,7 +249,7 @@ body {
     margin-top: 40px;
 }
 
-#games-local-player1-info, 
+#games-local-player1-info,
 #games-local-player2-info {
     width: 35%;
     text-align: center;
@@ -360,13 +380,13 @@ body {
     gap: 15px;
 }
 
-.games-tournament-player-skin1, 
-.games-tournament-player-skin2, 
-.games-tournament-player-skin3, 
-.games-tournament-player-skin4, 
-.games-tournament-player-skin5, 
-.games-tournament-player-skin6, 
-.games-tournament-player-skin7, 
+.games-tournament-player-skin1,
+.games-tournament-player-skin2,
+.games-tournament-player-skin3,
+.games-tournament-player-skin4,
+.games-tournament-player-skin5,
+.games-tournament-player-skin6,
+.games-tournament-player-skin7,
 .games-tournament-player-skin8 {
     width: 150px;
     height: 200px;
@@ -657,7 +677,7 @@ body {
     border-bottom: none;
 }
 
-.sent-message + .sent-message strong, 
+.sent-message + .sent-message strong,
 .received-message + .received-message strong
 {
     display: none;
@@ -744,39 +764,40 @@ body {
 }
 
 
-/* Profile Image */
+/* NAV BAR */
+.navbar {
+	opacity: 0.5; /* 80% opacity */
+	height: 82px; /* Adjust as needed */
+	align-items: center;
+}
+
+.navbar-nav {
+    margin-right: auto;
+}
+
+/* Profile Image Container */
 #profile-img {
 	position: absolute;
 	top: 0;
 	right: 0;
-	margin: 10px;
-	width: 140px;
-	height: 140px;
+	margin-right: 25px;
 	background-color: transparent;
 	border: none;
+    width: 84px;  /* Adjust the size */
+    height: 84px; /* Same width and height for a square image */
+    overflow: hidden;
+    border-radius: 50%;
 }
 
+/* Profile Image */
 #profile-img img {
-	border-radius: 50%; /* To make the image circular */
+	border-radius: 50%; /* Make the image circular */
 	width: 100%;
 	height: 100%;
-	object-fit: cover; /* To ensure the image covers the container */
+	object-fit: cover; /* Ensure the image fits the container */
+	border: 3px solid rgba(20, 18, 18, 0.8); /* Add a white border with transparency */
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Optional: Add a subtle shadow for depth */
 }
-
-/**
-.menu-icon {
-	position: fixed;
-	top: 20px;
-	right: 20px;
-	cursor: pointer;
-	z-index: 1000;
-}
-
-.menu-icon img {
-	width: 30px;
-	height: 30px;
-}
-**/
 
 
 /* Sidebar */
@@ -790,7 +811,6 @@ body {
 	color: white;
 	z-index: 999;
 	padding-top: 60px;
-
 }
 
 .sidebar ul {
