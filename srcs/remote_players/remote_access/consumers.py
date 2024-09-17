@@ -18,7 +18,36 @@ class GameConsumer(AsyncWebsocketConsumer):
 
 		await self.accept()
 
+		#todo: add user count to game
+		logger.info(f"Game {self.game_id}: [<user_count>/2]")
+		await self.channel_layer.group_send(
+			self.room_group_name,
+			{
+				'type': 'game_info',
+				'reason': 'Ready',
+			}
+		)
+
+	async def handle_connection_lost(self):
+		await self.channel_layer.group_send(
+			self.room_group_name,
+			{
+				'type': 'game_info',
+				'info': 'Disconect',
+			}
+		)
+		try:
+			game = await self.get_game(self.game_id)
+			logger.info(f"GameConsumer: Game between user {game.player_1} and {game.player_2} ended because one of the users lost connection")
+			await self.delete_game(game)
+		except Game.DoesNotExist:
+			pass
+		except Exception as e:
+			logger.exception(f"Exception in GameConsumer \n\tFunction: \"connect\":\n {e}")
+
+	#todo: handle this with close_codes
 	async def disconnect(self, close_code):
+		await self.handle_connection_lost()
 		await self.channel_layer.group_discard(
 			self.room_group_name,
 			self.channel_name
@@ -26,6 +55,10 @@ class GameConsumer(AsyncWebsocketConsumer):
 
 	async def receive(self, text_data):
 		text_data_json = json.loads(text_data)
+
+		# * Debug
+		logger.debug(f"json: {text_data_json}")
+
 		player_id = text_data_json['player_id']
 		action = text_data_json['action']
 
@@ -38,6 +71,13 @@ class GameConsumer(AsyncWebsocketConsumer):
 			}
 		)
 
+	async def game_info(self, event):
+		info = event['info']
+
+		await self.send(text_data=json.dumps({
+			'type': 'game_info',
+			'info': info,
+		}))
 
 	async def move(self, event):
 		player_id = event['player_id']
@@ -49,6 +89,14 @@ class GameConsumer(AsyncWebsocketConsumer):
 			'action': action
 		}))
 
+	@database_sync_to_async
+	def get_game(self, game_id):
+		return Game.objects.get(id=game_id)
+	
+	@database_sync_to_async
+	def delete_game(self, game):
+		game.delete()
+
 class QueueConsumer(AsyncWebsocketConsumer):
 	queue_Pong = []
 	queue_Fighty = []
@@ -58,13 +106,10 @@ class QueueConsumer(AsyncWebsocketConsumer):
 		self.game = self.scope['url_route']['kwargs']['game']
 		self.user_id = self.scope['url_route']['kwargs']['user_id']
 
-		logger.info("Hello")
-
 		await self.accept()
 
 		if self.is_user_in_any_queue(self.user_id):
-			logger.info("Hello3")
-
+			logger.info(f"QueueConsumer: User {self.user_id} tried to join a queue but he is already in one")
 			await self.send(json.dumps({
 				'status': 'error',
 				'message': 'User is already in a queue!'
@@ -72,11 +117,7 @@ class QueueConsumer(AsyncWebsocketConsumer):
 			await self.close()
 			return
 
-		logger.info("Hello2")
-
-
 		if self.game == 'Pong':
-				
 			self.queue_Pong.append(self)
 
 			if (len(self.queue_Pong) >= 2):
@@ -86,6 +127,7 @@ class QueueConsumer(AsyncWebsocketConsumer):
 
 			if (len(self.queue_Fighty) >= 2):
 				await self.start_game()
+		logger.info(f"QueueConsumer: User {self.user_id} joined {self.game}'s queue")
 
 
 	async def disconnect(self, close_code):
@@ -96,7 +138,7 @@ class QueueConsumer(AsyncWebsocketConsumer):
 
 
 	async def start_game(self):
-		logger.exception('Entered start_game')
+		logger.info('Entered start_game')
 		if self.game == 'Pong':
 			players = self.queue_Pong[:self.game_size]
 			self.queue_Pong = self.queue_Pong[self.game_size:]
@@ -138,10 +180,6 @@ class QueueConsumer(AsyncWebsocketConsumer):
 
 	@database_sync_to_async
 	def create_game(self, data):
-		info1 = data['player_1']
-		info2 = data['player_2']
-		logger.exception(f'1: {info1}')
-		logger.exception(f'2: {info2}')
 		try:
 			game = Game.objects.create(
 				player_1 = data['player_1'],
@@ -149,5 +187,4 @@ class QueueConsumer(AsyncWebsocketConsumer):
 			)
 		except Exception as e:
 			logger.exception(f'exception: {e}')
-		logger.exception('!!!')
 		return game
