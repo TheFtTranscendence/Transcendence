@@ -1,3 +1,5 @@
+window.IP = "10.12.7.11"
+
 window.chatScripts = [
 	'chat/chat.js',
 ];
