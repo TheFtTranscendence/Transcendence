@@ -1,43 +1,34 @@
-// Sample content for each route
-const routes = {
-	'#home': `<h1>Home Page</h1><p>Welcome to the home page!</p>`,
-	'#game': `<h1>Game</h1><canvas id="game-area"></canvas>`,
-	'#game2': `<h1>Game2</h1>
-					<div id="div-game2-area">
-						<div id="div-game2-top">
-							<!-- Player 1 health -->
-							<div id="game2-bar1-parent">
-								<div id="game2-bar1-background"></div>
-								<div id="game2-bar1"></div>
-							</div>
-							<!-- timer -->
-							<div id="game2-timer"> 50 </div>
-							<!-- Player 2 health -->
-							<div id="game2-bar2-parent">
-								<div id="game2-bar2-background"></div>
-								<div id="game2-bar2"></div>
-							</div>
-						</div>
-						<div id= "game2-end-text"> Tie </div>
-						<div>
-							<canvas id="game2-area"></canvas>
-						</div>
-					</div>
-					`,
-	'#chat': `<h1>Chat</h1><p>Here can be eventually the chat</p>`
-};
-				
-
 // Function to handle navigation
 function navigate() {
-	const hash = window.location.hash;
-	const contentDiv = document.getElementById('content');
-	contentDiv.innerHTML = routes[hash] || '<h1>404 Not Found</h1><p>Page not found.</p>';
 
-	if (hash === '#game')
-		loadGameScript();
-	if (hash === '#game2')
-		loadGameScript2();
+	switch (window.location.hash) {
+		case '#home':
+			element = 'home'
+			scripts = window.homeScripts
+			startFunction = 'home'
+			break;
+
+		case '#game':
+			element = 'game'
+			scripts = window.gameScripts
+			startFunction = 'startGame'
+			break;
+
+		case '#fighters':
+			element = 'games'
+			scripts = window.menuScripts
+			startFunction = 'main_menu'
+			break;
+
+		case '#chat': 
+			element = 'chat'
+			scripts = window.chatScripts
+			startFunction = 'chat'
+			break;
+	}
+	
+	document.getElementById(element).classList.remove('hidden');
+	loadScripts(scripts, startFunction);
 }
 
 // Function to load a script and return a Promise
@@ -60,28 +51,36 @@ function loadScript(src) {
 }
 
 // Function to load all scripts
-function loadGameScript2() {
-	scripts = [
-		'game2/events.js',
-		'game2/init.js',
-		'game2/game_end.js',
-		'game2/gameScript2.js'
-	];
+function loadScripts(scripts, functionName = 'none') {
 	
 	scripts.reduce((promise, src) => {
 		
 		return promise.then(() => loadScript(src));
-	}, Promise.resolve()).then(() => {
-
-		if (typeof startGame2 === 'function')
-			startGame2();
-		else
-			console.error("startGame2 function not found")
-
-	}).catch(error => {
+	}, Promise.resolve())
+	.then(() => {
+			if (functionName != 'none') {
+				if (typeof window[functionName] === 'function') {
+					window[functionName]();
+				} else {
+					console.error("Function " + functionName + " not found");
+				}
+			}
+	})
+	.catch(error => {
 		console.error(error);
 	});
 }
+
+function UnloadScripts(scripts) {
+
+	scripts.forEach(script => {
+		const scriptElement = document.querySelector(`script[src="${script}"]`);
+		if (scriptElement) {
+			scriptElement.remove();
+		}
+	});
+}
+
 
 // Starts game script
 function loadGameScript()
@@ -113,11 +112,42 @@ function handleLogin() {
 	}
 
 	// console.log('Sending JSON:', JSON.stringify(data, null, 2));
-
+	
 	axios.post('http://localhost:8000/auth/login/', data)
 	.then((response) => {
 		console.log(response.data);
 		alert('Login successful');
+		
+		window.Usertoken = response.data.token;
+		
+		userheaders = {
+			'Authorization': 'Token ' + response.data.token,
+		}
+
+		axios.get('http://localhost:8000/auth/users/', {headers: userheaders})
+		.then((response) => {
+			window.user = response.data;
+			console.log('User:', window.user);
+			console.log(response.data);
+
+			Object.entries(window.user.friend_list).forEach(([key, friend]) => {
+				// Create a WebSocket connection for each friend
+				friend.socket = new WebSocket('ws://localhost:8002/ws/chat/?user=' + window.user.username + '&chat_id=' + friend.chat_id);
+			
+				// Setup an onmessage event listener
+				friend.socket.onmessage = function(e) {
+					const data = JSON.parse(e.data);
+					console.log(data);
+				};
+			
+				console.log('Friend key:', key);
+				console.log('Friend object:', friend);
+			});
+			
+		})
+		.catch((error) => {
+			console.error(error);
+		});
 	})
 	.catch((error) => {
 		console.error(error);

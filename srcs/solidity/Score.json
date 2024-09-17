@@ -1,5 +1,116 @@
 [
 	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_instanceIndex",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_gameType",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_player1",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_player2",
+				"type": "string"
+			},
+			{
+				"internalType": "uint8",
+				"name": "_score1",
+				"type": "uint8"
+			},
+			{
+				"internalType": "uint8",
+				"name": "_score2",
+				"type": "uint8"
+			}
+		],
+		"name": "addGame",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "addInstance",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_instanceIndex",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_gameType",
+				"type": "string"
+			},
+			{
+				"internalType": "string[]",
+				"name": "_players",
+				"type": "string[]"
+			}
+		],
+		"name": "addTournament",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_instanceIndex",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_gameType",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_player1",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_player2",
+				"type": "string"
+			},
+			{
+				"internalType": "uint8",
+				"name": "_score1",
+				"type": "uint8"
+			},
+			{
+				"internalType": "uint8",
+				"name": "_score2",
+				"type": "uint8"
+			}
+		],
+		"name": "addTournamentGame",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
 		"inputs": [],
 		"name": "noCurrentTournament",
 		"type": "error"
@@ -12,6 +123,11 @@
 	{
 		"inputs": [],
 		"name": "onlyOwnerError",
+		"type": "error"
+	},
+	{
+		"inputs": [],
+		"name": "onlyPongyFightyError",
 		"type": "error"
 	},
 	{
@@ -30,11 +146,6 @@
 		"type": "error"
 	},
 	{
-		"inputs": [],
-		"name": "wrongTournamentIndex",
-		"type": "error"
-	},
-	{
 		"anonymous": false,
 		"inputs": [
 			{
@@ -42,6 +153,12 @@
 				"internalType": "uint256",
 				"name": "instanceIndex",
 				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "gameType",
+				"type": "string"
 			},
 			{
 				"indexed": false,
@@ -107,6 +224,12 @@
 			},
 			{
 				"indexed": false,
+				"internalType": "string",
+				"name": "gameType",
+				"type": "string"
+			},
+			{
+				"indexed": false,
 				"internalType": "uint8",
 				"name": "numberOfPlayers",
 				"type": "uint8"
@@ -130,53 +253,19 @@
 			},
 			{
 				"internalType": "string",
-				"name": "_player1",
+				"name": "_gameType",
 				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_player2",
-				"type": "string"
-			},
-			{
-				"internalType": "uint8",
-				"name": "_score1",
-				"type": "uint8"
-			},
-			{
-				"internalType": "uint8",
-				"name": "_score2",
-				"type": "uint8"
 			}
 		],
-		"name": "addGame",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "addInstance",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
+		"name": "getAllTournamentsRankings",
+		"outputs": [
 			{
-				"internalType": "uint256",
-				"name": "_instanceIndex",
-				"type": "uint256"
-			},
-			{
-				"internalType": "string[]",
-				"name": "_players",
-				"type": "string[]"
+				"internalType": "string[][]",
+				"name": "",
+				"type": "string[][]"
 			}
 		],
-		"name": "addTournament",
-		"outputs": [],
-		"stateMutability": "nonpayable",
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -188,41 +277,8 @@
 			},
 			{
 				"internalType": "string",
-				"name": "_player1",
+				"name": "_gameType",
 				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_player2",
-				"type": "string"
-			},
-			{
-				"internalType": "uint8",
-				"name": "_score1",
-				"type": "uint8"
-			},
-			{
-				"internalType": "uint8",
-				"name": "_score2",
-				"type": "uint8"
-			}
-		],
-		"name": "addTournamentGame",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_instanceIndex",
-				"type": "uint256"
 			}
 		],
 		"name": "getGames",
@@ -274,19 +330,19 @@
 				"internalType": "uint256",
 				"name": "_instanceIndex",
 				"type": "uint256"
-			}
-		],
-		"name": "getNextTournamentPlayers",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
 			},
 			{
 				"internalType": "string",
-				"name": "",
+				"name": "_gameType",
 				"type": "string"
+			}
+		],
+		"name": "getLastTournamentRanking",
+		"outputs": [
+			{
+				"internalType": "string[]",
+				"name": "",
+				"type": "string[]"
 			}
 		],
 		"stateMutability": "view",
@@ -300,17 +356,22 @@
 				"type": "uint256"
 			},
 			{
-				"internalType": "uint256",
-				"name": "_tournamentIndex",
-				"type": "uint256"
+				"internalType": "string",
+				"name": "_gameType",
+				"type": "string"
 			}
 		],
-		"name": "getTournamentRanking",
+		"name": "getNextTournamentPlayers",
 		"outputs": [
 			{
-				"internalType": "string[]",
+				"internalType": "string",
 				"name": "",
-				"type": "string[]"
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
 			}
 		],
 		"stateMutability": "view",

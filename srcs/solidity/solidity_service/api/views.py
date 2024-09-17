@@ -67,7 +67,7 @@ def add_instance(request):
 
 # Add a game
 @api_view(['POST'])
-def add_game(request, instanceIndex):
+def add_game(request, instanceIndex, gameType):
     data = request.data
     player1 = data.get('player1')
     player2 = data.get('player2')
@@ -81,13 +81,13 @@ def add_game(request, instanceIndex):
         # Estimate gas and gas price
         base_gas_price = web3.eth.gas_price
         gas_price = int(base_gas_price * 2)
-        base_gas = contract.functions.addGame(instanceIndex, player1, player2, score1, score2).estimate_gas({
+        base_gas = contract.functions.addGame(instanceIndex, gameType, player1, player2, score1, score2).estimate_gas({
             'from': web3.eth.default_account
         })
         gas = int(base_gas * 2)
 
         # Build the transaction
-        tx = contract.functions.addGame(instanceIndex, player1, player2, score1, score2).build_transaction({
+        tx = contract.functions.addGame(instanceIndex, gameType, player1, player2, score1, score2).build_transaction({
             'chainId': 11155111,
             'gas': gas,
             'gasPrice': gas_price,
@@ -109,7 +109,7 @@ def add_game(request, instanceIndex):
 
 # Add tournament (4 or 8 players)
 @api_view(['POST'])
-def add_tournament(request, instanceIndex):
+def add_tournament(request, instanceIndex, gameType):
     data = request.data
     players = data.get('players')
 
@@ -120,13 +120,13 @@ def add_tournament(request, instanceIndex):
         # Estimate gas and gas price
         base_gas_price = web3.eth.gas_price
         gas_price = int(base_gas_price * 2)
-        base_gas = contract.functions.addTournament(instanceIndex, players).estimate_gas({
+        base_gas = contract.functions.addTournament(instanceIndex, gameType, players).estimate_gas({
             'from': web3.eth.default_account
         })
         gas = int(base_gas * 2)
 
         # Build the transaction
-        tx = contract.functions.addTournament(instanceIndex, players).build_transaction({
+        tx = contract.functions.addTournament(instanceIndex, gameType, players).build_transaction({
             'chainId': 11155111,
             'gas': gas,
             'gasPrice': gas_price,
@@ -148,7 +148,7 @@ def add_tournament(request, instanceIndex):
 
 # Add a tournament game
 @api_view(['POST'])
-def add_tournament_game(request, instanceIndex):
+def add_tournament_game(request, instanceIndex, gameType):
     data = request.data
     player1 = data.get('player1')
     player2 = data.get('player2')
@@ -162,13 +162,13 @@ def add_tournament_game(request, instanceIndex):
         # Estimate gas and gas price
         base_gas_price = web3.eth.gas_price
         gas_price = int(base_gas_price * 2)
-        base_gas = contract.functions.addTournamentGame(instanceIndex, player1, player2, score1, score2).estimate_gas({
+        base_gas = contract.functions.addTournamentGame(instanceIndex, gameType, player1, player2, score1, score2).estimate_gas({
             'from': web3.eth.default_account
         })
         gas = int(base_gas * 2)
 
         # Build the transaction
-        tx = contract.functions.addTournamentGame(instanceIndex, player1, player2, score1, score2).build_transaction({
+        tx = contract.functions.addTournamentGame(instanceIndex, gameType, player1, player2, score1, score2).build_transaction({
             'chainId': 11155111,
             'gas': gas,
             'gasPrice': gas_price,
@@ -192,9 +192,9 @@ def add_tournament_game(request, instanceIndex):
 
 # Get all the games from an instance (for the history)
 @api_view(['GET'])
-def get_games(request, instanceIndex):
+def get_games(request, instanceIndex, gameType):
     try:
-        games = contract.functions.getGames(instanceIndex).call()
+        games = contract.functions.getGames(instanceIndex, gameType).call()
     except Exception as e:
         return JsonResponse({'exception': str(e)}, status=400)
 
@@ -202,20 +202,30 @@ def get_games(request, instanceIndex):
 
 # Get the next tournament game to play (returns 2 players)
 @api_view(['GET'])
-def get_next_tournament_player(request, instanceIndex):
+def get_next_tournament_player(request, instanceIndex, gameType):
     try:
-        players = contract.functions.getNextTournamentPlayers(instanceIndex).call()
+        players = contract.functions.getNextTournamentPlayers(instanceIndex, gameType).call()
     except Exception as e:
         return JsonResponse({'exception': str(e)}, status=400)
 
     return JsonResponse({'success': players}, status=200)
 
-# Get a tournament ranking
+# Get the last tournament ranking
 @api_view(['GET'])
-def get_tournament_ranking(request, instanceIndex, tournamentIndex):
+def get_last_tournament_ranking(request, instanceIndex, gameType):
     try:
-        ranking = contract.functions.getTournamentRanking(instanceIndex, tournamentIndex).call()
+        ranking = contract.functions.getLastTournamentRanking(instanceIndex, gameType).call()
     except Exception as e:
         return JsonResponse({'exception': str(e)}, status=400)
 
     return JsonResponse({'success': ranking}, status=200)
+
+# Get all the tournaments rankings
+@api_view(['GET'])
+def get_all_tournaments_rankings(request, instanceIndex, gameType):
+    try:
+        rankings = contract.functions.getAllTournamentsRankings(instanceIndex, gameType).call()
+    except Exception as e:
+        return JsonResponse({'exception': str(e)}, status=400)
+
+    return JsonResponse({'success': rankings}, status=200)

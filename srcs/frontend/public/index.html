@@ -88,29 +88,237 @@
 			<button id="toLogin">Already a user?</button>
 		</div>
 	</div>
--->
-
+	-->
 	<nav class="hidden">
 		<a href="#home" class="nav-link">Home</a>
 		<a href="#game" class="nav-link">Game</a>
-		<a href="#game2" class="nav-link">Game2</a>
+		<a href="#fighters" class="nav-link">Fighty Fighters</a>
 		<a href="#chat" class="nav-link">Chat</a>
 	</nav>
 	<div id="content">
+		<div id="home" class="hidden">
+			<h1>Home</h1>
+			<p>Click on the links above to navigate to the different sections of the website.</p>
+			<p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Architecto quaerat alias, adipisci laborum labore reprehenderit quae doloremque repellendus magnam consectetur, dolore necessitatibus explicabo ipsum tenetur accusantium minus iste! Sed, voluptas.</p>
+		</div>
 		<div id="game" class="hidden">
-			<canvas id="game-area" class="hidden"></canvas>
+			<canvas id="game-area"></canvas>
 		</div>
-		<div id="game2" class="hidden">
-			<canvas id="game2-area" class="hidden"></canvas>
+
+		<div id="games" class="hidden">
+			<div id="games-menu-area" class="hidden">
+				<!-- Game Title -->
+				<div id="games-menu-title">Fighty Fighters</div>
+				
+				<!-- Game Menu -->
+				<div id="games-menu-area2">
+					<!-- Left Side: Player Info and Buttons -->
+					<div id="games-menu-player-info">
+						<h2 id="games-menu-player-name">Player Name</h2>
+						<div id="games-menu-player-buttons">
+							<button id="games-button-skin">Change Skin</button>
+						</div>
+						<div id="games-menu-selected-skin"></div>
+					</div>
+			
+					<!-- Right Side: Game Options -->
+					<div id="games-menu-game-options">
+						<button id="games-button-Matchmaking">Matchmaking</button>
+						<button id="games-button-local">Local</button>
+						<button id="games-button-tournament">Tournament</button>
+						
+					</div>
+				</div>
+			</div>
+
+			<div id="games-local-menu" class="hidden">
+				<div id="games-menu-title">Local Game</div>
+			
+				<div id="games-local-menu-area">
+					<!-- Left Side: Player 1 Info -->
+					<div id="games-local-player1-info">
+						<input type="text" id="games-player1-name" placeholder="Player 1 Name" class="player-name-input">
+						<div id="games-local-player1-wrapper">
+							<div id="games-local-player1-buttons">
+								<button id="games-button-skin1">Change Skin</button>
+							</div>
+						</div>
+						<div id="games-local-player1-skin"></div>
+					</div>
+			
+					<!-- Center: Play Button -->
+					<div id="games-local-play-button">
+						<button id="games-local-button-play">Play</button>
+						<button id="games-local-button-back">Back</button>
+					</div>
+			
+					<!-- Right Side: Player 2 Info -->
+					<div id="games-local-player2-info">
+						<input type="text" id="games-player2-name" placeholder="Player 2 Name" class="player-name-input">
+						<div id="games-local-player2-wrapper">
+							<div id="games-local-player2-buttons">
+								<button id="games-button-skin2">Change Skin</button>
+							</div>
+							<div id="games-local-player2-skin"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div id="games-tournament-menu" class="hidden">
+				<div id="games-menu-title">Tournament Game</div>
+
+				<div id="games-tournament-menu-area">
+					<!-- Player Sections -->
+					<div id="games-players-wrapper">
+						<!-- Player 1 -->
+						<div class="games-tournament-player-info">
+							<input id="games-tournament-player-name1" type="text" placeholder="Player 1 Name" class="player-name-input">
+							<div class="games-tournament-player-wrapper">
+								<div class="games-tournament-player-buttons">
+									<button id="games-tournament-button-skin1" class="games-button-skin">Change Skin</button>
+								</div>
+								<div id= "games-tournament-player-skin1" class="games-tournament-player-skin1"></div>
+							</div>
+						</div>
+
+						<!-- Player 2 -->
+						<div class="games-tournament-player-info">
+							<input id="games-tournament-player-name2" type="text" placeholder="Player 2 Name" class="player-name-input">
+							<div class="games-tournament-player-wrapper">
+								<div class="games-tournament-player-buttons">
+									<button id="games-tournament-button-skin2" class="games-button-skin">Change Skin</button>
+								</div>
+								<div id= "games-tournament-player-skin2" class="games-tournament-player-skin2"></div>
+							</div>
+						</div>
+
+						<!-- Player 3 -->
+						<div class="games-tournament-player-info">
+							<input id="games-tournament-player-name3" type="text" placeholder="Player 3 Name" class="player-name-input">
+							<div class="games-tournament-player-wrapper">
+								<div class="games-tournament-player-buttons">
+									<button id="games-tournament-button-skin3" class="games-button-skin">Change Skin</button>
+								</div>
+								<div id= "games-tournament-player-skin3" class="games-tournament-player-skin3"></div>
+							</div>
+						</div>
+
+						<!-- Player 4 -->
+						<div class="games-tournament-player-info">
+							<input id="games-tournament-player-name4" type="text" placeholder="Player 4 Name" class="player-name-input">
+							<div class="games-tournament-player-wrapper">
+								<div class="games-tournament-player-buttons">
+									<button id="games-tournament-button-skin4" class="games-button-skin">Change Skin</button>
+								</div>
+								<div id="games-tournament-player-skin4" class="games-tournament-player-skin4"></div>
+							</div>
+						</div>
+
+						<!-- Extendable Players (5 to 8) - Initially Hidden -->
+							<!-- Player 5 -->
+						
+						<div class="games-tournament-player-info2">
+							<input id="games-tournament-player-name5" type="text" placeholder="Player 5 Name" class="player-name-input">
+							<div class="games-tournament-player-wrapper">
+								<div class="games-tournament-player-buttons">
+									<button id="games-tournament-button-skin5" class="games-button-skin">Change Skin</button>
+								</div>
+								<div id= "games-tournament-player-skin5" class="games-tournament-player-skin5"></div>
+							</div>
+						</div>
+
+						<!-- Player 6 -->
+						<div class="games-tournament-player-info2">
+							<input id="games-tournament-player-name6" type="text" placeholder="Player 6 Name" class="player-name-input">
+							<div class="games-tournament-player-wrapper">
+								<div class="games-tournament-player-buttons">
+									<button id="games-tournament-button-skin6" class="games-button-skin">Change Skin</button>
+								</div>
+								<div id= "games-tournament-player-skin6" class="games-tournament-player-skin6"></div>
+							</div>
+						</div>
+
+						<!-- Player 7 -->
+						<div class="games-tournament-player-info2">
+							<input id="games-tournament-player-name7" type="text" placeholder="Player 7 Name" class="player-name-input">
+							<div class="games-tournament-player-wrapper">
+								<div class="games-tournament-player-buttons">
+									<button id="games-tournament-button-skin7" class="games-button-skin">Change Skin</button>
+								</div>
+								<div id= "games-tournament-player-skin7" class="games-tournament-player-skin7"></div>
+							</div>
+						</div>
+
+						<!-- Player 8 -->
+						<div class="games-tournament-player-info2">
+							<input id="games-tournament-player-name8" type="text" placeholder="Player 8 Name" class="player-name-input">
+							<div class="games-tournament-player-wrapper">
+								<div class="games-tournament-player-buttons">
+									<button id="games-tournament-button-skin8" class="games-button-skin">Change Skin</button>
+								</div>
+								<div id= "games-tournament-player-skin8" class="games-tournament-player-skin8"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+					<!-- Center: Play Button -->
+					<div id="games-tournament-play-button">
+						<button id="games-tournament-button-play">Play</button>
+						<button id="games-tournament-button-back">Back</button>
+						<button id="toggle-extended-players">Toggle Players 4-8</button>
+					</div>
+				</div>
+			</div>
+			
+			<div id="div-game2-area" class="hidden">
+				<div id="div-game2-top">
+					<!-- Player 1 health -->
+					<div id="game2-bar1-parent">
+						<div id="game2-bar1-background"></div>
+						<div id="game2-bar1"></div>
+					</div>
+					<!-- timer -->
+					<div id="game2-timer"> 250 </div>
+					<!-- Player 2 health -->
+					<div id="game2-bar2-parent">
+						<div id="game2-bar2-background"></div>
+						<div id="game2-bar2"></div>
+					</div>
+				</div>
+				<div id= "game2-end-text"> Tie </div>
+				<div>	
+					<canvas id="game2-area"></canvas>
+				</div>
+			</div>
 		</div>
+
+		<div id="chat" class="hidden">
+			<div id="chat-list">
+				<!-- Chat divs will be dynamically added here -->
+			</div>
+			<div id="chat-content-container">
+				<div id="chat-content">
+					<!-- Messages will be displayed here after selecting a chat -->
+				</div>
+				<div id="chat-input-container">
+					<input type="text" id="chat-input" placeholder="Type your message here..." />
+					<button id="send-button">Send</button>
+				</div>
+			</div>
+		</div>
+
 	</div>
 
 	<!-- Bootstrap JS and dependencies -->
 	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.6.0/dist/umd/popper.min.js"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-	<script src="game2/classes.js"></script>
+	
+	<script src="globals.js"></script>
 	<script src="script.js"></script>
+	<script src="game2/classes.js"></script> <!-- So it doesnt give error when loading it more than once -->
 
 </body>
 </html>

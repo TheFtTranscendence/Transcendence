@@ -8,12 +8,12 @@ from friends import routing
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'userManagement.settings')
 
 application = ProtocolTypeRouter({
-    "http": get_asgi_application(),
-    "websocket": AllowedHostsOriginValidator(
-        AuthMiddlewareStack(
-            URLRouter(
-                routing.websocket_urlpatterns
-            )
-        )
-    ),
+	"http": get_asgi_application(),
+	"websocket": AllowedHostsOriginValidator(
+		AuthMiddlewareStack(
+			URLRouter(
+				routing.websocket_urlpatterns
+			)
+		)
+	),
 })

@@ -69,8 +69,6 @@ async function game_end_winner(v, winner, loser) {
 	else 
 		winner.change_sprites(winner.sprites.idleInv)
 
-	// If Mask killed facing left he stands!
-		
 	v.g.backgroundInterval = setInterval(() => {
 		v.g.c.fillStyle = 'black'; v.g.c.fillRect(0, 0, v.g.canvas.width, v.g.canvas.height)
 		v.background.update(v.g)
@@ -96,8 +94,12 @@ async function game_end_winner(v, winner, loser) {
 
 	// leave_game(v)
 
-	// Para registar na blockchain o jogo
-	// axios.post('http://localhost:8001/solidity/addgame')
+	axios.post('http://localhost:8001/solidity/addgame/' + window.user.smartcontract_id, {
+		player1: v.player.name,
+		player2: v.enemy.name,
+		score1: v.player.health,
+		score2: v.enemy.health
+	})
 	
 	console.log('Game Ended!')
 }
@@ -133,5 +135,15 @@ async function game_end_tie(v) {
 	
 	document.querySelector('#game2-end-text').innerHTML = 'Tie!'
 	document.querySelector('#game2-end-text').style.display = 'flex'
+
+	axios.post('http://localhost:8001/solidity/addgame/' + window.user.smartcontract_id, {
+		player1: v.player.name,
+		player2: v.enemy.name,
+		score1: v.player.health,
+		score2: v.enemy.health
+	})
+
+	leave_game(v)
+	
 }
 

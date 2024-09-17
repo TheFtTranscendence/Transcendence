@@ -2,22 +2,19 @@ include srcs/.env
 
 # '-f' specify the file to use. 'up' start the containers. '-d' detached mode. '--build' build the images before starting the containers.
 all:
-	@docker compose -f ./srcs/docker-compose.yml up --build
+	@docker compose  -f  ./srcs/docker-compose.yml up  --build 
 
 # 'down' stop and remove the containers.
 down:
 	@docker compose -f ./srcs/docker-compose.yml down
 
-re:
+re: deepclean
 	@docker compose -f srcs/docker-compose.yml up --build
 
 # 'ps' list the containers. 'images' list the images.
 status :
 	@docker ps
 	@docker images
-
-perms:
-	sudo chown hiper:hiper */**
 
 # 'stop' stop the containers. 'rm' remove the containers. 'rmi' remove the images. 'volume rm' remove the volumes. 'network rm' remove the networks and keeps the defaults bridge|host|none.
 clean:

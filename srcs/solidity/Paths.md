@@ -1,5 +1,10 @@
 # Solidity
 
+<em>
+- <strong>instanceIndex</strong> has to be fetch into the Postgres database.
+- <strong>gameType</strong> can only be "Pongy" or "Fighty".
+</em>
+
 ## /solidity/addinstance/
 
 Request Method: **POST**
@@ -14,7 +19,7 @@ Returns:
 |exception| catched exception | 400 |
 
 
-## /solidity/addgame/\<instanceIndex>/
+## /solidity/addgame/\<instanceIndex>/\<gameType>/
 
 Request Method: **POST**
 
@@ -37,7 +42,7 @@ Returns:
 |exception| catched exception | 400 |
 
 
-## /solidity/addtournament/\<instanceIndex>/
+## /solidity/addtournament/\<instanceIndex>/\<gameType>/
 
 Request Method: **POST**
 
@@ -57,7 +62,7 @@ Returns:
 |exception| catched exception | 400 |
 
 
-## /solidity/addtournamentgame/\<instanceIndex>/
+## /solidity/addtournamentgame/\<instanceIndex>/\<gameType>/
 
 Request Method: **POST**
 
@@ -80,7 +85,7 @@ Returns:
 |exception| catched exception | 400 |
 
 
-## /solidity/getgames/\<instanceIndex>/
+## /solidity/getgames/\<instanceIndex>/\<gameType>/
 
 Request Method: **GET**
 
@@ -94,7 +99,7 @@ Returns:
 |exception| catched exception | 400 |
 
 
-## /solidity/getnexttournamentplayers/\<instanceIndex>/
+## /solidity/getnexttournamentplayers/\<instanceIndex>/\<gameType>/
 
 Request Method: **GET**
 
@@ -108,7 +113,7 @@ Returns:
 |exception| catched exception | 400 |
 
 
-## /solidity/gettournamentranking/\<instanceIndex>/\<tournamentIndex>/
+## /solidity/getlasttournamentranking/\<instanceIndex>/\<gameType>/
 
 Request Method: **GET**
 
@@ -121,3 +126,15 @@ Returns:
 |success| Returns the ranking of the tournament | 200 |
 |exception| catched exception | 400 |
 
+## /solidity/getalltournamentsrankings/\<instanceIndex>/\<gameType>/
+
+Request Method: **GET**
+
+JSON file: *(null)*
+
+Returns:
+
+| Message | Description | Status |
+|--------|-------------|:-----:|
+|success| Returns the ranking of the tournament | 200 |
+|exception| catched exception | 400 |
