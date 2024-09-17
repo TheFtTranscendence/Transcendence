@@ -58,7 +58,13 @@ class QueueConsumer(AsyncWebsocketConsumer):
 		self.game = self.scope['url_route']['kwargs']['game']
 		self.user_id = self.scope['url_route']['kwargs']['user_id']
 
+		logger.info("Hello")
+
+		await self.accept()
+
 		if self.is_user_in_any_queue(self.user_id):
+			logger.info("Hello3")
+
 			await self.send(json.dumps({
 				'status': 'error',
 				'message': 'User is already in a queue!'
@@ -66,7 +72,8 @@ class QueueConsumer(AsyncWebsocketConsumer):
 			await self.close()
 			return
 
-		await self.accept()
+		logger.info("Hello2")
+
 
 		if self.game == 'Pong':
 				

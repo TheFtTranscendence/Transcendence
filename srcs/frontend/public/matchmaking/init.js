@@ -102,7 +102,7 @@ function Matchmaking_init_vars() {
 		},
 
 		g: {
-			fps: 100,
+			fps: 30,
 
 			gameInterval: 0,
 			timerInterval: 0,
