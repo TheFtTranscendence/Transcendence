@@ -9,7 +9,6 @@ from rest_framework.authtoken.models import Token
 
 logger = logging.getLogger(__name__)
 
-#todo: Remove friend Request if the user changes username
 class SocialConsumer(AsyncWebsocketConsumer):
 
 	async def connect(self):
@@ -204,6 +203,7 @@ class SocialConsumer(AsyncWebsocketConsumer):
 			'response': response,
 		}))
 
+	#todo: delete chats related to this friendship
 	async def handle_remove_friend(self, data):
 		target_username = data['target']
 		sender_username = data['sender']
