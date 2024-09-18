@@ -9,32 +9,38 @@ from rest_framework.authtoken.models import Token
 
 logger = logging.getLogger(__name__)
 
-#todo: using self.user check if the sender is always the user, maybe add sender and target to response request, to add this feature and to be consistent
-class ChatConsumer(AsyncWebsocketConsumer):
-	
+#todo: Remove friend Request if the user changes username
+class SocialConsumer(AsyncWebsocketConsumer):
+
 	async def connect(self):
+
+		# Get user token in query params
 		query_params = self.scope['query_string'].decode()
 		if 'token=' in query_params:
 			token_key = query_params.split('token=')[-1]
 		else:
+			logger.error(f"[Social] - connect: User tried to connect to social socket, but didn't specify token")
 			await self.close()
+			return;
 
+		# Get user from token
 		user = await self.get_user_from_token(token_key)
-
 		if user:
 			self.user = user
 		else:
+			logger.error(f"[Social] - connect: User doesn't exist")
 			await self.close()
 			return
 
+		# Set user as online
 		try:
 			self.user.online = True
 			await self.save_user(self.user)
 		except Exception as e:
 			logger.exception(f'exception: {e}')
 
+		# Add user to a websocket channel
 		self.room_group_name = f'user_{self.user.id}'
-
 		await self.channel_layer.group_add(
 			self.room_group_name,
 			self.channel_name
@@ -48,13 +54,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			logger.error(f"An error occurred: {e}")
 
 	async def disconnect(self, close_code):
+		
+		# Check if the user actually exist before doing anything else
 		if hasattr(self, 'user'):
+			# Set the user as offline
 			await self.notify_friend_list('offline')
-		try:
-			self.user.online = False
-			await self.save_user(self.user)
-		except Exception as e:
-			logger.exception(f'exception: {e}')
+			try:
+				self.user.online = False
+				await self.save_user(self.user)
+			except Exception as e:
+				logger.exception(f'exception: {e}')
 		await self.channel_layer.group_discard(
 			self.room_group_name,
 			self.channel_name
@@ -78,45 +87,60 @@ class ChatConsumer(AsyncWebsocketConsumer):
 	async def handle_friend_request(self, data):
 		sender_username = data['sender']
 		target_username = data['target']
+		logger.info(f"[Social]: Attempt to send friend request from {self.user.username} to {target_username}")
 		try:
-			sender = await self.get_user(sender_username)
+			# Check if the user sending the info is the actually user
+			if self.user.username != sender_username:
+					raise User.DoesNotExist
+
+			# Get target users
 			target = await self.get_user(target_username)
+
+			# Check if any of the users is blocked my one another
+			is_blocked = await self.is_user_in_block_list(self.user, target)
+			if is_blocked:
+				raise User.DoesNotExist
+			is_blocked = await self.is_user_in_block_list(target, self.user)
+			if is_blocked:
+				raise User.DoesNotExist
+			
+			# Check if they aren't already friend
+			is_friend = await self.is_user_in_friend_list(self.user, target)
+			if is_friend:
+				await self.send(text_data=json.dumps({'detail': 'User is already friend.'}))
+				return 
+			
 			try:
-				is_blocked = await self.is_user_in_block_list(sender, target)
-				if is_blocked:
-					raise User.DoesNotExist
-				is_blocked = await self.is_user_in_block_list(target, sender)
-				if is_blocked:
-					raise User.DoesNotExist
-				is_friend = await self.is_user_in_friend_list(sender, target)
-				if is_friend:
-					await self.send(text_data=json.dumps({'detail': 'User is already friend.'}))
-					raise ValueError
+				# [1/2] Check if it exists any friend request pending from sender to target
+				await self.get_friend_request(sender=self.user, target=target)
+				await self.send(text_data=json.dumps({'detail': 'Friend Request already exists.'}))
+			except FriendRequest.DoesNotExist:
 				try:
-					await self.get_friend_request(sender=sender, target=target)
+					# [2/2] Check if it exists any friend request pending from target to sender
+					await self.get_friend_request(sender=self.user, target=target)
 					await self.send(text_data=json.dumps({'detail': 'Friend Request already exists.'}))
 				except FriendRequest.DoesNotExist:
-					try:
-						await self.get_friend_request(sender=sender, target=target)
-						await self.send(text_data=json.dumps({'detail': 'Friend Request already exists.'}))
-					except FriendRequest.DoesNotExist:
-						request = await self.create_friend_request(sender=sender, target=target)
-						target_group_name = f'user_{target.id}'
-						await self.channel_layer.group_send(
-							target_group_name,
-							{
-								'type': 'friend_request',
-								'sender': sender.username,
-								'request_id': request.id
-							}
-						)
-			except ValueError:
-				pass
+
+					# If neither of them existed it created one and sends it to the target
+					request = await self.create_friend_request(sender=self.user, target=target)
+					target_group_name = f'user_{target.id}'
+					await self.channel_layer.group_send(
+						target_group_name,
+						{
+							'type': 'friend_request',
+							'sender': self.user.username,
+							'request_id': request.id
+						}
+					)
 		except User.DoesNotExist:
+			logger.info(f"[Social]: Friend request from {self.user.username} failed")
 			await self.send(text_data=json.dumps({'detail': 'User not found.'}))
+			return
 		except Exception as e:
-			logger.exception(f'exception: {e}')
+			logger.exception(f'[Social]: {e}')
 			await self.send(text_data=json.dumps({'detail': 'Error'}))
+			return
+		logger.info(f"[Social]: Friend request from {self.user.username} sucedded")
 
 	async def friend_request(self, event):
 		sender_username = event['sender']
@@ -132,18 +156,27 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		request_id = data['request_id']
 		accept = data['accept']
 		try:
+			# Get request object from request id
 			request = await self.get_friend_request(id=request_id)
+
+			# Get users belonging to that request
 			sender = await self.get_sender(request)
 			target = await self.get_target(request)
+
+			# Check if the user accepting is the target user
+			if self.user.id != target.id:
+				raise FriendRequest.DoesNotExist
+			
 			if accept:
 				await self.add_friend(sender=sender, target=target)
-				request.accepted = True
 				response = f"Friend request from {sender.id} to {target.id} accepted"
 			else:
-				request.accepted = False
 				response = f"Friend request from {sender.id} to {target.id} denied"
-			await self.save_request(request)
+
+			# Delete request after getting the response
 			await self.delete_request(request)
+
+			# Send the message with the response to the sender
 			group_name = f'user_{sender.id}'
 			await self.channel_layer.group_send(
 				group_name,
@@ -152,7 +185,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
 					'response': response
 				}
 			)
+
 			await self.send(text_data=json.dumps({'detail': 'Friend request responded to successfully.'}))
+
+			logger.info(f"[Social]: {response}")
+
 		except FriendRequest.DoesNotExist:
 			await self.send(text_data=json.dumps({'detail': 'Friend request not found.'}))
 		except Exception as e:
@@ -170,17 +207,25 @@ class ChatConsumer(AsyncWebsocketConsumer):
 	async def handle_remove_friend(self, data):
 		target_username = data['target']
 		sender_username = data['sender']
+		logger.info(f"[Social]: Attempt to remove friend from {self.user.username} to {target_username}")
 		try:
-			sender = await self.get_user(sender_username)
+			# Check if the user sending the info is the actually user
+			if self.user.username != sender_username:
+					raise User.DoesNotExist
+			
+			# Get target user object
 			target = await self.get_user(target_username)
-			await self.remove_friend(sender=sender, target=target)
-			group2_name = f'user_{sender.id}'
+
+			await self.remove_friend(sender=self.user, target=target)
+
+			# Inform users of the friend removed
+			group2_name = f'user_{self.user.id}'
 			group1_name = f'user_{target.id}'
 			await self.channel_layer.group_send(
 				group1_name,
 				{
 					'type': 'friend_removed',
-					'sender': sender.username,
+					'sender': self.user.username,
 					'target': target.username
 				}
 			)
@@ -188,15 +233,20 @@ class ChatConsumer(AsyncWebsocketConsumer):
 				group2_name,
 				{
 					'type': 'friend_removed',
-					'sender': sender.username,
+					'sender': self.user.username,
 					'target': target.username
 				}
 			)
+
 		except User.DoesNotExist:
+			logger.info(f"[Social]: Friend remove from {self.user.username} failed")
 			await self.send(text_data=json.dumps({'detail': 'User not found.'}))
+			return
 		except Exception as e:
-			logger.exception(f'exception: {e}')
+			logger.exception(f'[Social]: {e}')
 			await self.send(text_data=json.dumps({'detail': 'Error'}))
+			return
+		logger.info(f"[Social]: Friend remove from {self.user.username} sucedded")
 
 	async def friend_removed(self, event):
 		sender = event['sender']
@@ -208,54 +258,46 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			'target': target
 		}))
 
+	# ! They can only block each other if they are friends
 	async def handle_block(self, data):
 		target_username = data['target']
 		sender_username = data['sender']
 		try:
-			sender = await self.get_user(sender_username)
+			# Check if the user sending the info is the actually user
+			if self.user.username != sender_username:
+					raise User.DoesNotExist
+			
+			# Get target user object
 			target = await self.get_user(target_username)
-			await self.remove_friend(sender=sender, target=target)
-			await self.add_block(sender=sender, target=target)
-			group2_name = f'user_{sender.id}'
-			group1_name = f'user_{target.id}'
-			try:
-				request = await self.get_friend_request(sender=sender, target=target)
-				await self.delete_request(request)
-			except Exception as e:
-				try:
-					request = await self.get_friend_request(sender=target, target=sender)
-					await self.delete_request(request)
-				except Exception as e:
-					pass
-			await self.channel_layer.group_send(
-				group1_name,
-				{
-					'type': 'friend_removed',
-					'sender': sender.username,
-					'target': target.username
-				}
-			)
-			await self.channel_layer.group_send(
-				group2_name,
-				{
-					'type': 'friend_removed',
-					'sender': sender.username,
-					'target': target.username
-				}
-			)
+
+			# Remove from friend list
+			message = {
+				"action": "remove_friend",
+				"sender": self.user.username,
+				"target": target.username
+			}
+			await self.handle_remove_friend(message)
+
+			# Add to block list
+			await self.add_block(sender=self.user, target=target)
+
 		except User.DoesNotExist:
 			await self.send(text_data=json.dumps({'detail': 'User not found.'}))
 		except Exception as e:
 			logger.exception(f'exception: {e}')
 			await self.send(text_data=json.dumps({'detail': 'Error'}))
+		logger.info(f"[Social]: User {target_username} blocked {self.user.username}")
 
 	async def handle_remove_block(self, data):
 		target_username = data['target']
 		sender_username = data['sender']
 		try:
-			sender = await self.get_user(sender_username)
+			# Check if the user sending the info is the actually user
+			if self.user.username != sender_username:
+					raise User.DoesNotExist
+
 			target = await self.get_user(target_username)
-			await self.remove_block(sender=sender, target=target)
+			await self.remove_block(sender=self.user, target=target)
 		except User.DoesNotExist:
 			await self.send(text_data=json.dumps({'detail': 'User not found.'}))
 		except Exception as e:
@@ -302,21 +344,21 @@ class ChatConsumer(AsyncWebsocketConsumer):
 				}))
 
 	@database_sync_to_async
-	def is_user_blocked(self, sender, block_list):
+	def _is_user_blocked(self, sender, block_list):
 		return sender in block_list
 
 	async def is_user_in_block_list(self, sender, target):
 		block_list = await self.get_block_list(target)
-		r = await self.is_user_blocked(sender, block_list)
+		r = await self._is_user_blocked(sender, block_list)
 		return r
 	
 	@database_sync_to_async
-	def is_user_friend(self, sender, friend_list):
+	def _is_user_friend(self, sender, friend_list):
 		return sender in friend_list
 
 	async def is_user_in_friend_list(self, sender, target):
 		friend_list = await self.get_friend_list(sender.id)
-		r = await self.is_user_friend(target, friend_list)
+		r = await self._is_user_friend(target, friend_list)
 		return r
 	
 	@database_sync_to_async
@@ -392,7 +434,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		return related_object.id
 	
 	@database_sync_to_async
-	def get_user_from_token(self, token_key):
+	def get_user_from_token(self, token_key): #used in line 27 connect
 		try:
 			token = Token.objects.get(key=token_key)
 			user = token.user

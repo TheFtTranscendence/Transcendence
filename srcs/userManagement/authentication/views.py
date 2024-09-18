@@ -34,7 +34,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
 		if user_id:
 			user_to_delete = self.get_object()
-			if user_to_delete != current_user and not current_user.is_staff:
+			if user_to_delete != current_user and not current_user.staff:
 				return Response({'message': 'You do not have permission to delete this user.'}, status=status.HTTP_400_BAD_REQUEST)
 		else:
 			user_to_delete = current_user
