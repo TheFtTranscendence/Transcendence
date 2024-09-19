@@ -40,23 +40,21 @@ function handleOutsideClick(event) {
 //GET PROFILE PICTURE
 function getAvater(username) {
 	const imgElement = document.querySelector('#profile-img img');
-	axios.get('http://localhost:8000/data/avatar/' + username)
-    .then((response) => {
-		const imageUrl = response.data.url;
-		//Check if imageUrl is working, if not show default
-		const img = new Image();
-		img.onload = function() {
-			imgElement.src = imageUrl;
-		};
-		img.onerror = function() {
-			imgElement.src = 'img/red.jpg';
-		};
-		img.src = imageUrl;
-    })
-    .catch((error) => {
-        //console.error(error);
+
+	if (window.user && window.user.avater) {
+		imgElement.src = window.user.avater;
+	} else {
 		imgElement.src = 'img/red.jpg';
-    });
+	}
+	// const img = new Image();
+	// img.onload = function() {
+	//
+	// };
+	// img.onerror = function() {
+	//
+	// };
+	// img.src = window.user.avater;
+
 	document.getElementById('profile-img').classList.remove('hidden');
 }
 
