@@ -251,3 +251,9 @@ class RegisterView(APIView):
 		except Exception as e:
 			logger.exception("Unexpected error during registration: %s", e)
 			return Response({'message': 'Internal server error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+		
+class HealthView(APIView):
+	permission_classes = [AllowAny]
+
+	def get(self, request):
+		return Response({'status': 'online'}, status=status.HTTP_200_OK)

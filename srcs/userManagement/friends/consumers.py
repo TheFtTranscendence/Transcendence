@@ -203,7 +203,6 @@ class SocialConsumer(AsyncWebsocketConsumer):
 			'response': response,
 		}))
 
-	#todo: delete chats related to this friendship
 	async def handle_remove_friend(self, data):
 		target_username = data['target']
 		sender_username = data['sender']
