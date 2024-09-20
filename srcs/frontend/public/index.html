@@ -28,10 +28,10 @@
 						<a class="nav-link" href="#home">Home</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="#game">Game</a>
+						<a class="nav-link" href="#game">Pong</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="#game2">Game2</a>
+						<a class="nav-link" href="#fighters">Fighters</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="#chat">Chat</a>
@@ -126,11 +126,13 @@
 
 	<div id="home" class="hidden">
 
-		<!-- Sidebar -->
-
 	</div>
 
-	<!-- <div id="content"> -->
+	<div id="content">
+		<div id="game" class="hidden">
+            <canvas id="game-area"></canvas>
+        </div>
+
 		<div id="games" class="hidden">
 			<div id="games-menu-area" class="hidden">
 				<!-- Game Title -->
@@ -318,7 +320,7 @@
 					<canvas id="game2-area"></canvas>
 				</div>
 			</div>
-	<!-- </div> -->
+	</div>
 
 		<div id="chat" class="hidden">
 			<div id="chat-list">
