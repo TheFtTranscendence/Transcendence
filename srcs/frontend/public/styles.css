@@ -777,14 +777,14 @@ body::before {
 
 /* Profile Image Container */
 #profile-img {
-	position: absolute;
+	position: relative;
 	top: 0;
 	right: 0;
 	margin-right: 25px;
-	background-color: transparent;
 	border: none;
-    width: 84px;  /* Adjust the size */
-    height: 84px; /* Same width and height for a square image */
+	background-color: transparent;
+    width: 75px;  /* Adjust the size */
+    height: 75px; /* Same width and height for a square image */
     overflow: hidden;
     border-radius: 50%;
 }
@@ -796,8 +796,22 @@ body::before {
 	height: 100%;
 	object-fit: cover; /* Ensure the image fits the container */
 	border: 3px solid rgba(20, 18, 18, 0.8); /* Add a white border with transparency */
-	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Optional: Add a subtle shadow for depth */
+	box-shadow: 0 0 10px rgba(110, 67, 67, 0.2); /* Optional: Add a subtle shadow for depth */
 }
+
+@media (max-width: 992px) {
+	#navbarNav {
+	  text-align: center;
+	}
+	#profile-img {
+	  margin: 0 auto 15px auto; /* Center the profile image on smaller screens */
+	}
+  }
+
+  /* Make the text more visible when the navbar is collapsed */
+  .navbar-nav .nav-link {
+	color: black; /* Adjust text color */
+  }
 
 
 /* Sidebar */
