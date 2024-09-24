@@ -6,8 +6,9 @@ from .models import FriendRequest
 import logging
 from rest_framework.authtoken.models import Token
 
-
 logger = logging.getLogger(__name__)
+
+#todo: maybe rewrite whole code (on school pc, on laptop it would be a nightmare)
 
 class SocialConsumer(AsyncWebsocketConsumer):
 
