@@ -16,6 +16,7 @@ function	_update_user_chats() {
 		friend.socket = new WebSocket(`ws://${window.IP}:8002/ws/chat/?user=` + window.user.username + '&chat_id=' + friend.chat_id);
 	
 		// todo: talk with diogo about this and how he is doing it
+		// ? this should give the toast right? And then diogo changes it in the chat script
 		friend.socket.onmessage = function(e) {
 			const data = JSON.parse(e.data);
 			console.log(data);
@@ -114,11 +115,7 @@ function	delete_user(target = '') {
 
 //* The target part should only be used as an admin in the console, so once again, dont worry about it
 function	modify_user(field, new_value, target='') {
-	if (target == '')	{
-		url = `http://${window.IP}:8000/auth/users/`
-	} else {
-		url = `http://${window.IP}:8000/auth/users/${target}`
-	}
+	url = `http://${window.IP}:8000/auth/users/${target}`
 
 	data = {
 		[field]: new_value
