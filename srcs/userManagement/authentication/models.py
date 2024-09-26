@@ -42,6 +42,9 @@ class Preferences(models.Model):
 
 class User(AbstractBaseUser, PermissionsMixin):
 
+	class	AlreadyFriends(Exception):
+		pass
+
 	def get_friends_data(self):
 		friends = self.friend_list.all()
 		friends_data = {}
