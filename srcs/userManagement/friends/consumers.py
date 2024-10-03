@@ -5,6 +5,7 @@ import json
 from authentication.models import User
 from .models import FriendRequest
 from rest_framework.authtoken.models import Token
+import requests
 
 import logging
 logger = logging.getLogger(__name__)
@@ -58,6 +59,8 @@ class	SocialConsumer(AsyncWebsocketConsumer):
 			await self.handleBlock(text_data_json)
 		elif msg_type == 'remove_block':
 			await self.handleRemoveBlock(text_data_json)
+		elif msg_type == 'game_invite':
+			await self.handleGameInvite(text_data_json)
 
 	#
 	async def handleFriendRequest(self, data):
@@ -111,7 +114,7 @@ class	SocialConsumer(AsyncWebsocketConsumer):
 			logger.info(f"[Social]: Friend request from {self.user.username} failed")
 			await self.send(text_data=json.dumps({
 					'type': 'error',
-					'detail': 'User not found.'
+					'detail': 'User not found'
 				}))
 			return
 		except User.AlreadyFriends:
@@ -190,7 +193,7 @@ class	SocialConsumer(AsyncWebsocketConsumer):
 			logger.info(f"[Social]: Friend request from {self.user.username} failed")
 			await self.send(text_data=json.dumps({
 					'type': 'error',
-					'detail': 'User not found.'
+					'detail': 'User not found'
 				}))
 			return
 		except Exception as e:
@@ -244,7 +247,7 @@ class	SocialConsumer(AsyncWebsocketConsumer):
 			logger.info(f"[Social]: Friend remove from {self.user.username} failed")
 			await self.send(text_data=json.dumps({
 					'type': 'error',
-					'detail': 'User not found.'
+					'detail': 'User not found'
 				}))
 			return 0
 		except Exception as e:
@@ -263,49 +266,92 @@ class	SocialConsumer(AsyncWebsocketConsumer):
 			'user': target_id,
 		}))
 
-	#TODO
-	# async def handleGameInvite(self, data):
-	# 	'''
-	# 	To use this function send:
-	# 	{
-	# 		"type": "game_invite",
-	# 		"target": [target.id],
-	# 		"game": [pongy/fighty]
-	# 	}
-	# 	'''
-	# 	target_id = data['target']
-	# 	game = data['game']
+	class	GameDoesntExist(Exception):
+		pass
 
-	# 	try:
-	# 		#todo this exception
-	# 		if game != 'pongy' and game != 'fighty':
-	# 			raise Exception("Game doesnt exist")
+	async def handleGameInvite(self, data):
+		'''
+		To use this function send:
+		{
+			"type": "game_invite",
+			"target": [target.id],
+			"game": [pongy/fighty]
+		}
+		'''
+		target_id = data['target']
+		game = data['game']
 
-	# 		target = await self._getUser(id=target_id)
+		try:
+			if game != 'pongy' and game != 'fighty':
+				raise self.GameDoesntExist
 
-	# 		group_name = f'user_{self.user.id}'
-	# 		await self.channel_layer.group_send(
-	# 			group_name,
-	# 			{
-	# 				'type': 'friend_removed',
-	# 				'user': self.user.id
-	# 			}
-	# 		)
+			target = await self._getUser(id=target_id)
 
-	# 	except User.DoesNotExist:
-	# 		logger.info(f"[Social]: Friend remove from {self.user.username} failed")
-	# 		await self.send(text_data=json.dumps({
-	# 				'type': 'error',
-	# 				'detail': 'User not found.'
-	# 			}))
-	# 		return
-	# 	except Exception as e:
-	# 		logger.exception(f'exception: {e}')
-	# 		await self.send(text_data=json.dumps({
-	# 				'type': 'error',
-	# 				'detail': 'IDFK',
-	# 			}))
-	# 		return
+			json_payload = {
+				"player_1": self.user.id,
+				"player_2": target.id
+			}
+
+			response = requests.post("http://remote-players:8004/game/", json_payload)
+			response.raise_for_status()
+			data = response.json()
+
+			game_id = data['id']
+
+			await self.send(json.dumps({
+				'type': 'game_invite',
+				'game': game,
+				'game_id': game_id,
+				'player1': self.user.id,
+				'player2': target.id,
+			}))
+			group_name = f"s_{target.id}"
+			await self.channel_layer.group_send(
+				group_name,
+				{
+					'type': 'game_invite',
+					'game': game,
+					'game_id': game_id,
+					'player1': self.user.id,
+					'player2': target.id,
+				}
+			)
+		
+		except User.DoesNotExist:
+			logger.info(f"[Social]: Game invite from {self.user.username} failed")
+			await self.send(text_data=json.dumps({
+					'type': 'error',
+					'detail': 'User not found'
+				}))
+			return
+		except self.GameDoesntExist:
+			logger.info(f"[Social]: Game invite from {self.user.username} failed")
+			await self.send(text_data=json.dumps({
+					'type': 'error',
+					'detail': 'Game not found'
+				}))
+			return
+		except Exception as e:
+			logger.exception(f'exception: {e}')
+			await self.send(text_data=json.dumps({
+					'type': 'error',
+					'detail': 'IDFK',
+				}))
+			return
+		
+	async def game_invite(self, event):
+		game = event['game']
+		game_id = event['game_id']
+		player1 = event['player1']
+		player2 = event['player2']
+
+		await self.send(text_data=json.dumps({
+			'type': 'game_invite',
+			'game': game,
+			'game_id': game_id,
+			'player1': player1,
+			'player2': player2,
+		}))
 		
 
 	# ! They can only block each other if they are friends
@@ -330,13 +376,13 @@ class	SocialConsumer(AsyncWebsocketConsumer):
 		except User.DoesNotExist:
 			await self.send(text_data=json.dumps({
 					'type': 'error',
-					'detail': 'User not found.'
+					'detail': 'User not found'
 				}))
 			return
 		except User.AlreadyBlocked:
 			await self.send(text_data=json.dumps({
 					'type': 'error',
-					'detail': 'User already blocked.'
+					'detail': 'User already blocked'
 				}))
 			return
 		except Exception as e:
@@ -360,7 +406,7 @@ class	SocialConsumer(AsyncWebsocketConsumer):
 		except User.DoesNotExist:
 			await self.send(text_data=json.dumps({
 					'type': 'error',
-					'detail': 'User not found.'
+					'detail': 'User not found'
 				}))
 			return
 		except Exception as e:
