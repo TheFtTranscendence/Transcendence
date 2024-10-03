@@ -55,9 +55,9 @@ class	SocialConsumer(AsyncWebsocketConsumer):
 		elif msg_type == 'remove_friend':
 			await self.handleRemoveFriend(text_data_json)
 		elif msg_type == 'block':
-			await self.handle_block(text_data_json)
+			await self.handleBlock(text_data_json)
 		elif msg_type == 'remove_block':
-			await self.handle_remove_block(text_data_json)
+			await self.handleRemoveBlock(text_data_json)
 
 	#
 	async def handleFriendRequest(self, data):
@@ -238,9 +238,126 @@ class	SocialConsumer(AsyncWebsocketConsumer):
 					'user': self.user.id
 				}
 			)
+			return 1
 
 		except User.DoesNotExist:
 			logger.info(f"[Social]: Friend remove from {self.user.username} failed")
+			await self.send(text_data=json.dumps({
+					'type': 'error',
+					'detail': 'User not found.'
+				}))
+			return 0
+		except Exception as e:
+			logger.exception(f'exception: {e}')
+			await self.send(text_data=json.dumps({
+					'type': 'error',
+					'detail': 'IDFK',
+				}))
+			return 0
+		
+	async def friend_removed(self, event):
+		target_id = event['user']
+
+		await self.send(text_data=json.dumps({
+			'type': 'friend_removed',
+			'user': target_id,
+		}))
+
+	#TODO
+	# async def handleGameInvite(self, data):
+	# 	'''
+	# 	To use this function send:
+	# 	{
+	# 		"type": "game_invite",
+	# 		"target": [target.id],
+	# 		"game": [pongy/fighty]
+	# 	}
+	# 	'''
+	# 	target_id = data['target']
+	# 	game = data['game']
+
+	# 	try:
+	# 		#todo this exception
+	# 		if game != 'pongy' and game != 'fighty':
+	# 			raise Exception("Game doesnt exist")
+
+	# 		target = await self._getUser(id=target_id)
+
+	# 		group_name = f'user_{self.user.id}'
+	# 		await self.channel_layer.group_send(
+	# 			group_name,
+	# 			{
+	# 				'type': 'friend_removed',
+	# 				'user': self.user.id
+	# 			}
+	# 		)
+
+	# 	except User.DoesNotExist:
+	# 		logger.info(f"[Social]: Friend remove from {self.user.username} failed")
+	# 		await self.send(text_data=json.dumps({
+	# 				'type': 'error',
+	# 				'detail': 'User not found.'
+	# 			}))
+	# 		return
+	# 	except Exception as e:
+	# 		logger.exception(f'exception: {e}')
+	# 		await self.send(text_data=json.dumps({
+	# 				'type': 'error',
+	# 				'detail': 'IDFK',
+	# 			}))
+	# 		return
+		
+
+	# ! They can only block each other if they are friends
+	async def handleBlock(self, data):
+		target_id = data['target']
+		try:
+			target = await self._getUser(id=target_id)
+
+			is_blocked = await self._isUserBlocked(target)
+			if is_blocked:
+				raise User.AlreadyBlocked
+			is_friend = await self._isUserFriend(target)
+			if not is_friend:
+				raise User.DoesNotExist
+
+			response = await self.handleRemoveFriend(data)
+			if not response:
+				return
+			
+			await self._addBlock(target=target)
+
+		except User.DoesNotExist:
+			await self.send(text_data=json.dumps({
+					'type': 'error',
+					'detail': 'User not found.'
+				}))
+			return
+		except User.AlreadyBlocked:
+			await self.send(text_data=json.dumps({
+					'type': 'error',
+					'detail': 'User already blocked.'
+				}))
+			return
+		except Exception as e:
+			logger.exception(f'exception: {e}')
+			await self.send(text_data=json.dumps({
+					'type': 'error',
+					'detail': 'IDFK',
+				}))
+			return
+		
+	async def handleRemoveBlock(self, data):
+		target_id = data['target']
+		try:
+
+			target = await self._getUser(id=target_id)
+			is_blocked = await self._isUserBlocked(target)
+			if not is_blocked:
+				raise User.DoesNotExist
+			await self._removeBlock(target)
+
+		except User.DoesNotExist:
 			await self.send(text_data=json.dumps({
 					'type': 'error',
 					'detail': 'User not found.'
@@ -253,14 +370,6 @@ class	SocialConsumer(AsyncWebsocketConsumer):
 					'detail': 'IDFK',
 				}))
 			return
-		
-	async def friend_removed(self, event):
-		target_id = event['user']
-
-		await self.send(text_data=json.dumps({
-			'type': 'friend_removed',
-			'user': target_id,
-		}))
 
 	async def	_getUserOnConnect(self):
 		query_params = self.scope['query_string'].decode()
@@ -332,6 +441,10 @@ class	SocialConsumer(AsyncWebsocketConsumer):
 		target.friend_list.remove(self.user)
 
 	@database_sync_to_async
+	def _removeBlock(self, target):
+		self.user.block_list.remove(target)
+
+	@database_sync_to_async
 	def _createFriendRequest(self, target):
 		return FriendRequest.objects.create(sender=self.user, target=target)
 	
@@ -339,6 +452,10 @@ class	SocialConsumer(AsyncWebsocketConsumer):
 	def _addFriend(self, target):
 		self.user.friend_list.add(target)
 		target.friend_list.add(self.user)
+
+	@database_sync_to_async
+	def _addBlock(self, target):
+		self.user.block_list.add(target)
 
 	@database_sync_to_async
 	def _deleteObject(self, object):
