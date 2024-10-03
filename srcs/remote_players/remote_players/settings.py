@@ -110,6 +110,20 @@ LOGGING = {
 			'level': 'INFO',
 			'propagate': False,
 		},
+		'django.request': {
+			'handlers': ['console'],
+			'level': 'DEBUG',
+			'propagate': False,
+		},
+		'django.server': {
+			'handlers': ['console'],
+			'level': 'DEBUG',
+			'propagate': False,
+		},
+		'channels': {
+			'handlers': ['console'],
+			'level': 'DEBUG',
+		},
 	},
 }
 

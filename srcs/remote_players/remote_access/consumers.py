@@ -7,28 +7,68 @@ from .models import Game
 logger = logging.getLogger(__name__)
 
 class GameConsumer(AsyncWebsocketConsumer):
+
+	ERROR_LOGGING_IN = 42;
+
 	async def connect(self):
-		self.game_id = self.scope['url_route']['kwargs']['game_id']
-		self.room_group_name = f'game_{self.game_id}'
 
-		await self.channel_layer.group_add(
-			self.room_group_name,
-			self.channel_name
-		)
+		try:
+			query_params = self.scope['query_string'].decode()
+			if 'game_id=' in query_params:
+				game_id = query_params.split('game_id=')[-1]
+			else:
+				logger.error(f"[Game] - connect: User tried to connect to game socket, but didn't give a game id")
+				self.close(self.ERROR_LOGGING_IN)
+				return;
 
-		await self.accept()
+			self.game = await self._getGame(game_id)
+			if not self.game:
+				logger.error(f"[Game] - connect: User tried to connect to social socket, but didn't give a valid game id")
+				self.close(self.ERROR_LOGGING_IN)
+				return;
 
-		#todo: add user count to game
-		logger.info(f"Game {self.game_id}: [<user_count>/2]")
-		await self.channel_layer.group_send(
-			self.room_group_name,
-			{
-				'type': 'game_info',
-				'reason': 'Ready',
-			}
-		)
+			self.room_group_name = f'game_{game_id}'
 
-	async def handle_connection_lost(self):
+			await self.channel_layer.group_add(
+				self.room_group_name,
+				self.channel_name
+			)
+			self.ready = False
+			if self.game.user_count == 2:
+				logger.error(f"[Game] - connect: User tried to connect to game socket, but game is already full")
+				self.close(self.ERROR_LOGGING_IN)
+				return;
+
+			await self._increaseUserCount()
+			await self.accept()
+			if self.game.user_count == 2:
+				# await self._startGame()
+				await self.channel_layer.group_send(
+					self.room_group_name,
+					{
+						'type': 'game_info',
+						'info': 'Ready',
+					}
+				)
+		except Exception as e:
+			logger.exception(f'exception: {e}')
+
+	@database_sync_to_async
+	def _startGame(self):
+		self.game.started = True
+		self.game.save()
+
+	async def game_info(self, event):
+		info = event['info']
+
+		await self._startGame()
+
+		await self.send(text_data=json.dumps({
+			'type': 'game_info',
+			'info': info,
+		}))
+
+	async def _handleConnectionLost(self):
 		await self.channel_layer.group_send(
 			self.room_group_name,
 			{
@@ -37,17 +77,18 @@ class GameConsumer(AsyncWebsocketConsumer):
 			}
 		)
 		try:
-			game = await self.get_game(self.game_id)
-			logger.info(f"GameConsumer: Game between user {game.player_1} and {game.player_2} ended because one of the users lost connection")
-			await self.delete_game(game)
-		except Game.DoesNotExist:
-			pass
+			await self._deleteGame()
 		except Exception as e:
-			logger.exception(f"Exception in GameConsumer \n\tFunction: \"connect\":\n {e}")
+			logger.exception(f'exception: {e}')
+			await self.send(text_data=json.dumps({
+					'type': 'error',
+					'detail': 'IDFK',
+				}))
+			return
 
-	#todo: handle this with close_codes
 	async def disconnect(self, close_code):
-		await self.handle_connection_lost()
+		if close_code != self.ERROR_LOGGING_IN:
+			await self._handleConnectionLost()
 		await self.channel_layer.group_discard(
 			self.room_group_name,
 			self.channel_name
@@ -55,29 +96,20 @@ class GameConsumer(AsyncWebsocketConsumer):
 
 	async def receive(self, text_data):
 		text_data_json = json.loads(text_data)
+		msg_type = text_data_json['type']
 
-		# * Debug
-		logger.debug(f"json: {text_data_json}")
+		if msg_type == 'move' and self.game.started:
+			player_id = text_data_json['player_id']
+			action = text_data_json['action']
 
-		player_id = text_data_json['player_id']
-		action = text_data_json['action']
-
-		await self.channel_layer.group_send(
-			self.room_group_name,
-			{
-				'type': 'move',
-				'player_id': player_id,
-				'action': action
-			}
-		)
-
-	async def game_info(self, event):
-		info = event['info']
-
-		await self.send(text_data=json.dumps({
-			'type': 'game_info',
-			'info': info,
-		}))
+			await self.channel_layer.group_send(
+				self.room_group_name,
+				{
+					'type': 'move',
+					'player_id': player_id,
+					'action': action
+				}
+			)
 
 	async def move(self, event):
 		player_id = event['player_id']
@@ -90,12 +122,17 @@ class GameConsumer(AsyncWebsocketConsumer):
 		}))
 
 	@database_sync_to_async
-	def get_game(self, game_id):
-		return Game.objects.get(id=game_id)
+	def _getGame(self, id):
+		return Game.objects.get(id=id)
 	
 	@database_sync_to_async
-	def delete_game(self, game):
-		game.delete()
+	def _increaseUserCount(self):
+		self.game.user_count += 1
+		self.game.save()
+	
+	@database_sync_to_async
+	def _deleteGame(self):
+		self.game.delete()
 
 class QueueConsumer(AsyncWebsocketConsumer):
 	queue_Pong = []
