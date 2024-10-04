@@ -8,8 +8,8 @@ logger = logging.getLogger(__name__)
 
 class GameConsumer(AsyncWebsocketConsumer):
 
-	ERROR_LOGGING_IN = 42;
-	REQUEST_DENIED = 24
+	ERROR_LOGGING_IN = 3042;
+	REQUEST_DENIED = 3024
 	#USER_DISCONECT = default
 
 	class	ErrorLoggingIn(Exception):
@@ -26,6 +26,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 				game_id = query_params.split('game_id=')[-1]
 			else:
 				raise self.ErrorLoggingIn
+			
 
 			self.game = await self._getGame(game_id)
 			if not self.game:
@@ -39,6 +40,11 @@ class GameConsumer(AsyncWebsocketConsumer):
 				self.channel_name
 			)
 
+			if 'invite_denied' in query_params:
+				await self.close(self.REQUEST_DENIED)
+				return 
+
+
 			if self.game.user_count == 2:
 				raise self.GameFull
 
@@ -47,17 +53,17 @@ class GameConsumer(AsyncWebsocketConsumer):
 				await self.channel_layer.group_send(
 					self.room_group_name,
 					{
-						'type': 'ready',
+						'type': 'ready_msg',
 					}
 				)
 		except self.ErrorLoggingIn:
 			logger.error(f"[Game] - connect: User tried to connect to game socket, but didn't give a game id")
-			self.close(self.ERROR_LOGGING_IN)
+			await self.close(self.ERROR_LOGGING_IN)
 			return;
 		except self.GameFull:
 			logger.error(f"[Game] - connect: User tried to connect to game socket, but game is already full")
-			self.close(self.ERROR_LOGGING_IN)
-			return;	
+			await self.close(self.ERROR_LOGGING_IN)
+			return;
 		except Exception as e:
 			logger.exception(f'exception: {e}')
 
@@ -80,16 +86,11 @@ class GameConsumer(AsyncWebsocketConsumer):
 			'info': info,
 		}))
 
-	#todo: think better about this when i have the mental
 	async def disconnect(self, close_code):
 		if close_code == self.ERROR_LOGGING_IN:
-			await self.channel_layer.group_send(
-				self.room_group_name,
-				{
-					'type': 'game_info',
-					'info': 'Error logging in',
-				}
-			)
+			await self.send(text_data=json.dumps({
+				'error': 'error loggin in',
+			}))
 		elif close_code == self.REQUEST_DENIED:
 			await self.channel_layer.group_send(
 				self.room_group_name,
@@ -174,7 +175,7 @@ class QueueConsumer(AsyncWebsocketConsumer):
 				self.user_id = temp.split('&user_id=')[1]
 			else:
 				logger.error(f"[Game] - connect: User tried to connect to game socket, but didn't give a game or user id")
-				self.close()
+				await self.close()
 				return;
 
 			await self.accept()
