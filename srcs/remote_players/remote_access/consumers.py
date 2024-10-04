@@ -9,6 +9,14 @@ logger = logging.getLogger(__name__)
 class GameConsumer(AsyncWebsocketConsumer):
 
 	ERROR_LOGGING_IN = 42;
+	REQUEST_DENIED = 24
+	#USER_DISCONECT = default
+
+	class	ErrorLoggingIn(Exception):
+		pass
+
+	class	GameFull(Exception):
+		pass
 
 	async def connect(self):
 
@@ -17,39 +25,39 @@ class GameConsumer(AsyncWebsocketConsumer):
 			if 'game_id=' in query_params:
 				game_id = query_params.split('game_id=')[-1]
 			else:
-				logger.error(f"[Game] - connect: User tried to connect to game socket, but didn't give a game id")
-				self.close(self.ERROR_LOGGING_IN)
-				return;
+				raise self.ErrorLoggingIn
 
 			self.game = await self._getGame(game_id)
 			if not self.game:
-				logger.error(f"[Game] - connect: User tried to connect to social socket, but didn't give a valid game id")
-				self.close(self.ERROR_LOGGING_IN)
-				return;
+				raise self.ErrorLoggingIn
 
+			await self.accept()
+			self.ready = False
 			self.room_group_name = f'game_{game_id}'
-
 			await self.channel_layer.group_add(
 				self.room_group_name,
 				self.channel_name
 			)
-			self.ready = False
+
 			if self.game.user_count == 2:
-				logger.error(f"[Game] - connect: User tried to connect to game socket, but game is already full")
-				self.close(self.ERROR_LOGGING_IN)
-				return;
+				raise self.GameFull
 
 			await self._increaseUserCount()
-			await self.accept()
 			if self.game.user_count == 2:
-				# await self._startGame()
 				await self.channel_layer.group_send(
 					self.room_group_name,
 					{
-						'type': 'game_info',
-						'info': 'Ready',
+						'type': 'ready',
 					}
 				)
+		except self.ErrorLoggingIn:
+			logger.error(f"[Game] - connect: User tried to connect to game socket, but didn't give a game id")
+			self.close(self.ERROR_LOGGING_IN)
+			return;
+		except self.GameFull:
+			logger.error(f"[Game] - connect: User tried to connect to game socket, but game is already full")
+			self.close(self.ERROR_LOGGING_IN)
+			return;	
 		except Exception as e:
 			logger.exception(f'exception: {e}')
 
@@ -58,38 +66,54 @@ class GameConsumer(AsyncWebsocketConsumer):
 		self.game.started = True
 		self.game.save()
 
+	async def ready_msg(self, event):
+		await self._startGame()
+		await self.send(text_data=json.dumps({
+			'type': 'ready',
+		}))
+
 	async def game_info(self, event):
 		info = event['info']
-
-		await self._startGame()
 
 		await self.send(text_data=json.dumps({
 			'type': 'game_info',
 			'info': info,
 		}))
 
-	async def _handleConnectionLost(self):
-		await self.channel_layer.group_send(
-			self.room_group_name,
-			{
-				'type': 'game_info',
-				'info': 'Disconect',
-			}
-		)
-		try:
-			await self._deleteGame()
-		except Exception as e:
-			logger.exception(f'exception: {e}')
-			await self.send(text_data=json.dumps({
-					'type': 'error',
-					'detail': 'IDFK',
-				}))
-			return
-
 	#todo: think better about this when i have the mental
 	async def disconnect(self, close_code):
-		if close_code != self.ERROR_LOGGING_IN:
-			await self._handleConnectionLost()
+		if close_code == self.ERROR_LOGGING_IN:
+			await self.channel_layer.group_send(
+				self.room_group_name,
+				{
+					'type': 'game_info',
+					'info': 'Error logging in',
+				}
+			)
+		elif close_code == self.REQUEST_DENIED:
+			await self.channel_layer.group_send(
+				self.room_group_name,
+				{
+					'type': 'game_info',
+					'info': 'User dennied game invite',
+				}
+			)
+		else:
+			try:
+				await self.channel_layer.group_send(
+					self.room_group_name,
+					{
+						'type': 'game_info',
+						'info': 'Disconect',
+					}
+				)
+				await self._deleteGame()
+			except Exception as e:
+				logger.exception(f'exception: {e}')
+				await self.send(text_data=json.dumps({
+						'type': 'error',
+						'detail': 'IDFK',
+					}))
 		await self.channel_layer.group_discard(
 			self.room_group_name,
 			self.channel_name
