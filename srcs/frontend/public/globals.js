@@ -1,4 +1,4 @@
-window.IP = "localhost"
+window.IP = "10.12.3.13"
 
 window.chatScripts = [
 	'chat/chat.js',
@@ -30,7 +30,7 @@ window.game2Scripts = [
 
 window.matchmakingScripts = [
 	'matchmaking/before_game.js',
-	'matchmaking/classes.js',
+	// 'matchmaking/classes.js',
 	'matchmaking/events.js',
 	'matchmaking/init.js',
 	'matchmaking/game_end.js',

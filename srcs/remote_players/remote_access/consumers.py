@@ -176,7 +176,10 @@ class QueueConsumer(AsyncWebsocketConsumer):
 			else:
 				logger.error(f"[Game] - connect: User tried to connect to game socket, but didn't give a game or user id")
 				await self.close()
-				return;
+				return
+			
+			logger.info(f"game = {self.game}")
+			logger.info(f"user_id = {self.user_id}")
 
 			await self.accept()
 
