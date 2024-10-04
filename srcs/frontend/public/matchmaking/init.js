@@ -102,7 +102,7 @@ function Matchmaking_init_vars() {
 		},
 
 		g: {
-			fps: 30,
+			fps: 300,
 
 			gameInterval: 0,
 			timerInterval: 0,
@@ -119,7 +119,7 @@ function Matchmaking_init_vars() {
 			gravity: 0.5, // px
 			drag: 0.5, // px
 			knockback: 25, // px
-			hit_dmg: 5, // %
+			hit_dmg: 100, // %
 			stun_time: stun_time, // ms
 			ground_height: ground_height, // px
 

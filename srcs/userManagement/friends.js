@@ -45,7 +45,6 @@ function	set_online()	{
 function	send_friend_request(target) {
 	const	data = {
 		action:	"friend_request",
-		sender:	window.user.username,
 		target:	target
 
 	}
@@ -53,20 +52,20 @@ function	send_friend_request(target) {
 	window.user.social_socket.send(data)
 }
 
-function	accept_friend_request(request_id) {
+function	accept_friend_request(target) {
 	const	data = {
-		action:		"respond_request",
-		request_id:	request_id,
+		action:		"resquest_response",
+		target:		target,
 		accept:		true
 	}
 
 	window.user.social_socket.send(data)
 }
 
-function	dennie_friend_request(request_id) {
+function	denie_friend_request(target) {
 	const	data = {
-		action:		"respond_request",
-		request_id:	request_id,
+		action:		"resquest_response",
+		target:		target,
 		accept:		false
 	}
 
@@ -76,31 +75,25 @@ function	dennie_friend_request(request_id) {
 function	remove_friend(target) {
 	const	data = {
 		action:	"remove_friend",
-		sender:	window.user.username,
 		target:	target
-
 	}
 
 	window.user.social_socket.send(data)
 }
 
-function	block_user(target) {
+function	block(target) {
 	const	data = {
 		action:	"block",
-		sender:	window.user.username,
 		target:	target
-
 	}
 
 	window.user.social_socket.send(data)
 }
 
-function	block_user(target) {
+function	unblock(target) {
 	const	data = {
 		action:	"remove_block",
-		sender:	window.user.username,
 		target:	target
-
 	}
 
 	window.user.social_socket.send(data)

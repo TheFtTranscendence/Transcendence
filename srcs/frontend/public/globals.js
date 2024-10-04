@@ -1,4 +1,4 @@
-window.IP = "10.12.3.13"
+window.IP = "10.12.3.11"
 
 window.chatScripts = [
 	'chat/chat.js',
