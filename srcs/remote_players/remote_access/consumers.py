@@ -86,6 +86,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 				}))
 			return
 
+	#todo: think better about this when i have the mental
 	async def disconnect(self, close_code):
 		if close_code != self.ERROR_LOGGING_IN:
 			await self._handleConnectionLost()
@@ -134,6 +135,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 	def _deleteGame(self):
 		self.game.delete()
 
+#todo: it works, maybe rewrite in a better way 
 class QueueConsumer(AsyncWebsocketConsumer):
 	queue_Pong = []
 	queue_Fighty = []
