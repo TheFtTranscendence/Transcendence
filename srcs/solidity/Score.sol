@@ -184,6 +184,8 @@ contract Score is Ownable {
 
     /**
         * @notice Get all the games of an instance.
+        * @param _instanceIndex The index of the instance in the database.
+        * @return returns The games of the instance.
     **/
     function getGames(uint256 _instanceIndex, string calldata _gameType) public view returns (Game[] memory) {
         if (_instanceIndex < 0 || _instanceIndex >= instanceIndex)
@@ -191,6 +193,23 @@ contract Score is Ownable {
         if (keccak256(abi.encodePacked(_gameType)) != keccak256(abi.encodePacked("Pongy")) && keccak256(abi.encodePacked(_gameType)) != keccak256(abi.encodePacked("Fighty")))
             revert onlyPongyFightyError();
         return instancesGame[_gameType][_instanceIndex];
+    }
+
+    /**
+        * @notice Get the current tournament players list.
+        * @param _instanceIndex The index of the instance in the database.
+        * @return returns The names of the players.
+    */
+    function getCurrentTournamentPlayersList(uint256 _instanceIndex, string calldata _gameType) public view returns (string[] memory) {
+        if (_instanceIndex < 0 || _instanceIndex >= instanceIndex)
+            revert wrongInstanceIndex();
+        if (keccak256(abi.encodePacked(_gameType)) != keccak256(abi.encodePacked("Pongy")) && keccak256(abi.encodePacked(_gameType)) != keccak256(abi.encodePacked("Fighty")))
+            revert onlyPongyFightyError();
+        uint256 _tournamentIndex = getCurrentTournamentIndex(_instanceIndex, _gameType);
+        if (instancesTournament[_gameType][_instanceIndex][_tournamentIndex].finished)
+            revert noCurrentTournament();
+
+        return instancesTournament[_gameType][_instanceIndex][_tournamentIndex].players;
     }
 
     /**

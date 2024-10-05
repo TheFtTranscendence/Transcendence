@@ -200,6 +200,16 @@ def get_games(request, instanceIndex, gameType):
 
     return JsonResponse({'success': games}, status=200)
 
+# Get the current tournament players list
+@api_view(['GET'])
+def get_current_tournament_players_list(request, instanceIndex, gameType):
+    try:
+        players = contract.functions.getCurrentTournamentPlayersList(instanceIndex, gameType).call()
+    except Exception as e:
+        return JsonResponse({'exception': str(e)}, status=400)
+
+    return JsonResponse({'success': players}, status=200)
+
 # Get the next tournament game to play (returns 2 players)
 @api_view(['GET'])
 def get_next_tournament_player(request, instanceIndex, gameType):
