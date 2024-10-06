@@ -99,6 +99,19 @@ Returns:
 |exception| catched exception | 400 |
 
 
+## /solidity/gettournamentstatus/\<instanceIndex>/\<gameType>/
+
+Request Method: **GET**
+
+JSON file: *(null)*
+
+Returns:
+
+| Message | Description | Status |
+|--------|-------------|:-----:|
+|success| Returns all the games | 200 |
+|exception| catched exception | 400 |
+
 ## /solidity/getcurrenttournamentplayerslist/\<instanceIndex>/\<gameType>/
 
 Request Method: **GET**

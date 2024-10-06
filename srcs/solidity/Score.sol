@@ -108,7 +108,7 @@ contract Score is Ownable {
     /**
         * @notice Add a new 4 or 8 players tournament to the database.
         * @param _instanceIndex The index of the instance in the database.
-        * 
+        * @param _gameType The type of the game (Pongy or Fighty).
         * @param _players The list of players in the tournament. 4 or 8 players only.
         * @dev Only one tournament can be in progress at a time.
     **/
@@ -137,6 +137,7 @@ contract Score is Ownable {
     /**
         * @notice Add a game to the current tournament.
         * @param _instanceIndex The index of the instance in the database.
+        * @param _gameType The type of the game (Pongy or Fighty).
         * @param _player1 The name of the first player.
         * @param _player2 The name of the second player.
         * @param _score1 The score of the first player.
@@ -185,6 +186,7 @@ contract Score is Ownable {
     /**
         * @notice Get all the games of an instance.
         * @param _instanceIndex The index of the instance in the database.
+        * @param _gameType The type of the game (Pongy or Fighty).
         * @return returns The games of the instance.
     **/
     function getGames(uint256 _instanceIndex, string calldata _gameType) public view returns (Game[] memory) {
@@ -196,8 +198,25 @@ contract Score is Ownable {
     }
 
     /**
+        * @notice Get the current tournament status.
+        * @param _instanceIndex The index of the instance in the database.
+        * @param _gameType The type of the game (Pongy or Fighty).
+        * @return returns The status of the current tournament.
+    */
+    function getTournamentStatus(uint256 _instanceIndex, string calldata _gameType) public view returns (bool) {
+        if (_instanceIndex < 0 || _instanceIndex >= instanceIndex)
+            revert wrongInstanceIndex();
+        if (keccak256(abi.encodePacked(_gameType)) != keccak256(abi.encodePacked("Pongy")) && keccak256(abi.encodePacked(_gameType)) != keccak256(abi.encodePacked("Fighty")))
+            revert onlyPongyFightyError();
+        if (instancesTournament[_gameType][_instanceIndex].length == 0)
+            return false;
+        return !instancesTournament[_gameType][_instanceIndex][instancesTournament[_gameType][_instanceIndex].length - 1].finished;
+   }
+
+    /**
         * @notice Get the current tournament players list.
         * @param _instanceIndex The index of the instance in the database.
+        * @param _gameType The type of the game (Pongy or Fighty).
         * @return returns The names of the players.
     */
     function getCurrentTournamentPlayersList(uint256 _instanceIndex, string calldata _gameType) public view returns (string[] memory) {
@@ -215,6 +234,7 @@ contract Score is Ownable {
     /**
         * @notice Get the next players of a tournament.
         * @param _instanceIndex The index of the instance in the database.
+        * @param _gameType The type of the game (Pongy or Fighty).
         * @return returns The names of the next players.
     */
     function getNextTournamentPlayers(uint256 _instanceIndex, string calldata _gameType) public view returns (string memory, string memory) {
@@ -260,6 +280,7 @@ contract Score is Ownable {
     /**
         * @notice Get the ranking of all the tournaments of an instance.
         * @param _instanceIndex The index of the instance in the database.
+        * @param _gameType The type of the game (Pongy or Fighty).
         * @return returns The ranking of all the tournaments.
     */
     function getAllTournamentsRankings(uint256 _instanceIndex, string calldata _gameType) public view returns (string[][] memory) {
@@ -279,6 +300,7 @@ contract Score is Ownable {
     /**
         * @notice Get the last tournament ranking of an instance.
         * @param _instanceIndex The index of the instance in the database.
+        * @param _gameType The type of the game (Pongy or Fighty).
         * @return returns The last tournament ranking.
     */
     function getLastTournamentRanking(uint256 _instanceIndex, string calldata _gameType) public view returns (string[] memory) {

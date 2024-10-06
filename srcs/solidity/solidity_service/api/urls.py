@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import add_instance, add_game, add_tournament, add_tournament_game, get_games, get_current_tournament_players_list, get_next_tournament_player, get_last_tournament_ranking, get_all_tournaments_rankings
+from .views import add_instance, add_game, add_tournament, add_tournament_game, get_games, get_tournament_status, get_current_tournament_players_list, get_next_tournament_player, get_last_tournament_ranking, get_all_tournaments_rankings
 
 urlpatterns = [
     # Setter functions
@@ -10,6 +10,7 @@ urlpatterns = [
 
     # Getter functions
     path('getgames/<int:instanceIndex>/<str:gameType>', get_games),
+    path('gettournamentstatus/<int:instanceIndex>/<str:gameType>', get_tournament_status),
     path('getcurrenttournamentplayerslist/<int:instanceIndex>/<str:gameType>', get_current_tournament_players_list),
     path('getnexttournamentplayers/<int:instanceIndex>/<str:gameType>', get_next_tournament_player),
     path('getlasttournamentranking/<int:instanceIndex>/<str:gameType>', get_last_tournament_ranking),
