@@ -35,12 +35,12 @@ def add_instance(request):
     def add_instance_func():
         # Estimate gas and gas price
         base_gas_price = web3.eth.gas_price
-        gas_price = int(base_gas_price * 20)
+        gas_price = int(base_gas_price * 3)
         base_gas = contract.functions.addInstance().estimate_gas({
             'from': web3.eth.default_account
         })
-        gas = int(base_gas * 20)
-        max_priority_fee_per_gas = web3.toWei(5000000, 'gwei')  # 0.005 ETH in Gwei
+        gas = int(base_gas * 3)
+        max_priority_fee_per_gas = web3.to_wei(100, 'gwei')  # 0.005 ETH in Gwei
         max_fee_per_gas = base_gas_price + max_priority_fee_per_gas
 
         # Build the transaction
@@ -83,11 +83,13 @@ def add_game(request, instanceIndex, gameType):
     def add_game_func():
         # Estimate gas and gas price
         base_gas_price = web3.eth.gas_price
-        gas_price = int(base_gas_price * 20)
+        gas_price = int(base_gas_price * 3)
         base_gas = contract.functions.addGame(instanceIndex, gameType, player1, player2, score1, score2).estimate_gas({
             'from': web3.eth.default_account
         })
-        gas = int(base_gas * 20)
+        gas = int(base_gas * 3)
+        max_priority_fee_per_gas = web3.to_wei(100, 'gwei')  # 0.005 ETH in Gwei
+        max_fee_per_gas = base_gas_price + max_priority_fee_per_gas
 
         # Build the transaction
         tx = contract.functions.addGame(instanceIndex, gameType, player1, player2, score1, score2).build_transaction({
@@ -123,11 +125,13 @@ def add_tournament(request, instanceIndex, gameType):
     def add_tournament_func():
         # Estimate gas and gas price
         base_gas_price = web3.eth.gas_price
-        gas_price = int(base_gas_price * 20)
+        gas_price = int(base_gas_price * 3)
         base_gas = contract.functions.addTournament(instanceIndex, gameType, players).estimate_gas({
             'from': web3.eth.default_account
         })
-        gas = int(base_gas * 20)
+        gas = int(base_gas * 3)
+        max_priority_fee_per_gas = web3.to_wei(100, 'gwei')  # 0.005 ETH in Gwei
+        max_fee_per_gas = base_gas_price + max_priority_fee_per_gas
 
         # Build the transaction
         tx = contract.functions.addTournament(instanceIndex, gameType, players).build_transaction({
@@ -166,11 +170,13 @@ def add_tournament_game(request, instanceIndex, gameType):
     def add_tournament_game_func():
         # Estimate gas and gas price
         base_gas_price = web3.eth.gas_price
-        gas_price = int(base_gas_price * 20)
+        gas_price = int(base_gas_price * 3)
         base_gas = contract.functions.addTournamentGame(instanceIndex, gameType, player1, player2, score1, score2).estimate_gas({
             'from': web3.eth.default_account
         })
-        gas = int(base_gas * 20)
+        gas = int(base_gas * 3)
+        max_priority_fee_per_gas = web3.to_wei(100, 'gwei')  # 0.005 ETH in Gwei
+        max_fee_per_gas = base_gas_price + max_priority_fee_per_gas
 
         # Build the transaction
         tx = contract.functions.addTournamentGame(instanceIndex, gameType, player1, player2, score1, score2).build_transaction({
