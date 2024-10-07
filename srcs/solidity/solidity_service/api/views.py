@@ -35,15 +35,15 @@ def add_instance(request):
     def add_instance_func():
         # Estimate gas and gas price
         base_gas_price = web3.eth.gas_price
-        gas_price = int(base_gas_price * 2)
+        gas_price = int(base_gas_price * 20)
         base_gas = contract.functions.addInstance().estimate_gas({
             'from': web3.eth.default_account
         })
-        gas = int(base_gas * 2)
+        gas = int(base_gas * 20)
 
         # Build the transaction
         tx = contract.functions.addInstance().build_transaction({
-            'chainId': 11155111,
+            'chainId': 17000,
             'gas': gas,
             'gasPrice': gas_price,
             'nonce': web3.eth.get_transaction_count(web3.eth.default_account),
@@ -80,15 +80,15 @@ def add_game(request, instanceIndex, gameType):
     def add_game_func():
         # Estimate gas and gas price
         base_gas_price = web3.eth.gas_price
-        gas_price = int(base_gas_price * 2)
+        gas_price = int(base_gas_price * 20)
         base_gas = contract.functions.addGame(instanceIndex, gameType, player1, player2, score1, score2).estimate_gas({
             'from': web3.eth.default_account
         })
-        gas = int(base_gas * 2)
+        gas = int(base_gas * 20)
 
         # Build the transaction
         tx = contract.functions.addGame(instanceIndex, gameType, player1, player2, score1, score2).build_transaction({
-            'chainId': 11155111,
+            'chainId': 17000,
             'gas': gas,
             'gasPrice': gas_price,
             'nonce': web3.eth.get_transaction_count(web3.eth.default_account),
@@ -119,15 +119,15 @@ def add_tournament(request, instanceIndex, gameType):
     def add_tournament_func():
         # Estimate gas and gas price
         base_gas_price = web3.eth.gas_price
-        gas_price = int(base_gas_price * 2)
+        gas_price = int(base_gas_price * 20)
         base_gas = contract.functions.addTournament(instanceIndex, gameType, players).estimate_gas({
             'from': web3.eth.default_account
         })
-        gas = int(base_gas * 2)
+        gas = int(base_gas * 20)
 
         # Build the transaction
         tx = contract.functions.addTournament(instanceIndex, gameType, players).build_transaction({
-            'chainId': 11155111,
+            'chainId': 17000,
             'gas': gas,
             'gasPrice': gas_price,
             'nonce': web3.eth.get_transaction_count(web3.eth.default_account),
@@ -161,15 +161,15 @@ def add_tournament_game(request, instanceIndex, gameType):
     def add_tournament_game_func():
         # Estimate gas and gas price
         base_gas_price = web3.eth.gas_price
-        gas_price = int(base_gas_price * 2)
+        gas_price = int(base_gas_price * 20)
         base_gas = contract.functions.addTournamentGame(instanceIndex, gameType, player1, player2, score1, score2).estimate_gas({
             'from': web3.eth.default_account
         })
-        gas = int(base_gas * 2)
+        gas = int(base_gas * 20)
 
         # Build the transaction
         tx = contract.functions.addTournamentGame(instanceIndex, gameType, player1, player2, score1, score2).build_transaction({
-            'chainId': 11155111,
+            'chainId': 17000,
             'gas': gas,
             'gasPrice': gas_price,
             'nonce': web3.eth.get_transaction_count(web3.eth.default_account),
