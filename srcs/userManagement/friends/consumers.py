@@ -51,7 +51,7 @@ class	SocialConsumer(AsyncWebsocketConsumer):
 
 		if msg_type == 'friend_request':
 			await self.handleFriendRequest(text_data_json)
-		elif msg_type == 'resquest_response':
+		elif msg_type == 'request_response':
 			await self.handleRequestResponse(text_data_json)
 		elif msg_type == 'remove_friend':
 			await self.handleRemoveFriend(text_data_json)
