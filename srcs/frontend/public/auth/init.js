@@ -35,6 +35,8 @@ function handleSuccessAuth(errorField) {
 		'Authorization': 'Token ' + window.Usertoken,
 	}
 
+    set_online();
+
 	currentUser.username = window.user.username;
 	localStorage.setItem('currentUser', JSON.stringify(currentUser));
 }

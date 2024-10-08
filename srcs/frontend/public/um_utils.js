@@ -145,7 +145,7 @@ function	modify_user(field, new_value, target='') {
 //* Im updating the intire user everytime there is a small update, this is obviously not the best way to do it, but it works well enought for our project
 function	set_online()	{
 
-	window.user.social_socket = new WebSocket("ws://" + window.IP + ":8000/ws/social/?token=" + window.user.token);
+	window.user.social_socket = new WebSocket("ws://" + window.IP + ":8000/ws/social/?user=" + window.user.username);
 
 	//todo: also need to work with the errors
 	window.user.social_socket.onmessage = function(e) {
