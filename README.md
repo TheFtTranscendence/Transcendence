@@ -157,7 +157,6 @@ class LoginView(APIView):
 class RegisterView(APIView):
 	permission_classes = [AllowAny]
 
-	#TODO: implement missing fields and already in use email/username
 	def post(self, request):
 		data = request.data
 		email = data.get('email')
