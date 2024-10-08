@@ -195,6 +195,7 @@ class LoginView(APIView):
 		if not password:
 			missing_fields.append('password')
 		if not username or not password:
+			logger.exception("Unexpected error during login: All fields are required")
 			return Response({'message': 'All fields are required', 'missing_fields': missing_fields}, status=status.HTTP_400_BAD_REQUEST)
 
 		user = authenticate(request, username=username, password=password)
@@ -203,6 +204,7 @@ class LoginView(APIView):
 			token, created = Token.objects.get_or_create(user=user)
 			return Response({'message': 'Login successful', 'token': token.key, 'user': UserSerializer(user).data}, status=status.HTTP_200_OK)
 		else:
+			logger.exception("Unexpected error during login: Invalid credentials")
 			return Response({'message': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
 
 class RegisterView(APIView):
@@ -226,15 +228,19 @@ class RegisterView(APIView):
 		if not confirm_password:
 			missing_fields.append('confirm_password')
 		if not email or not username or not password or not confirm_password:
+			logger.exception("Unexpected error during registration: All fields are required")
 			return Response({'message': 'All fields are required', 'missing_fields': missing_fields}, status=status.HTTP_400_BAD_REQUEST)
 
 		if password != confirm_password:
+			logger.exception("Unexpected error during registration: Passwords do not match")
 			return Response({'message': 'Passwords do not match'}, status=status.HTTP_400_BAD_REQUEST)
 
 		if User.objects.filter(email=email).exists():
+			logger.exception("Unexpected error during registration: Email is already in use")
 			return Response({'message': 'Email is already in use'}, status=status.HTTP_400_BAD_REQUEST)
 
 		if User.objects.filter(username=username).exists():
+			logger.exception("Unexpected error during registration: Username is already in use")
 			return Response({'message': 'Username is already in use'}, status=status.HTTP_400_BAD_REQUEST)
 
 		try:
@@ -246,9 +252,10 @@ class RegisterView(APIView):
 
 			return Response({'message': 'Registration successful', 'token': token.key, 'user': UserSerializer(user).data}, status=status.HTTP_201_CREATED)
 		except ValueError as e:
+			logger.exception("Unexpected error during registration1: %s", e)
 			return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 		except Exception as e:
-			logger.exception("Unexpected error during registration: %s", e)
+			logger.exception("Unexpected error during registration2: %s", e)
 			return Response({'message': 'Internal server error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 		
 class HealthView(APIView):

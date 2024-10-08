@@ -1,5 +1,3 @@
-window.IP = "10.12.3.9"
-
 const currentUser = {
 	username: "",
 	email: "" //Not set

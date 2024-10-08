@@ -85,7 +85,7 @@ function putAvatar(event) {
 		'Content-Type': 'multipart/form-data',
 	}
 
-	axios.patch('http://localhost:8000/auth/users/' + window.user.id + '/', formData)
+	axios.patch('http://' + window.IP + ':8000/auth/users/' + window.user.id + '/', formData)
     .then(response => {
 		console.log('Upload successful:', response.data);
 	})
@@ -145,7 +145,7 @@ function handlePasswordChangeForm() {
 		confirm_new_password: confirmNewPassword
 	}
 
-	axios.put('http://localhost:8000/config/change_avatar/' + username, data)
+	axios.put('http://' + window.IP + ':8000/config/change_avatar/' + username, data)
 	.then(response => {
 		alert("Password change successful");
 		if (!errorField.classList.contains('hidden')) {
