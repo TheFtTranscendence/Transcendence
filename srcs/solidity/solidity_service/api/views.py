@@ -5,6 +5,7 @@ from django.http import JsonResponse
 import json
 from web3 import Web3, HTTPProvider
 from django.conf import settings
+import time
 
 # Get from settings
 ethereum_node_url = settings.ETHEREUM_NODE_URL
@@ -39,8 +40,8 @@ def add_instance(request):
         base_gas = contract.functions.addInstance().estimate_gas({
             'from': web3.eth.default_account
         })
-        gas = int(base_gas * 3)
-        max_priority_fee_per_gas = web3.to_wei(100, 'gwei')  # 0.005 ETH in Gwei
+        gas = int(base_gas * 5)
+        max_priority_fee_per_gas = web3.to_wei(200, 'gwei')  # 0.005 ETH in Gwei
         max_fee_per_gas = base_gas_price + max_priority_fee_per_gas
 
         # Build the transaction
@@ -55,6 +56,13 @@ def add_instance(request):
         tx_hash = web3.eth.send_raw_transaction(signed_tx.raw_transaction)
         return tx_hash
     
+    while True:
+        pending_nonce = web3.eth.get_transaction_count(web3.eth.default_account, 'pending')
+        latest_nonce = web3.eth.get_transaction_count(web3.eth.default_account, 'latest')
+        if pending_nonce == latest_nonce:
+            break
+        time.sleep(5)
+
     try:
         tx_hash = add_instance_func()
     except Exception as e:
@@ -87,8 +95,8 @@ def add_game(request, instanceIndex, gameType):
         base_gas = contract.functions.addGame(instanceIndex, gameType, player1, player2, score1, score2).estimate_gas({
             'from': web3.eth.default_account
         })
-        gas = int(base_gas * 3)
-        max_priority_fee_per_gas = web3.to_wei(100, 'gwei')  # 0.005 ETH in Gwei
+        gas = int(base_gas * 5)
+        max_priority_fee_per_gas = web3.to_wei(200, 'gwei')  # 0.005 ETH in Gwei
         max_fee_per_gas = base_gas_price + max_priority_fee_per_gas
 
         # Build the transaction
@@ -102,6 +110,13 @@ def add_game(request, instanceIndex, gameType):
         signed_tx = web3.eth.account.sign_transaction(tx, private_key)
         tx_hash = web3.eth.send_raw_transaction(signed_tx.raw_transaction)
         return tx_hash
+
+    while True:
+        pending_nonce = web3.eth.get_transaction_count(web3.eth.default_account, 'pending')
+        latest_nonce = web3.eth.get_transaction_count(web3.eth.default_account, 'latest')
+        if pending_nonce == latest_nonce:
+            break
+        time.sleep(5)
 
     try:
         tx_hash = add_game_func()
@@ -129,8 +144,8 @@ def add_tournament(request, instanceIndex, gameType):
         base_gas = contract.functions.addTournament(instanceIndex, gameType, players).estimate_gas({
             'from': web3.eth.default_account
         })
-        gas = int(base_gas * 3)
-        max_priority_fee_per_gas = web3.to_wei(100, 'gwei')  # 0.005 ETH in Gwei
+        gas = int(base_gas * 5)
+        max_priority_fee_per_gas = web3.to_wei(200, 'gwei')  # 0.005 ETH in Gwei
         max_fee_per_gas = base_gas_price + max_priority_fee_per_gas
 
         # Build the transaction
@@ -144,6 +159,13 @@ def add_tournament(request, instanceIndex, gameType):
         signed_tx = web3.eth.account.sign_transaction(tx, private_key)
         tx_hash = web3.eth.send_raw_transaction(signed_tx.raw_transaction)
         return tx_hash
+
+    while True:
+        pending_nonce = web3.eth.get_transaction_count(web3.eth.default_account, 'pending')
+        latest_nonce = web3.eth.get_transaction_count(web3.eth.default_account, 'latest')
+        if pending_nonce == latest_nonce:
+            break
+        time.sleep(5)
 
     try:
         tx_hash = add_tournament_func()
@@ -174,8 +196,8 @@ def add_tournament_game(request, instanceIndex, gameType):
         base_gas = contract.functions.addTournamentGame(instanceIndex, gameType, player1, player2, score1, score2).estimate_gas({
             'from': web3.eth.default_account
         })
-        gas = int(base_gas * 3)
-        max_priority_fee_per_gas = web3.to_wei(100, 'gwei')  # 0.005 ETH in Gwei
+        gas = int(base_gas * 5)
+        max_priority_fee_per_gas = web3.to_wei(200, 'gwei')  # 0.005 ETH in Gwei
         max_fee_per_gas = base_gas_price + max_priority_fee_per_gas
 
         # Build the transaction
@@ -190,6 +212,13 @@ def add_tournament_game(request, instanceIndex, gameType):
         tx_hash = web3.eth.send_raw_transaction(signed_tx.raw_transaction)
         return tx_hash
 
+    while True:
+        pending_nonce = web3.eth.get_transaction_count(web3.eth.default_account, 'pending')
+        latest_nonce = web3.eth.get_transaction_count(web3.eth.default_account, 'latest')
+        if pending_nonce == latest_nonce:
+            break
+        time.sleep(5)
+        
     try:
         tx_hash = add_tournament_game_func()
     except Exception as e:
