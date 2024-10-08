@@ -4,6 +4,6 @@ from .models import FriendRequest
 class FriendRequestSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = FriendRequest
-		fields = ['id', 'sender', 'target', 'created_at', 'accepted', 'rejected']
+		fields = ['id', 'sender', 'target', 'created_at', 'accepted']
 		
 

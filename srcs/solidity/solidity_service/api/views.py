@@ -35,17 +35,20 @@ def add_instance(request):
     def add_instance_func():
         # Estimate gas and gas price
         base_gas_price = web3.eth.gas_price
-        gas_price = int(base_gas_price * 2)
+        gas_price = int(base_gas_price * 3)
         base_gas = contract.functions.addInstance().estimate_gas({
             'from': web3.eth.default_account
         })
-        gas = int(base_gas * 2)
+        gas = int(base_gas * 3)
+        max_priority_fee_per_gas = web3.to_wei(100, 'gwei')  # 0.005 ETH in Gwei
+        max_fee_per_gas = base_gas_price + max_priority_fee_per_gas
 
         # Build the transaction
         tx = contract.functions.addInstance().build_transaction({
-            'chainId': 11155111,
+            'chainId': 17000,
+            'maxPriorityFeePerGas': max_priority_fee_per_gas,  # Fixed tip of 0.005 ETH
+            'maxFeePerGas': max_fee_per_gas,
             'gas': gas,
-            'gasPrice': gas_price,
             'nonce': web3.eth.get_transaction_count(web3.eth.default_account),
         })
         signed_tx = web3.eth.account.sign_transaction(tx, private_key)
@@ -80,17 +83,20 @@ def add_game(request, instanceIndex, gameType):
     def add_game_func():
         # Estimate gas and gas price
         base_gas_price = web3.eth.gas_price
-        gas_price = int(base_gas_price * 2)
+        gas_price = int(base_gas_price * 3)
         base_gas = contract.functions.addGame(instanceIndex, gameType, player1, player2, score1, score2).estimate_gas({
             'from': web3.eth.default_account
         })
-        gas = int(base_gas * 2)
+        gas = int(base_gas * 3)
+        max_priority_fee_per_gas = web3.to_wei(100, 'gwei')  # 0.005 ETH in Gwei
+        max_fee_per_gas = base_gas_price + max_priority_fee_per_gas
 
         # Build the transaction
         tx = contract.functions.addGame(instanceIndex, gameType, player1, player2, score1, score2).build_transaction({
-            'chainId': 11155111,
+            'chainId': 17000,
+            'maxPriorityFeePerGas': max_priority_fee_per_gas,  # Fixed tip of 0.005 ETH
+            'maxFeePerGas': max_fee_per_gas,
             'gas': gas,
-            'gasPrice': gas_price,
             'nonce': web3.eth.get_transaction_count(web3.eth.default_account),
         })
         signed_tx = web3.eth.account.sign_transaction(tx, private_key)
@@ -119,17 +125,20 @@ def add_tournament(request, instanceIndex, gameType):
     def add_tournament_func():
         # Estimate gas and gas price
         base_gas_price = web3.eth.gas_price
-        gas_price = int(base_gas_price * 2)
+        gas_price = int(base_gas_price * 3)
         base_gas = contract.functions.addTournament(instanceIndex, gameType, players).estimate_gas({
             'from': web3.eth.default_account
         })
-        gas = int(base_gas * 2)
+        gas = int(base_gas * 3)
+        max_priority_fee_per_gas = web3.to_wei(100, 'gwei')  # 0.005 ETH in Gwei
+        max_fee_per_gas = base_gas_price + max_priority_fee_per_gas
 
         # Build the transaction
         tx = contract.functions.addTournament(instanceIndex, gameType, players).build_transaction({
-            'chainId': 11155111,
+            'chainId': 17000,
+            'maxPriorityFeePerGas': max_priority_fee_per_gas,  # Fixed tip of 0.005 ETH
+            'maxFeePerGas': max_fee_per_gas,
             'gas': gas,
-            'gasPrice': gas_price,
             'nonce': web3.eth.get_transaction_count(web3.eth.default_account),
         })
         signed_tx = web3.eth.account.sign_transaction(tx, private_key)
@@ -161,17 +170,20 @@ def add_tournament_game(request, instanceIndex, gameType):
     def add_tournament_game_func():
         # Estimate gas and gas price
         base_gas_price = web3.eth.gas_price
-        gas_price = int(base_gas_price * 2)
+        gas_price = int(base_gas_price * 3)
         base_gas = contract.functions.addTournamentGame(instanceIndex, gameType, player1, player2, score1, score2).estimate_gas({
             'from': web3.eth.default_account
         })
-        gas = int(base_gas * 2)
+        gas = int(base_gas * 3)
+        max_priority_fee_per_gas = web3.to_wei(100, 'gwei')  # 0.005 ETH in Gwei
+        max_fee_per_gas = base_gas_price + max_priority_fee_per_gas
 
         # Build the transaction
         tx = contract.functions.addTournamentGame(instanceIndex, gameType, player1, player2, score1, score2).build_transaction({
-            'chainId': 11155111,
+            'chainId': 17000,
+            'maxPriorityFeePerGas': max_priority_fee_per_gas,  # Fixed tip of 0.005 ETH
+            'maxFeePerGas': max_fee_per_gas,
             'gas': gas,
-            'gasPrice': gas_price,
             'nonce': web3.eth.get_transaction_count(web3.eth.default_account),
         })
         signed_tx = web3.eth.account.sign_transaction(tx, private_key)
@@ -199,6 +211,26 @@ def get_games(request, instanceIndex, gameType):
         return JsonResponse({'exception': str(e)}, status=400)
 
     return JsonResponse({'success': games}, status=200)
+
+# Get the current tournament players list
+@api_view(['GET'])
+def get_tournament_status(request, instanceIndex, gameType):
+    try:
+        players = contract.functions.getTournamentStatus(instanceIndex, gameType).call()
+    except Exception as e:
+        return JsonResponse({'exception': str(e)}, status=400)
+
+    return JsonResponse({'success': players}, status=200)
+
+# Get the current tournament players list
+@api_view(['GET'])
+def get_current_tournament_players_list(request, instanceIndex, gameType):
+    try:
+        players = contract.functions.getCurrentTournamentPlayersList(instanceIndex, gameType).call()
+    except Exception as e:
+        return JsonResponse({'exception': str(e)}, status=400)
+
+    return JsonResponse({'success': players}, status=200)
 
 # Get the next tournament game to play (returns 2 players)
 @api_view(['GET'])

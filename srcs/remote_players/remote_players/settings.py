@@ -100,7 +100,7 @@ LOGGING = {
 		},
 	},
 	'loggers': {
-		'django': {
+		'remote_players': {
 			'handlers': ['console'],
 			'level': 'INFO',
 			'propagate': False,
@@ -109,6 +109,20 @@ LOGGING = {
 			'handlers': ['console'],
 			'level': 'INFO',
 			'propagate': False,
+		},
+		'django.request': {
+			'handlers': ['console'],
+			'level': 'DEBUG',
+			'propagate': False,
+		},
+		'django.server': {
+			'handlers': ['console'],
+			'level': 'DEBUG',
+			'propagate': False,
+		},
+		'channels': {
+			'handlers': ['console'],
+			'level': 'DEBUG',
 		},
 	},
 }
