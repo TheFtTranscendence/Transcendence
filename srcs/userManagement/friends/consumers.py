@@ -144,7 +144,7 @@ class	SocialConsumer(AsyncWebsocketConsumer):
 		'''
 		To use this function send:
 		{
-			"type": "resquest_response",
+			"type": "request_response",
 			"target": [target.id],
 			"response": true/false
 		}

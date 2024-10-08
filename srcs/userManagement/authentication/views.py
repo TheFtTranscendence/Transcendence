@@ -56,7 +56,6 @@ class UserViewSet(viewsets.ModelViewSet):
 
 		return Response(user_data)
 
-	#todo: destroy chats related to this user
 	def destroy(self, request, *args, **kwargs):
 		user_id = kwargs.get('pk')
 		current_user = request.user
