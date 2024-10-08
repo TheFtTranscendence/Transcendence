@@ -1,8 +1,6 @@
-window.IP = "10.12.3.11"
-
 const currentUser = {
-	username: String = "",
-	email: String = "" //Not set
+	username: "",
+	email: "" //Not set
 };
 
 window.authScripts = [
