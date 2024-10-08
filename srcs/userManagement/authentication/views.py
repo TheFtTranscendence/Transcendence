@@ -239,7 +239,7 @@ class RegisterView(APIView):
 			logger.exception("Unexpected error during registration: Email is already in use")
 			return Response({'message': 'Email is already in use'}, status=status.HTTP_400_BAD_REQUEST)
 
-		if User.objects.filter(username=username).exists():
+		if User.objects.filter(username=username).exists() or username.isdigit():
 			logger.exception("Unexpected error during registration: Username is already in use")
 			return Response({'message': 'Username is already in use'}, status=status.HTTP_400_BAD_REQUEST)
 

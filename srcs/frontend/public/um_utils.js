@@ -2,7 +2,7 @@
 
 //* This is Important because of the microservices module
 function	ping_Usermanagement() {
-	axios.get(`http://${window.IP}:8000/auth/health/`)
+	return axios.get(`http://${window.IP}:8000/auth/health/`)
 	.then((response) => {
 		//todo: define a variable so it knows that the usermanagement server is up or down
 	})
@@ -30,7 +30,7 @@ function	update_user_info() {
 		'Authorization': 'Token ' + window.usertoken,
 	}
 
-	axios.get(`http://${window.IP}:8000/auth/users/`, {headers: userheaders})
+	return axios.get(`http://${window.IP}:8000/auth/users/`, {headers: userheaders})
 	.then((response) => {
 		window.user = response.data;
 		_update_user_chats()
@@ -51,7 +51,7 @@ function	get_all_users() {
 		'Authorization': 'Token ' + window.usertoken,
 	}
 
-	axios.get(`http://${window.IP}:8000/auth/users/all/`, {headers: userheaders})
+	return axios.get(`http://${window.IP}:8000/auth/users/all/`, {headers: userheaders})
 	.then((response) => {
 		return response.data
 	})
@@ -71,7 +71,7 @@ function	get_user_info(target) {
 		'Authorization': 'Token ' + window.usertoken,
 	}
 
-	axios.get(`http://${window.IP}:8000/auth/users/${target}/`, {headers: userheaders})
+	return axios.get(`http://${window.IP}:8000/auth/users/${target}/`, {headers: userheaders})
 	.then((response) => {
 		return response.data
 	})
@@ -100,7 +100,7 @@ function	delete_user(target = '') {
 		'Authorization': 'Token ' + window.usertoken,
 	}
 
-	axios.delete(url, {headers: userheaders})
+	return axios.delete(url, {headers: userheaders})
 	.then((response) => {
 		return response.data
 	})
@@ -125,7 +125,7 @@ function	modify_user(field, new_value, target='') {
 		'Authorization': 'Token ' + window.usertoken,
 	}
 
-	axios.patch(url, {headers: userheaders}, data)
+	return axios.patch(url, {headers: userheaders}, data)
 	.then((response) => {
 		return response.data
 	})
@@ -193,7 +193,7 @@ function	set_online()	{
 				 */
 				update_user_info();
 				//? if in chat screen update chat screen because we have one less friend?
-				break ;
+				break ;get_user
 			case 'game_invite':
 				/**
 				 * type: 'game_invite',
@@ -257,12 +257,11 @@ function	set_online()	{
 // target should be an ID
 function	send_friend_request(target) {
 	const	data = {
-		type:	"friend_request",
-		target:	target
-
+		type: "friend_request",
+		target: target
 	}
 
-	window.social_socket.send(data)
+	window.social_socket.send(JSON.stringify(data))
 }
 
 // target should be an ID
@@ -273,7 +272,7 @@ function	accept_friend_request(target) {
 		response:	true
 	}
 
-	window.social_socket.send(data)
+	window.social_socket.send(JSON.stringify(data))
 }
 
 // target should be an ID
@@ -284,7 +283,7 @@ function	denie_friend_request(target) {
 		response:	false
 	}
 
-	window.social_socket.send(data)
+	window.social_socket.send(JSON.stringify(data))
 }
 
 // target should be an ID
@@ -294,7 +293,7 @@ function	remove_friend(target) {
 		target:	target
 	}
 
-	window.social_socket.send(data)
+	window.social_socket.send(JSON.stringify(data))
 }
 
 // target should be an ID
@@ -304,7 +303,7 @@ function	block(target) {
 		target:	target
 	}
 
-	window.social_socket.send(data)
+	window.social_socket.send(JSON.stringify(data))
 }
 
 // target should be an ID
@@ -314,7 +313,7 @@ function	unblock(target) {
 		target:	target
 	}
 
-	window.social_socket.send(data)
+	window.social_socket.send(JSON.stringify(data))
 }
 
 // target should be an ID
@@ -325,5 +324,5 @@ function	send_game_invite(target, game) {
 		game: game
 	}
 
-	window.social_socket.send(data)
+	window.social_socket.send(JSON.stringify(data))
 }
