@@ -25,7 +25,6 @@ function auth()
 }
 
 function handleSuccessAuth(errorField) {
-	console.log("handleSuccessAuth() called")
 	document.getElementById('auth').classList.add('hidden');
 	document.querySelector('nav').classList.remove('hidden');
 	window.location.hash = '#home';
@@ -35,31 +34,6 @@ function handleSuccessAuth(errorField) {
 	userheaders = {
 		'Authorization': 'Token ' + window.Usertoken,
 	}
-
-	axios.get('http://' + window.IP + ':8000/auth/users/', {headers: userheaders})
-	.then((response) => {
-		window.user = response.data;
-		console.log('User:', window.user);
-		console.log(response.data);
-
-		Object.entries(window.user.friend_list).forEach(([key, friend]) => {
-			// Create a WebSocket connection for each friend
-			friend.socket = new WebSocket('ws://' + window.IP + ':8002/ws/chat/?user=' + window.user.username + '&chat_id=' + friend.chat_id);
-
-			// Setup an onmessage event listener
-			friend.socket.onmessage = function(e) {
-				const data = JSON.parse(e.data);
-				console.log(data);
-			};
-
-			console.log('Friend key:', key);
-			console.log('Friend object:', friend);
-		});
-
-	})
-	.catch((error) => {
-		console.error(error);
-	});
 
 	currentUser.username = window.user.username;
 	localStorage.setItem('currentUser', JSON.stringify(currentUser));
@@ -77,10 +51,9 @@ function handleLogin() {
 
 	axios.post('http://' + window.IP + ':8000/auth/login/', data)
 	.then((response) => {
-		window.Usertoken = response.data.token;
-		console.log(response.data);
+		window.user = response.data.user;
+		window.user.token = response.data.token;
 		handleSuccessAuth(errorField);
-		alert('Login successful');
 	})
 	.catch((error) => {
 		var errorMsg = error;
@@ -96,12 +69,12 @@ function handleLogin() {
 					errorMsg = "Password is required";
 				}
 			} else {
-				//errorMsg = error.response.json().message;
+				errorMsg = "Account doesn't exist";
 			}
 		}
 		errorField.textContent = errorMsg;
 		errorField.classList.remove('hidden');
-		handleSuccessAuth(errorField, username);
+		// handleSuccessAuth(errorField, username);
 	})
 }
 
@@ -121,8 +94,8 @@ function handleRegister() {
 
 	axios.post('http://' + window.IP + ':8000/auth/register/', data)
 	.then((response) => {
-		console.log(response.data);
-		alert('Registration successful');
+		window.user = response.data.user;
+		window.user.token = response.data.token;
 		handleSuccessAuth(errorField, data.username)
 	})
 	.catch((error) => {
@@ -141,17 +114,14 @@ function handleRegister() {
 				if (missing_fields.includes('email')) {
 					errorMsg = "Email is required";
 				}
-				if (missing_fields.includes('first_name')) {
-					errorMsg = "First name is required";
-				}
-				if (missing_fields.includes('last_name')) {
-					errorMsg = "Last name is required";
+				if (missing_fields.includes('confirm_password')) {
+					errorMsg = "confirm_password";
 				}
 			} else if (status === 409) {
 				errorMsg = "Username already exists";
 			} else {
-				errorMsg = "An error occurred: ' + error.response.data.message";
-				errorMsg = "An error occurred: ' + error.response.message";
+				errorMsg = "An error occurred: " + error.response.data.message;
+				errorMsg = "An error occurred: " + error.response.message;
 			}
 		}
 		errorField.textContent = errorMsg;
