@@ -647,7 +647,7 @@ body::before {
     background-color: #0056b3;
 }
 
-#chat-input {
+#chat-input, #chat-input-buttons {
     flex-grow: 1;
     padding: 10px;
     border: none;
