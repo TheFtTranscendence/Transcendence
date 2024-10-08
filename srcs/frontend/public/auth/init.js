@@ -36,7 +36,7 @@ function handleSuccessAuth(errorField) {
 		'Authorization': 'Token ' + window.Usertoken,
 	}
 
-	axios.get('http://localhost:8000/auth/users/', {headers: userheaders})
+	axios.get('http://' + window.IP + ':8000/auth/users/', {headers: userheaders})
 	.then((response) => {
 		window.user = response.data;
 		console.log('User:', window.user);
@@ -44,7 +44,7 @@ function handleSuccessAuth(errorField) {
 
 		Object.entries(window.user.friend_list).forEach(([key, friend]) => {
 			// Create a WebSocket connection for each friend
-			friend.socket = new WebSocket('ws://localhost:8002/ws/chat/?user=' + window.user.username + '&chat_id=' + friend.chat_id);
+			friend.socket = new WebSocket('ws://' + window.IP + ':8002/ws/chat/?user=' + window.user.username + '&chat_id=' + friend.chat_id);
 
 			// Setup an onmessage event listener
 			friend.socket.onmessage = function(e) {
@@ -75,7 +75,7 @@ function handleLogin() {
 		password: password,
 	}
 
-	axios.post('http://localhost:8000/auth/login/', data)
+	axios.post('http://' + window.IP + ':8000/auth/login/', data)
 	.then((response) => {
 		window.Usertoken = response.data.token;
 		console.log(response.data);
@@ -119,7 +119,7 @@ function handleRegister() {
 		confirm_password: confirm_password
 	}
 
-	axios.post('http://localhost:8000/auth/register/', data)
+	axios.post('http://' + window.IP + ':8000/auth/register/', data)
 	.then((response) => {
 		console.log(response.data);
 		alert('Registration successful');
