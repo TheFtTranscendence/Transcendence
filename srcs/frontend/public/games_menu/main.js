@@ -14,7 +14,7 @@ function clearMenu() {
 function games_menu_hashchange() {
 	
 	clearMenu()
-	UnloadScripts(window.menuScripts)
+	unloadScripts(window.menuScripts)
 	document.getElementById('games').classList.add("hidden")
 }
 
@@ -40,7 +40,7 @@ function main_menu_matchmakingButton () {
 	if (window.location.hash == '#fighters') {
 
 		clearMenu()
-		UnloadScripts(window.menuScripts)
+		unloadScripts(window.menuScripts)
 		loadScripts(window.matchmakingScripts, 'Matchmaking_before_game') // To change for optimization
 	}
 	else {

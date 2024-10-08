@@ -178,7 +178,7 @@ function leave_game(v) {
 	document.getElementById('div-game2-area').classList.add("hidden");
 	document.getElementById('game2-menu').classList.add("hidden");
 	document.getElementById('game2').classList.add("hidden");
-	UnloadScripts(window.game2Scripts);
+	unloadScripts(window.game2Scripts);
 
 	document.getElementById('game2').classList.add("hidden");
 	unloadScripts(window.game2Scripts);

@@ -182,6 +182,6 @@ function Matchmaking_leave_game(v) {
 	v.s.queue_socket.close()
 
 	document.getElementById('game2').classList.add("hidden");
-	UnloadScripts(window.matchmakingScripts);
+	unloadScripts(window.matchmakingScripts);
 
 }

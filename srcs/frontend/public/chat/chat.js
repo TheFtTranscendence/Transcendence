@@ -15,7 +15,7 @@ function chat_hashchange(event) {
 	window.sendButton.removeEventListener('click', sendChatMessage)
 	window.removeEventListener('keypress', keypress)
 
-	UnloadScripts(window.chatScripts)
+	unloadScripts(window.chatScripts)
 }
 
 
