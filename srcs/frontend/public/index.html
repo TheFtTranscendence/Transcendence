@@ -124,8 +124,44 @@
 	</div>
 
 
-	<div id="home" class="hidden">
+	<div id="home" class="container mt-4 hidden">
 
+		<!-- Win/Loss Counter using Bootstrap cards -->
+		<div class="row mb-4 justify-content-center">
+			<div class="col-md-5 mb-3">
+				<div class="card text-center bg-success text-white">
+					<div class="card-body">
+						<h5 class="card-title">Total Wins</h5>
+						<p class="card-text" id="winCounter">0</p>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-5 mb-3">
+				<div class="card text-center bg-danger text-white">
+					<div class="card-body">
+						<h5 class="card-title">Total Losses</h5>
+						<p class="card-text" id="lossCounter">0</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Game History Table with Bootstrap styling -->
+		<div class="table-responsive">
+			<table class="table table-bordered table-hover">
+				<thead class="thead-dark">
+					<tr>
+						<th scope="col">Game</th>
+						<th scope="col">Date</th>
+						<th scope="col">Players</th>
+						<th scope="col">Win/Loss</th>
+					</tr>
+				</thead>
+				<tbody id="gameHistoryTableBody">
+					<!-- Table rows will be dynamically added here -->
+				</tbody>
+			</table>
+		</div>
 	</div>
 
 	<div id="content">
