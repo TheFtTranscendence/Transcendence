@@ -2,7 +2,7 @@
 
 //* This is Important because of the microservices module
 function	ping_Usermanagement() {
-	axios.get(`http://${window.IP}:8000/auth/health/`)
+	return axios.get(`http://${window.IP}:8000/auth/health/`)
 	.then((response) => {
 		//todo: define a variable so it knows that the usermanagement server is up or down
 	})
@@ -30,7 +30,7 @@ function	update_user_info() {
 		'Authorization': 'Token ' + window.usertoken,
 	}
 
-	axios.get(`http://${window.IP}:8000/auth/users/`, {headers: userheaders})
+	return axios.get(`http://${window.IP}:8000/auth/users/`, {headers: userheaders})
 	.then((response) => {
 		window.user = response.data;
 		_update_user_chats()
@@ -51,7 +51,7 @@ function	get_all_users() {
 		'Authorization': 'Token ' + window.usertoken,
 	}
 
-	axios.get(`http://${window.IP}:8000/auth/users/all/`, {headers: userheaders})
+	return axios.get(`http://${window.IP}:8000/auth/users/all/`, {headers: userheaders})
 	.then((response) => {
 		return response.data
 	})
@@ -71,7 +71,7 @@ function	get_user_info(target) {
 		'Authorization': 'Token ' + window.usertoken,
 	}
 
-	axios.get(`http://${window.IP}:8000/auth/users/${target}/`, {headers: userheaders})
+	return axios.get(`http://${window.IP}:8000/auth/users/${target}/`, {headers: userheaders})
 	.then((response) => {
 		return response.data
 	})
@@ -100,7 +100,7 @@ function	delete_user(target = '') {
 		'Authorization': 'Token ' + window.usertoken,
 	}
 
-	axios.delete(url, {headers: userheaders})
+	return axios.delete(url, {headers: userheaders})
 	.then((response) => {
 		return response.data
 	})
@@ -125,7 +125,7 @@ function	modify_user(field, new_value, target='') {
 		'Authorization': 'Token ' + window.usertoken,
 	}
 
-	axios.patch(url, {headers: userheaders}, data)
+	return axios.patch(url, {headers: userheaders}, data)
 	.then((response) => {
 		return response.data
 	})
