@@ -32,7 +32,7 @@ function handleSuccessAuth(errorField) {
 		errorField.classList.add('hidden');
 
 	userheaders = {
-		'Authorization': 'Token ' + window.Usertoken,
+		'Authorization': 'Token ' + window.usertoken,
 	}
 
     set_online();
@@ -54,7 +54,7 @@ function handleLogin() {
 	axios.post('http://' + window.IP + ':8000/auth/login/', data)
 	.then((response) => {
 		window.user = response.data.user;
-		window.user.token = response.data.token;
+		window.usertoken = response.data.token;
 		handleSuccessAuth(errorField);
 	})
 	.catch((error) => {
@@ -97,7 +97,7 @@ function handleRegister() {
 	axios.post('http://' + window.IP + ':8000/auth/register/', data)
 	.then((response) => {
 		window.user = response.data.user;
-		window.user.token = response.data.token;
+		window.usertoken = response.data.token;
 		handleSuccessAuth(errorField, data.username)
 	})
 	.catch((error) => {

@@ -27,7 +27,7 @@ function	_update_user_chats() {
 //! We should still put this inside a try but it should never happen
 function	update_user_info() {
 	userheaders = {
-		'Authorization': 'Token ' + window.user.token,
+		'Authorization': 'Token ' + window.usertoken,
 	}
 
 	axios.get(`http://${window.IP}:8000/auth/users/`, {headers: userheaders})
@@ -48,7 +48,7 @@ function	update_user_info() {
 //! This really needs to be inside a try because if the user doesnt have an admin token its going to raise an exception
 function	get_all_users() {
 	userheaders = {
-		'Authorization': 'Token ' + window.user.token,
+		'Authorization': 'Token ' + window.usertoken,
 	}
 
 	axios.get(`http://${window.IP}:8000/auth/users/all/`, {headers: userheaders})
@@ -68,7 +68,7 @@ function	get_all_users() {
 //this works with both username and user ID
 function	get_user_info(target) {
 	userheaders = {
-		'Authorization': 'Token ' + window.user.token,
+		'Authorization': 'Token ' + window.usertoken,
 	}
 
 	axios.get(`http://${window.IP}:8000/auth/users/${target}/`, {headers: userheaders})
@@ -97,7 +97,7 @@ function	delete_user(target = '') {
 	}
 
 	userheaders = {
-		'Authorization': 'Token ' + window.user.token,
+		'Authorization': 'Token ' + window.usertoken,
 	}
 
 	axios.delete(url, {headers: userheaders})
@@ -122,7 +122,7 @@ function	modify_user(field, new_value, target='') {
 	}
 
 	userheaders = {
-		'Authorization': 'Token ' + window.user.token,
+		'Authorization': 'Token ' + window.usertoken,
 	}
 
 	axios.patch(url, {headers: userheaders}, data)
