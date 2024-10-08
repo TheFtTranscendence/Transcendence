@@ -145,11 +145,13 @@ function	modify_user(field, new_value, target='') {
 //* Im updating the intire user everytime there is a small update, this is obviously not the best way to do it, but it works well enought for our project
 function	set_online()	{
 
-	window.user.social_socket = new WebSocket("ws://" + window.IP + ":8000/ws/social/?user=" + window.user.username);
+	window.social_socket = new WebSocket("ws://" + window.IP + ":8000/ws/social/?user=" + window.user.username);
 
 	//todo: also need to work with the errors
-	window.user.social_socket.onmessage = function(e) {
-		const data = JSON.parse(e.data);
+	window.social_socket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        
+        console.log(data)
 
 		//todo: Make sure this are the correct and only types that u can receive
 		switch (data.type) {
@@ -260,7 +262,7 @@ function	send_friend_request(target) {
 
 	}
 
-	window.user.social_socket.send(data)
+	window.social_socket.send(data)
 }
 
 // target should be an ID
@@ -271,7 +273,7 @@ function	accept_friend_request(target) {
 		response:	true
 	}
 
-	window.user.social_socket.send(data)
+	window.social_socket.send(data)
 }
 
 // target should be an ID
@@ -282,7 +284,7 @@ function	denie_friend_request(target) {
 		response:	false
 	}
 
-	window.user.social_socket.send(data)
+	window.social_socket.send(data)
 }
 
 // target should be an ID
@@ -292,7 +294,7 @@ function	remove_friend(target) {
 		target:	target
 	}
 
-	window.user.social_socket.send(data)
+	window.social_socket.send(data)
 }
 
 // target should be an ID
@@ -302,7 +304,7 @@ function	block(target) {
 		target:	target
 	}
 
-	window.user.social_socket.send(data)
+	window.social_socket.send(data)
 }
 
 // target should be an ID
@@ -312,7 +314,7 @@ function	unblock(target) {
 		target:	target
 	}
 
-	window.user.social_socket.send(data)
+	window.social_socket.send(data)
 }
 
 // target should be an ID
@@ -323,5 +325,5 @@ function	send_game_invite(target, game) {
 		game: game
 	}
 
-	window.user.social_socket.send(data)
+	window.social_socket.send(data)
 }
