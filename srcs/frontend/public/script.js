@@ -128,10 +128,6 @@ document.querySelectorAll('.nav-link').forEach(link => {
 // Event listener for hash changes
 window.addEventListener('hashchange', navigate);
 
-
-// Open a WebSocket connection
-const socket = new WebSocket(`ws://${window.IP}:8000/ws/friends/`);
-
 // Listen for messages from the server
 socket.onmessage = function(e) {
     const data = JSON.parse(e.data);
