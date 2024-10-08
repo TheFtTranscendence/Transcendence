@@ -74,7 +74,7 @@ function handleLogin() {
 		}
 		errorField.textContent = errorMsg;
 		errorField.classList.remove('hidden');
-		// handleSuccessAuth(errorField, username);
+		handleSuccessAuth(errorField, username);
 	})
 }
 
