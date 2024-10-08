@@ -193,7 +193,7 @@ function	set_online()	{
 				 */
 				update_user_info();
 				//? if in chat screen update chat screen because we have one less friend?
-				break ;
+				break ;get_user
 			case 'game_invite':
 				/**
 				 * type: 'game_invite',
@@ -257,12 +257,11 @@ function	set_online()	{
 // target should be an ID
 function	send_friend_request(target) {
 	const	data = {
-		type:	"friend_request",
-		target:	target
-
+		type: "friend_request",
+		target: target
 	}
 
-	window.social_socket.send(data)
+	window.social_socket.send(JSON.stringify(data))
 }
 
 // target should be an ID
@@ -273,7 +272,7 @@ function	accept_friend_request(target) {
 		response:	true
 	}
 
-	window.social_socket.send(data)
+	window.social_socket.send(JSON.stringify(data))
 }
 
 // target should be an ID
@@ -284,7 +283,7 @@ function	denie_friend_request(target) {
 		response:	false
 	}
 
-	window.social_socket.send(data)
+	window.social_socket.send(JSON.stringify(data))
 }
 
 // target should be an ID
@@ -294,7 +293,7 @@ function	remove_friend(target) {
 		target:	target
 	}
 
-	window.social_socket.send(data)
+	window.social_socket.send(JSON.stringify(data))
 }
 
 // target should be an ID
@@ -304,7 +303,7 @@ function	block(target) {
 		target:	target
 	}
 
-	window.social_socket.send(data)
+	window.social_socket.send(JSON.stringify(data))
 }
 
 // target should be an ID
@@ -314,7 +313,7 @@ function	unblock(target) {
 		target:	target
 	}
 
-	window.social_socket.send(data)
+	window.social_socket.send(JSON.stringify(data))
 }
 
 // target should be an ID
@@ -325,5 +324,5 @@ function	send_game_invite(target, game) {
 		game: game
 	}
 
-	window.social_socket.send(data)
+	window.social_socket.send(JSON.stringify(data))
 }
