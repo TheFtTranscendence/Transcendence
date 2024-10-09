@@ -6,8 +6,15 @@ function Matchmaking_queue(v)
 	v.s.queue_socket.onmessage = function(event) {
 		msg = JSON.parse(event.data)
 		console.log(msg)
-		v.s.player1 = msg.player1
-		v.s.player2 = msg.player2
+
+		if (window.user.id == msg.player1 ) {
+			v.s.player = window.user.username
+			v.s.enemy = get_user_info(msg.player2).username
+		} else {
+			v.s.enemy = window.user.username
+			v.s.player = get_user_info(msg.player1).username
+		}
+
 		v.s.gameId = msg.game_id
 
 		Matchmaking_setup_socket(v)
