@@ -45,7 +45,6 @@ function getAvatar() {
 	} else {
 		imgElement.src = 'img/red.jpg';
 	}
-
 	document.getElementById('profile-img').classList.remove('hidden');
 }
 
