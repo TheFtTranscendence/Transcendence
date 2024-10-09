@@ -6,6 +6,7 @@ from authentication.models import User
 from .models import FriendRequest
 from rest_framework.authtoken.models import Token
 import requests
+import os
 
 import logging
 logger = logging.getLogger(__name__)
@@ -292,7 +293,7 @@ class	SocialConsumer(AsyncWebsocketConsumer):
 				"player_2": target.id
 			}
 
-			response = requests.post("https://remote-players:8004/game/", json_payload)
+			response = requests.post(f"http://remote-players:8004/game/", json_payload)
 			response.raise_for_status()
 			data = response.json()
 

@@ -137,7 +137,7 @@ services:
     environment:
       - IP=${IP}
     ports:
-      - "3000:433"
+      - "3000:443"
     networks:
       - app-network
     volumes:
