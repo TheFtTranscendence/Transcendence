@@ -1,4 +1,3 @@
-
 navigate();
 
 // Function to handle navigation

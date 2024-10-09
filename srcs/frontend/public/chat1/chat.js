@@ -55,9 +55,6 @@ function sendChatMessage() {
 
 		// Clear the input box
 		chatInput.value = ''
-
-		// Scroll to the bottom of the chat content
-		window.chatContent.scrollTop = window.chatCondocument.getElementById('chat-input-buttons').placeholder = "New placeholder text";tent.scrollHeight
 	}
 }
 
@@ -157,9 +154,15 @@ function displayChatList(chatListContainer, friendList) {
 		const chatDiv = document.createElement('div')
 		chatDiv.classList.add('chat-item')
 
+		if (Math.random() > 0.5) { // SUBSTITUIR COM ACTUAL STATUS OF ONLNE
 		chatDiv.innerHTML = `
-			<div class="friend-name">${friend[0]}</div>
+			<div class="friend-name">🟢 ${friend[0]}</div>
 		`
+		} else {
+		chatDiv.innerHTML = `
+			<div class="friend-name">⚫ ${friend[0]}</div>
+		`
+		}
 
 		// Add the click event listener
 		const listener = () => openChat(friend)
@@ -246,7 +249,6 @@ function chat()
 	window.chatConfirmInput = document.getElementById('chat-input-buttons')
 
 
-	// Get through the database when implemented
 	window.Messages = []
 
 	try {

@@ -119,7 +119,7 @@ function init_vars(player1, player2, skins1, skins2) {
             gravity: 0.5, // px
             drag: 0.5, // px
             knockback: 25, // px
-            hit_dmg: 100, // %
+            hit_dmg: 5, // %
             stun_time: stun_time, // ms
             ground_height: ground_height, // px
 
