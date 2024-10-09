@@ -2,7 +2,7 @@
 
 //* This is Important because of the microservices module
 function	ping_Usermanagement() {
-	return axios.get(`https://${window.IP}:8000/auth/health/`)
+	return axios.get(`https://${window.IP}:3000/user-management/auth/health/`)
 	.then((response) => {
         console.log("OK")
 		//todo: define a variable so it knows that the usermanagement server is up or down

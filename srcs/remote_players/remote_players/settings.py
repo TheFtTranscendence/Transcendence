@@ -100,6 +100,11 @@ LOGGING = {
 		},
 	},
 	'loggers': {
+        'django': {
+			'handlers': ['console'],
+			'level': 'INFO',
+			'propagate': True,
+		},
 		'remote_players': {
 			'handlers': ['console'],
 			'level': 'INFO',

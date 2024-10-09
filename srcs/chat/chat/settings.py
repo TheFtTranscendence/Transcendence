@@ -107,10 +107,10 @@ LOGGING = {
 		},
 	},
 	'loggers': {
-		'django': {
+        'django': {
 			'handlers': ['console'],
-			'level': 'INFO', 
-			'propagate': False,
+			'level': 'INFO',
+			'propagate': True,
 		},
 		'chatApp': {
 			'handlers': ['console'],
