@@ -1,19 +1,39 @@
+function matchmaking_hashchange() {
+	console.log('hashchange game2');
+	window.removeEventListener('hashchange', matchmaking_hashchange)
+	alert('Matchmaking cancelled')
+}
+
 function Matchmaking_queue(v)
 {
 	console.log('connecting to WebSocket')
 	v.s.queue_socket = new WebSocket(`ws://${window.IP}:8004/ws/queue/?game=Fighty&user_id=` + window.user.id);
 
+	window.addEventListener('hashchange', matchmaking_hashchange)
+
+	
 	v.s.queue_socket.onmessage = function(event) {
 		msg = JSON.parse(event.data)
 		console.log(msg)
 
 		if (window.user.id == msg.player1 ) {
-			v.s.player = window.user.username
-			v.s.enemy = get_user_info(msg.player2).username
+			v.player.name = window.user.username
+			v.player.sprites = window.game2Skins[window.user.preferences.fighty_skin]
+			
+			user2 = get_user_info(msg.player2)
+			v.enemy.name = user2.username
+			v.enemy.sprites = window.game2Skins[user2.preferences.fighty_skin]
 		} else {
-			v.s.enemy = window.user.username
-			v.s.player = get_user_info(msg.player1).username
+			v.enemy.name = window.user.username
+			v.enemy.sprites = window.game2Skins[window.user.preferences.fighty_skin]
+			
+			user1 = get_user_info(msg.player1)
+			v.player.name = user1.username
+			v.player.sprites = window.game2Skins[user1.preferences.fighty_skin]
 		}
+
+		v.s.player1 = msg.player1
+		v.s.player2 = msg.player2
 
 		v.s.gameId = msg.game_id
 

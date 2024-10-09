@@ -185,3 +185,10 @@ function Matchmaking_leave_game(v) {
 	unloadScripts(window.matchmakingScripts);
 
 }
+
+function Matchmaking_init_skins(v, skins1, skins2) {
+
+	v.player.sprites = skins1
+	v.enemy.sprites = skins2
+
+}
