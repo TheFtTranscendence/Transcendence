@@ -21,6 +21,9 @@ ASGI_APPLICATION = 'chat.asgi.application'
 WSGI_APPLICATION = 'chat.wsgi.application'
 ROOT_URLCONF = 'chat.urls'
 
+SECURE_SSL_REDIRECT = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 INSTALLED_APPS = [
 	'daphne',
 

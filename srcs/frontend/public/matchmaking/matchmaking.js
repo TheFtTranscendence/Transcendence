@@ -1,7 +1,7 @@
 function Matchmaking_queue(v)
 {
 	console.log('connecting to WebSocket')
-	v.s.queue_socket = new WebSocket(`ws://${window.IP}:8004/ws/queue/?game=Fighty&user_id=` + window.user.id);
+	v.s.queue_socket = new WebSocket(`wss://${window.IP}:3000/remote-players/ws/queue/?game=Fighty&user_id=` + window.user.id);
 
 	v.s.queue_socket.onmessage = function(event) {
 		msg = JSON.parse(event.data)
@@ -19,7 +19,7 @@ function Matchmaking_queue(v)
 
 function Matchmaking_setup_socket(v) {
 	
-	v.s.game_socket = new WebSocket(`ws://${window.IP}:8004/ws/remote_access/?game_id=` + v.s.gameId);
+	v.s.game_socket = new WebSocket(`wss://${window.IP}:3000/remote-players/ws/remote_access/?game_id=` + v.s.gameId);
 	
 	v.s.game_socket.onmessage = function(event) {
 		msg = JSON.parse(event.data)

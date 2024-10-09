@@ -8,7 +8,7 @@ window.authScripts = [
 ]
 
 window.chatScripts = [
-	'chat/chat.js',
+	'chat1/chat.js',
 ];
 
 window.homeScripts = [

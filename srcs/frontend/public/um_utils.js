@@ -15,7 +15,7 @@ function	ping_Usermanagement() {
 
 function	_update_user_chats() {
 	Object.entries(window.user.friend_list).forEach(([key, friend]) => {
-		friend.socket = new WebSocket(`ws://${window.IP}:8002/ws/chat/?user=` + window.user.username + '&chat_id=' + friend.chat_id);
+		friend.socket = new WebSocket(`wss://${window.IP}:3000/chat/ws/chat/?user=` + window.user.username + '&chat_id=' + friend.chat_id);
 	
 		// todo: talk with diogo about this and how he is doing it
 		// ? this should give the toast right? And then diogo changes it in the chat script
@@ -32,7 +32,7 @@ function	update_user_info() {
 		'Authorization': 'Token ' + window.usertoken,
 	}
 
-	return axios.get(`https://${window.IP}:8000/auth/users/`, {headers: userheaders})
+	return axios.get(`https://${window.IP}:3000/user-management/auth/users/`, {headers: userheaders})
 	.then((response) => {
 		window.user = response.data;
 		_update_user_chats()
@@ -53,7 +53,7 @@ function	get_all_users() {
 		'Authorization': 'Token ' + window.usertoken,
 	}
 
-	return axios.get(`https://${window.IP}:8000/auth/users/all/`, {headers: userheaders})
+	return axios.get(`https://${window.IP}:3000/user-management/auth/users/all/`, {headers: userheaders})
 	.then((response) => {
 		return response.data
 	})
@@ -73,7 +73,7 @@ function	get_user_info(target) {
 		'Authorization': 'Token ' + window.usertoken,
 	}
 
-	return axios.get(`https://${window.IP}:8000/auth/users/${target}/`, {headers: userheaders})
+	return axios.get(`https://${window.IP}:3000/user-management/auth/users/${target}/`, {headers: userheaders})
 	.then((response) => {
 		return response.data
 	})
@@ -93,9 +93,9 @@ function	get_user_info(target) {
 //if no user is provided it will delete himself
 function	delete_user(target = '') {
 	if (target == '')	{
-		url = `https://${window.IP}:8000/auth/users/`
+		url = `https://${window.IP}:3000/user-management/auth/users/`
 	} else {
-		url = `https://${window.IP}:8000/auth/users/${target}`
+		url = `https://${window.IP}:3000/user-management/auth/users/${target}`
 	}
 
 	userheaders = {
@@ -117,7 +117,7 @@ function	delete_user(target = '') {
 
 //* The target part should only be used as an admin in the console, so once again, dont worry about it
 function	modify_user(field, new_value, target='') {
-	url = `https://${window.IP}:8000/auth/users/${target}`
+	url = `https://${window.IP}:3000/user-management/auth/users/${target}`
 
 	data = {
 		[field]: new_value
@@ -147,7 +147,7 @@ function	modify_user(field, new_value, target='') {
 //* Im updating the intire user everytime there is a small update, this is obviously not the best way to do it, but it works well enought for our project
 function	set_online()	{
 
-	window.social_socket = new WebSocket("ws://" + window.IP + ":8000/ws/social/?user=" + window.user.username);
+	window.social_socket = new WebSocket("wss://" + window.IP + ":3000/user-management/ws/social/?user=" + window.user.username);
 
 	//todo: also need to work with the errors
 	window.social_socket.onmessage = function(e) {

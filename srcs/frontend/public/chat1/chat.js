@@ -64,7 +64,7 @@ function sendChatMessage() {
 function getMessages(friend) {
 
 	return new Promise((resolve, reject) => {
-		axios.get(`https://${window.IP}:8002/chats/` + friend[1].chat_id + '/?user=' + window.user.username)
+		axios.get(`https://${window.IP}:3000/chat/chats/` + friend[1].chat_id + '/?user=' + window.user.username)
 		.then((response) => {
 			console.log('data ', response.data)
 			console.log('messages ', response.data.messages)

@@ -51,7 +51,7 @@ function handleLogin() {
 		password: password,
 	}
 
-	axios.post('https://' + window.IP + ':8000/auth/login/', data)
+	axios.post('https://' + window.IP + ':3000/user-management/auth/login/', data)
 	.then((response) => {
 		window.user = response.data.user;
 		window.usertoken = response.data.token;
@@ -94,7 +94,7 @@ function handleRegister() {
 		confirm_password: confirm_password
 	}
 
-	axios.post('https://' + window.IP + ':8000/auth/register/', data)
+	axios.post('https://' + window.IP + ':3000/user-management/auth/register/', data)
 	.then((response) => {
 		window.user = response.data.user;
 		window.usertoken = response.data.token;
