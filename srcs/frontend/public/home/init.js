@@ -42,7 +42,7 @@ function getAvater(username) {
 	const imgElement = document.querySelector('#profile-img img');
 
 	if (window.user && window.user.avatar) {
-		imgElement.src = window.user.avatar;
+		imgElement.src = "https://" + window.IP + ":3000/user-management/" + window.user.avatar;
 	} else {
 		imgElement.src = 'img/red.jpg';
 	}
@@ -59,41 +59,47 @@ function getAvater(username) {
 }
 
 // CHANGE PROFILE PICTURE
-document.getElementById('uploadButton').addEventListener('click', triggerFileDialog);
-document.getElementById('changeProfilePicture').addEventListener('change', putAvatar);
+//document.getElementById('uploadButton').addEventListener('click', triggerFileDialog);
+//document.getElementById('changeProfilePicture').addEventListener('change', putAvatar);
 
 
 function triggerFileDialog() {
     document.getElementById('changeProfilePicture').click();
 }
 
-// Function to handle image selection and preview
-function putAvatar(event) {
-	const sidebar = document.getElementById('sidebar');
-	const imgElement = document.querySelector('#profile-img img');
-	const file = event.target.files[0];
-	imgElement.src = URL.createObjectURL(file);
-	sidebar.classList.add('hidden');
-	document.removeEventListener('click', handleOutsideClick);
+function handleUpload() {
+    const fileInput = document.getElementById('avatarInput');
 
-	username = "window.user.username" //ToDO: Get real username
-	const formData = new FormData();
-	formData.append('avatar', file);
-
-	userheaders = {
-		'Authorization': 'Token ' + window.Usertoken,
-		'Content-Type': 'multipart/form-data',
-	}
-
-	axios.patch('https://' + window.IP + ':3000/user-management/auth/users/' + window.user.id + '/', formData)
-    .then(response => {
-		console.log('Upload successful:', response.data);
-	})
-	.catch(error => {
-		console.error('Error uploading file:', error);
-	});
+    if (fileInput.files.length > 0) {
+        uploadAvatar(fileInput.files[0]);
+    } else {
+        alert('Please select a file to upload.');
+    }
 }
 
+async function uploadAvatar(file) {
+    const formData = new FormData();
+    formData.append('avatar', file);
+
+    try {
+        const response = await fetch(`/user-management/auth/users/${window.user.id}/`, {
+            method: 'PATCH',
+            body: formData,
+            headers: {
+                'Authorization': 'Token ' + window.usertoken,
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        console.log('Avatar uploaded successfully:', data);
+    } catch (error) {
+        console.error('Error uploading avatar:', error);
+    }
+}
 
 // LOGOUT
 document.getElementById('logoutButton').addEventListener('click', handleLogout);

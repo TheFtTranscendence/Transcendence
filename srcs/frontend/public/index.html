@@ -45,8 +45,10 @@
 	</nav>
 	<div id="sidebar" class="sidebar hidden">
 		<ul>
-			<li><input type="file" id="changeProfilePicture" style="display: none;" accept=".jpg" />
-			<button id="uploadButton">Change Profile Picture</button></li>
+			<li>
+				<input type="file" id="avatarInput" />
+				<button onclick="handleUpload()">Upload Avatar</button>
+			</li>
 			<li>
 				<button id="changePassword">Change Password</button>
 				<div id="changePasswordForm" class="hidden">

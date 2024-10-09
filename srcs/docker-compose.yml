@@ -33,6 +33,12 @@ volumes:
       type: none
       o: bind
       device: ${SOLIDITY_DATA_PATH}
+  images_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${IMAGES_DATA_PATH}
 
 services:
   #Container for the usermanagement database
@@ -101,6 +107,8 @@ services:
       - app-network
     depends_on:
       - usermanagement_db
+    volumes:
+      - images_data:/app/images
     restart: unless-stopped
   remote-players:
     container_name: remote-players

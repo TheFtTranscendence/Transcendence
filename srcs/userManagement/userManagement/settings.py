@@ -21,7 +21,7 @@ ASGI_APPLICATION = 'userManagement.asgi.application'
 WSGI_APPLICATION = 'userManagement.wsgi.application'
 AUTH_USER_MODEL = 'authentication.User'
 ROOT_URLCONF = 'userManagement.urls'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'images')
+MEDIA_ROOT = '/app/images'
 MEDIA_URL = '/images/'
 
 SECURE_SSL_REDIRECT = False
