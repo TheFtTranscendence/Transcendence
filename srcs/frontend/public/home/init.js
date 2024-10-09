@@ -151,9 +151,9 @@ function handlePasswordChangeForm(event) {
 		confirm_new_password: confirmNewPassword
 	};
 
-	const url = `https://${window.IP}:3000/user-management/auth/users/`;
+	const url = `https://${window.IP}:3000/user-management/auth/users/${window.user.id}/`;
 
-	return fetch(url, {
+	fetch(url, {
 		method: 'PATCH',
 		headers: {
 			'Content-Type': 'application/json',
@@ -172,6 +172,7 @@ function handlePasswordChangeForm(event) {
 		document.removeEventListener('click', handleOutsideClick);
 	})
 	.catch(error => {
+		alert("Password not changed successful");
 		errorField.textContent = error.message || "An error occurred. Please try again.";
 		errorField.classList.remove('hidden');
 	});
