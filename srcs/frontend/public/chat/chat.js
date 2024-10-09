@@ -4,9 +4,11 @@ function chat_hashchange(event) {
 	window.removeEventListener('hashchange', chat_hashchange)
 
     // Remove all event listeners before clearing the chat list container
-    window.chatDivs.forEach(({ element, listener }) => {
-        element.removeEventListener('click', listener)
-    })
+	try {
+		window.chatDivs.forEach(({ element, listener }) => {
+			element.removeEventListener('click', listener)
+		})
+	} catch {}
 
 	window.addButton.removeEventListener('click', chat_addButton)
 	window.removeButton.removeEventListener('click', chat_removeButton)
@@ -152,9 +154,15 @@ function displayChatList(chatListContainer, friendList) {
 		const chatDiv = document.createElement('div')
 		chatDiv.classList.add('chat-item')
 
+		if (Math.random() > 0.5) { // SUBSTITUIR COM ACTUAL STATUS OF ONLNE
 		chatDiv.innerHTML = `
-			<div class="friend-name">${friend[0]}</div>
+			<div class="friend-name">🟢 ${friend[0]}</div>
 		`
+		} else {
+		chatDiv.innerHTML = `
+			<div class="friend-name">⚫ ${friend[0]}</div>
+		`
+		}
 
 		// Add the click event listener
 		const listener = () => openChat(friend)
