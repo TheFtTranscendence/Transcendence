@@ -8,9 +8,9 @@ cp mkcert-v*-linux-amd64 /usr/local/bin/mkcert
 mkcert $IP
 cp $IP* /etc/nginx/ssl
 
-envsubst < /etc/nginx/conf.d/default.conf > /etc/nginx/conf.d/nginx.conf
-
 rm /etc/nginx/conf.d/default.conf
+sed -i "s/\$IP/$IP/g" "/etc/nginx/conf.d/nginx.conf"
+
 cd /usr/share/nginx/html/
 
 echo "Updating IP"

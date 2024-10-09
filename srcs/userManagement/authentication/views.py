@@ -139,7 +139,7 @@ class UserViewSet(viewsets.ModelViewSet):
 			}
 
 			try:
-				response = requests.post("http://chat:8002/chats/create_chat/", json=json_payload)
+				response = requests.post("https://chat:8002/chats/create_chat/", json=json_payload)
 				response.raise_for_status()
 				data = response.json()
 			except requests.exceptions.RequestException as e:
@@ -153,7 +153,7 @@ class UserViewSet(viewsets.ModelViewSet):
 				json_payload = {"user2": new_username}
 
 			try:
-				response = requests.patch(f"http://chat:8002/chats/{chat_id}/", json=json_payload)
+				response = requests.patch(f"https://chat:8002/chats/{chat_id}/", json=json_payload)
 				response.raise_for_status()
 			except requests.exceptions.RequestException as e:
 				logger.error(f'API request failed: {e}')
@@ -172,7 +172,7 @@ class UserService:
 	@staticmethod
 	def get_blockchain_id():
 		try:
-			response = requests.post('http://solidity:8001/solidity/addinstance/')
+			response = requests.post('https://solidity:8001/solidity/addinstance/')
 			response.raise_for_status()
 			data = response.json()
 			return data.get('success')

@@ -11,7 +11,7 @@ COPY public /usr/share/nginx/html
 COPY script.sh / 
 RUN chmod +x script.sh
 
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/conf.d/nginx.conf
 
 # Expose port 80 to the host
 EXPOSE 80

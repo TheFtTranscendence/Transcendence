@@ -2,7 +2,7 @@
 
 //* This is Important because of the microservices module
 function	ping_Usermanagement() {
-	return axios.get(`http://${window.IP}:8000/auth/health/`)
+	return axios.get(`https://${window.IP}:8000/auth/health/`)
 	.then((response) => {
 		//todo: define a variable so it knows that the usermanagement server is up or down
 	})
@@ -30,7 +30,7 @@ function	update_user_info() {
 		'Authorization': 'Token ' + window.usertoken,
 	}
 
-	return axios.get(`http://${window.IP}:8000/auth/users/`, {headers: userheaders})
+	return axios.get(`https://${window.IP}:8000/auth/users/`, {headers: userheaders})
 	.then((response) => {
 		window.user = response.data;
 		_update_user_chats()
@@ -51,7 +51,7 @@ function	get_all_users() {
 		'Authorization': 'Token ' + window.usertoken,
 	}
 
-	return axios.get(`http://${window.IP}:8000/auth/users/all/`, {headers: userheaders})
+	return axios.get(`https://${window.IP}:8000/auth/users/all/`, {headers: userheaders})
 	.then((response) => {
 		return response.data
 	})
@@ -71,7 +71,7 @@ function	get_user_info(target) {
 		'Authorization': 'Token ' + window.usertoken,
 	}
 
-	return axios.get(`http://${window.IP}:8000/auth/users/${target}/`, {headers: userheaders})
+	return axios.get(`https://${window.IP}:8000/auth/users/${target}/`, {headers: userheaders})
 	.then((response) => {
 		return response.data
 	})
@@ -91,9 +91,9 @@ function	get_user_info(target) {
 //if no user is provided it will delete himself
 function	delete_user(target = '') {
 	if (target == '')	{
-		url = `http://${window.IP}:8000/auth/users/`
+		url = `https://${window.IP}:8000/auth/users/`
 	} else {
-		url = `http://${window.IP}:8000/auth/users/${target}`
+		url = `https://${window.IP}:8000/auth/users/${target}`
 	}
 
 	userheaders = {
@@ -115,7 +115,7 @@ function	delete_user(target = '') {
 
 //* The target part should only be used as an admin in the console, so once again, dont worry about it
 function	modify_user(field, new_value, target='') {
-	url = `http://${window.IP}:8000/auth/users/${target}`
+	url = `https://${window.IP}:8000/auth/users/${target}`
 
 	data = {
 		[field]: new_value

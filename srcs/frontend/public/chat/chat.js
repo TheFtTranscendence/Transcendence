@@ -4,9 +4,11 @@ function chat_hashchange(event) {
 	window.removeEventListener('hashchange', chat_hashchange)
 
     // Remove all event listeners before clearing the chat list container
-    window.chatDivs.forEach(({ element, listener }) => {
-        element.removeEventListener('click', listener)
-    })
+	try {
+		window.chatDivs.forEach(({ element, listener }) => {
+			element.removeEventListener('click', listener)
+		})
+	} catch {}
 
 	window.addButton.removeEventListener('click', chat_addButton)
 	window.removeButton.removeEventListener('click', chat_removeButton)
@@ -20,7 +22,10 @@ function chat_hashchange(event) {
     // Clear the chat list container's contents
     window.chatListContainer.innerHTML = ''
 	window.chatContent.innerHTML = ''
+
+	window.chatConfirmInput.value = '' // Clear input box
 	window.chatInput.value = '' // Clear input box
+
 	window.sendButton.removeEventListener('click', sendChatMessage)
 	window.removeEventListener('keypress', keypress)
 
@@ -59,7 +64,7 @@ function sendChatMessage() {
 function getMessages(friend) {
 
 	return new Promise((resolve, reject) => {
-		axios.get(`http://${window.IP}:8002/chats/` + friend[1].chat_id + '/?user=' + window.user.username)
+		axios.get(`https://${window.IP}:8002/chats/` + friend[1].chat_id + '/?user=' + window.user.username)
 		.then((response) => {
 			console.log('data ', response.data)
 			console.log('messages ', response.data.messages)
@@ -248,6 +253,7 @@ function chat()
 		friendList = window.user.friend_list
 	} catch (error) {
 		console.error('Error getting friend list')
+		window.
 		alert('Error getting friend list')
 		return
 	}

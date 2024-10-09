@@ -61,7 +61,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 			}
 
 			try:
-				response = requests.post("http://chat:8002/chats/create_chat/", json=json_payload)
+				response = requests.post("https://chat:8002/chats/create_chat/", json=json_payload)
 				response.raise_for_status()  # Raises HTTPError for bad responses
 				data = response.json()  # Get JSON data from requests response
 			except requests.exceptions.RequestException as e:
