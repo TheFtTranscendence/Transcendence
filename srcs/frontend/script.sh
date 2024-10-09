@@ -8,7 +8,6 @@ cp mkcert-v*-linux-amd64 /usr/local/bin/mkcert
 mkcert $IP
 cp $IP* /etc/nginx/ssl
 
-rm /etc/nginx/conf.d/default.conf
 sed -i "s/\$IP/$IP/g" "/etc/nginx/conf.d/nginx.conf"
 
 cd /usr/share/nginx/html/
