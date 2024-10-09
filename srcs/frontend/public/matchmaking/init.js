@@ -6,21 +6,21 @@ function Matchmaking_init_vars() {
 	ground_height = 50 // px
 	
 	return {
-		background: new Sprite({
+		background: new Matchmaking_Sprite({
 			position: { x: 0, y: 0 },
 			imageSrc: './game2/assets/background.png',
 			scale: 1,
 			framesMax: 1
 		}),
 
-		shop: new Sprite({
+		shop: new Matchmaking_Sprite({
 			position: { x: 800, y: 320 },
 			imageSrc: './game2/assets/shop.png',
 			scale: 3,
 			framesMax: 6
 		}),
 		
-		player: new Fighter({
+		player: new Matchmaking_Fighter({
 			name: 'player',
 			position: { x: canvas_width / 4, y: canvas_height - ground_height + 250},
 			velocity: { x: 0, y: 0},
@@ -55,7 +55,7 @@ function Matchmaking_init_vars() {
 			facing : 'right',
 		}),
 		
-		enemy: new Fighter({
+		enemy: new Matchmaking_Fighter({
 			name: 'enemy',
 			position : { x: canvas_width * 3 / 4, y: canvas_height - ground_height + 250},
 			velocity: { x: 0, y: 0},
@@ -102,7 +102,7 @@ function Matchmaking_init_vars() {
 		},
 
 		g: {
-			fps: 300,
+			fps: 100,
 
 			gameInterval: 0,
 			timerInterval: 0,
@@ -119,7 +119,7 @@ function Matchmaking_init_vars() {
 			gravity: 0.5, // px
 			drag: 0.5, // px
 			knockback: 25, // px
-			hit_dmg: 100, // %
+			hit_dmg: 5, // %
 			stun_time: stun_time, // ms
 			ground_height: ground_height, // px
 

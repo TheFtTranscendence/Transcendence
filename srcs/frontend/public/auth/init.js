@@ -55,6 +55,7 @@ function handleLogin() {
 	.then((response) => {
 		window.user = response.data.user;
 		window.usertoken = response.data.token;
+		_update_user_chats();
 		handleSuccessAuth(errorField);
 	})
 	.catch((error) => {
@@ -98,6 +99,7 @@ function handleRegister() {
 	.then((response) => {
 		window.user = response.data.user;
 		window.usertoken = response.data.token;
+		_update_user_chats();
 		handleSuccessAuth(errorField, data.username)
 	})
 	.catch((error) => {

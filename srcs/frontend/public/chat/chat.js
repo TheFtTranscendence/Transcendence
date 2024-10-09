@@ -52,9 +52,6 @@ function sendChatMessage() {
 
 		// Clear the input box
 		chatInput.value = ''
-
-		// Scroll to the bottom of the chat content
-		window.chatContent.scrollTop = window.chatCondocument.getElementById('chat-input-buttons').placeholder = "New placeholder text";tent.scrollHeight
 	}
 }
 
@@ -249,7 +246,6 @@ function chat()
 	window.chatConfirmInput = document.getElementById('chat-input-buttons')
 
 
-	// Get through the database when implemented
 	window.Messages = []
 
 	try {

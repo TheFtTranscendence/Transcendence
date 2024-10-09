@@ -5,7 +5,7 @@ function Matchmaking_queue(v)
 
 	v.s.queue_socket.onmessage = function(event) {
 		msg = JSON.parse(event.data)
-
+		console.log(msg)
 		v.s.player1 = msg.player1
 		v.s.player2 = msg.player2
 		v.s.gameId = msg.game_id
@@ -24,7 +24,6 @@ function Matchmaking_setup_socket(v) {
 	v.s.game_socket.onmessage = function(event) {
 		msg = JSON.parse(event.data)
 		console.log(window.user.id, " received: ", msg)
-		console.log("Here1")
 		console.log(msg.action)
 		console.log(msg.action == 'ArrowUp_keydown')
 		switch (msg.action) {
@@ -45,15 +44,5 @@ function Matchmaking_setup_socket(v) {
 			case 'attack_1': v.player.attack(); break;
 			case 'attack_2': v.enemy.attack(); break;
 		}
-		
-		// //? Why is this not upthere?
-		// if (msg.action == 'attack')
-		// {
-		// 	if (msg.player_id == v.s.player1)
-		// 		v.player.attack()
-		// 	else
-		// 		v.enemy.attack()
-		// }
-		// // }
 	}
 }
