@@ -106,14 +106,20 @@ class UserViewSet(viewsets.ModelViewSet):
 		return Response({'message': message, 'user': serializer.data})
 
 	def _update_password(self, user_to_update, request):
+		old_password = request.data.get('old_password')
 		password = request.data.get('password')
 		confirm_password = request.data.get('confirm_password')
 
-		if password:
-			if confirm_password and password != confirm_password:
-				return False
-			user_to_update.set_password(password)
-			user_to_update.save()
+		if old_password and password and confirm_password:
+			user = authenticate(request, username=user_to_update.username, password=old_password)
+			if user is not None:
+				if password:
+					if confirm_password and password != confirm_password:
+						return False
+					user_to_update.set_password(password)
+					user_to_update.save()
+		elif old_password or password or confirm_password:
+			return False
 
 		return True
 
@@ -202,6 +208,7 @@ class LoginView(APIView):
 		user = authenticate(request, username=username, password=password)
 		if user is not None:
 			login(request, user)
+			Token.objects.filter(user=user).delete()
 			token, created = Token.objects.get_or_create(user=user)
 			return Response({'message': 'Login successful', 'token': token.key, 'user': UserSerializer(user).data}, status=status.HTTP_200_OK)
 		else:
@@ -249,7 +256,11 @@ class RegisterView(APIView):
 			user.blockchain_id = UserService.get_blockchain_id()
 			user.save()
 
+			logger.info("HERE")
+			Token.objects.filter(user=user).delete()
+			logger.info("HERE2")
 			token, created = Token.objects.get_or_create(user=user)
+			logger.info(token)
 
 			return Response({'message': 'Registration successful', 'token': token.key, 'user': UserSerializer(user).data}, status=status.HTTP_201_CREATED)
 		except ValueError as e:

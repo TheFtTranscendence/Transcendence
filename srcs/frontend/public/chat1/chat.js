@@ -1,9 +1,9 @@
 function chat_hashchange(event) {
-    // Hide the chat container
-    document.getElementById("chat").classList.add("hidden")
+	// Hide the chat container
+	document.getElementById("chat").classList.add("hidden")
 	window.removeEventListener('hashchange', chat_hashchange)
 
-    // Remove all event listeners before clearing the chat list container
+	// Remove all event listeners before clearing the chat list container
 	try {
 		window.chatDivs.forEach(({ element, listener }) => {
 			element.removeEventListener('click', listener)
@@ -19,8 +19,8 @@ function chat_hashchange(event) {
 
 	window.confirmButton.removeEventListener('click', chat_confirmButton)
 	
-    // Clear the chat list container's contents
-    window.chatListContainer.innerHTML = ''
+	// Clear the chat list container's contents
+	window.chatListContainer.innerHTML = ''
 	window.chatContent.innerHTML = ''
 
 	window.chatConfirmInput.value = '' // Clear input box
@@ -59,28 +59,38 @@ function sendChatMessage() {
 }
 
 function getMessages(friend) {
-
 	return new Promise((resolve, reject) => {
-		axios.get(`https://${window.IP}:3000/chat/chats/` + friend[1].chat_id + '/?user=' + window.user.username)
+		const url = `https://${window.IP}:3000/chat/chats/${friend[1].chat_id}/?user=${window.user.username}`;
+
+		fetch(url, {
+			method: 'GET',
+		})
 		.then((response) => {
-			console.log('data ', response.data)
-			console.log('messages ', response.data.messages)
-			window.Messages = response.data.messages
-			resolve()
+			if (!response.ok) {
+				return response.json().then(err => { throw err; });
+			}
+			return response.json();
+		})
+		.then((data) => {
+			console.log('data ', data);
+			console.log('messages ', data.messages);
+			window.Messages = data.messages;
+			resolve(data.messages); // Resolve with messages or data as needed
 		})
 		.catch((error) => {
-			console.error('Error getting messages')
-			alert('Error getting messages')
-			reject()
-		})
+			console.error('Error getting messages:', error);
+			alert('Error getting messages: ' + (error.message || 'An unknown error occurred.'));
+			reject(error); // Pass the error to the reject
+		});
 	});
 }
+
 
 async function openChat(friend) {
 	console.log(friend)
 
 	// Clear previous chat content
-    window.chatContent.innerHTML = ''
+	window.chatContent.innerHTML = ''
 
 	await getMessages(friend)
 	window.CurrentChatting = friend[0]
@@ -100,34 +110,34 @@ async function openChat(friend) {
 	}
 
 	// Clear previous chat content
-    window.chatContent.innerHTML = ''
+	window.chatContent.innerHTML = ''
 
 	console.log('window messages ', window.Messages)
 
-    // Filter the messages for the selected friend
-    const filteredMessages = window.Messages.filter(message => message.sender === friend[0] || message.sender === window.user.username)
+	// Filter the messages for the selected friend
+	const filteredMessages = window.Messages.filter(message => message.sender === friend[0] || message.sender === window.user.username)
 
 	console.log('filtered messages ', filteredMessages)
 
-    // Display the messages in the chat content div
-    filteredMessages.forEach(message => {
+	// Display the messages in the chat content div
+	filteredMessages.forEach(message => {
 		const messageDiv = document.createElement('div')
-        messageDiv.classList.add('message-item')
+		messageDiv.classList.add('message-item')
 
-        // Differentiate between sent and received messages
-        if (message.sender === window.user.username) {
+		// Differentiate between sent and received messages
+		if (message.sender === window.user.username) {
 			messageDiv.classList.add('sent-message')
-        } else {
+		} else {
 			messageDiv.classList.add('received-message')
-        }
+		}
 
-        messageDiv.innerHTML = `
+		messageDiv.innerHTML = `
 		<strong>${message.sender}:</strong> ${message.content}
-        `
-        window.chatContent.appendChild(messageDiv)
-    })
+		`
+		window.chatContent.appendChild(messageDiv)
+	})
 
-    console.log(`Chat with ${friend[0]} opened`)
+	console.log(`Chat with ${friend[0]} opened`)
 
 	window.chatContent.scrollTop = window.chatContent.scrollHeight
 

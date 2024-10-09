@@ -6,8 +6,7 @@ function home_hashchange(event)
 
 function home()
 {
-	console.log("home called")
-	getAvater("window.user.username") //ToDo: Create currentUser or similar instance
+	getAvatar()
 	document.getElementById('home').classList.remove('hidden');
 	window.addEventListener('hashchange', home_hashchange);
 	document.getElementById('profile-img').addEventListener('click', showSideBar);
@@ -27,18 +26,18 @@ function showSideBar() {
 }
 
 function handleOutsideClick(event) {
-    const sidebar = document.getElementById('sidebar');
-    const isClickInsideSidebar = sidebar.contains(event.target);
-    const isClickProfile = document.getElementById('profile-img').contains(event.target);
+	const sidebar = document.getElementById('sidebar');
+	const isClickInsideSidebar = sidebar.contains(event.target);
+	const isClickProfile = document.getElementById('profile-img').contains(event.target);
 
-    if (!isClickInsideSidebar && !isClickProfile) {
-        sidebar.classList.add('hidden');
-        document.removeEventListener('click', handleOutsideClick);
+	if (!isClickInsideSidebar && !isClickProfile) {
+		sidebar.classList.add('hidden');
+		document.removeEventListener('click', handleOutsideClick);
 	}
 }
 
 //GET PROFILE PICTURE
-function getAvater(username) {
+function getAvatar() {
 	const imgElement = document.querySelector('#profile-img img');
 
 	if (window.user && window.user.avatar) {
@@ -46,14 +45,6 @@ function getAvater(username) {
 	} else {
 		imgElement.src = 'img/red.jpg';
 	}
-	// const img = new Image();
-	// img.onload = function() {
-	//
-	// };
-	// img.onerror = function() {
-	//
-	// };
-	// img.src = window.user.avater;
 
 	document.getElementById('profile-img').classList.remove('hidden');
 }
@@ -64,42 +55,44 @@ function getAvater(username) {
 
 
 function triggerFileDialog() {
-    document.getElementById('changeProfilePicture').click();
+	document.getElementById('changeProfilePicture').click();
 }
 
 function handleUpload() {
-    const fileInput = document.getElementById('avatarInput');
+	const fileInput = document.getElementById('avatarInput');
 
-    if (fileInput.files.length > 0) {
-        uploadAvatar(fileInput.files[0]);
-    } else {
-        alert('Please select a file to upload.');
-    }
+	if (fileInput.files.length > 0) {
+		uploadAvatar(fileInput.files[0]);
+	} else {
+		alert('Please select a file to upload.');
+	}
 }
 
 async function uploadAvatar(file) {
-    const formData = new FormData();
-    formData.append('avatar', file);
+	const formData = new FormData();
+	formData.append('avatar', file);
 
-    try {
-        const response = await fetch(`/user-management/auth/users/${window.user.id}/`, {
-            method: 'PATCH',
-            body: formData,
-            headers: {
-                'Authorization': 'Token ' + window.usertoken,
-            },
-        });
+	try {
+		const response = await fetch(`https://${window.IP}:3000/user-management/auth/users/${window.user.id}/`, {
+			method: 'PATCH',
+			body: formData,
+			headers: {
+				'Authorization': 'Token ' + window.usertoken,
+			},
+		});
 
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
+		if (!response.ok) {
+			const errorData = await response.json(); // Parse error response if available
+			throw new Error(errorData.message || 'Network response was not ok');
+		}
 
-        const data = await response.json();
-        console.log('Avatar uploaded successfully:', data);
-    } catch (error) {
-        console.error('Error uploading avatar:', error);
-    }
+		const data = await response.json();
+		console.log('Avatar uploaded successfully:', data);
+	} catch (error) {
+		console.error('Error uploading avatar:', error);
+	}
 }
+
 
 // LOGOUT
 document.getElementById('logoutButton').addEventListener('click', handleLogout);
@@ -119,52 +112,69 @@ function handleLogout() {
 document.getElementById('changePassword').addEventListener('click', handlePasswordChange);
 
 function handlePasswordChange() {
-	const changePasswordForm = document.getElementById('changePasswordForm')
+	const changePasswordForm = document.getElementById('changePasswordForm');
+	const submitButton = document.getElementById('submitPasswordChange');
+
 	if (changePasswordForm) {
-        if (changePasswordForm.classList.contains('hidden')) {
-            console.log("remove hidden");
-            changePasswordForm.classList.remove('hidden');
-            document.getElementById('submitPasswordChange').addEventListener('click', handlePasswordChangeForm);
-        } else {
-            console.log("add hidden");
-            changePasswordForm.classList.add('hidden');
-            document.getElementById('submitPasswordChange').removeEventListener('click', handlePasswordChangeForm);
-        }
-    } else {
-        console.error('Element #changePasswordForm not found');
-    }
+		if (changePasswordForm.classList.contains('hidden')) {
+			console.log("remove hidden");
+			changePasswordForm.classList.remove('hidden');
+			// Add the event listener only if it's not already added
+			if (!isListenerAdded) {
+				submitButton.addEventListener('click', handlePasswordChangeForm);
+				isListenerAdded = true; // Set to true when listener is added
+			}
+		} else {
+			console.log("add hidden");
+			changePasswordForm.classList.add('hidden');
+			submitButton.removeEventListener('click', handlePasswordChangeForm);
+			isListenerAdded = false; // Reset the status
+		}
+	} else {
+		console.error('Element #changePasswordForm not found');
+	}
 }
 
-function handlePasswordChangeForm() {
+function handlePasswordChangeForm(event) {
 	event.preventDefault();
+
 	const currentPassword = document.getElementById('currentPassword').value;
 	const newPassword = document.getElementById('newPassword').value;
 	const confirmNewPassword = document.getElementById('confirmNewPassword').value;
-	const errorField = document.getElementById('changePasswordError')
-	const changePasswordForm = document.getElementById('changePasswordForm')
+	const errorField = document.getElementById('changePasswordError');
+	const changePasswordForm = document.getElementById('changePasswordForm');
 	const sidebar = document.getElementById('sidebar');
-	const username = "window.user.username" //ToDo: get real username
 
 	const data = {
 		old_password: currentPassword,
 		new_password: newPassword,
 		confirm_new_password: confirmNewPassword
-	}
+	};
 
-	axios.put('https://' + window.IP + ':3000/user-management/config/change_avatar/' + username, data)
+	const url = `https://${window.IP}:3000/user-management/auth/users/`;
+
+	return fetch(url, {
+		method: 'PATCH',
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': 'Token ' + window.usertoken
+		},
+		body: JSON.stringify(data),
+	})
 	.then(response => {
-		alert("Password change successful");
-		if (!errorField.classList.contains('hidden')) {
-			errorField.classList.add('hidden');
+		if (!response.ok) {
+			return response.json().then(err => { throw err; });
 		}
+		alert("Password change successful");
+		errorField.classList.add('hidden');
 		changePasswordForm.classList.add('hidden');
-		document.getElementById('submitPasswordChange').removeEventListener('click', handlePasswordChangeForm);
 		sidebar.classList.add('hidden');
 		document.removeEventListener('click', handleOutsideClick);
 	})
 	.catch(error => {
-		errorField.textContent = error;
+		errorField.textContent = error.message || "An error occurred. Please try again.";
 		errorField.classList.remove('hidden');
 	});
 }
+
 
