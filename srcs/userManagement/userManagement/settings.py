@@ -26,6 +26,7 @@ MEDIA_URL = '/images/'
 
 INSTALLED_APPS = [
 	'daphne',
+	'corsheaders',
 	
 	'django.contrib.admin',
 	'django.contrib.auth',
@@ -34,7 +35,6 @@ INSTALLED_APPS = [
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
 
-	'corsheaders',
 	'rest_framework',
 	'rest_framework.authtoken',
 	'channels',
@@ -45,9 +45,9 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+	'corsheaders.middleware.CorsMiddleware',
 	'django.middleware.security.SecurityMiddleware',
 	'django.contrib.sessions.middleware.SessionMiddleware',
-	'corsheaders.middleware.CorsMiddleware',
 	'django.middleware.common.CommonMiddleware',
 	'django.middleware.csrf.CsrfViewMiddleware',
 	'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -101,11 +101,16 @@ LOGGING = {
 	'version': 1,
 	'handlers': {
 		'console': {
-			'level': 'INFO',
+			'level': 'DEBUG',
 			'class': 'logging.StreamHandler',
 		},
 	},
 	'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
 		'authentication': {
 			'handlers': ['console'],
 			'level': 'INFO',

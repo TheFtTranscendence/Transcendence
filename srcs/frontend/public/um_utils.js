@@ -4,9 +4,11 @@
 function	ping_Usermanagement() {
 	return axios.get(`https://${window.IP}:8000/auth/health/`)
 	.then((response) => {
+        console.log("OK")
 		//todo: define a variable so it knows that the usermanagement server is up or down
 	})
 	.catch((error) => {
+        console.log("KO")
 		//todo
 	})
 }
