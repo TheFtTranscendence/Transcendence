@@ -20,7 +20,6 @@ class ChatViewSet(viewsets.ModelViewSet):
 	@csrf_exempt
 	@action(detail=False, methods=['post'])
 	def create_chat(self, request):
-		logger.info("HERE3")
 		user1 = request.data['user1']
 		user2 = request.data['user2']
 		chat = Chat.objects.filter(

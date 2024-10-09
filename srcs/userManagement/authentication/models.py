@@ -53,7 +53,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 		friends_data = {}
 
 		print(friends)
-		logger.info("HERE")
 		for friend in friends:
 			friend_name = friend.username
 			json_payload = {
@@ -61,27 +60,18 @@ class User(AbstractBaseUser, PermissionsMixin):
 				"user2": friend_name
 			}
 
-			logger.info("HERE2")
-
 			try:
-				logger.info("HERE4")
 				response = requests.post(f"http://chat:8002/chats/create_chat/", json=json_payload)
-				logger.info("HERE5")
-				response.raise_for_status()  # Raises HTTPError for bad responses
-				data = response.json()  # Get JSON data from requests response
+				response.raise_for_status()
+				data = response.json()
 			except requests.exceptions.RequestException as e:
-				# Log the error and return an empty dictionary or handle as needed
 				logger.info(f'API request failed: {e}')
-				continue  # Skip this friend if the API request fails
+				continue  
 
 			except ValueError:
-				# Log the error and return an empty dictionary or handle as needed
 				logger.info('Invalid JSON in response')
-				continue  # Skip this friend if JSON parsing fails
+				continue
 
-			logger.info(data)
-
-			# Determine unread messages based on the response
 			if data.get("user1") == self.username:
 				unread_msgs = data.get("user1_unread_messages", 0)
 			else:
@@ -91,6 +81,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 				"id": friend.id,
 				"chat_id": data.get("id"),
 				"unread_msgs": unread_msgs,
+				"status": friend.online,
 				"socket": None  # Placeholder for future socket info
 			}
 

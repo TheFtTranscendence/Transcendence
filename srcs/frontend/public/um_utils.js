@@ -116,8 +116,10 @@ function	delete_user(target = '') {
 }
 
 //* The target part should only be used as an admin in the console, so once again, dont worry about it
-function	modify_user(field, new_value, target='') {
-	url = `https://${window.IP}:3000/user-management/auth/users/${target}`
+function	modify_user(field, new_value, target = '') {
+	if (target == '')
+		target = window.user.id
+	url = `https://${window.IP}:3000/user-management/auth/users/${target}/`
 
 	data = {
 		[field]: new_value
@@ -127,7 +129,7 @@ function	modify_user(field, new_value, target='') {
 		'Authorization': 'Token ' + window.usertoken,
 	}
 
-	return axios.patch(url, {headers: userheaders}, data)
+	return axios.patch(url, data, {headers: userheaders})
 	.then((response) => {
 		return response.data
 	})

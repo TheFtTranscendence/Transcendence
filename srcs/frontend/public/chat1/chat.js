@@ -154,7 +154,7 @@ function displayChatList(chatListContainer, friendList) {
 		const chatDiv = document.createElement('div')
 		chatDiv.classList.add('chat-item')
 
-		if (Math.random() > 0.5) { // SUBSTITUIR COM ACTUAL STATUS OF ONLNE
+		if (friend.status) { // SUBSTITUIR COM ACTUAL STATUS OF ONLNE
 		chatDiv.innerHTML = `
 			<div class="friend-name">🟢 ${friend[0]}</div>
 		`

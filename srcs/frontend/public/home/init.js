@@ -41,8 +41,8 @@ function handleOutsideClick(event) {
 function getAvater(username) {
 	const imgElement = document.querySelector('#profile-img img');
 
-	if (window.user && window.user.avater) {
-		imgElement.src = window.user.avater;
+	if (window.user && window.user.avatar) {
+		imgElement.src = window.user.avatar;
 	} else {
 		imgElement.src = 'img/red.jpg';
 	}
