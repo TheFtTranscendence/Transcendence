@@ -129,6 +129,7 @@ function Matchmaking_init_vars() {
 		s: {
 			game_socket: 0,
 			queue_socket: 0,
+			socketupdate: 0,
 			gameId: 0,
 			player1: 0,
 			player2: 0
@@ -169,7 +170,8 @@ function Matchmaking_leave_game(v) {
 	clearInterval(v.g.gameInterval)
 	clearInterval(v.g.timerInterval)
 	clearInterval(v.g.backgroundInterval)
-		
+	clearInterval(v.s.socketupdate)
+
 	window.removeEventListener('keydown', Matchmaking_game2_keydown)
 	window.removeEventListener('keyup', Matchmaking_game2_keyup)
 	window.removeEventListener('hashchange', Matchmaking_game2_hashchange)

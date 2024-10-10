@@ -84,7 +84,7 @@ function get_all_users() {
 }
 
 //! This really needs to be inside a try because if the target user doesn't exist, it's going to raise an exception
-function get_user_info(target) {
+async function get_user_info(target) {
 	const userheaders = {
 		'Authorization': 'Token ' + window.usertoken,
 	};
@@ -159,6 +159,43 @@ function modify_user(field, new_value, target = '') {
 	.catch(error => {
 		throw new Error(error.message || "An unknown error occurred");
 	});
+}
+
+function modify_user_preferences(field, new_value, target = '') {
+    if (target === '') target = window.user.id;
+    const url = `https://${window.IP}:3000/user-management/auth/users/${target}/`;
+
+    if (field == 'pongy_skin') {
+    data = {
+      pongy_skin: new_value,
+      fighty_skin: window.user.preferences.fighty_skin,
+    }
+  } else if (field == 'fighty_skin') {
+    data = {
+      pongy_skin: window.user.preferences.pongy_skin,
+      fighty_skin: new_value,
+    }
+  }
+
+    const userheaders = {
+        'Authorization': 'Token ' + window.usertoken,
+        'Content-Type': 'application/json',
+    };
+
+    return fetch(url, {
+        method: 'PATCH',
+        headers: userheaders,
+        body: JSON.stringify(data),
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(err => { throw err; });
+        }
+        return response.json();
+    })
+    .catch(error => {
+        throw new Error(error.message || "An unknown error occurred");
+    });
 }
 
 function modify_user_password(old_password, password, confirm_password, target = '') {
