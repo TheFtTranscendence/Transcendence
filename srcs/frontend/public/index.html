@@ -165,10 +165,44 @@
 		</div>
 	</div>
 
+
+	<div id="auth">
+		<div id="login" class="auth-page hidden">
+			<h1>Login</h1>
+			<form id="loginForm">
+				<label for="loginUsername">Username:</label>
+				<input type="text" id="loginUsername" name="username">
+				<label for="loginPassword">Password:</label>
+				<input type="password" id="loginPassword" name="password">
+				<button type="submit">Login</button>
+			</form>
+			<button id="toRegister">Not a user yet?</button>
+		</div>
+		<div id="register" class="auth-page hidden">
+			<h1>Register</h1>
+			<form id="registerForm">
+				<label for="registerUsername">Username:</label>
+				<input type="text" id="registerUsername" name="username">
+				<label for="registerPassword">Password:</label>
+				<input type="password" id="registerPassword" name="password">
+				<button type="submit">Register</button>
+			</form>
+			<button id="toLogin">Already a user?</button>
+		</div>
+	</div>
+	-->
+	<nav class="hidden">
+		<a href="#home" class="nav-link">Home</a>
+		<a href="#pongy" class="nav-link">Pongy</a>
+		<a href="#fighters" class="nav-link">Fighty Fighters</a>
+		<a href="#chat" class="nav-link">Chat</a>
+	</nav>
 	<div id="content">
-		<div id="game" class="hidden">
-            <canvas id="game-area"></canvas>
-        </div>
+		<div id="home" class="hidden">
+			<h1>Home</h1>
+			<p>Click on the links above to navigate to the different sections of the website.</p>
+			<p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Architecto quaerat alias, adipisci laborum labore reprehenderit quae doloremque repellendus magnam consectetur, dolore necessitatibus explicabo ipsum tenetur accusantium minus iste! Sed, voluptas.</p>
+		</div>
 
 		<div id="games" class="hidden">
 			<div id="games-menu-area" class="hidden">
@@ -335,6 +369,60 @@
 						<button id="toggle-extended-players">Toggle Players 4-8</button>
 					</div>
 				</div>
+			</div>
+
+			<div id="tournament-area" class="hidden">
+				<div id="tournament-bracket">
+					<div id="first-round" class="tournament-rounds">First Round
+						<div id="first-match-r1" class="matchups four-players eight-players hidden">
+							<div id="player1-r1" class="players"></div>
+							<hr class="middle-line">
+							<div id="player2-r1" class="players"></div>
+						</div>
+						<div id="second-match-r1" class="matchups four-players eight-players hidden">
+							<div id="player3-r1" class="players"></div>
+							<hr class="middle-line">
+							<div id="player4-r1" class="players"></div>
+						</div>
+						<div id="third-match-r1" class="matchups eight-players hidden">
+							<div id="player5-r1" class="players"></div>
+							<hr class="middle-line">
+							<div id="player6-r1" class="players"></div>
+						</div>
+						<div id="fourth-match-r1" class="matchups eight-players hidden">
+							<div id="player7-r1" class="players"></div>
+							<hr class="middle-line">
+							<div id="player8-r1" class="players"></div>
+						</div>
+					</div>
+					<div id="second-round" class="tournament-rounds eight-players hidden">Second Round
+						<div id="first-match-r2" class="matchups">
+							<div id="player1-r2" class="players">Game 1 Winner</div>
+							<hr class="middle-line">
+							<div id="player2-r2" class="players">Game 2	Winner</div>
+						</div>
+						<div id="second-match-r2" class="matchups">
+							<div id="player3-r2" class="players">Game 3 Winner</div>
+							<hr class="middle-line">
+							<div id="player4-r2" class="players">Game 4	Winner</div>
+						</div>
+					</div>
+					<div id="final" class="tournament-rounds">Final
+						<div id="first-match-r3" class="matchups four-players eight-players hidden">
+							<div id="player1-r3" class="players">Upper Winner</div>
+							<hr class="middle-line">
+							<div id="player2-r3" class="players">Lower Winner</div>
+						</div>
+					</div>
+					<div id="next-game" class="tournament-rounds">
+						<div id="next-game-players">Player X vs Player Y</div>
+						<button id="next-game-button">Next Game</button>
+					</div>
+				</div>
+			</div>
+
+			<div id="game" class="hidden">
+				<canvas id="game-area"></canvas>
 			</div>
 
 			<div id="div-game2-area" class="hidden">

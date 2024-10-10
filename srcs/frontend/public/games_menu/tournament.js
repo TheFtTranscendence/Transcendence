@@ -1,148 +1,222 @@
-function clearTournamentMenu() {
-	document.getElementById('games-tournament-menu').classList.add('hidden')
-	
-	window.removeEventListener('hashchange', tournament_menu_hashchange)
+function clearTournament() {
+    document.getElementById('tournament-area').classList.add("hidden");
 
-	window.toogle58Button.removeEventListener('click', tournament_extendPlayers)
-	window.PlayButton.removeEventListener('click', tournament_play)
-	window.BackButton.removeEventListener('click', tournament_backButton)
+    // Make sure you're removing the exact listener added previously
+    window.removeEventListener('hashchange', clearTournament); 
 
-	window.tournamentskinButton.forEach(function(button) {
-		button.removeEventListener('click', handleButtonClick);
-	})
+    if (window.nextGameButton) {
+        window.nextGameButton.removeEventListener('click', next_game);
+    }
+
+    UnloadScripts(window.tournamentScripts);
 }
+// function tournament_hashchange()
+// {
+//     clearTournament()
+// 	UnloadScripts(window.tournamentScripts)
+// }
 
-function tournament_play() {
-	console.log('Play button clicked')
-	
-	const playerNames = []
-	const playerSkins = []
-	
-	if (document.querySelectorAll('.games-tournament-player-info2')[0].style.display === 'flex')
-		nb_players = 8
-	else
-		nb_players = 4
-
-	console.log(nb_players)
-	for (n = 1; n <= nb_players; n++) {
-		const playerName = document.getElementById('games-tournament-player-name' + n).value.trim()
-		if (playerName.length == 0) {
-			alert('Please enter the names of all players')
-			return
+async function next_game_players()
+{
+	let nextGamePlayers = [];
+    try{
+        const response = await axios.get('http://localhost:8001/solidity/getnexttournamentplayers/' + window.user.blockchain_id + "/Pongy");
+        console.log("HEREEE1!!!");
+        console.log(response.data);
+        nextGamePlayers = response.data.success;
+    }
+	catch (error) {
+		console.error(error);
+		if (error.response)	{
+			const status = error.response.status;
 		}
-		playerNames.push(playerName)
-		playerSkins.push(window.tournamentPlayerSkins[n - 1])
 	}
 
-	console.log(playerNames)
-	console.log(playerSkins)
-	
-	
-	// Uncomment when scripts apply
-	// clearTournamentMenu()
-	// unloadScripts(window.menuScripts)
-	if (window.location.hash == '#fighters') {
-		// Load scripts for tournament
-	} else {
-		// Pong Change
+    console.log("PLAYER1 -> ", nextGamePlayers[0]);
+    
+    console.log("PLAYER2 -> ", nextGamePlayers[1]);
+
+    let names = [];
+    let skins = [];
+
+    nextGamePlayers.forEach(item => {
+        let name = item.slice(0, -1);
+        let skin = parseInt(item.slice(-1));
+
+        names.push(name);
+        skins.push(skin);
+    })
+    return [names, skins];
+}
+
+async function next_game() {
+    document.getElementById('tournament-area').classList.add("hidden");
+    window.tournamentVars.tournamentMatch = true;
+
+    let playerNames = [];
+    let playerSkins = [];
+
+    [playerNames, playerSkins] = await next_game_players();
+
+    if (window.location.hash == '#fighters') {
+        document.getElementById('div-game2-area').classList.remove("hidden");
+        window.player1Skin = 0;
+        window.player2Skin = 1;
+        UnloadScripts(window.menuScripts);
+        clearTournament();
+        startGame2(playerNames[0], playerNames[1], window.game2Skins[playerSkins[0]], window.game2Skins[playerSkins[1]], true);
+    } else {
+        document.getElementById('game-area').classList.remove("hidden");
+
+        clearTournament();
+
+        // let p1 = window.playerCounter;
+        // console.log("p1 -> ", p1);
+        startGame(playerNames[0], playerNames[1], window.game1Skins[playerSkins[0]], window.game1Skins[playerSkins[1]], playerSkins[0], playerSkins[1], true, false);
+        // window.playerCounter += 2;
+    }
+}
+
+function show_bracket(playerNames)
+{
+	if (playerNames.length === 4)
+	{
+		const elements = document.querySelectorAll('.four-players');
+		elements.forEach((element, index) => {
+			element.classList.remove('hidden')
+		})
 	}
+	else
+	{
+		const elements = document.querySelectorAll('.eight-players');
+		elements.forEach((element, index) => {
+			element.classList.remove('hidden')
+		})
+	}
+
+	roundOnePlayers = "";
+    for (i = 0; i < playerNames.length; i++)
+    {
+        input_id = 'player' + (i + 1) + '-r1';
+        document.getElementById(input_id).textContent = playerNames[i];
+    }
+
 }
 
-function tournament_backButton() {
-	console.log("Tournament Back button clicked");
+function shuffle_names(playerNames, playerSkins)
+{
+    for (let index = 0; index < playerNames.length; index++)
+    {
+        let randomPos = Math.floor(Math.random() * playerNames.length);
+        [playerNames[index], playerNames[randomPos]] = [playerNames[randomPos], playerNames[index]];
+        [playerSkins[index], playerSkins[randomPos]] = [playerSkins[randomPos], playerSkins[index]];
+    }
 
-	clearTournamentMenu()
-	main_menu()
+    return [playerNames, playerSkins];
 }
 
-function tournament_menu_hashchange() {
-	console.log("Tournament HashChange");
-	clearTournamentMenu()
-	unloadScripts(window.menuScripts)
+
+function tournament_loop() {
+    // Make sure you clear the hashchange listener first
+    window.removeEventListener('hashchange', clearTournament);
+    
+    window.addEventListener('hashchange', clearTournament);
+
+    document.getElementById('tournament-area').classList.remove("hidden");
+
+    if (window.location.hash == '#fighters') {
+        document.getElementById('div-game2-area').classList.add("hidden");
+        show_bracket(window.playerNames);
+    } else {
+        document.getElementById('game-area').classList.add("hidden");
+        show_bracket(window.pongPlayerNames);
+    }
+
+    // Make sure you are not registering multiple listeners
+    if (window.nextGameButton) {
+        window.nextGameButton.removeEventListener('click', next_game);
+    }
+
+    window.nextGameButton = document.getElementById('next-game-button');
+    window.nextGameButton.addEventListener('click', next_game);
+
+    if (window.location.hash == '#fighters') {
+        loadScripts(window.game2Scripts);
+    } else {
+        loadScripts(window.gameScripts);
+    }
+
+    // console.log(window.pongPlayerNames);
+    // console.log(window.pongPlayerSkins);
+
 }
 
-function tournament_extendPlayers() {
+function storeTournament(namesAndSkins)
+{
+    if (window.location.hash == '#fighters') {
+        axios.post('http://localhost:8001/solidity/addtournament/' +  window.user.blockchain_id + "/Fighty", {
+            players: namesAndSkins,
+        })
+        .then((response) => {
+            console.log(response.data);
+        })
+        .catch((error) => {
+            console.error(error);
+            if (error.response)	{
+                const status = error.response.status;
+            }
+        });
+    }
+    else {
+        axios.post('http://localhost:8001/solidity/addtournament/' +  window.user.blockchain_id + "/Pongy", {
+            players: namesAndSkins,
+        })
+        .then((response) => {
+            console.log(response.data);
+        })
+        .catch((error) => {
+            console.error(error);
+            if (error.response)	{
+                const status = error.response.status;
+            }
+        });  
+    }
+}
 
-	console.log("Extend Players button clicked");
-	
-	document.querySelectorAll('.games-tournament-player-info2').forEach(function(player) {
-		if (player.style.display === 'flex') {
-			player.style.display = 'none';
-		} else {
-			player.style.display = 'flex';
+function start_tournament(playerNamesOrd, playerSkinsOrd) {
+    document.getElementById('games-tournament-menu').classList.add("hidden");
+
+    if (window.location.hash == '#fighters')
+        window.fightyTournamentOn = true;
+    else
+        window.pongyTournamentOn = true;
+
+    // if (window.location.hash == '#fighters') {
+    //     [window.playerNames, window.playerSkins] = shuffle_names(playerNamesOrd, playerSkinsOrd);
+    //     tournament_loop();
+    // } else {
+    //     [window.pongPlayerNames, window.pongPlayerSkins] = shuffle_names(playerNamesOrd, playerSkinsOrd);
+    //     tournament_loop();
+    // }
+    [window.playerNames, window.playerSkins] = shuffle_names(playerNamesOrd, playerSkinsOrd);
+    const namesAndSkins = window.playerNames.map((name, skin) => name + window.playerSkins[skin]);
+
+
+    axios.get('http://localhost:8001/solidity/getlasttournamentranking/' + window.user.blockchain_id + "/Pongy")
+	.then((response) => {
+        console.log("BLOCKCHAIN TOURNEY");
+		console.log(response.data);
+	})
+	.catch((error) => {
+		console.error(error);
+		if (error.response)	{
+			const status = error.response.status;
 		}
 	});
-}
 
-function games_tournament_menu() {
+    // console.log("namesAndSkins\n", namesAndSkins);
 
-	document.getElementById('games-tournament-menu').classList.remove('hidden')
+    storeTournament(namesAndSkins);
 
-	if (window.location.hash == '#fighters') {
-		// loadScripts(window.game2Scripts)
-		window.tournamentPlayerSkins = [0, 0, 0, 0, 0, 0, 0, 0]
-		for (n = 1; n <= 8; n++) {
-			document.getElementById('games-tournament-player-skin' + n).style.backgroundImage = "url('" + window.game2SkinsPreviews[0] + "')"
-		}
-
-	} else {
-		// Pong Change, put default skins for pong
-		// window.tournamentPlayerSkins = [0, 0, 0, 0, 0, 0, 0, 0]
-		// for (n = 1; n <= 8; n++) {
-		// 	document.getElementById('games-tournament-player-skin' + n).style.backgroundImage = "url('" + window.gameSkinsPreviews[0] + "')"
-		// }
-	}
-
-	window.addEventListener('hashchange', tournament_menu_hashchange)
-	
-	window.toogle58Button = document.getElementById('toggle-extended-players')
-	window.PlayButton = document.getElementById('games-tournament-button-play')
-	window.BackButton = document.getElementById('games-tournament-button-back')
-
-	window.tournamentskinButton = [
-		document.getElementById('games-tournament-button-skin1'),
-		document.getElementById('games-tournament-button-skin2'),
-		document.getElementById('games-tournament-button-skin3'),
-		document.getElementById('games-tournament-button-skin4'),
-		document.getElementById('games-tournament-button-skin5'),
-		document.getElementById('games-tournament-button-skin6'),
-		document.getElementById('games-tournament-button-skin6'),
-		document.getElementById('games-tournament-button-skin7'),
-		document.getElementById('games-tournament-button-skin8')
-	]
-	
-
-	window.toogle58Button.addEventListener('click', tournament_extendPlayers)
-	window.PlayButton.addEventListener('click', tournament_play)
-	window.BackButton.addEventListener('click', tournament_backButton)
-
-	window.tournamentskinButton.forEach(function(button) {
-		button.addEventListener('click', handleButtonClick);
-	})
-	
-}
-
-function handleButtonClick(event) {
-	
-	const buttonId = event.target.id;
-    const lastChar = buttonId.charAt(buttonId.length - 1);
-    const buttonNumber = parseInt(lastChar, 10);
-
-    tournament_skinbutton(buttonNumber);
-}
-
-function tournament_skinbutton(buttonId) {
-    console.log(`Skin Button clicked: ${buttonId}`);
-	
-	if (window.location.hash == '#fighters')
-	{
-		if (window.tournamentPlayerSkins[buttonId - 1] == window.game2SkinsPreviews.length - 1)
-			window.tournamentPlayerSkins[buttonId - 1] = 0;
-		else
-			window.tournamentPlayerSkins[buttonId - 1]++;
-		document.getElementById('games-tournament-player-skin' + buttonId).style.backgroundImage = "url('" + window.game2SkinsPreviews[window.tournamentPlayerSkins[buttonId - 1]] + "')";
-	} else {
-		// Pong Change
-		// Change skins in pong
-	}
+    tournament_loop();
 }

@@ -1,6 +1,6 @@
-function startGame2(player1, player2, skins1, skins2) {
+function startGame2(player1, player2, skins1, skins2, tournamentGame) {
 	
-	v = init_vars(player1, player2, skins1, skins2)
+	v = init_vars(player1, player2, skins1, skins2, tournamentGame)
 	setup_canvas(v)
 	// setup_music(v)
 

@@ -252,8 +252,9 @@ class RegisterView(APIView):
 			return Response({'message': 'Username is already in use'}, status=status.HTTP_400_BAD_REQUEST)
 
 		try:
+			blockchain_id = UserService.get_blockchain_id()
 			user = UserService.create_user(username, password, email)
-			user.blockchain_id = UserService.get_blockchain_id()
+			user.blockchain_id = blockchain_id
 			user.save()
 
 			logger.info("HERE")

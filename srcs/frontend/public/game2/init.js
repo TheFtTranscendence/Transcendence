@@ -1,4 +1,4 @@
-function init_vars(player1, player2, skins1, skins2) {
+function init_vars(player1, player2, skins1, skins2, tournamentGame) {
 
     canvas_width = 1366
 	canvas_height = 768
@@ -124,6 +124,8 @@ function init_vars(player1, player2, skins1, skins2) {
             ground_height: ground_height, // px
 
 			backgroundMusic: 0,
+
+            tournamentGame: tournamentGame,
         }
     }
 }
@@ -159,10 +161,13 @@ function reset_keys(v) {
 function leave_game(v) {
 	console.log('hashchange game2');
 
+    storeMatch(v)
+    console.log("WE HERE")
+
     clearInterval(v.g.gameInterval)
     clearInterval(v.g.timerInterval)
     clearInterval(v.g.backgroundInterval)
-
+        
     window.removeEventListener('keydown', game2_keydown)
 	window.removeEventListener('keyup', game2_keyup)
 	window.removeEventListener('hashchange', game2_hashchange)
@@ -172,15 +177,73 @@ function leave_game(v) {
 		v.g.backgroundMusic = null
 	}
 	catch {}
+	
+    window.addEventListener('keydown', quit);
 
-	v.g.timer.innerHTML = 50
+}
 
-	document.getElementById('div-game2-area').classList.add("hidden");
-	document.getElementById('game2-menu').classList.add("hidden");
-	document.getElementById('game2').classList.add("hidden");
-	unloadScripts(window.game2Scripts);
+function quit(event)
+{
+    if (event.key === 'x' || event.key === 'X') {
+        v.g.timer.innerHTML = 250
+        document.querySelector('#game2-end-text').style.display = 'none'
+    
+        document.querySelector('#game2-bar1').style.width = '100%'
+        document.querySelector('#game2-bar2').style.width = '100%'
+        
+        UnloadScripts(window.game2Scripts);
+        document.getElementById('div-game2-area').classList.add("hidden");
+        console.log("WE also HERE")
+        if (v.g.tournamentGame) {
+            loadScripts(window.tournamentScripts);
+            tournament_loop();
+        }
+        else {
+            loadScripts(window.menuScripts);
+            main_menu();
+        }
+        window.removeEventListener('keydown', quit);
+    }
+}
 
-	document.getElementById('game2').classList.add("hidden");
-	unloadScripts(window.game2Scripts);
-
+function storeMatch(v)
+{
+// 	console.log(vars.gameVars.p1Name + vars.gameVars.p1SkinId);
+// 	console.log(vars.gameVars.p2Name + vars.gameVars.p2SkinId);
+	if (v.g.tournamentGame)
+	{
+        axios.post('http://localhost:8001/solidity/addgame/' + window.user.blockchain_id + "/Fighty", {
+            player1: v.player.name,
+            player2: v.enemy.name,
+            score1: v.player.health,
+            score2: v.enemy.health
+        })
+		.then((response) => {
+			console.log(response.data);
+		})
+		.catch((error) => {
+			console.error(error);
+			if (error.response)	{
+				const status = error.response.status;
+			}
+		});
+	}
+	else
+	{
+		axios.post('http://localhost:8001/solidity/addgame/' +  window.user.blockchain_id + "/Fighty", {
+            player1: v.player.name,
+            player2: v.enemy.name,
+            score1: v.player.health,
+            score2: v.enemy.health
+		})
+		.then((response) => {
+			console.log(response.data);
+		})
+		.catch((error) => {
+			console.error(error);
+			if (error.response)	{
+				const status = error.response.status;
+			}
+		});
+	}
 }

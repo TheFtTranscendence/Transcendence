@@ -23,6 +23,10 @@ window.gameScripts = [
 window.menuScripts = [
 	'games_menu/main.js',
 	'games_menu/local.js',
+	'games_menu/tournament_menu.js',
+];
+
+window.tournamentScripts = [
 	'games_menu/tournament.js',
 ];
 
@@ -46,8 +50,21 @@ window.matchmakingScripts = [
 ];
 
 
+/* ----------------------- Game 1 Skins ----------------------- */
 
+window.game1Skins = [
+	bluePaddle = 'game/assets/blue_paddle.png',
+	greenPaddle = 'game/assets/green_paddle.png',
+	pinkPaddle = 'game/assets/pink_paddle.png',
+	redPaddle = 'game/assets/red_paddle.png',
+]
 
+window.game1SkinsPreview = [
+	bluePaddle = 'game/assets/blue_paddle_preview.png',
+	greenPaddle = 'game/assets/green_paddle_preview.png',
+	pinkPaddle = 'game/assets/pink_paddle_preview.png',
+	redPaddle = 'game/assets/red_paddle_preview.png',
+]
 
 /* ----------------------- Game 2 Skins ----------------------- */
 
@@ -161,3 +178,38 @@ window.game2Skins = [
 		}
 	}
 ]
+
+window.tournamentVars = {
+	tournamentMatch: false,
+	matchNr: 0
+}
+
+window.fourPlayer = {
+	firstMatchWinner: "",
+	secondMatchWinner: "",
+	finalWinner: ""
+}
+
+window.eightPlayer = {
+	firstMatchWinner: "",
+	secondMatchWinner: "",
+	thirdMatchWinner: "",
+	fourthMatchWinner: "",
+	upperWinner: "",
+	lowerWinner: "",
+	finalWinner: ""
+}
+
+window.playerNames = []
+
+window.playerSkins = []
+
+window.pongPlayerNames = []
+
+window.pongPlayerSkins = []
+
+window.playerCounter = 0;
+
+window.pongyTournamentOn = true;
+
+window.fightyTournamentOn = true;

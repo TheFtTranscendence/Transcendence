@@ -7,6 +7,10 @@ from web3 import Web3, HTTPProvider
 from django.conf import settings
 import time
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 # Get from settings
 ethereum_node_url = settings.ETHEREUM_NODE_URL
 contract_address = settings.CONTRACT_ADDRESS
@@ -79,11 +83,14 @@ def add_instance(request):
 # Add a game
 @api_view(['POST'])
 def add_game(request, instanceIndex, gameType):
+    logger.info(f"instanceIndex -> {instanceIndex}, gameType -> {gameType}")
     data = request.data
     player1 = data.get('player1')
     player2 = data.get('player2')
     score1 = data.get('score1')
     score2 = data.get('score2')
+    logger.info(f"p1 -> {player1}, p2 -> {player2}")
+    logger.info(f"s1 -> {score1}, s2 -> {score2}")
 
     if player1 is None or player2 is None or score1 is None or score2 is None:
         return JsonResponse({'missing fields': 'Data isnt format as expected'}, status=450)
@@ -121,6 +128,7 @@ def add_game(request, instanceIndex, gameType):
     try:
         tx_hash = add_game_func()
     except Exception as e:
+        logger.exception(e)
         return JsonResponse({'exception': str(e)}, status=400)
 
     # Wait for the transaction to be mined
