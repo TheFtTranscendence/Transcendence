@@ -1,5 +1,6 @@
 function clearTournamentMenu() {
 	document.getElementById('games-tournament-menu').classList.add('hidden')
+	document.getElementById('winner-screen').classList.add("hidden");
 	
 	window.removeEventListener('hashchange', tournament_menu_hashchange)
 
@@ -12,10 +13,6 @@ function clearTournamentMenu() {
 	})
 }
 
-function clearBracket()
-{
-	
-}
 
 function tournament_backButton() {
 	console.log("Tournament Back button clicked");
@@ -27,7 +24,7 @@ function tournament_backButton() {
 function tournament_menu_hashchange() {
 	console.log("Tournament HashChange");
 	clearTournamentMenu()
-	UnloadScripts(window.menuScripts)
+	unloadScripts(window.menuScripts)
 }
 
 function tournament_extendPlayers() {
@@ -80,38 +77,20 @@ async function tournament_play() {
 		playerSkins.push(window.tournamentPlayerSkins[n - 1])
 	}
 
+    const uniqueNames = new Set(playerNames)
+    if (uniqueNames.size !== playerNames.length) {
+        alert('All player names must be unique')
+        return
+    }
+
 	console.log(playerNames)
 	console.log(playerSkins)
 
-	// axios.get('http://localhost:8001/solidity/getlasttournamentranking/' + window.user.blockchain_id + "/Pongy")
-	// .then((response) => {
-	// 	console.log("LAST TOURNEY");
-	// 	console.log(response.data);
-	// })
-	// .catch((error) => {
-	// 	console.error(error);
-	// 	if (error.response)	{
-	// 		const status = error.response.status;
-	// 	}
-	// });
-
-	// axios.get('http://localhost:8001/solidity/getalltournamentsrankings/' + window.user.blockchain_id + "/Pongy")
-	// .then((response) => {
-	// 	console.log("ALL TOURNEY");
-	// 	console.log(response.data);
-	// })
-	// .catch((error) => {
-	// 	console.error(error);
-	// 	if (error.response)	{
-	// 		const status = error.response.status;
-	// 	}
-	// });
-
 	// Uncomment when scripts apply
-	// clearTournamentMenu()
+	clearTournamentMenu()
 	console.log(window.pongPlayerNames)
     console.log(window.pongPlayerSkins)
-	UnloadScripts(window.menuScripts)
+	unloadScripts(window.menuScripts)
 	start_tournament(playerNames, playerSkins)
 }
 

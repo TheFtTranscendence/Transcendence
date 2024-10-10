@@ -5,38 +5,40 @@ function game_hashchange(vars)
 		console.log('hashchange game');
 		window.removeEventListener("hashchange", game_hashchange);
 
-		document.getElementById('game').classList.add('hidden');
-
+		
 		window.removeEventListener("keydown", handleKeyDown);
 		window.removeEventListener("keyup", handleKeyUp);
 		vars.canvasVars.canvas.removeEventListener("click", handleCanvasClick);
-
 		clearInterval(vars.IntervalVars.gameLoop);
+		
+		document.getElementById('game').classList.add('hidden');
 		unloadScripts(window.gameScripts);
 	}
-	document.getElementById('game').classList.add('hidden');
-
+	
 	window.removeEventListener("keydown", handleKeyDown);
 	window.removeEventListener("keyup", handleKeyUp);
 	vars.canvasVars.canvas.removeEventListener("click", handleCanvasClick);
-
 	clearInterval(vars.IntervalVars.gameLoop);
-	UnloadScripts(window.gameScripts);
+	
+	document.getElementById('game').classList.add('hidden');
+	unloadScripts(window.gameScripts);
 
+	window.isGameActive = false
 	vars.running = false;
 }
 
 function cleanUpAfterFinish(vars)
 {
 	console.log("cleanup Game");
-	document.getElementById('game').classList.add('hidden');
 	window.removeEventListener("keydown", handleKeyDown);
 	window.removeEventListener("keyup", handleKeyUp);
 	vars.canvasVars.canvas.removeEventListener("click", handleCanvasClick);
-
-	storeMatch(vars);
 	clearInterval(vars.IntervalVars.gameLoop);
-	UnloadScripts(window.gameScripts);
+	document.getElementById('game').classList.add('hidden');
+	
+	storeMatch(vars);
+	window.isGameActive = false
+	unloadScripts(window.gameScripts);
 	
 	vars.running = false;
 
@@ -51,45 +53,64 @@ function cleanUpAfterFinish(vars)
 
 }
 
-async function storeMatch(vars)
+function storeMatch(vars)
 {
+	players = [
+		vars.gameVars.p1Name + vars.gameVars.p1SkinId,
+		vars.gameVars.p2Name + vars.gameVars.p2SkinId,
+	]
 	console.log(vars.gameVars.p1Name + vars.gameVars.p1SkinId);
 	console.log(vars.gameVars.p2Name + vars.gameVars.p2SkinId);
 	if (vars.gameVars.tournamentGame)
 	{
-		axios.post('http://localhost:8001/solidity/addtournamentgame/' +  window.user.blockchain_id + "/Pongy", {
+		if (vars.gameVars.p1Score > vars.gameVars.p2Score) {
+			pongyTournamentData.addGameWinner(vars.gameVars.p1Name + vars.gameVars.p1SkinId)
+		}
+		else {
+			pongyTournamentData.addGameWinner(vars.gameVars.p2Name + vars.gameVars.p2SkinId)
+		}
+		
+		pongyTournamentData.setMatchAsPlayed(players)
+
+		const url = `https://${window.IP}:3000/solidity/solidity/addtournamentgame/${window.user.blockchain_id}/Pongy`;
+
+		const data = {
 			player1: vars.gameVars.p1Name + vars.gameVars.p1SkinId,
 			player2: vars.gameVars.p2Name + vars.gameVars.p2SkinId,
 			score1: vars.gameVars.p1Score,
 			score2: vars.gameVars.p2Score,
+		};
+
+		fetch(url, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(data),
 		})
-		.then((response) => {
-			console.log(response.data);
-		})
-		.catch((error) => {
-			console.error(error);
-			if (error.response)	{
-				const status = error.response.status;
-			}
-		});
+
+
+		console.log("MatchStored")
+		console.log(data)
 	}
 	else
 	{
-		await axios.post('http://localhost:8001/solidity/addgame/' +  window.user.blockchain_id + "/Pongy", {
-			player1: vars.gameVars.p1Name,
-			player2: vars.gameVars.p2Name,
+		const url = `https://${window.IP}:3000/solidity/solidity/addgame/${window.user.blockchain_id}/Pongy`;
+
+		const data = {
+			player1: vars.gameVars.p1Name + vars.gameVars.p1SkinId,
+			player2: vars.gameVars.p2Name + vars.gameVars.p2SkinId,
 			score1: vars.gameVars.p1Score,
 			score2: vars.gameVars.p2Score,
+		};
+
+		fetch(url, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(data),
 		})
-		.then((response) => {
-			console.log(response.data);
-		})
-		.catch((error) => {
-			console.error(error);
-			if (error.response)	{
-				const status = error.response.status;
-			}
-		});
 	}
 }
 
@@ -101,8 +122,45 @@ function loadImage(src, callback)
 	return img;
 }
 
-function startGame(p1Name, p2Name, p1Skin, p2Skin, p1SkinId, p2SkinId, tournamentGame, matchmaking)
+function startMatchmakingGame()
 {
+	const vars = initVars();
+	
+	Matchmaking_queue(vars)
+
+	vars.gameVars.tournamentGame = tournamentGame;
+
+	vars.gameVars.p1Name = vars.mm.player1;
+	vars.gameVars.p2Name = vars.mm.player2;
+	// vars.gameVars.p1SkinId = p1SkinId;
+	// vars.gameVars.p2SkinId = p2SkinId;
+	// vars.paddleVars.p1PaddleSkin.src = p1Skin;
+	// vars.paddleVars.p2PaddleSkin.src = p2Skin;
+	vars.ballVars.ballSkin.src = "game/assets/ball.png";
+
+	document.getElementById('game').classList.remove('hidden');
+
+	// When leaving this hash (#game), trigger game_hashchange function
+	window.addEventListener("hashchange", (event) => {game_hashchange(vars)});
+
+	window.addEventListener("keydown", (event) => handleKeyDownMatchmaking(event, vars));
+	window.addEventListener("keyup", (event) => handleKeyUpMatchmaking(event, vars));
+	vars.canvasVars.canvas.addEventListener("click", (event) => handleCanvasClickMatchmaking(event, vars));
+
+	vars.IntervalVars.gameLoop = setInterval(() => gameLoop(vars), 1000 / 60);
+
+}
+
+function startGame(p1Name, p2Name, p1Skin, p2Skin, p1SkinId, p2SkinId, tournamentGame)
+{
+
+	if (!window.isGameActive)
+		window.isGameActive = true
+	else
+	{
+		console.log("GAME ALREADY FUCKING HAPPENING")
+		return
+	}
 	const vars = initVars();
 
 	vars.gameVars.tournamentGame = tournamentGame;
@@ -113,6 +171,8 @@ function startGame(p1Name, p2Name, p1Skin, p2Skin, p1SkinId, p2SkinId, tournamen
 	vars.gameVars.p2SkinId = p2SkinId;
 	vars.paddleVars.p1PaddleSkin.src = p1Skin;
 	vars.paddleVars.p2PaddleSkin.src = p2Skin;
+	vars.paddleVars.p1SkinPath = p1Skin;
+	vars.paddleVars.p2SkinPath = p2Skin;
 	vars.ballVars.ballSkin.src = "game/assets/ball.png";
 
 	vars.paddleVars.p1PaddleSkin = loadImage(p1Skin, function() {
@@ -132,19 +192,11 @@ function startGame(p1Name, p2Name, p1Skin, p2Skin, p1SkinId, p2SkinId, tournamen
 	window.addEventListener("hashchange", (event) => {game_hashchange(vars)});
 
 	
-	if (matchmaking)
-	{
-		window.addEventListener("keydown", (event) => handleKeyDownMatchmaking(event, vars));
-		window.addEventListener("keyup", (event) => handleKeyUpMatchmaking(event, vars));
-		vars.canvasVars.canvas.addEventListener("click", (event) => handleCanvasClickMatchmaking(event, vars));
-	}
-	else
-	{
-		window.addEventListener("keydown", (event) => handleKeyDown(event, vars));
-		window.addEventListener("keyup", (event) => handleKeyUp(event, vars));
-		vars.canvasVars.canvas.addEventListener("click", (event) => handleCanvasClick(event, vars));
-	}
-   	vars.IntervalVars.gameLoop = setInterval(() => gameLoop(vars), 1000 / 60);
+	window.addEventListener("keydown", (event) => handleKeyDown(event, vars));
+	window.addEventListener("keyup", (event) => handleKeyUp(event, vars));
+	vars.canvasVars.canvas.addEventListener("click", (event) => handleCanvasClick(event, vars));
+
+	vars.IntervalVars.gameLoop = setInterval(() => gameLoop(vars), 1000 / 60);
 }
 
 function initVars()
@@ -171,13 +223,14 @@ function initVars()
 		gameReset: false,
 		pointScored: false,
 		tournamentGame: false,
+		matchmakingReady: false,
 		p1Score: 0,
 		p2Score: 0,
 		p1Name: "",
 		p2Name: "",
 		p1SkinId: 0,
 		p2SkinId: 0,
-		maxPoints: 1
+		maxPoints: 2
 	}
 
 	const mm = {
@@ -201,7 +254,9 @@ function initVars()
 		p2paddleX: canvasVars.canvasWidth - 50,
 		p2paddleY: (canvasVars.canvasHeight / 2) - (paddleHeight / 2),
 		p1PaddleSkin: new Image(),
-		p2PaddleSkin: new Image()
+		p2PaddleSkin: new Image(),
+		p1SkinPath: "",
+		p2SkinPath: ""
 	}
 
 	const ballVars = {
@@ -279,7 +334,7 @@ function handleCanvasClickMatchmaking(event, vars)
 	{
 		if (vars.gameVars.gameFinish)
 		{
-			cleanUpAfterFinish(vars, window.menuScripts)
+			cleanUpAfterFinish(vars)
 		}
 		vars.gameVars.gameStart = true;
 		vars.gameVars.p1Score = 0;
@@ -326,7 +381,7 @@ function handleCanvasClick(event, vars)
 	{
 		if (vars.gameVars.gameFinish)
 		{
-			cleanUpAfterFinish(vars, window.menuScripts)
+			cleanUpAfterFinish(vars)
 		}
 		vars.gameVars.gameStart = true;
 		vars.gameVars.p1Score = 0;
@@ -473,6 +528,14 @@ function resetGame(vars)
 	vars.paddleVars.p2PaddleSkin = null;
 	vars.ballVars.ballSkin = null;
 
+	vars.paddleVars.p1PaddleSkin = new Image();
+	vars.paddleVars.p2PaddleSkin = new Image();
+	vars.ballVars.ballSkin = new Image();
+
+	vars.paddleVars.p1PaddleSkin.src = vars.paddleVars.p1SkinPath;
+	vars.paddleVars.p2PaddleSkin.src = vars.paddleVars.p2SkinPath;
+	vars.ballVars.ballSkin.src = "game/assets/ball.png";
+
 	if (vars.gameVars.p1Score >= vars.gameVars.maxPoints || vars.gameVars.p2Score >= vars.gameVars.maxPoints)
 	{
 		vars.gameVars.gameStart = false;
@@ -484,25 +547,12 @@ function resetGame(vars)
 
 function drawPaddle(x, y, skin, vars)
 {
-	// vars.canvasVars.ctx.fillStyle = color;
-	// skin.onload = function() {
 	vars.canvasVars.ctx.drawImage(skin, x, y, vars.paddleVars.paddleWidth, vars.paddleVars.paddleHeight);
-	// }
-	// vars.canvasVars.ctx.fillRect(x, y, vars.paddleVars.paddleWidth, vars.paddleVars.paddleHeight);
+
 }
 
 function drawBall(x, y, vars)
 {
-	// vars.canvasVars.ctx.beginPath();
-	// vars.canvasVars.ctx.arc(x, y, vars.ballVars.ballSize, 0, Math.PI * 2);
-	// if (x > (vars.canvasVars.canvasWidth / 2 - 10))
-	//     vars.canvasVars.ctx.fillStyle = "blue";
-	// else
-	//     vars.canvasVars.ctx.fillStyle = "red";
-	// vars.canvasVars.ctx.fill();
-	// vars.canvasVars.ctx.lineWidth = 1;
-	// vars.canvasVars.ctx.strokeStyle = "white";
-	// vars.canvasVars.ctx.stroke();
 	vars.canvasVars.ctx.drawImage(vars.ballVars.ballSkin, x, y, vars.ballVars.ballSize + 20, vars.ballVars.ballSize + 20);
 }
 
@@ -554,14 +604,6 @@ function drawButton(text, x, y, width, height, size, font, vars)
 
 function endGame(vars)
 {
-	// const finalGameStats = {
-	//     player1: vars.gameVars.p1Name,
-	//     player2: vars.gameVars.p2Name,
-	//     score1: vars.gameVars.p1Score,
-	//     score2: vars.gameVars.p2Score,
-	// }
-
-
 	if (vars.gameVars.p1Score === vars.gameVars.maxPoints)
 	{
 		drawText("red", "50px ARCADECLASSIC", "player1 WINS !", (vars.canvasVars.canvasWidth / 2) - 160, (vars.canvasVars.canvasHeight / 2) - 130, vars)
@@ -624,8 +666,6 @@ function Matchmaking_queue(vars)
 
 		Matchmaking_setup_socket(vars)
 		
-		// document.getElementById('div-game2-area').classList.remove("hidden");
-		gameLoop(vars)
 	}
 }
 

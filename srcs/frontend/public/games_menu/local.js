@@ -9,7 +9,7 @@ function clearLocalMenu() {
 		unloadScripts(window.game2Scripts)
 	}
 	else {
-		UnloadScripts(window.gameScripts)
+		unloadScripts(window.gameScripts)
 	}
 
 	document.getElementById('games-local-menu').classList.add("hidden")

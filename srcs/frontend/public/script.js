@@ -22,7 +22,7 @@ function navigate() {
 			startFunction = 'home'
 			break;
 
-		case '#pongy':
+		case '#game':
 			element = 'games'
 			scripts = window.menuScripts
 			startFunction = 'main_menu'
@@ -44,6 +44,11 @@ function navigate() {
 	document.getElementById(element).classList.remove("hidden");
 	loadScripts(scripts, startFunction);
 }
+
+// window.onload = function() {
+//     // Set the hash to #auth when the page loads
+//     window.location.hash = '#auth';
+// };
 
 // Function to load a script and return a Promise
 function loadScript(src) {

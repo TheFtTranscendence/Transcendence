@@ -191,7 +191,7 @@ function quit(event)
         document.querySelector('#game2-bar1').style.width = '100%'
         document.querySelector('#game2-bar2').style.width = '100%'
         
-        UnloadScripts(window.game2Scripts);
+        unloadScripts(window.game2Scripts);
         document.getElementById('div-game2-area').classList.add("hidden");
         console.log("WE also HERE")
         if (v.g.tournamentGame) {

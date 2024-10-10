@@ -54,9 +54,9 @@ function main_menu_matchmakingButton () {
 		// Load the scripts for pong matchmaking
 		// Pong change
 		clearMenu()
-		UnloadScripts(window.menuScripts)
-		loadGameScript(window.gameScripts)
-		startGame("p1", "p2", window.game1Skins[0], window.game1Skins[1], 0, 1, false, true)
+		unloadScripts(window.menuScripts)
+		loadScriptss(window.gameScripts)
+		startMatchmakingGame("p1", "p2", window.game1Skins[0], window.game1Skins[1], 0, 1, false, true)
 	}
 }
 
@@ -75,44 +75,20 @@ function loadScriptss(scriptUrls) {
 
 async function main_menu_tournamentButton() {
 	console.log('Tournament button clicked')
-	clearMenu()
+	clearMenu()	
 
-    axios.get('http://localhost:8001/solidity/getlasttournamentranking/' + window.user.blockchain_id + "/Pongy")
-	.then((response) => {
-        console.log("Current TOURNEY");
-		console.log(response.data);
-	})
-	.catch((error) => {
-		console.error(error);
-		if (error.response)	{
-			const status = error.response.status;
-		}
-	});
+	const gameStatus = await window.getTournamentStatus();
 
-
-	axios.get('http://localhost:8001/solidity/getalltournamentsrankings/' + window.user.blockchain_id + "/Pongy")
-	.then((response) => {
-		console.log("ALL TOURNEY");
-		console.log(response.data);
-	})
-	.catch((error) => {
-		console.error(error);
-		if (error.response)	{
-			const status = error.response.status;
-		}
-	});
-
-
-	if (window.location.hash == '#fighters' && !window.fightyTournamentOn) {
+	if (window.location.hash == '#fighters' && !gameStatus) {
 		games_tournament_menu()
 	}
-	else if (window.location.hash == '#pongy' && !window.pongyTournamentOn)
+	else if (window.location.hash == '#game' && !gameStatus)
 	{
 		games_tournament_menu()
 	}
 	else
 	{
-		UnloadScripts(window.menuScripts)
+		unloadScripts(window.menuScripts)
 		await loadScriptss(window.tournamentScripts)
 		tournament_loop()
 	}
@@ -138,6 +114,8 @@ function main_menu() {
 		document.getElementById('games-menu-title').textContent = 'Pongy'
 		document.getElementById('games-menu-selected-skin').style.backgroundImage = "url('" + window.game1SkinsPreview[window.pongPlayerSkins] + "')" 
 	}
+
+	pongyTournamentData.printAllMatches()
 
 	window.addEventListener('hashchange', games_menu_hashchange)
 	

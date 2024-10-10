@@ -1,7 +1,13 @@
 function home_hashchange(event)
 {
+
 	document.getElementById('home').classList.add('hidden');
 	unloadScripts(window.homeScripts);
+	if (window.frontendHealthCheck === false) 
+	{
+		checkTournamentStatus()
+		window.frontendHealthCheck = true
+	}
 }
 
 function home()
@@ -10,6 +16,76 @@ function home()
 	document.getElementById('home').classList.remove('hidden');
 	window.addEventListener('hashchange', home_hashchange);
 	document.getElementById('profile-img').addEventListener('click', showSideBar);
+}
+
+async function checkTournamentStatus()
+{
+	console.log("HERE CHECKING TOURNEY DATABASE")
+	let pongyStatus = false
+	let url = `https://${window.IP}:3000/solidity/solidity/gettournamentstatus/${window.user.blockchain_id}/Pongy`;
+	
+	try {
+		// Use await to wait for the fetch request to complete
+		const response = await fetch(url, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+			}
+		});
+		
+		// Check if the response is okay
+		if (!response.ok) {
+			throw new Error(`Error fetching data: ${response.statusText}`);
+		}
+
+		// Parse the response JSON
+		const data = await response.json();
+		
+		// Store the status from the response
+		pongyStatus = data.success;
+
+		console.log('INITIAL PONGY STATUS:', pongyStatus); // Log the pongyStatus
+		
+	} catch (error) {
+		// Handle any errors
+		console.error('Error:', error);
+	}
+	
+	let fightyStatus = false
+	const url2 = `https://${window.IP}:3000/solidity/solidity/gettournamentstatus/${window.user.blockchain_id}/Fighty`;
+
+	try {
+		// Use await to wait for the fetch request to complete
+		const response = await fetch(url2, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+			}
+		});
+		
+		// Check if the response is okay
+		if (!response.ok) {
+			throw new Error(`Error fetching data: ${response.statusText}`);
+		}
+
+		// Parse the response JSON
+		const data = await response.json();
+		
+		// Store the status from the response
+		fightyStatus = data.success;
+
+		console.log('INITIAL FIGHTY STATUS:', fightyStatus); // Log the fightyStatus
+		
+	} catch (error) {
+		// Handle any errors
+		console.error('Error:', error);
+	}
+
+	if (pongyStatus)
+		pongyTournamentData.retriveTournamentInfo()
+	if (fightyStatus)
+		fightyTournamentData.retriveTournamentInfo()
+
 }
 
 
