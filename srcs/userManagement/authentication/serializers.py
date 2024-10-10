@@ -18,5 +18,10 @@ class UserSerializer(serializers.ModelSerializer):
 		model = User
 		fields = ['id', 'email', 'username', 'blockchain_id', 'avatar', 'staff', 'superuser', 'friend_list', 'block_list', 'online', 'preferences']
 		
+	def update(self, instance, validated_data):
+		if 'avatar' in validated_data:
+			instance.avatar = validated_data['avatar']
+		return super().update(instance, validated_data)
+
 	def get_friend_list(self, obj):
 		return obj.get_friends_data()

@@ -6,10 +6,10 @@ function clearLocalMenu() {
 	window.backButton.removeEventListener('click', local_backbutton)
 	
 	if (window.location.hash == '#fighters') {
-		UnloadScripts(window.game2Scripts)
+		unloadScripts(window.game2Scripts)
 	}
 	else {
-		// UnloadScripts(window.gameScripts) Pong Change
+		// unloadScripts(window.gameScripts) Pong Change
 	}
 
 	document.getElementById('games-local-menu').classList.add("hidden")
@@ -17,7 +17,7 @@ function clearLocalMenu() {
 
 function local_menu_hashchange() {
 	clearLocalMenu()
-	UnloadScripts(window.menuScripts)
+	unloadScripts(window.menuScripts)
 }
 
 function local_changeSkinButton1() {
@@ -74,7 +74,7 @@ function local_play() {
 	window.playButton.removeEventListener('click', local_play)
 	document.getElementById('games-local-menu').classList.add("hidden")
 
-	UnloadScripts(window.menuScripts)
+	unloadScripts(window.menuScripts)
 	if (window.location.hash == '#fighters') {
 		document.getElementById('div-game2-area').classList.remove("hidden")
 		startGame2(player1name, player2name, window.game2Skins[window.player1Skin], window.game2Skins[window.player2Skin])

@@ -17,6 +17,9 @@ ROOT_URLCONF = 'remote_players.urls'
 
 ALLOWED_HOSTS = ['*']
 
+SECURE_SSL_REDIRECT = False
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 INSTALLED_APPS = [
 	'daphne',
 
@@ -100,6 +103,11 @@ LOGGING = {
 		},
 	},
 	'loggers': {
+        'django': {
+			'handlers': ['console'],
+			'level': 'INFO',
+			'propagate': True,
+		},
 		'remote_players': {
 			'handlers': ['console'],
 			'level': 'INFO',

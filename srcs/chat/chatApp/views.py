@@ -8,6 +8,10 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import AllowAny
 from django.db.models import Q
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 class ChatViewSet(viewsets.ModelViewSet):
 	queryset = Chat.objects.all()
 	serializer_class = ChatSerializer

@@ -119,7 +119,7 @@ function init_vars(player1, player2, skins1, skins2) {
             gravity: 0.5, // px
             drag: 0.5, // px
             knockback: 25, // px
-            hit_dmg: 100, // %
+            hit_dmg: 5, // %
             stun_time: stun_time, // ms
             ground_height: ground_height, // px
 
@@ -178,7 +178,7 @@ function leave_game(v) {
 	document.getElementById('div-game2-area').classList.add("hidden");
 	document.getElementById('game2-menu').classList.add("hidden");
 	document.getElementById('game2').classList.add("hidden");
-	UnloadScripts(window.game2Scripts);
+	unloadScripts(window.game2Scripts);
 
 	document.getElementById('game2').classList.add("hidden");
 	unloadScripts(window.game2Scripts);

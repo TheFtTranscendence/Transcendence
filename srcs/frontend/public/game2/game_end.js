@@ -4,7 +4,7 @@ function sleep(ms) {
 
 async function game_end(v) {
 	clearInterval(v.g.gameInterval);
-    clearInterval(v.g.timerInterval);
+	clearInterval(v.g.timerInterval);
 
 	window.removeEventListener('keydown', game2_keydown)
 	window.removeEventListener('keyup', game2_keyup)
@@ -94,11 +94,21 @@ async function game_end_winner(v, winner, loser) {
 
 	// leave_game(v)
 
-	axios.post(`http://${window.IP}:8001/solidity/addgame/` + window.user.smartcontract_id, {
+	const url = `https://${window.IP}:3000/solidity/solidity/addgame/${window.user.smartcontract_id}`;
+
+	const data = {
 		player1: v.player.name,
 		player2: v.enemy.name,
 		score1: v.player.health,
-		score2: v.enemy.health
+		score2: v.enemy.health,
+	};
+
+	fetch(url, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify(data),
 	})
 	
 	console.log('Game Ended!')
@@ -136,11 +146,21 @@ async function game_end_tie(v) {
 	document.querySelector('#game2-end-text').innerHTML = 'Tie!'
 	document.querySelector('#game2-end-text').style.display = 'flex'
 
-	axios.post(`http://${window.IP}:8001/solidity/addgame/` + window.user.smartcontract_id, {
+	const url = `https://${window.IP}:3000/solidity/solidity/addgame/${window.user.smartcontract_id}`;
+
+	const data = {
 		player1: v.player.name,
 		player2: v.enemy.name,
 		score1: v.player.health,
-		score2: v.enemy.health
+		score2: v.enemy.health,
+	};
+
+	fetch(url, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify(data),
 	})
 
 	leave_game(v)

@@ -21,11 +21,15 @@ ASGI_APPLICATION = 'userManagement.asgi.application'
 WSGI_APPLICATION = 'userManagement.wsgi.application'
 AUTH_USER_MODEL = 'authentication.User'
 ROOT_URLCONF = 'userManagement.urls'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'images')
+MEDIA_ROOT = '/app/images'
 MEDIA_URL = '/images/'
+
+SECURE_SSL_REDIRECT = False
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 INSTALLED_APPS = [
 	'daphne',
+	'corsheaders',
 	
 	'django.contrib.admin',
 	'django.contrib.auth',
@@ -34,7 +38,6 @@ INSTALLED_APPS = [
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
 
-	'corsheaders',
 	'rest_framework',
 	'rest_framework.authtoken',
 	'channels',
@@ -45,9 +48,9 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+	'corsheaders.middleware.CorsMiddleware',
 	'django.middleware.security.SecurityMiddleware',
 	'django.contrib.sessions.middleware.SessionMiddleware',
-	'corsheaders.middleware.CorsMiddleware',
 	'django.middleware.common.CommonMiddleware',
 	'django.middleware.csrf.CsrfViewMiddleware',
 	'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -101,11 +104,16 @@ LOGGING = {
 	'version': 1,
 	'handlers': {
 		'console': {
-			'level': 'INFO',
+			'level': 'DEBUG',
 			'class': 'logging.StreamHandler',
 		},
 	},
 	'loggers': {
+		'django': {
+			'handlers': ['console'],
+			'level': 'INFO',
+			'propagate': True,
+		},
 		'authentication': {
 			'handlers': ['console'],
 			'level': 'INFO',

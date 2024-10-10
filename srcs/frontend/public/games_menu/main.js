@@ -14,7 +14,7 @@ function clearMenu() {
 function games_menu_hashchange() {
 	
 	clearMenu()
-	UnloadScripts(window.menuScripts)
+	unloadScripts(window.menuScripts)
 	document.getElementById('games').classList.add("hidden")
 }
 
@@ -23,12 +23,13 @@ function main_menu_changeSkinButton () {
 
 	if (window.location.hash == '#fighters') {
 
-		if (window.playerSkin == window.game2SkinsPreviews.length - 1)
-			window.playerSkin = 0
+		if (window.user.preferences.fighty_skin == window.game2SkinsPreviews.length - 1)
+			modify_user("preferences", {fighty_skin: 0, pongy: window.user.preferences.pongy_skin})
 		else
-			window.playerSkin++
+			modify_user("preferences", {fighty_skin: window.user.preferences.pongy_skin + 1, pongy: window.user.preferences.pongy_skin})
 
-		document.getElementById('games-menu-selected-skin').style.backgroundImage = "url('" + window.game2SkinsPreviews[window.playerSkin] + "')" 
+		update_user_info()
+		document.getElementById('games-menu-selected-skin').style.backgroundImage = "url('" + window.game2SkinsPreviews[window.user.preferences.fighty_skin] + "')" 
 	}
 	else {
 		// Add functionality for changing the skin Pong Change
@@ -40,7 +41,7 @@ function main_menu_matchmakingButton () {
 	if (window.location.hash == '#fighters') {
 
 		clearMenu()
-		UnloadScripts(window.menuScripts)
+		unloadScripts(window.menuScripts)
 		loadScripts(window.matchmakingScripts, 'Matchmaking_before_game') // To change for optimization
 	}
 	else {
@@ -67,9 +68,8 @@ function main_menu() {
 	
 	if (window.location.hash == '#fighters') {
 		
-		window.playerSkin = 0 // Get from database when implemented
 		document.getElementById('games-menu-title').textContent = 'Fighty Fighters'
-		document.getElementById('games-menu-selected-skin').style.backgroundImage = "url('" + window.game2SkinsPreviews[window.playerSkin] + "')" 
+		document.getElementById('games-menu-selected-skin').style.backgroundImage = "url('" + window.game2SkinsPreviews[window.user.preferences.fighty_skin] + "')" 
 	} else {
 		
 		document.getElementById('games-menu-title').textContent = 'Pongy'

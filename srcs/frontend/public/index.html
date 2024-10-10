@@ -6,7 +6,6 @@
 	<title>Pong</title>
 	<link rel="stylesheet" href="styles.css">
 	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body >
 
@@ -45,8 +44,10 @@
 	</nav>
 	<div id="sidebar" class="sidebar hidden">
 		<ul>
-			<li><input type="file" id="changeProfilePicture" style="display: none;" accept=".jpg" />
-			<button id="uploadButton">Change Profile Picture</button></li>
+			<li>
+				<input type="file" id="avatarInput" />
+				<button onclick="handleUpload()">Upload Avatar</button>
+			</li>
 			<li>
 				<button id="changePassword">Change Password</button>
 				<div id="changePasswordForm" class="hidden">
@@ -360,10 +361,30 @@
 	</div>
 
 		<div id="chat" class="hidden">
+			
+			
+			
+			
 			<div id="chat-list">
+				
 				<!-- Chat divs will be dynamically added here -->
+				
+				
 			</div>
+			
 			<div id="chat-content-container">
+				<div id="chat-buttons">
+
+					<button id="add-button">Add</button>
+					<button id="remove-button">Remove</button>
+					<button id="block-button">Block</button>
+					<button id="unblock-button">Unblock</button>
+					<button id="invite-button-pong">Invite to Pongy</button>
+					<button id="invite-button-fighters">Invite to Fighty</button>
+					<input type="text" id="chat-input-buttons" placeholder="Select an action..." />
+					<button id="confirm-button">Confirm</button>
+
+				</div>
 				<div id="chat-content">
 					<!-- Messages will be displayed here after selecting a chat -->
 				</div>
@@ -382,8 +403,10 @@
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 	<script src="globals.js"></script>
+	<script src="um_utils.js"></script>
 	<script src="script.js"></script>
 	<script src="game2/classes.js"></script> <!-- So it doesnt give error when loading it more than once -->
+	<script src="matchmaking/classes.js"></script> <!-- So it doesnt give error when loading it more than once -->
 
 </body>
 </html>

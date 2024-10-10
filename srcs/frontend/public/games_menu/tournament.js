@@ -40,7 +40,7 @@ function tournament_play() {
 	
 	// Uncomment when scripts apply
 	// clearTournamentMenu()
-	// UnloadScripts(window.menuScripts)
+	// unloadScripts(window.menuScripts)
 	if (window.location.hash == '#fighters') {
 		// Load scripts for tournament
 	} else {
@@ -58,7 +58,7 @@ function tournament_backButton() {
 function tournament_menu_hashchange() {
 	console.log("Tournament HashChange");
 	clearTournamentMenu()
-	UnloadScripts(window.menuScripts)
+	unloadScripts(window.menuScripts)
 }
 
 function tournament_extendPlayers() {

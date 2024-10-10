@@ -28,6 +28,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+SECURE_SSL_REDIRECT = False
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 
 # Application definition
 
@@ -56,7 +59,7 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 #! this is not working i think
 # CORS_ALLOWED_ORIGINS = [
-# 	"http://0.0.0.0:3000",
+# 	"https://0.0.0.0:3000",
 # ]
 
 CORS_ALLOW_METHODS = [

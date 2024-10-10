@@ -1,4 +1,4 @@
-class Sprite {
+class Matchmaking_Sprite {
 	// time = shop.time = 10
 	constructor({ position, imageSrc, scale = 1, framesMax = 1, time = 10 , img_offset = {x: 0, y: 0}}) {
 		this.position = position
@@ -55,7 +55,7 @@ class Sprite {
 	}
 }
 
-class Fighter extends Sprite {
+class Matchmaking_Fighter extends Matchmaking_Sprite {
 	constructor({ name, position, velocity, color, offset, bar , scale = 1, imageSrc, framesMax = 1, img_offset = {x: 0, y: 0}, sprites, hit_frame, hit_frameInv, facing}) {
 		{
 			super({ position, imageSrc, scale, framesMax, img_offset})

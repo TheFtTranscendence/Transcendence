@@ -10,6 +10,7 @@ import requests
 from .serializers import UserSerializer
 from .models import User
 from rest_framework.exceptions import NotFound
+import os
 
 logger = logging.getLogger(__name__)
 
@@ -105,14 +106,20 @@ class UserViewSet(viewsets.ModelViewSet):
 		return Response({'message': message, 'user': serializer.data})
 
 	def _update_password(self, user_to_update, request):
+		old_password = request.data.get('old_password')
 		password = request.data.get('password')
 		confirm_password = request.data.get('confirm_password')
 
-		if password:
-			if confirm_password and password != confirm_password:
-				return False
-			user_to_update.set_password(password)
-			user_to_update.save()
+		if old_password and password and confirm_password:
+			user = authenticate(request, username=user_to_update.username, password=old_password)
+			if user is not None:
+				if password:
+					if confirm_password and password != confirm_password:
+						return False
+					user_to_update.set_password(password)
+					user_to_update.save()
+		elif old_password or password or confirm_password:
+			return False
 
 		return True
 
@@ -139,7 +146,7 @@ class UserViewSet(viewsets.ModelViewSet):
 			}
 
 			try:
-				response = requests.post("http://chat:8002/chats/create_chat/", json=json_payload)
+				response = requests.post(f"http://chat:8002/chats/create_chat/", json=json_payload)
 				response.raise_for_status()
 				data = response.json()
 			except requests.exceptions.RequestException as e:
@@ -172,7 +179,7 @@ class UserService:
 	@staticmethod
 	def get_blockchain_id():
 		try:
-			response = requests.post('http://solidity:8001/solidity/addinstance/')
+			response = requests.post(f"http://solidity:8001/solidity/addinstance/")
 			response.raise_for_status()
 			data = response.json()
 			return data.get('success')
@@ -201,6 +208,7 @@ class LoginView(APIView):
 		user = authenticate(request, username=username, password=password)
 		if user is not None:
 			login(request, user)
+			Token.objects.filter(user=user).delete()
 			token, created = Token.objects.get_or_create(user=user)
 			return Response({'message': 'Login successful', 'token': token.key, 'user': UserSerializer(user).data}, status=status.HTTP_200_OK)
 		else:
@@ -239,16 +247,21 @@ class RegisterView(APIView):
 			logger.exception("Unexpected error during registration: Email is already in use")
 			return Response({'message': 'Email is already in use'}, status=status.HTTP_400_BAD_REQUEST)
 
-		if User.objects.filter(username=username).exists():
+		if User.objects.filter(username=username).exists() or username.isdigit():
 			logger.exception("Unexpected error during registration: Username is already in use")
 			return Response({'message': 'Username is already in use'}, status=status.HTTP_400_BAD_REQUEST)
 
 		try:
+			blockchain_id = UserService.get_blockchain_id()
 			user = UserService.create_user(username, password, email)
-			user.blockchain_id = UserService.get_blockchain_id()
+			user.blockchain_id = blockchain_id
 			user.save()
 
+			logger.info("HERE")
+			Token.objects.filter(user=user).delete()
+			logger.info("HERE2")
 			token, created = Token.objects.get_or_create(user=user)
+			logger.info(token)
 
 			return Response({'message': 'Registration successful', 'token': token.key, 'user': UserSerializer(user).data}, status=status.HTTP_201_CREATED)
 		except ValueError as e:

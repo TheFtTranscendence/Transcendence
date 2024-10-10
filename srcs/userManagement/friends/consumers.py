@@ -6,6 +6,7 @@ from authentication.models import User
 from .models import FriendRequest
 from rest_framework.authtoken.models import Token
 import requests
+import os
 
 import logging
 logger = logging.getLogger(__name__)
@@ -18,10 +19,10 @@ class	SocialConsumer(AsyncWebsocketConsumer):
 				self.user = await self._getUserOnConnect()
 			except Exception as e:
 				self.close()
-				return;
+				return
 		
-			self.room_name = f"s_{self.user.id}";
-			self._setOnline();
+			self.room_name = f"s_{self.user.id}"
+			await self._setOnline()
 			await self.channel_layer.group_add(
 				self.room_name,
 				self.channel_name
@@ -36,7 +37,7 @@ class	SocialConsumer(AsyncWebsocketConsumer):
 	async def disconnect(self, close_code):
 		try:
 			if self.user:
-				self._setOffline()
+				await self._setOffline()
 				await self._notifyOnlineStatus()
 				await self.channel_layer.group_discard(
 					self.room_name,
@@ -51,7 +52,7 @@ class	SocialConsumer(AsyncWebsocketConsumer):
 
 		if msg_type == 'friend_request':
 			await self.handleFriendRequest(text_data_json)
-		elif msg_type == 'resquest_response':
+		elif msg_type == 'request_response':
 			await self.handleRequestResponse(text_data_json)
 		elif msg_type == 'remove_friend':
 			await self.handleRemoveFriend(text_data_json)
@@ -62,7 +63,7 @@ class	SocialConsumer(AsyncWebsocketConsumer):
 		elif msg_type == 'game_invite':
 			await self.handleGameInvite(text_data_json)
 
-	#
+
 	async def handleFriendRequest(self, data):
 		'''
 		To use this function send:
@@ -292,7 +293,7 @@ class	SocialConsumer(AsyncWebsocketConsumer):
 				"player_2": target.id
 			}
 
-			response = requests.post("http://remote-players:8004/game/", json_payload)
+			response = requests.post(f"http://remote-players:8004/game/", json_payload)
 			response.raise_for_status()
 			data = response.json()
 

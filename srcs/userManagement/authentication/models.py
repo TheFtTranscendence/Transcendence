@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 import requests
 from rest_framework.response import Response
 import logging
-
+import os
 
 logger = logging.getLogger(__name__)
 
@@ -61,20 +61,17 @@ class User(AbstractBaseUser, PermissionsMixin):
 			}
 
 			try:
-				response = requests.post("http://chat:8002/chats/create_chat/", json=json_payload)
-				response.raise_for_status()  # Raises HTTPError for bad responses
-				data = response.json()  # Get JSON data from requests response
+				response = requests.post(f"http://chat:8002/chats/create_chat/", json=json_payload)
+				response.raise_for_status()
+				data = response.json()
 			except requests.exceptions.RequestException as e:
-				# Log the error and return an empty dictionary or handle as needed
 				logger.info(f'API request failed: {e}')
-				continue  # Skip this friend if the API request fails
+				continue  
 
 			except ValueError:
-				# Log the error and return an empty dictionary or handle as needed
 				logger.info('Invalid JSON in response')
-				continue  # Skip this friend if JSON parsing fails
+				continue
 
-			# Determine unread messages based on the response
 			if data.get("user1") == self.username:
 				unread_msgs = data.get("user1_unread_messages", 0)
 			else:
@@ -84,6 +81,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 				"id": friend.id,
 				"chat_id": data.get("id"),
 				"unread_msgs": unread_msgs,
+				"status": friend.online,
 				"socket": None  # Placeholder for future socket info
 			}
 

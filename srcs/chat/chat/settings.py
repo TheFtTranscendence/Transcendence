@@ -21,6 +21,9 @@ ASGI_APPLICATION = 'chat.asgi.application'
 WSGI_APPLICATION = 'chat.wsgi.application'
 ROOT_URLCONF = 'chat.urls'
 
+SECURE_SSL_REDIRECT = False
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 INSTALLED_APPS = [
 	'daphne',
 
@@ -107,10 +110,10 @@ LOGGING = {
 		},
 	},
 	'loggers': {
-		'django': {
+        'django': {
 			'handlers': ['console'],
-			'level': 'INFO', 
-			'propagate': False,
+			'level': 'INFO',
+			'propagate': True,
 		},
 		'chatApp': {
 			'handlers': ['console'],
