@@ -24,9 +24,9 @@ function main_menu_changeSkinButton () {
 	if (window.location.hash == '#fighters') {
 
 		if (window.user.preferences.fighty_skin == window.game2SkinsPreviews.length - 1)
-			modify_user("preferences", {fighty_skin: 0, pongy: window.user.preferences.pongy_skin})
+			modify_user("preferences", {pongy_skin: window.user.preferences.pongy_skin, fighty_skin: 0})
 		else
-			modify_user("preferences", {fighty_skin: window.user.preferences.pongy_skin + 1, pongy: window.user.preferences.pongy_skin})
+			modify_user("preferences", {pongy_skin: window.user.preferences.pongy_skin, fighty_skin: window.user.preferences.fighty_skin + 1})
 
 		update_user_info()
 		document.getElementById('games-menu-selected-skin').style.backgroundImage = "url('" + window.game2SkinsPreviews[window.user.preferences.fighty_skin] + "')" 
