@@ -136,15 +136,30 @@ class GameConsumer(AsyncWebsocketConsumer):
 					'action': action
 				}
 			)
+		if msg_type == 'game_state':
+			stats = text_data_json['stats']
+			await self.channel_layer.group_send(
+				self.room_group_name,
+				{
+					'type': 'game_state',
+					'stats': stats,
+				}
+			)
 
 	async def move(self, event):
 		player_id = event['player_id']
 		action = event['action']
 
 		await self.send(text_data=json.dumps({
-			'type': 'move',
 			'player_id': player_id,
 			'action': action
+		}))
+
+	async def game_state(self, event):
+		stats = event['stats']
+
+		await self.send(text_data=json.dumps({
+			'stats': stats
 		}))
 
 	@database_sync_to_async
