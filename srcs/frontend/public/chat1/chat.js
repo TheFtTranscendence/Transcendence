@@ -160,11 +160,14 @@ function keypress(event) {
 function displayChatList(chatListContainer, friendList) {
 	window.chatDivs = []
 
+	console.log("friend list", friendList)
+
 	Object.entries(friendList).forEach(friend => {
+		console.log("friend", friend)
 		const chatDiv = document.createElement('div')
 		chatDiv.classList.add('chat-item')
 
-		if (friend.status) { // SUBSTITUIR COM ACTUAL STATUS OF ONLNE
+		if (friend[1].status) {
 		chatDiv.innerHTML = `
 			<div class="friend-name">🟢 ${friend[0]}</div>
 		`
