@@ -2,7 +2,25 @@
 
 //* This is Important because of the microservices module
 function ping_Usermanagement() {
-	return fetch(`https://${window.IP}:3000/user-management/auth/health/`)
+	return fetch(`https://${window.IP}:3000/user-management/auth/health/`, { signal: AbortSignal.timeout(5000) })
+		.then(response => response.json())
+		.catch(error => error);
+}
+
+function ping_Chat() {
+	return fetch(`https://${window.IP}:3000/chat/health/`, { signal: AbortSignal.timeout(5000) })
+		.then(response => response.json())
+		.catch(error => error);
+}
+
+function ping_RemotePlayers() {
+	return fetch(`https://${window.IP}:3000/remote-players/health/`, { signal: AbortSignal.timeout(5000) })
+		.then(response => response.json())
+		.catch(error => error);
+}
+
+function ping_Solidity() {
+	return fetch(`https://${window.IP}:3000/solidity/health/`, { signal: AbortSignal.timeout(5000) })
 		.then(response => response.json())
 		.catch(error => error);
 }
