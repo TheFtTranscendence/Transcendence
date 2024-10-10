@@ -200,34 +200,105 @@ function set_online() {
 		const data = JSON.parse(e.data);
 		
 		console.log(data);
+		update_user_info();
 
 		switch (data.type) {
 			case 'status':
-				update_user_info();
-				break;
+				/**
+				 * type: status
+				 * user: user_id
+				 * status: true/false (online status)
+				 */
+				//todo: Depending on how the friend list works, the way of showing if its online should update, this depends on how that works
+				break ;
 			case 'friend_request':
-				// Handle friend request
-				break;
-			case 'request_response':
-				if (data.response) {
-					update_user_info();
-					// Handle friend request accepted
+				/**
+				 * sender = e.sender
+				 * request id = e.request_id
+				 * type: friend_request
+				 * sender: sender_id
+				 */
+				//todo: toast of a friend request
+				//todo: Decide what else this does
+				break ;
+			case 'request_reponse':
+				//todo: change this, it should return a bolleon
+				/**
+				 * response: "Friend request from ID1 to ID2 accepted/dennied"
+				 * type: request_reponse
+				 * sender: sender_id
+				 * response: true/false
+				 */
+				//! This is not how it works
+				if (data.response == true)	{
+					//todo: toast of friend request accepted
+					//? if in chat screen update chat screen because we have one more friend?
+				}	else	{
+					//? Do nothing?
+				}
+				break ;
+			case 'friend_removed':
+				/**
+				 * type: friend_removed
+				 * user: user_id
+				 */
+				//? if in chat screen update chat screen because we have one less friend?
+				break ;
+			case 'game_invite':
+				/**
+				 * type: 'game_invite',
+				 * game: pongy/fighty,
+				 * game_id: game_id,
+				 * player1: player1_id,
+				 * player2: player2_id,
+				 */
+				break ;
+			case 'error':
+				switch (data.detail) {
+					case 'Friend Request already exists':
+						// When sending a friend request
+						break ;
+					case 'User not found':
+						/**
+						 * When sending a friend request
+						 * When responding to a friend request
+						 * When removing a friend
+						 * When sending a game invite
+						 * When blocking a user
+						 * When removing a block
+						 */
+						break ;
+					case 'already friends':
+						// When sending a friend request
+						break ;
+					case 'IDFK':
+						//! This should never be the case, if this is the case its because something in the code is wrong
+						//! If this appears its because a situation i did not anticipate happend
+						break ;
+					case 'Friend Request does not exists':
+						// When responding to a friend request
+						break ;
+					case 'Game not found':
+						//! This should also never appear, unless the user is using the console
+						break ;
+					case 'User already blocked':
+						//! This should also not appear since they should only have the option to block someone if they are friends
+						//? Are u ok with this behavior? should they be able to block anyone?
+						break ;
+				}
+				break ;
+			case 'feedback':
+				switch (data.detail) {
+					// When a user responds to a request, these are the messages that the sender gets
+					case 'Friend request accepted':
+						break;
+					case 'Friend request dennied':
+						break;
 				}
 				break;
-			case 'friend_removed':
-				update_user_info();
-				break;
-			case 'game_invite':
-				update_user_info();
-				break;
-			case 'error':
-				// Handle errors
-				break;
-			case 'feedback':
-				// Handle feedback messages
-				break;
-		}
-	};
+			
+		};
+	}
 }
 
 // Target should be an ID
