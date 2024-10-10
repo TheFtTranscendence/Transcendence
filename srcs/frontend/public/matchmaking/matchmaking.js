@@ -27,10 +27,12 @@ function Matchmaking_queue(v)
 			.then (response => {
 				user2 = response
 			})
+
 			console.log('user2', user2)
 
 			v.enemy.name = user2.username
 			v.enemy.sprites = window.game2Skins[user2.preferences.fighty_skin]
+
 		} else {
 			v.enemy.name = window.user.username
 			v.enemy.sprites = window.game2Skins[window.user.preferences.fighty_skin]
@@ -81,7 +83,7 @@ function send_update(v) {
 		offset_p1: v.player.attackbox,
 		offset_p2: v.enemy.attackbox,
 
-		time: v.g.timer
+		time: v.g.timer.innerHTML
 	}
 	
 	v.s.game_socket.send(JSON.stringify({type: 'game_state', stats: stats}))
@@ -120,6 +122,20 @@ function Matchmaking_setup_socket(v) {
 		else if (msg.type == 'game_state')
 		{
 			console.log('game state from ' + window.user.id, msg)
+			v.player.health = msg.stats.health_p1
+			v.enemy.health = msg.stats.health_p2
+
+			v.player.position = msg.stats.position_p1
+			v.enemy.position = msg.stats.position_p2
+
+			v.player.velocity = msg.stats.velocity_p1
+			v.enemy.velocity = msg.stats.velocity_p2
+
+			v.player.attackbox = msg.stats.offset_p1
+			v.enemy.attackbox = msg.stats.offset_p2
+
+			v.g.timer.innerHTML = msg.stats.time
+
 		}
 	}
 }

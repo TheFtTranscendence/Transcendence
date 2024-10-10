@@ -126,3 +126,20 @@ document.querySelectorAll('.nav-link').forEach(link => {
 
 // Event listener for hash changes
 window.addEventListener('hashchange', navigate);
+
+
+function toast_alert(message, duration = 5000) {
+	const toastElement = document.getElementById('liveToast');
+	
+	const toastInstance = new bootstrap.Toast(toastElement, {
+		autohide: true, 
+		delay: duration 
+	  });
+
+    const toastBody = toastElement.querySelector('.toast-body');
+    toastBody.textContent = message;
+
+
+    // Show the toast
+    toastInstance.show();
+}
