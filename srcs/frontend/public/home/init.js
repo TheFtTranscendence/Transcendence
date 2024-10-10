@@ -64,7 +64,7 @@ function handleUpload() {
 	if (fileInput.files.length > 0) {
 		uploadAvatar(fileInput.files[0]);
 	} else {
-		alert('Please select a file to upload.');
+		toast_alert('Please select a file to upload.');
 	}
 }
 
@@ -165,14 +165,14 @@ function handlePasswordChangeForm(event) {
 		if (!response.ok) {
 			return response.json().then(err => { throw err; });
 		}
-		alert("Password change successful");
+		toast_alert("Password change successful");
 		errorField.classList.add('hidden');
 		changePasswordForm.classList.add('hidden');
 		sidebar.classList.add('hidden');
 		document.removeEventListener('click', handleOutsideClick);
 	})
 	.catch(error => {
-		alert("Password not changed successful");
+		toast_alert("Password not changed successful");
 		errorField.textContent = error.message || "An error occurred. Please try again.";
 		errorField.classList.remove('hidden');
 	});

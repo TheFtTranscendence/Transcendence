@@ -257,11 +257,8 @@ class RegisterView(APIView):
 			user.blockchain_id = blockchain_id
 			user.save()
 
-			logger.info("HERE")
 			Token.objects.filter(user=user).delete()
-			logger.info("HERE2")
 			token, created = Token.objects.get_or_create(user=user)
-			logger.info(token)
 
 			return Response({'message': 'Registration successful', 'token': token.key, 'user': UserSerializer(user).data}, status=status.HTTP_201_CREATED)
 		except ValueError as e:

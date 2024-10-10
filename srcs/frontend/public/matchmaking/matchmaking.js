@@ -1,7 +1,7 @@
 function matchmaking_hashchange() {
 	console.log('hashchange game2');
 	window.removeEventListener('hashchange', matchmaking_hashchange)
-	alert('Matchmaking cancelled')
+	toast_alert('Matchmaking cancelled')
 }
 
 function Matchmaking_queue(v)

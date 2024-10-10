@@ -1,6 +1,3 @@
-//! I'm assuming in this file that there is a global var called window.user
-
-//* This is Important because of the microservices module
 function ping_Usermanagement() {
 	return fetch(`https://${window.IP}:3000/user-management/auth/health/`, { signal: AbortSignal.timeout(5000) })
 		.then(response => response.json())
@@ -36,8 +33,6 @@ function _update_user_chats() {
 	});
 }
 
-//! This is only needed as an admin on the console; don't worry about it
-//! This really needs to be inside a try because if the user doesn't have an admin token, it's going to raise an exception
 function update_user_info() {
 	const userheaders = {
 		'Authorization': 'Token ' + window.usertoken,
@@ -62,7 +57,6 @@ function update_user_info() {
 	});
 }
 
-//! This really needs to be inside a try because if the target user doesn't exist, it's going to raise an exception
 function get_all_users() {
 	const userheaders = {
 		'Authorization': 'Token ' + window.usertoken,
@@ -83,7 +77,6 @@ function get_all_users() {
 	});
 }
 
-//! This really needs to be inside a try because if the target user doesn't exist, it's going to raise an exception
 async function get_user_info(target) {
 	const userheaders = {
 		'Authorization': 'Token ' + window.usertoken,
@@ -247,6 +240,7 @@ function set_online() {
 				 * status: true/false (online status)
 				 */
 				//todo: Depending on how the friend list works, the way of showing if its online should update, this depends on how that works
+				//todo: this function already updates the user, it just needs to update the friend list div
 				break ;
 			case 'friend_request':
 				/**
@@ -255,20 +249,21 @@ function set_online() {
 				 * type: friend_request
 				 * sender: sender_id
 				 */
-				//todo: toast of a friend request
-				//todo: Decide what else this does
+				user = get_user_info(data.sender)
+				toast_alert(`${user.username} sent a friend request`)
+				//todo: maybe this toast can have a accept and decline
+				//todo: add this to the notification list
 				break ;
 			case 'request_reponse':
-				//todo: change this, it should return a bolleon
 				/**
 				 * response: "Friend request from ID1 to ID2 accepted/dennied"
 				 * type: request_reponse
 				 * sender: sender_id
 				 * response: true/false
 				 */
-				//! This is not how it works
+				user = get_user_info(data.sender)
 				if (data.response == true)	{
-					//todo: toast of friend request accepted
+					toast_alert(`You and ${user.username} are now friends`)
 					//? if in chat screen update chat screen because we have one more friend?
 				}	else	{
 					//? Do nothing?
@@ -279,6 +274,8 @@ function set_online() {
 				 * type: friend_removed
 				 * user: user_id
 				 */
+				user = get_user_info(data.user)
+				toast_alert(`You and ${user.username} are no longer friends`)
 				//? if in chat screen update chat screen because we have one less friend?
 				break ;
 			case 'game_invite':
@@ -289,11 +286,16 @@ function set_online() {
 				 * player1: player1_id,
 				 * player2: player2_id,
 				 */
+				user = get_user_info(data.player1)
+				toast_alert(`${user.username} invited you to a game of ${data.game}`)
+				//todo: maybe this can go into the chat with that person
+				//todo: I belive u can only send invites to friends so this would work
 				break ;
 			case 'error':
 				switch (data.detail) {
 					case 'Friend Request already exists':
 						// When sending a friend request
+						//? Do nothing?
 						break ;
 					case 'User not found':
 						/**
@@ -304,15 +306,19 @@ function set_online() {
 						 * When blocking a user
 						 * When removing a block
 						 */
+						//? Is this all we want to do?
+						toast_alert("User not found")
 						break ;
 					case 'already friends':
 						// When sending a friend request
+						//? Do nothing?
 						break ;
 					case 'IDFK':
 						//! This should never be the case, if this is the case its because something in the code is wrong
 						//! If this appears its because a situation i did not anticipate happend
 						break ;
 					case 'Friend Request does not exists':
+						//! This should also never happen
 						// When responding to a friend request
 						break ;
 					case 'Game not found':
@@ -328,8 +334,10 @@ function set_online() {
 				switch (data.detail) {
 					// When a user responds to a request, these are the messages that the sender gets
 					case 'Friend request accepted':
+						toast_alert(`You and ${user.username} are now friends`)
 						break;
 					case 'Friend request dennied':
+						//? Do nothing
 						break;
 				}
 				break;
