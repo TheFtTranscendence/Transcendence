@@ -289,6 +289,7 @@ class QueueConsumer(AsyncWebsocketConsumer):
 				player_1 = data['player_1'],
 				player_2 = data['player_2'],
 			)
+			return game
 		except Exception as e:
 			logger.exception(f'exception: {e}')
-		return game
+		return None
