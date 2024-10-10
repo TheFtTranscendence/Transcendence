@@ -22,7 +22,7 @@ function navigate() {
 			startFunction = 'home'
 			break;
 
-		case '#pongy':
+		case '#game':
 			element = 'games'
 			scripts = window.menuScripts
 			startFunction = 'main_menu'

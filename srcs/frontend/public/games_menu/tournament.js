@@ -8,12 +8,12 @@ function clearTournament() {
         window.nextGameButton.removeEventListener('click', next_game);
     }
 
-    UnloadScripts(window.tournamentScripts);
+    unloadScripts(window.tournamentScripts);
 }
 // function tournament_hashchange()
 // {
 //     clearTournament()
-// 	UnloadScripts(window.tournamentScripts)
+// 	unloadScripts(window.tournamentScripts)
 // }
 
 async function next_game_players()
@@ -62,7 +62,7 @@ async function next_game() {
         document.getElementById('div-game2-area').classList.remove("hidden");
         window.player1Skin = 0;
         window.player2Skin = 1;
-        UnloadScripts(window.menuScripts);
+        unloadScripts(window.menuScripts);
         clearTournament();
         startGame2(playerNames[0], playerNames[1], window.game2Skins[playerSkins[0]], window.game2Skins[playerSkins[1]], true);
     } else {

@@ -54,8 +54,8 @@ function main_menu_matchmakingButton () {
 		// Load the scripts for pong matchmaking
 		// Pong change
 		clearMenu()
-		UnloadScripts(window.menuScripts)
-		loadGameScript(window.gameScripts)
+		unloadScripts(window.menuScripts)
+		loadScriptss(window.gameScripts)
 		startGame("p1", "p2", window.game1Skins[0], window.game1Skins[1], 0, 1, false, true)
 	}
 }
@@ -112,7 +112,7 @@ async function main_menu_tournamentButton() {
 	}
 	else
 	{
-		UnloadScripts(window.menuScripts)
+		unloadScripts(window.menuScripts)
 		await loadScriptss(window.tournamentScripts)
 		tournament_loop()
 	}

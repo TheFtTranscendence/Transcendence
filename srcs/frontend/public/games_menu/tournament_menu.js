@@ -27,7 +27,7 @@ function tournament_backButton() {
 function tournament_menu_hashchange() {
 	console.log("Tournament HashChange");
 	clearTournamentMenu()
-	UnloadScripts(window.menuScripts)
+	unloadScripts(window.menuScripts)
 }
 
 function tournament_extendPlayers() {
@@ -111,7 +111,7 @@ async function tournament_play() {
 	// clearTournamentMenu()
 	console.log(window.pongPlayerNames)
     console.log(window.pongPlayerSkins)
-	UnloadScripts(window.menuScripts)
+	unloadScripts(window.menuScripts)
 	start_tournament(playerNames, playerSkins)
 }
 

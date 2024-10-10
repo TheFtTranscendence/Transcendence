@@ -21,7 +21,7 @@ function game_hashchange(vars)
 	vars.canvasVars.canvas.removeEventListener("click", handleCanvasClick);
 
 	clearInterval(vars.IntervalVars.gameLoop);
-	UnloadScripts(window.gameScripts);
+	unloadScripts(window.gameScripts);
 
 	vars.running = false;
 }
@@ -36,7 +36,7 @@ function cleanUpAfterFinish(vars)
 
 	storeMatch(vars);
 	clearInterval(vars.IntervalVars.gameLoop);
-	UnloadScripts(window.gameScripts);
+	unloadScripts(window.gameScripts);
 	
 	vars.running = false;
 
@@ -101,7 +101,36 @@ function loadImage(src, callback)
 	return img;
 }
 
-function startGame(p1Name, p2Name, p1Skin, p2Skin, p1SkinId, p2SkinId, tournamentGame, matchmaking)
+function startMatchmakingGame()
+{
+	const vars = initVars();
+	
+	Matchmaking_queue(vars)
+
+	vars.gameVars.tournamentGame = tournamentGame;
+
+	vars.gameVars.p1Name = vars.mm.player1;
+	vars.gameVars.p2Name = vars.mm.player2;
+	// vars.gameVars.p1SkinId = p1SkinId;
+	// vars.gameVars.p2SkinId = p2SkinId;
+	// vars.paddleVars.p1PaddleSkin.src = p1Skin;
+	// vars.paddleVars.p2PaddleSkin.src = p2Skin;
+	vars.ballVars.ballSkin.src = "game/assets/ball.png";
+
+	document.getElementById('game').classList.remove('hidden');
+
+	// When leaving this hash (#game), trigger game_hashchange function
+	window.addEventListener("hashchange", (event) => {game_hashchange(vars)});
+
+	window.addEventListener("keydown", (event) => handleKeyDownMatchmaking(event, vars));
+	window.addEventListener("keyup", (event) => handleKeyUpMatchmaking(event, vars));
+	vars.canvasVars.canvas.addEventListener("click", (event) => handleCanvasClickMatchmaking(event, vars));
+
+	vars.IntervalVars.gameLoop = setInterval(() => gameLoop(vars), 1000 / 60);
+
+}
+
+function startGame(p1Name, p2Name, p1Skin, p2Skin, p1SkinId, p2SkinId, tournamentGame)
 {
 	const vars = initVars();
 
@@ -132,19 +161,11 @@ function startGame(p1Name, p2Name, p1Skin, p2Skin, p1SkinId, p2SkinId, tournamen
 	window.addEventListener("hashchange", (event) => {game_hashchange(vars)});
 
 	
-	if (matchmaking)
-	{
-		window.addEventListener("keydown", (event) => handleKeyDownMatchmaking(event, vars));
-		window.addEventListener("keyup", (event) => handleKeyUpMatchmaking(event, vars));
-		vars.canvasVars.canvas.addEventListener("click", (event) => handleCanvasClickMatchmaking(event, vars));
-	}
-	else
-	{
-		window.addEventListener("keydown", (event) => handleKeyDown(event, vars));
-		window.addEventListener("keyup", (event) => handleKeyUp(event, vars));
-		vars.canvasVars.canvas.addEventListener("click", (event) => handleCanvasClick(event, vars));
-	}
-   	vars.IntervalVars.gameLoop = setInterval(() => gameLoop(vars), 1000 / 60);
+	window.addEventListener("keydown", (event) => handleKeyDown(event, vars));
+	window.addEventListener("keyup", (event) => handleKeyUp(event, vars));
+	vars.canvasVars.canvas.addEventListener("click", (event) => handleCanvasClick(event, vars));
+
+	vars.IntervalVars.gameLoop = setInterval(() => gameLoop(vars), 1000 / 60);
 }
 
 function initVars()
@@ -171,6 +192,7 @@ function initVars()
 		gameReset: false,
 		pointScored: false,
 		tournamentGame: false,
+		matchmakingReady: false,
 		p1Score: 0,
 		p2Score: 0,
 		p1Name: "",
@@ -624,8 +646,6 @@ function Matchmaking_queue(vars)
 
 		Matchmaking_setup_socket(vars)
 		
-		// document.getElementById('div-game2-area').classList.remove("hidden");
-		gameLoop(vars)
 	}
 }
 
