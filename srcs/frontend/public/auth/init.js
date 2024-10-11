@@ -83,7 +83,6 @@ function handleLogin() {
 		}
 		errorField.textContent = errorMsg;
 		errorField.classList.remove('hidden');
-		handleSuccessAuth()
 	});
 }
 // Define the event listener as a named function
