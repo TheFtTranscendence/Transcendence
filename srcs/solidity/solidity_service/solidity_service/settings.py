@@ -118,7 +118,27 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'solidity_service.wsgi.application'
 
-
+LOGGING = {
+	'version': 1,
+	'handlers': {
+		'console': {
+			'level': 'DEBUG',
+			'class': 'logging.StreamHandler',
+		},
+	},
+	'loggers': {
+		'django': {
+			'handlers': ['console'],
+			'level': 'INFO',
+			'propagate': True,
+		},
+		'api': {
+			'handlers': ['console'],
+			'level': 'INFO',
+			'propagate': False,
+		},
+	},
+}
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
