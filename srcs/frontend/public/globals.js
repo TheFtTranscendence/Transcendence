@@ -210,6 +210,46 @@ window.pongPlayerSkins = []
 
 window.playerCounter = 0;
 
-window.pongyTournamentOn = true;
 
-window.fightyTournamentOn = true;
+
+async function getTournamentStatus() {
+    let gameStatus = false; // Default value
+    
+    try {
+        let url;
+        // Check the hash in the URL and choose the correct API endpoint
+        if (window.location.hash == '#fighters') {
+            url = `https://${window.IP}:3000/solidity/solidity/gettournamentstatus/${window.user.blockchain_id}/Fighty`;
+        } else {
+            url = `https://${window.IP}:3000/solidity/solidity/gettournamentstatus/${window.user.blockchain_id}/Pongy`;
+        }
+        
+        // Use await to wait for the fetch request to complete
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        // Check if the response is okay
+        if (!response.ok) {
+            throw new Error(`Error fetching data: ${response.statusText}`);
+        }
+
+        // Parse the response JSON
+        const data = await response.json();
+        
+        // Store the status from the response
+        gameStatus = data.success;
+
+        console.log('gameStatus:', gameStatus); // Log the gameStatus
+        
+    } catch (error) {
+        // Handle any errors
+        console.error('Error:', error);
+    }
+
+    // Return the gameStatus after the fetch request completes
+    return gameStatus;
+}

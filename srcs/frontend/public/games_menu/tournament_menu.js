@@ -83,30 +83,6 @@ async function tournament_play() {
 	console.log(playerNames)
 	console.log(playerSkins)
 
-	// axios.get('http://localhost:8001/solidity/getlasttournamentranking/' + window.user.blockchain_id + "/Pongy")
-	// .then((response) => {
-	// 	console.log("LAST TOURNEY");
-	// 	console.log(response.data);
-	// })
-	// .catch((error) => {
-	// 	console.error(error);
-	// 	if (error.response)	{
-	// 		const status = error.response.status;
-	// 	}
-	// });
-
-	// axios.get('http://localhost:8001/solidity/getalltournamentsrankings/' + window.user.blockchain_id + "/Pongy")
-	// .then((response) => {
-	// 	console.log("ALL TOURNEY");
-	// 	console.log(response.data);
-	// })
-	// .catch((error) => {
-	// 	console.error(error);
-	// 	if (error.response)	{
-	// 		const status = error.response.status;
-	// 	}
-	// });
-
 	// Uncomment when scripts apply
 	// clearTournamentMenu()
 	console.log(window.pongPlayerNames)

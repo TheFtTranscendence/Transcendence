@@ -57,39 +57,42 @@ async function storeMatch(vars)
 	console.log(vars.gameVars.p2Name + vars.gameVars.p2SkinId);
 	if (vars.gameVars.tournamentGame)
 	{
-		axios.post('http://localhost:8001/solidity/addtournamentgame/' +  window.user.blockchain_id + "/Pongy", {
+		const url = `https://${window.IP}:3000/solidity/solidity/addtournamentgame/${window.user.blockchain_id}/Pongy`;
+
+		const data = {
 			player1: vars.gameVars.p1Name + vars.gameVars.p1SkinId,
 			player2: vars.gameVars.p2Name + vars.gameVars.p2SkinId,
 			score1: vars.gameVars.p1Score,
 			score2: vars.gameVars.p2Score,
+		};
+
+		fetch(url, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(data),
 		})
-		.then((response) => {
-			console.log(response.data);
-		})
-		.catch((error) => {
-			console.error(error);
-			if (error.response)	{
-				const status = error.response.status;
-			}
-		});
+		console.log(data)
 	}
 	else
 	{
-		await axios.post('http://localhost:8001/solidity/addgame/' +  window.user.blockchain_id + "/Pongy", {
+		const url = `https://${window.IP}:3000/solidity/solidity/addgame/${window.user.blockchain_id}/Pongy`;
+
+		const data = {
 			player1: vars.gameVars.p1Name,
 			player2: vars.gameVars.p2Name,
 			score1: vars.gameVars.p1Score,
 			score2: vars.gameVars.p2Score,
+		};
+
+		fetch(url, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(data),
 		})
-		.then((response) => {
-			console.log(response.data);
-		})
-		.catch((error) => {
-			console.error(error);
-			if (error.response)	{
-				const status = error.response.status;
-			}
-		});
 	}
 }
 

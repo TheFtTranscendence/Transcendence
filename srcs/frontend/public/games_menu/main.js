@@ -77,36 +77,37 @@ async function main_menu_tournamentButton() {
 	console.log('Tournament button clicked')
 	clearMenu()
 
-    axios.get('http://localhost:8001/solidity/getlasttournamentranking/' + window.user.blockchain_id + "/Pongy")
-	.then((response) => {
-        console.log("Current TOURNEY");
-		console.log(response.data);
-	})
-	.catch((error) => {
-		console.error(error);
-		if (error.response)	{
-			const status = error.response.status;
-		}
-	});
+    // axios.get('http://localhost:8001/solidity/getlasttournamentranking/' + window.user.blockchain_id + "/Pongy")
+	// .then((response) => {
+    //     console.log("Current TOURNEY");
+	// 	console.log(response.data);
+	// })
+	// .catch((error) => {
+	// 	console.error(error);
+	// 	if (error.response)	{
+	// 		const status = error.response.status;
+	// 	}
+	// });
 
 
-	axios.get('http://localhost:8001/solidity/getalltournamentsrankings/' + window.user.blockchain_id + "/Pongy")
-	.then((response) => {
-		console.log("ALL TOURNEY");
-		console.log(response.data);
-	})
-	.catch((error) => {
-		console.error(error);
-		if (error.response)	{
-			const status = error.response.status;
-		}
-	});
+	// axios.get('http://localhost:8001/solidity/getalltournamentsrankings/' + window.user.blockchain_id + "/Pongy")
+	// .then((response) => {
+	// 	console.log("ALL TOURNEY");
+	// 	console.log(response.data);
+	// })
+	// .catch((error) => {
+	// 	console.error(error);
+	// 	if (error.response)	{
+	// 		const status = error.response.status;
+	// 	}
+	// });
 
+	const gameStatus = await window.getTournamentStatus();
 
-	if (window.location.hash == '#fighters' && !window.fightyTournamentOn) {
+	if (window.location.hash == '#fighters' && !gameStatus) {
 		games_tournament_menu()
 	}
-	else if (window.location.hash == '#pongy' && !window.pongyTournamentOn)
+	else if (window.location.hash == '#game' && !gameStatus)
 	{
 		games_tournament_menu()
 	}
@@ -138,6 +139,50 @@ function main_menu() {
 		document.getElementById('games-menu-title').textContent = 'Pongy'
 		document.getElementById('games-menu-selected-skin').style.backgroundImage = "url('" + window.game1SkinsPreview[window.pongPlayerSkins] + "')" 
 	}
+
+
+	// const url = `https://${window.IP}:3000/solidity/solidity/gettournamentstatus/${window.user.blockchain_id}/Pongy`;
+	// fetch(url, {
+	// 	method: 'GET', // Use 'GET' for fetching data
+	// 	headers: {
+	// 		'Content-Type': 'application/json',
+	// 	}
+	// })
+	// .then(response => {
+	// 	if (!response.ok) {
+	// 		throw new Error(`Error fetching data: ${response.statusText}`);
+	// 	}
+	// 	return response.json(); // Assuming the response is in JSON format
+	// })
+	// .then(data => {
+	// 	console.log('TOURNEY STATUS:', data);
+	// 	// Process the data here (for example, display it on the UI)
+	// })
+	// .catch(error => {
+	// 	console.error('Error:', error);
+	// });
+
+	// const url2 = `https://${window.IP}:3000/solidity/solidity/getcurrenttournamentplayerslist/${window.user.blockchain_id}/Pongy`;
+	// fetch(url2, {
+	// 	method: 'GET', // Use 'GET' for fetching data
+	// 	headers: {
+	// 		'Content-Type': 'application/json',
+	// 	}
+	// })
+	// .then(response => {
+	// 	if (!response.ok) {
+	// 		throw new Error(`Error fetching data: ${response.statusText}`);
+	// 	}
+	// 	return response.json(); // Assuming the response is in JSON format
+	// })
+	// .then(data => {
+	// 	console.log('TOURNEY PLAYERS:', data);
+	// 	// Process the data here (for example, display it on the UI)
+	// })
+	// .catch(error => {
+	// 	console.error('Error:', error);
+	// });
+
 
 	window.addEventListener('hashchange', games_menu_hashchange)
 	
