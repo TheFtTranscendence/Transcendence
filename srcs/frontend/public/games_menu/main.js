@@ -69,7 +69,11 @@ function main_menu() {
 	if (window.location.hash == '#fighters') {
 		
 		document.getElementById('games-menu-title').textContent = 'Fighty Fighters'
-		document.getElementById('games-menu-selected-skin').style.backgroundImage = "url('" + window.game2SkinsPreviews[window.user.preferences.fighty_skin] + "')" 
+		try {
+			document.getElementById('games-menu-selected-skin').style.backgroundImage = "url('" + window.game2SkinsPreviews[window.user.preferences.fighty_skin] + "')" 
+		} catch {
+			toast_alert("Error setting skin")
+		}
 	} else {
 		
 		document.getElementById('games-menu-title').textContent = 'Pongy'
