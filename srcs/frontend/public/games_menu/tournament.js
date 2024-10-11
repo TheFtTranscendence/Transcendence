@@ -223,7 +223,6 @@ async function show_bracket()
 	const tournamentRakings = await getTournamentRankings();
 
 	console.log("tournament rakings!!! -> ", tournamentRakings)
-	
 
 }
 
