@@ -24,11 +24,11 @@ async function main_menu_changeSkinButton () {
 	if (window.location.hash == '#fighters') {
 
 		if (window.user.preferences.fighty_skin == window.game2SkinsPreviews.length - 1)
-			modify_user_preferences("fighty_skin", 0)
+			await modify_user_preferences("fighty_skin", 0)
 		else
-			modify_user_preferences("fighty_skin", window.user.preferences.fighty_skin + 1)
+			await modify_user_preferences("fighty_skin", window.user.preferences.fighty_skin + 1)
 
-		await update_user_info()
+		update_user_info()
 		document.getElementById('games-menu-selected-skin').style.backgroundImage = "url('" + window.game2SkinsPreviews[window.user.preferences.fighty_skin] + "')" 
 	}
 	else {
