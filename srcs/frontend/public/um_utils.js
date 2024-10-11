@@ -209,7 +209,10 @@ function set_online() {
 				 * user: user_id
 				 * status: true/false (online status)
 				 */
-				chat()
+				if (window.location.hash == '#chat') {
+					chat_hashchange()
+					chat()
+				}
 				break ;
 			case 'friend_request':
 				/**
@@ -220,17 +223,20 @@ function set_online() {
 				addFriendRequest(data.sender, new_user.username)
 				toast_alert(`${new_user.username} sent a friend request`)
 				break ;
-				case 'request_reponse':
-					/**
-					 * type: request_reponse
-					 * sender: sender_id
-					 * response: true/false
-					*/
-					new_user = await get_user_info(data.sender)
-					if (data.response == true)	{
-						toast_alert(`You and ${new_user.username} are now friends`)
-						
-					chat()
+			case 'request_reponse':
+				/**
+				 * type: request_reponse
+				 * sender: sender_id
+				 * response: true/false
+				*/
+				new_user = await get_user_info(data.sender)
+				if (data.response == true)	{
+					toast_alert(`You and ${new_user.username} are now friends`)
+					
+					if (window.location.hash == '#chat') {
+						chat_hashchange()
+						chat()
+					}
 				}	else	{
 					//? Do nothing?
 				}
@@ -243,7 +249,10 @@ function set_online() {
 				new_user = await get_user_info(data.user)
 				toast_alert(`You and ${new_user.username} are no longer friends`)
 				
-				chat()
+				if (window.location.hash == '#chat') {
+					chat_hashchange()
+					chat()
+				}
 				break ;
 			case 'game_invite':
 				/**
@@ -300,7 +309,10 @@ function set_online() {
 					case 'Friend request accepted':
 						toast_alert(`You and ${user.username} are now friends`)
 
-						chat()
+						if (window.location.hash == '#chat') {
+							chat_hashchange()
+							chat()
+						}
 						break;
 					case 'Friend request dennied':
 						//? Do nothing
