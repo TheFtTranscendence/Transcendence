@@ -160,6 +160,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 		stats = event['stats']
 
 		await self.send(text_data=json.dumps({
+			'type': 'game_state',
 			'stats': stats
 		}))
 
