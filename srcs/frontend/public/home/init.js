@@ -8,6 +8,7 @@ function home()
 {
 	getAvatar()
 	fillInfos()
+	fillInfos()
 	document.getElementById('home').classList.remove('hidden');
 	window.addEventListener('hashchange', home_hashchange);
 	document.getElementById('profile-img').addEventListener('click', showSideBar);
