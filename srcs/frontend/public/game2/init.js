@@ -123,7 +123,6 @@ function init_vars(player1, player2, skins1, skins2) {
             stun_time: stun_time, // ms
             ground_height: ground_height, // px
 
-			backgroundMusic: 0,
         }
     }
 }
@@ -137,12 +136,6 @@ function setup_canvas(v)
 
 	v.g.timer = document.querySelector('#game2-timer')
 	v.g.time = parseInt(v.g.timer.innerHTML)
-}
-
-function setup_music(v) {
-	v.g.backgroundMusic = new Audio('./game2/assets/background.mp3')
-	v.g.backgroundMusic.loop = true;
-	v.g.backgroundMusic.volume = 0.02;
 }
 
 function reset_keys(v) {
@@ -167,13 +160,7 @@ function leave_game(v) {
 	window.removeEventListener('keyup', game2_keyup)
 	window.removeEventListener('hashchange', game2_hashchange)
 
-	try {
-		v.g.backgroundMusic.pause()
-		v.g.backgroundMusic = null
-	}
-	catch {}
-
-	v.g.timer.innerHTML = 50
+	v.g.timer.innerHTML = 200
 
 	document.getElementById('div-game2-area').classList.add("hidden");
 	document.getElementById('game2-menu').classList.add("hidden");

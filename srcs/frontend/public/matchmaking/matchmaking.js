@@ -16,7 +16,7 @@ async function side_get_user_info(id) {
 }
 
 
-function Matchmaking_queue(v)
+async function Matchmaking_queue(v)
 {
 	console.log('connecting to WebSocket')
 	v.s.queue_socket = new WebSocket(`wss://${window.IP}:3000/remote-players/ws/queue/?game=Fighty&user_id=` + window.user.id);
@@ -24,42 +24,44 @@ function Matchmaking_queue(v)
 	window.addEventListener('hashchange', matchmaking_hashchange)
 
 	
-	v.s.queue_socket.onmessage = function(event) {
+	v.s.queue_socket.onmessage = async function(event) {
 		msg = JSON.parse(event.data)
 		console.log(msg)
 		
 		if (msg.type == 'error') 
 			return ;
 		
-		// if (window.user.id == msg.player1 ) {
-		// 	// v.player.name = window.user.username
-		// 	// v.player.sprites = window.game2Skins[window.user.preferences.fighty_skin]
+		if (window.user.id == msg.player1 ) {
 			
-		// 	const user2 = side_get_user_info(msg.player2)
-
-		// 	console.log('user2', user2)
-
-		// 	// if (user2.username)
-		// 	// 	v.enemy.name = user2.username
-		// 	// if (user2.skin)
-		// 	// 	v.enemy.sprites = window.game2Skins[user2.skin]
-		// 	// Matchmaking_init_skins(v.enemy, user2.skin)
-
-		// } else {
-		// 	// v.enemy.name = window.user.username
-		// 	// v.enemy.sprites = window.game2Skins[window.user.preferences.fighty_skin]
+			const user2 = await side_get_user_info(msg.player2)
+			console.log('user2', user2)
 			
-		// 	const user1 = side_get_user_info(msg.player1)
+			fighters = Matchmaking_init_fighters(
+				user2.username,
+				window.game2Skins[user2.skin],
+				window.user.username,
+				window.game2Skins[window.user.preferences.fighty_skin],
+				v.g.stun_time,
+			)
 			
-		// 	console.log('user1', user1)
+			v.player = fighters.player
+			v.enemy = fighters.enemy
 
-		// 	// if (user1.username)
-		// 	// 	v.player.name = user1.username
-		// 	// if (user1.skin)
-		// 	// 	v.player.sprites = window.game2Skins[user1.skin]
-		// 	// Matchmaking_init_skins(v.enemy, user1.skin)
+		} else {
+			const user1 = await side_get_user_info(msg.player1)
+			console.log('user1', user1)
 
-		// }
+			fighters = Matchmaking_init_fighters(
+				window.user.username,
+				window.game2Skins[window.user.preferences.fighty_skin],
+				user1.username,
+				window.game2Skins[user1.skin],
+				v.g.stun_time,
+			)
+
+			v.player = fighters.player
+			v.enemy = fighters.enemy
+		}
 
 		v.s.player1 = msg.player1
 		v.s.player2 = msg.player2
@@ -83,6 +85,7 @@ function send_update(v) {
 		v.g.timer.innerHTML % 10 != 5) {
 		return ;
 	}
+
 	stats = {
 		health_p1: v.player.health,
 		health_p2: v.enemy.health,
@@ -99,19 +102,24 @@ function send_update(v) {
 		time: v.g.timer.innerHTML
 	}
 	
+	console.log('sending game state from ' + window.user.id, stats)
+	
 	v.s.game_socket.send(JSON.stringify({type: 'game_state', stats: stats}))
+
+	return true;
 }
 
 function Matchmaking_setup_socket(v) {
 	
 	v.s.game_socket = new WebSocket(`wss://${window.IP}:3000/remote-players/ws/remote_access/?game_id=` + v.s.gameId);
 	
-	// v.s.socketupdate = window.setInterval(() => {send_update(v)}, 5000)
+	v.s.socketupdate = window.setInterval(() => {send_update(v)}, 5000)
 
 	v.s.game_socket.onmessage = function(event) {
 		msg = JSON.parse(event.data)
 		console.log(window.user.id, " received: ", msg)
 		console.log(msg.action)
+
 		if (msg.type == 'move') {
 			switch (msg.action) {
 				case 'ArrowRight_keydown': v.keys.ArrowRight.pressed = true; v.enemy.lastKey = 'ArrowRight'; break;
@@ -132,7 +140,7 @@ function Matchmaking_setup_socket(v) {
 				case 'attack_2': v.enemy.attack(); break;
 			}
 		}
-		else if (msg.type == 'game_state')
+		else
 		{
 			console.log('game state from ' + window.user.id, msg)
 			v.player.health = msg.stats.health_p1
@@ -149,6 +157,5 @@ function Matchmaking_setup_socket(v) {
 
 			v.g.timer.innerHTML = msg.stats.time
 		}
-
 	}
 }

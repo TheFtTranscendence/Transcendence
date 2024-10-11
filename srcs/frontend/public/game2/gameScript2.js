@@ -2,8 +2,6 @@ function startGame2(player1, player2, skins1, skins2) {
 	
 	v = init_vars(player1, player2, skins1, skins2)
 	setup_canvas(v)
-	// setup_music(v)
-
 
 	window.addEventListener('keydown', game2_keydown)
 	window.addEventListener('keyup', game2_keyup)
