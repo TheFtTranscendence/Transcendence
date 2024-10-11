@@ -195,9 +195,6 @@ class QueueConsumer(AsyncWebsocketConsumer):
 				await self.close()
 				return
 			
-			logger.info(f"game = {self.game}")
-			logger.info(f"user_id = {self.user_id}")
-
 			await self.accept()
 
 			if self.is_user_in_any_queue(self.user_id):

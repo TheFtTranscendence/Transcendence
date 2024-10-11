@@ -196,11 +196,11 @@ function modify_user_preferences(field, new_value, target = '') {
 function set_online() {
 	window.social_socket = new WebSocket(`wss://${window.IP}:3000/user-management/ws/social/?user=${window.user.username}`);
 
-	window.social_socket.onmessage = function(e) {
+	window.social_socket.onmessage = async function(e) {
 		const data = JSON.parse(e.data);
 		
 		console.log(data);
-		update_user_info();
+		await update_user_info();
 
 		switch (data.type) {
 			case 'status':
@@ -209,8 +209,18 @@ function set_online() {
 				 * user: user_id
 				 * status: true/false (online status)
 				 */
-				//todo: Depending on how the friend list works, the way of showing if its online should update, this depends on how that works
-				//todo: this function already updates the user, it just needs to update the friend list div
+				try {
+					window.chatDivs.forEach(({ element, listener }) => {
+						element.removeEventListener('click', listener)
+					})
+				} catch {}
+			
+				// Clear the chat list container's contents
+				window.chatListContainer.innerHTML = ''
+				window.chatContent.innerHTML = ''
+			
+				window.chatConfirmInput.value = '' // Clear input box
+				window.chatInput.value = '' // Clear input box
 				break ;
 			case 'friend_request':
 				/**

@@ -9,7 +9,6 @@ logger = logging.getLogger(__name__)
 class ChatConsumer(AsyncWebsocketConsumer):
 	async def connect(self):
 		query_param = self.scope['query_string'].decode()
-		logger.info(query_param)
 		params = dict(param.split('=') for param in query_param.split('&'))
 		
 		if 'chat_id' in params:
