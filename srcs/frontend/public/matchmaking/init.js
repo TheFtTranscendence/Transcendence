@@ -137,6 +137,32 @@ function Matchmaking_init_vars() {
 	}
 }
 
+async function Matchmaking_init_skins(guy, skin_nbr)
+{
+	console.log('settings skins for ', skin_nbr)
+	if (skin_nbr == undefined)
+		return ;
+	guy.sprites = {
+			attack1: { imageSrc: window.game2Skins[skin_nbr].attack1.imageSrc, framesMax: window.game2Skins[skin_nbr].attack1.framesMax, time: window.game2Skins[skin_nbr].attack1.time },
+			attack2: { imageSrc: window.game2Skins[skin_nbr].attack2.imageSrc, framesMax: window.game2Skins[skin_nbr].attack2.framesMax, time: window.game2Skins[skin_nbr].attack2.time },
+			death: { imageSrc: window.game2Skins[skin_nbr].death.imageSrc, framesMax: window.game2Skins[skin_nbr].death.framesMax, time: window.game2Skins[skin_nbr].death.time },
+			fall: { imageSrc: window.game2Skins[skin_nbr].fall.imageSrc, framesMax: window.game2Skins[skin_nbr].fall.framesMax, time: window.game2Skins[skin_nbr].fall.time },
+			idle: { imageSrc: window.game2Skins[skin_nbr].idle.imageSrc, framesMax: window.game2Skins[skin_nbr].idle.framesMax, time: window.game2Skins[skin_nbr].idle.time },
+			jump: { imageSrc: window.game2Skins[skin_nbr].jump.imageSrc, framesMax: window.game2Skins[skin_nbr].jump.framesMax, time: window.game2Skins[skin_nbr].jump.time },
+			run: { imageSrc: window.game2Skins[skin_nbr].run.imageSrc, framesMax: window.game2Skins[skin_nbr].run.framesMax, time: window.game2Skins[skin_nbr].run.time },
+			hit: { imageSrc: window.game2Skins[skin_nbr].hit.imageSrc, framesMax: window.game2Skins[skin_nbr].hit.framesMax, time: stun_time / window.game2Skins[skin_nbr].hit.framesMax },
+
+			attack1Inv: { imageSrc: window.game2Skins[skin_nbr].attack1Inv.imageSrc, framesMax: window.game2Skins[skin_nbr].attack1Inv.framesMax, time: window.game2Skins[skin_nbr].attack1Inv.time },
+			attack2Inv: { imageSrc: window.game2Skins[skin_nbr].attack2Inv.imageSrc, framesMax: window.game2Skins[skin_nbr].attack2Inv.framesMax, time: window.game2Skins[skin_nbr].attack2Inv.time },
+			deathInv: { imageSrc: window.game2Skins[skin_nbr].deathInv.imageSrc, framesMax: window.game2Skins[skin_nbr].deathInv.framesMax, time: window.game2Skins[skin_nbr].deathInv.time },
+			fallInv: { imageSrc: window.game2Skins[skin_nbr].fallInv.imageSrc, framesMax: window.game2Skins[skin_nbr].fallInv.framesMax, time: window.game2Skins[skin_nbr].fallInv.time },
+			idleInv: { imageSrc: window.game2Skins[skin_nbr].idleInv.imageSrc, framesMax: window.game2Skins[skin_nbr].idleInv.framesMax, time: window.game2Skins[skin_nbr].idleInv.time },
+			jumpInv: { imageSrc: window.game2Skins[skin_nbr].jumpInv.imageSrc, framesMax: window.game2Skins[skin_nbr].jumpInv.framesMax, time: window.game2Skins[skin_nbr].jumpInv.time },
+			runInv: { imageSrc: window.game2Skins[skin_nbr].runInv.imageSrc, framesMax: window.game2Skins[skin_nbr].runInv.framesMax, time: window.game2Skins[skin_nbr].runInv.time },
+			hitInv: { imageSrc: window.game2Skins[skin_nbr].hitInv.imageSrc, framesMax: window.game2Skins[skin_nbr].hitInv.framesMax, time: stun_time / window.game2Skins[skin_nbr].hitInv.framesMax },
+	}
+}
+
 function Matchmaking_setup_canvas(v)
 {
 	v.g.canvas = document.getElementById('game2-area')
@@ -185,12 +211,5 @@ function Matchmaking_leave_game(v) {
 
 	document.getElementById('game2').classList.add("hidden");
 	unloadScripts(window.matchmakingScripts);
-
-}
-
-function Matchmaking_init_skins(v, skins1, skins2) {
-
-	v.player.sprites = skins1
-	v.enemy.sprites = skins2
 
 }

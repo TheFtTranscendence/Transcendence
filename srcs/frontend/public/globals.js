@@ -70,7 +70,6 @@ window.game2SkinsPreviewsInverted = [
 window.game2Skins = [
 
 	game2SkinMask = {
-		normal: {
 			attack1: { imageSrc: 'game2/assets/Mask/Sprites/normal/Attack1.png', framesMax: 4, time: 15 },
 			attack2: { imageSrc: 'game2/assets/Mask/Sprites/normal/Attack2.png', framesMax: 4, time: 15 },
 			death: { imageSrc: 'game2/assets/Mask/Sprites/normal/Death.png', framesMax: 7, time: 10 },
@@ -79,21 +78,18 @@ window.game2Skins = [
 			jump: { imageSrc: 'game2/assets/Mask/Sprites/normal/Jump.png', framesMax: 2, time: 10 },
 			run: { imageSrc: 'game2/assets/Mask/Sprites/normal/Run.png', framesMax: 8, time: 10 },
 			hit: { imageSrc: 'game2/assets/Mask/Sprites/normal/TakeHit-silhouette.png', framesMax: 4},
+
+			attack1Inv: { imageSrc: 'game2/assets/Mask/Sprites/inverted/Attack1.png', framesMax: 4, time: 15 },
+			attack2Inv: { imageSrc: 'game2/assets/Mask/Sprites/inverted/Attack2.png', framesMax: 4, time: 15 },
+			deathInv: { imageSrc: 'game2/assets/Mask/Sprites/inverted/Death.png', framesMax: 7, time: 10 },
+			fallInv: { imageSrc: 'game2/assets/Mask/Sprites/inverted/Fall.png', framesMax: 2, time: 10 },
+			idleInv: { imageSrc: 'game2/assets/Mask/Sprites/inverted/Idle.png', framesMax: 4, time: 10 },
+			jumpInv: { imageSrc: 'game2/assets/Mask/Sprites/inverted/Jump.png', framesMax: 2, time: 10 },
+			runInv: { imageSrc: 'game2/assets/Mask/Sprites/inverted/Run.png', framesMax: 8, time: 10 },
+			hitInv: { imageSrc: 'game2/assets/Mask/Sprites/inverted/TakeHit-silhouette.png', framesMax: 4},
 		},
-		inverted: {
-			attack1: { imageSrc: 'game2/assets/Mask/Sprites/inverted/Attack1.png', framesMax: 4, time: 15 },
-			attack2: { imageSrc: 'game2/assets/Mask/Sprites/inverted/Attack2.png', framesMax: 4, time: 15 },
-			death: { imageSrc: 'game2/assets/Mask/Sprites/inverted/Death.png', framesMax: 7, time: 10 },
-			fall: { imageSrc: 'game2/assets/Mask/Sprites/inverted/Fall.png', framesMax: 2, time: 10 },
-			idle: { imageSrc: 'game2/assets/Mask/Sprites/inverted/Idle.png', framesMax: 4, time: 10 },
-			jump: { imageSrc: 'game2/assets/Mask/Sprites/inverted/Jump.png', framesMax: 2, time: 10 },
-			run: { imageSrc: 'game2/assets/Mask/Sprites/inverted/Run.png', framesMax: 8, time: 10 },
-			hit: { imageSrc: 'game2/assets/Mask/Sprites/inverted/TakeHit-silhouette.png', framesMax: 4},
-		}
-	},
 
 	game2SkinMask2 = {
-		normal: {
 			attack1: { imageSrc: 'game2/assets/Mask2/Sprites/normal/Attack1.png', framesMax: 4, time: 15 },
 			attack2: { imageSrc: 'game2/assets/Mask2/Sprites/normal/Attack2.png', framesMax: 4, time: 15 },
 			death: { imageSrc: 'game2/assets/Mask2/Sprites/normal/Death.png', framesMax: 7, time: 10 },
@@ -102,21 +98,18 @@ window.game2Skins = [
 			jump: { imageSrc: 'game2/assets/Mask2/Sprites/normal/Jump.png', framesMax: 2, time: 10 },
 			run: { imageSrc: 'game2/assets/Mask2/Sprites/normal/Run.png', framesMax: 8, time: 10 },
 			hit: { imageSrc: 'game2/assets/Mask2/Sprites/normal/TakeHit-silhouette.png', framesMax: 4},
+
+			attack1Inv: { imageSrc: 'game2/assets/Mask2/Sprites/inverted/Attack1.png', framesMax: 4, time: 15 },
+			attack2Inv: { imageSrc: 'game2/assets/Mask2/Sprites/inverted/Attack2.png', framesMax: 4, time: 15 },
+			deathInv: { imageSrc: 'game2/assets/Mask2/Sprites/inverted/Death.png', framesMax: 7, time: 10 },
+			fallInv: { imageSrc: 'game2/assets/Mask2/Sprites/inverted/Fall.png', framesMax: 2, time: 10 },
+			idleInv: { imageSrc: 'game2/assets/Mask2/Sprites/inverted/Idle.png', framesMax: 4, time: 10 },
+			jumpInv: { imageSrc: 'game2/assets/Mask2/Sprites/inverted/Jump.png', framesMax: 2, time: 10 },
+			runInv: { imageSrc: 'game2/assets/Mask2/Sprites/inverted/Run.png', framesMax: 8, time: 10 },
+			hitInv: { imageSrc: 'game2/assets/Mask2/Sprites/inverted/TakeHit-silhouette.png', framesMax: 4},
 		},
-		inverted: {
-			attack1: { imageSrc: 'game2/assets/Mask2/Sprites/inverted/Attack1.png', framesMax: 4, time: 15 },
-			attack2: { imageSrc: 'game2/assets/Mask2/Sprites/inverted/Attack2.png', framesMax: 4, time: 15 },
-			death: { imageSrc: 'game2/assets/Mask2/Sprites/inverted/Death.png', framesMax: 7, time: 10 },
-			fall: { imageSrc: 'game2/assets/Mask2/Sprites/inverted/Fall.png', framesMax: 2, time: 10 },
-			idle: { imageSrc: 'game2/assets/Mask2/Sprites/inverted/Idle.png', framesMax: 4, time: 10 },
-			jump: { imageSrc: 'game2/assets/Mask2/Sprites/inverted/Jump.png', framesMax: 2, time: 10 },
-			run: { imageSrc: 'game2/assets/Mask2/Sprites/inverted/Run.png', framesMax: 8, time: 10 },
-			hit: { imageSrc: 'game2/assets/Mask2/Sprites/inverted/TakeHit-silhouette.png', framesMax: 4},
-		}
-	},
 
 	game2SkinMask3 = {
-		normal: {
 			attack1: { imageSrc: 'game2/assets/Mask3/Sprites/normal/Attack1.png', framesMax: 4, time: 15 },
 			attack2: { imageSrc: 'game2/assets/Mask3/Sprites/normal/Attack2.png', framesMax: 4, time: 15 },
 			death: { imageSrc: 'game2/assets/Mask3/Sprites/normal/Death.png', framesMax: 7, time: 10 },
@@ -125,21 +118,18 @@ window.game2Skins = [
 			jump: { imageSrc: 'game2/assets/Mask3/Sprites/normal/Jump.png', framesMax: 2, time: 10 },
 			run: { imageSrc: 'game2/assets/Mask3/Sprites/normal/Run.png', framesMax: 8, time: 10 },
 			hit: { imageSrc: 'game2/assets/Mask3/Sprites/normal/TakeHit-silhouette.png', framesMax: 4},
+
+			attack1Inv: { imageSrc: 'game2/assets/Mask3/Sprites/inverted/Attack1.png', framesMax: 4, time: 15 },
+			attack2Inv: { imageSrc: 'game2/assets/Mask3/Sprites/inverted/Attack2.png', framesMax: 4, time: 15 },
+			deathInv: { imageSrc: 'game2/assets/Mask3/Sprites/inverted/Death.png', framesMax: 7, time: 10 },
+			fallInv: { imageSrc: 'game2/assets/Mask3/Sprites/inverted/Fall.png', framesMax: 2, time: 10 },
+			idleInv: { imageSrc: 'game2/assets/Mask3/Sprites/inverted/Idle.png', framesMax: 4, time: 10 },
+			jumpInv: { imageSrc: 'game2/assets/Mask3/Sprites/inverted/Jump.png', framesMax: 2, time: 10 },
+			runInv: { imageSrc: 'game2/assets/Mask3/Sprites/inverted/Run.png', framesMax: 8, time: 10 },
+			hitInv: { imageSrc: 'game2/assets/Mask3/Sprites/inverted/TakeHit-silhouette.png', framesMax: 4},
 		},
-		inverted: {
-			attack1: { imageSrc: 'game2/assets/Mask3/Sprites/inverted/Attack1.png', framesMax: 4, time: 15 },
-			attack2: { imageSrc: 'game2/assets/Mask3/Sprites/inverted/Attack2.png', framesMax: 4, time: 15 },
-			death: { imageSrc: 'game2/assets/Mask3/Sprites/inverted/Death.png', framesMax: 7, time: 10 },
-			fall: { imageSrc: 'game2/assets/Mask3/Sprites/inverted/Fall.png', framesMax: 2, time: 10 },
-			idle: { imageSrc: 'game2/assets/Mask3/Sprites/inverted/Idle.png', framesMax: 4, time: 10 },
-			jump: { imageSrc: 'game2/assets/Mask3/Sprites/inverted/Jump.png', framesMax: 2, time: 10 },
-			run: { imageSrc: 'game2/assets/Mask3/Sprites/inverted/Run.png', framesMax: 8, time: 10 },
-			hit: { imageSrc: 'game2/assets/Mask3/Sprites/inverted/TakeHit-silhouette.png', framesMax: 4},
-		}
-	},
 
 	game2SkinSamu = {
-		normal: {
 			attack1: { imageSrc: 'game2/assets/Samu/Sprites/normal/Attack1.png', framesMax: 4, time: 15 },
 			attack2: { imageSrc: 'game2/assets/Samu/Sprites/normal/Attack2.png', framesMax: 4, time: 15 },
 			death: { imageSrc: 'game2/assets/Samu/Sprites/normal/Death.png', framesMax: 6, time: 10 },
@@ -148,16 +138,14 @@ window.game2Skins = [
 			jump: { imageSrc: 'game2/assets/Samu/Sprites/normal/Jump.png', framesMax: 2, time: 10 },
 			run: { imageSrc: 'game2/assets/Samu/Sprites/normal/Run.png', framesMax: 8, time: 10 },
 			hit: { imageSrc: 'game2/assets/Samu/Sprites/normal/Take-Hit-white-silhouette.png', framesMax: 4},
-		},
-		inverted: {
-			attack1: { imageSrc: 'game2/assets/Samu/Sprites/inverted/Attack1.png', framesMax: 4, time: 15 },
-			attack2: { imageSrc: 'game2/assets/Samu/Sprites/inverted/Attack2.png', framesMax: 4, time: 15 },
-			death: { imageSrc: 'game2/assets/Samu/Sprites/inverted/Death.png', framesMax: 6, time: 10 },
-			fall: { imageSrc: 'game2/assets/Samu/Sprites/inverted/Fall.png', framesMax: 2, time: 10 },
-			idle: { imageSrc: 'game2/assets/Samu/Sprites/inverted/Idle.png', framesMax: 8, time: 10 },
-			jump: { imageSrc: 'game2/assets/Samu/Sprites/inverted/Jump.png', framesMax: 2, time: 10 },
-			run: { imageSrc: 'game2/assets/Samu/Sprites/inverted/Run.png', framesMax: 8, time: 10 },
-			hit: { imageSrc: 'game2/assets/Samu/Sprites/inverted/Take-Hit-white-silhouette.png', framesMax: 4},
+
+			attack1Inv: { imageSrc: 'game2/assets/Samu/Sprites/inverted/Attack1.png', framesMax: 4, time: 15 },
+			attack2Inv: { imageSrc: 'game2/assets/Samu/Sprites/inverted/Attack2.png', framesMax: 4, time: 15 },
+			deathInv: { imageSrc: 'game2/assets/Samu/Sprites/inverted/Death.png', framesMax: 6, time: 10 },
+			fallInv: { imageSrc: 'game2/assets/Samu/Sprites/inverted/Fall.png', framesMax: 2, time: 10 },
+			idleInv: { imageSrc: 'game2/assets/Samu/Sprites/inverted/Idle.png', framesMax: 8, time: 10 },
+			jumpInv: { imageSrc: 'game2/assets/Samu/Sprites/inverted/Jump.png', framesMax: 2, time: 10 },
+			runInv: { imageSrc: 'game2/assets/Samu/Sprites/inverted/Run.png', framesMax: 8, time: 10 },
+			hitInv: { imageSrc: 'game2/assets/Samu/Sprites/inverted/Take-Hit-white-silhouette.png', framesMax: 4},
 		}
-	}
 ]

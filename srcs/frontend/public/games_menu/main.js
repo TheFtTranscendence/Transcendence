@@ -18,17 +18,17 @@ function games_menu_hashchange() {
 	document.getElementById('games').classList.add("hidden")
 }
 
-function main_menu_changeSkinButton () {
+async function main_menu_changeSkinButton () {
 	console.log('Change Skin button clicked')
 
 	if (window.location.hash == '#fighters') {
 
 		if (window.user.preferences.fighty_skin == window.game2SkinsPreviews.length - 1)
-			modify_user("preferences", {pongy_skin: window.user.preferences.pongy_skin, fighty_skin: 0})
+			modify_user_preferences("fighty_skin", 0)
 		else
-			modify_user("preferences", {pongy_skin: window.user.preferences.pongy_skin, fighty_skin: window.user.preferences.fighty_skin + 1})
+			modify_user_preferences("fighty_skin", window.user.preferences.fighty_skin + 1)
 
-		update_user_info()
+		await update_user_info()
 		document.getElementById('games-menu-selected-skin').style.backgroundImage = "url('" + window.game2SkinsPreviews[window.user.preferences.fighty_skin] + "')" 
 	}
 	else {

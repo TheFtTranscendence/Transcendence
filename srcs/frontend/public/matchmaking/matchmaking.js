@@ -4,6 +4,18 @@ function matchmaking_hashchange() {
 	toast_alert('Matchmaking cancelled')
 }
 
+async function side_get_user_info(id) {
+	const data = await get_user_info(id)
+	console.log("Data username:", data.username);
+	console.log("Data fighty_skin:", data.preferences.fighty_skin);
+
+	return {
+		username: data.username,
+		skin: data.preferences.fighty_skin
+	};
+}
+
+
 function Matchmaking_queue(v)
 {
 	console.log('connecting to WebSocket')
@@ -19,33 +31,35 @@ function Matchmaking_queue(v)
 		if (msg.type == 'error') 
 			return ;
 		
-		if (window.user.id == msg.player1 ) {
-			v.player.name = window.user.username
-			v.player.sprites = window.game2Skins[window.user.preferences.fighty_skin]
+		// if (window.user.id == msg.player1 ) {
+		// 	// v.player.name = window.user.username
+		// 	// v.player.sprites = window.game2Skins[window.user.preferences.fighty_skin]
 			
-			get_user_info(msg.player2)
-			.then (response => {
-				user2 = response
-			})
+		// 	const user2 = side_get_user_info(msg.player2)
 
-			console.log('user2', user2)
+		// 	console.log('user2', user2)
 
-			v.enemy.name = user2.username
-			v.enemy.sprites = window.game2Skins[user2.preferences.fighty_skin]
+		// 	// if (user2.username)
+		// 	// 	v.enemy.name = user2.username
+		// 	// if (user2.skin)
+		// 	// 	v.enemy.sprites = window.game2Skins[user2.skin]
+		// 	// Matchmaking_init_skins(v.enemy, user2.skin)
 
-		} else {
-			v.enemy.name = window.user.username
-			v.enemy.sprites = window.game2Skins[window.user.preferences.fighty_skin]
+		// } else {
+		// 	// v.enemy.name = window.user.username
+		// 	// v.enemy.sprites = window.game2Skins[window.user.preferences.fighty_skin]
 			
-			get_user_info(msg.player1)
-			.then (response => {
-				user1 = response
-			})
-			console.log('user1', user1)
+		// 	const user1 = side_get_user_info(msg.player1)
+			
+		// 	console.log('user1', user1)
 
-			v.player.name = user1.username
-			v.player.sprites = window.game2Skins[user1.preferences.fighty_skin]
-		}
+		// 	// if (user1.username)
+		// 	// 	v.player.name = user1.username
+		// 	// if (user1.skin)
+		// 	// 	v.player.sprites = window.game2Skins[user1.skin]
+		// 	// Matchmaking_init_skins(v.enemy, user1.skin)
+
+		// }
 
 		v.s.player1 = msg.player1
 		v.s.player2 = msg.player2
@@ -61,7 +75,6 @@ function Matchmaking_queue(v)
 
 function send_update(v) {
 
-	// v.g.timer.innerHTML
 	if (window.user.username == v.player.name &&
 		v.g.timer.innerHTML % 10 != 0) {
 		return ;
@@ -93,7 +106,7 @@ function Matchmaking_setup_socket(v) {
 	
 	v.s.game_socket = new WebSocket(`wss://${window.IP}:3000/remote-players/ws/remote_access/?game_id=` + v.s.gameId);
 	
-	v.s.socketupdate = window.setInterval(() => { send_update(v)})
+	// v.s.socketupdate = window.setInterval(() => {send_update(v)}, 5000)
 
 	v.s.game_socket.onmessage = function(event) {
 		msg = JSON.parse(event.data)
@@ -135,7 +148,7 @@ function Matchmaking_setup_socket(v) {
 			v.enemy.attackbox = msg.stats.offset_p2
 
 			v.g.timer.innerHTML = msg.stats.time
-
 		}
+
 	}
 }
