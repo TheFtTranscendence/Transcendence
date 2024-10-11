@@ -151,6 +151,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 		action = event['action']
 
 		await self.send(text_data=json.dumps({
+			'type': 'move',
 			'player_id': player_id,
 			'action': action
 		}))
