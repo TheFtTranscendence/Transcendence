@@ -81,6 +81,7 @@ class UserViewSet(viewsets.ModelViewSet):
 	def partial_update(self, request, *args, **kwargs):
 		user_id = kwargs.get('pk')
 		current_user = request.user
+
 		if user_id:
 			user_to_update = self.get_object()
 		else:

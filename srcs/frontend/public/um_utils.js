@@ -155,51 +155,21 @@ function modify_user(field, new_value, target = '') {
 }
 
 function modify_user_preferences(field, new_value, target = '') {
-    if (target === '') target = window.user.id;
-    const url = `https://${window.IP}:3000/user-management/auth/users/${target}/`;
-
-    if (field == 'pongy_skin') {
-    data = {
-      pongy_skin: new_value,
-      fighty_skin: window.user.preferences.fighty_skin,
-    }
-  } else if (field == 'fighty_skin') {
-    data = {
-      pongy_skin: window.user.preferences.pongy_skin,
-      fighty_skin: new_value,
-    }
-  }
-
-    const userheaders = {
-        'Authorization': 'Token ' + window.usertoken,
-        'Content-Type': 'application/json',
-    };
-
-    return fetch(url, {
-        method: 'PATCH',
-        headers: userheaders,
-        body: JSON.stringify(data),
-    })
-    .then(response => {
-        if (!response.ok) {
-            return response.json().then(err => { throw err; });
-        }
-        return response.json();
-    })
-    .catch(error => {
-        throw new Error(error.message || "An unknown error occurred");
-    });
-}
-
-function modify_user_password(old_password, password, confirm_password, target = '') {
 	if (target === '') target = window.user.id;
 	const url = `https://${window.IP}:3000/user-management/auth/users/${target}/`;
 
-	const data = {
-		old_password: old_password,
-		password: password,
-		confirm_password: confirm_password
+	data = {
+		preferences: {
+			pongy_skin: window.user.preferences.pongy_skin,
+			fighty_skin: window.user.preferences.fighty_skin,
+		}
 	};
+
+	if (field == 'pongy_skin') {
+		data.preferences.pongy_skin = new_value;
+	} else if (field == 'fighty_skin') {
+		data.preferences.fighty_skin = new_value;
+	}
 
 	const userheaders = {
 		'Authorization': 'Token ' + window.usertoken,
