@@ -75,15 +75,13 @@ async function Matchmaking_queue(v)
 	}
 }
 
-function send_update(v) {
+function send_update(v, force = false) {
 
-	if (window.user.username == v.player.name &&
-		v.g.timer.innerHTML % 10 != 0) {
-		return ;
-	}
-	else if (window.user.username == v.enemy.name &&
-		v.g.timer.innerHTML % 10 != 5) {
-		return ;
+	if (force == false) {
+		if (window.user.username == v.player.name && v.g.time % 10 == 0)
+			return ;
+		else if (window.user.username == v.enemy.name && v.g.time % 10 == 5)
+			return ;
 	}
 
 	stats = {
@@ -99,7 +97,7 @@ function send_update(v) {
 		offset_p1: v.player.attackbox,
 		offset_p2: v.enemy.attackbox,
 
-		time: v.g.timer.innerHTML
+		time: v.g.time
 	}
 	
 	console.log('sending game state from ' + window.user.id, stats)
@@ -155,7 +153,7 @@ function Matchmaking_setup_socket(v) {
 			v.player.attackbox = msg.stats.offset_p1
 			v.enemy.attackbox = msg.stats.offset_p2
 
-			v.g.timer.innerHTML = msg.stats.time
+			v.g.time = msg.stats.time
 		}
 	}
 }

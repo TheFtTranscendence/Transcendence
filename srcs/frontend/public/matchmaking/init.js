@@ -203,7 +203,8 @@ function Matchmaking_leave_game(v) {
 	v.s.game_socket.close()
 	v.s.queue_socket.close()
 
-	document.getElementById('game2').classList.add("hidden");
+	document.getElementById('div-game2-area').classList.add("hidden");
+	document.getElementById('games').classList.add("hidden");
 	unloadScripts(window.matchmakingScripts);
 
 }
