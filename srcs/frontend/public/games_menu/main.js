@@ -18,15 +18,15 @@ function games_menu_hashchange() {
 	document.getElementById('games').classList.add("hidden")
 }
 
-function main_menu_changeSkinButton () {
+async function main_menu_changeSkinButton () {
 	console.log('Change Skin button clicked')
 
 	if (window.location.hash == '#fighters') {
 
 		if (window.user.preferences.fighty_skin == window.game2SkinsPreviews.length - 1)
-			modify_user("preferences", {fighty_skin: 0, pongy: window.user.preferences.pongy_skin})
+			await modify_user_preferences("fighty_skin", 0)
 		else
-			modify_user("preferences", {fighty_skin: window.user.preferences.pongy_skin + 1, pongy: window.user.preferences.pongy_skin})
+			await modify_user_preferences("fighty_skin", window.user.preferences.fighty_skin + 1)
 
 		update_user_info()
 		document.getElementById('games-menu-selected-skin').style.backgroundImage = "url('" + window.game2SkinsPreviews[window.user.preferences.fighty_skin] + "')" 
@@ -69,7 +69,11 @@ function main_menu() {
 	if (window.location.hash == '#fighters') {
 		
 		document.getElementById('games-menu-title').textContent = 'Fighty Fighters'
-		document.getElementById('games-menu-selected-skin').style.backgroundImage = "url('" + window.game2SkinsPreviews[window.user.preferences.fighty_skin] + "')" 
+		try {
+			document.getElementById('games-menu-selected-skin').style.backgroundImage = "url('" + window.game2SkinsPreviews[window.user.preferences.fighty_skin] + "')" 
+		} catch {
+			toast_alert("Error setting skin")
+		}
 	} else {
 		
 		document.getElementById('games-menu-title').textContent = 'Pongy'

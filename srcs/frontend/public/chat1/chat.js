@@ -79,7 +79,7 @@ function getMessages(friend) {
 		})
 		.catch((error) => {
 			console.error('Error getting messages:', error);
-			alert('Error getting messages: ' + (error.message || 'An unknown error occurred.'));
+			toast_alert('Error getting messages: ' + (error.message || 'An unknown error occurred.'));
 			reject(error); // Pass the error to the reject
 		});
 	});
@@ -160,11 +160,14 @@ function keypress(event) {
 function displayChatList(chatListContainer, friendList) {
 	window.chatDivs = []
 
+	console.log("friend list", friendList)
+
 	Object.entries(friendList).forEach(friend => {
+		console.log("friend", friend)
 		const chatDiv = document.createElement('div')
 		chatDiv.classList.add('chat-item')
 
-		if (friend.status) { // SUBSTITUIR COM ACTUAL STATUS OF ONLNE
+		if (friend[1].status) {
 		chatDiv.innerHTML = `
 			<div class="friend-name">🟢 ${friend[0]}</div>
 		`
@@ -200,26 +203,26 @@ async function chat_confirmButton() {
 		console.log('response ', response)
 		user_to_send = response.id
 	}).catch((error) => {
-		alert('User not found', error)
+		toast_alert('User not found', error)
 		return 
 	})
 
 	console.log('holder ', holder)
 
 	switch (holder) {
-		case "add": send_friend_request(user_to_send); alert('Friend request sent')
+		case "add": send_friend_request(user_to_send); toast_alert('Friend request sent')
 			break
-		case "remove": remove_friend(user_to_send); alert('Friend removed')
+		case "remove": remove_friend(user_to_send); toast_alert('Friend removed')
 			break
-		case "block": block(user_to_send); alert('User blocked')
+		case "block": block(user_to_send); toast_alert('User blocked')
 			break
-		case "unblock": unblock(user_to_send); alert('User unblocked')
+		case "unblock": unblock(user_to_send); toast_alert('User unblocked')
 			break
-		case "pongy": send_game_invite(user_to_send, 'pongy'); alert('Pong invite sent')
+		case "pongy": send_game_invite(user_to_send, 'pongy'); toast_alert('Pong invite sent')
 			break
-		case "fighty": send_game_invite(user_to_send, 'fighty'); alert('Fighty invite sent')
+		case "fighty": send_game_invite(user_to_send, 'fighty'); toast_alert('Fighty invite sent')
 			break
-		default: alert('Select an option first')
+		default: toast_alert('Select an option first')
 	}
 }
 
@@ -266,7 +269,7 @@ function chat()
 	} catch (error) {
 		console.error('Error getting friend list')
 		window.
-		alert('Error getting friend list')
+		toast_alert('Error getting friend list')
 		return
 	}
 

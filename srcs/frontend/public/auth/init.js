@@ -86,8 +86,22 @@ function handleLogin() {
 		handleSuccessAuth()
 	});
 }
+// Define the event listener as a named function
+function handleRegisterEvent(event) {
+	event.preventDefault();
+
+	if (isRegistering) {
+		return;
+	}
+
+	handleRegister();
+}
 
 function handleRegister() {
+	document.getElementById('registerForm').removeEventListener('submit', handleRegisterEvent);
+
+	isRegistering = true;
+
 	const username = document.getElementById('registerUsername').value;
 	const password = document.getElementById('registerPassword').value;
 	const confirm_password = document.getElementById('registerPasswordConfirm').value;
@@ -142,6 +156,9 @@ function handleRegister() {
 		}
 		errorField.textContent = errorMsg;
 		errorField.classList.remove('hidden');
+	})
+	.finally(() => {
+		isRegistering = false;
 	});
 }
 
@@ -151,10 +168,9 @@ document.getElementById('loginForm').addEventListener('submit', (event) => {
 	handleLogin();
 });
 
-document.getElementById('registerForm').addEventListener('submit', (event) => {
-	event.preventDefault();
-	handleRegister();
-});
+// Add the event listener for the register form
+document.getElementById('registerForm').addEventListener('submit', handleRegisterEvent);
+
 
 // AUTH ANIMATION
 const leftSide = document.querySelector('.left-side');

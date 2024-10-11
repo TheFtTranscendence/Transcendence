@@ -5,6 +5,7 @@ function Matchmaking_sleep(ms) {
 async function Matchmaking_game_end(v) {
 	clearInterval(v.g.gameInterval);
     clearInterval(v.g.timerInterval);
+	clearInterval(v.s.socketupdate)
 
 	window.removeEventListener('keydown', Matchmaking_game2_keydown)
 	window.removeEventListener('keyup', Matchmaking_game2_keyup)

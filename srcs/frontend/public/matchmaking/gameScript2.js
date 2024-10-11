@@ -4,8 +4,6 @@ function Matchmaking_startGame2(v) {
 	window.addEventListener('keyup', Matchmaking_game2_keyup)
 	window.addEventListener('hashchange', Matchmaking_game2_hashchange)
 
-	// v.g.backgroundMusic.play();
-
 	v.g.gameInterval = window.setInterval(() => Matchmaking_game_loop(v), 1000 / v.g.fps)
 	v.g.timerInterval = window.setInterval(() => Matchmaking_decreaseTimer(v), 1000)
 }

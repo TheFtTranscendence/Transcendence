@@ -27,7 +27,7 @@ function tournament_play() {
 	for (n = 1; n <= nb_players; n++) {
 		const playerName = document.getElementById('games-tournament-player-name' + n).value.trim()
 		if (playerName.length == 0) {
-			alert('Please enter the names of all players')
+			toast_alert('Please enter the names of all players')
 			return
 		}
 		playerNames.push(playerName)

@@ -20,7 +20,7 @@ web3.eth.default_account = account.address  # Set the default account
 # Load the contract ABI
 with open('/usr/src/app/Score.json') as f:
     contract_abi_list = json.load(f)
-    print("Loaded JSON content:", contract_abi_list)  # Debugging line
+    # print("Loaded JSON content:", contract_abi_list)  # Debugging line
     
     # Assuming it's an array of ABIs
     contract_abi = contract_abi_list

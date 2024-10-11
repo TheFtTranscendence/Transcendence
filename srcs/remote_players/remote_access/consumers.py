@@ -136,6 +136,15 @@ class GameConsumer(AsyncWebsocketConsumer):
 					'action': action
 				}
 			)
+		if msg_type == 'game_state':
+			stats = text_data_json['stats']
+			await self.channel_layer.group_send(
+				self.room_group_name,
+				{
+					'type': 'game_state',
+					'stats': stats,
+				}
+			)
 
 	async def move(self, event):
 		player_id = event['player_id']
@@ -145,6 +154,14 @@ class GameConsumer(AsyncWebsocketConsumer):
 			'type': 'move',
 			'player_id': player_id,
 			'action': action
+		}))
+
+	async def game_state(self, event):
+		stats = event['stats']
+
+		await self.send(text_data=json.dumps({
+			'type': 'game_state',
+			'stats': stats
 		}))
 
 	@database_sync_to_async
@@ -274,6 +291,7 @@ class QueueConsumer(AsyncWebsocketConsumer):
 				player_1 = data['player_1'],
 				player_2 = data['player_2'],
 			)
+			return game
 		except Exception as e:
 			logger.exception(f'exception: {e}')
-		return game
+		return None

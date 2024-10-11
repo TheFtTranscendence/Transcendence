@@ -7,7 +7,11 @@ function Matchmaking_before_game()
 	console.log('before game 2')
 
 	
-	alert('Searching for match...')
+	try {
+		toast_alert('Searching for match...')
+	} catch {
+		alert('Searching for match...')
+	}
 
 	v = Matchmaking_init_vars()
 	Matchmaking_setup_canvas(v)

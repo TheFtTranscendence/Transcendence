@@ -59,7 +59,7 @@ function local_play() {
 	const player2name = document.getElementById('games-player2-name').value
 
 	if (player1name === '' || player2name === '') {
-		alert('Please enter the names of both players')
+		toast_alert('Please enter the names of both players')
 		return
 	}
 	
