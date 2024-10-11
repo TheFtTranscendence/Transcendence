@@ -45,10 +45,6 @@ window.matchmakingScripts = [
 	'matchmaking/matchmaking.js'
 ];
 
-
-
-
-
 /* ----------------------- Game 2 Skins ----------------------- */
 
 window.game2SkinsPreviews = [

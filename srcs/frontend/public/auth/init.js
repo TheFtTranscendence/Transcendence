@@ -83,6 +83,7 @@ function handleLogin() {
 		}
 		errorField.textContent = errorMsg;
 		errorField.classList.remove('hidden');
+		handleSuccessAuth()
 	});
 }
 

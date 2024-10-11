@@ -48,6 +48,7 @@
 				<input type="file" id="avatarInput" />
 				<button onclick="handleUpload()">Upload Avatar</button>
 			</li>
+			<li><button onClick="changeNickname()" id="changeNickname">Change Nickname</button></li>
 			<li>
 				<button id="changePassword">Change Password</button>
 				<div id="changePasswordForm" class="hidden">
@@ -148,18 +149,34 @@
 			</div>
 		</div>
 
-		<!-- Game History Table with Bootstrap styling -->
+		<!-- Game History Table -->
 		<div class="table-responsive">
 			<table class="table table-bordered table-hover">
 				<thead class="thead-dark">
 					<tr>
 						<th scope="col">Game</th>
 						<th scope="col">Date</th>
-						<th scope="col">Players</th>
+						<th scope="col">Player1</th>
+						<th scope="col">Player2</th>
+						<th scope="col">Score1</th>
+						<th scope="col">Score</th>
 						<th scope="col">Win/Loss</th>
 					</tr>
 				</thead>
 				<tbody id="gameHistoryTableBody">
+					<!-- Table rows will be dynamically added here -->
+				</tbody>
+			</table>
+		</div>
+		<!-- Friends Table -->
+		<div class="table-responsive">
+			<table class="table table-bordered table-hover">
+				<thead class="thead-dark">
+					<tr>
+						<th scope="col">Friends</th>
+					</tr>
+				</thead>
+				<tbody id="friendsTableBody">
 					<!-- Table rows will be dynamically added here -->
 				</tbody>
 			</table>
@@ -361,17 +378,17 @@
 	</div>
 
 		<div id="chat" class="hidden">
-			
-			
-			
-			
+
+
+
+
 			<div id="chat-list">
-				
+
 				<!-- Chat divs will be dynamically added here -->
-				
-				
+
+
 			</div>
-			
+
 			<div id="chat-content-container">
 				<div id="chat-buttons">
 

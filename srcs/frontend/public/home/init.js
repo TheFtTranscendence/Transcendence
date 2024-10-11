@@ -7,11 +7,11 @@ function home_hashchange(event)
 function home()
 {
 	getAvatar()
+	fillInfos()
 	document.getElementById('home').classList.remove('hidden');
 	window.addEventListener('hashchange', home_hashchange);
 	document.getElementById('profile-img').addEventListener('click', showSideBar);
 }
-
 
 function showSideBar() {
 	const sidebar = document.getElementById('sidebar');
@@ -93,6 +93,9 @@ async function uploadAvatar(file) {
 	}
 }
 
+function changeNickname() {
+
+}
 
 // LOGOUT
 document.getElementById('logoutButton').addEventListener('click', handleLogout);
@@ -176,6 +179,44 @@ function handlePasswordChangeForm(event) {
 		errorField.textContent = error.message || "An error occurred. Please try again.";
 		errorField.classList.remove('hidden');
 	});
+}
+
+
+// GAME HISTORY TABLE
+
+
+
+// dummy data
+const Game = {
+	timestamp: "",
+	player1: "",
+	player2: "",
+	score1: "",
+	score2: "",
+	tournamentIndex: ""    // -1: not a tournament, then the index of the tournament
+}
+
+
+function	fillInfos() {
+	fillGame()
+	fillWinLoss()
+	fillFriends()
+}
+
+function fillGame() {
+	const table = document.getElementById('friendsTableBody')
+
+}
+
+
+function fillWinLoss() {
+	const winCounter = document.getElementById('winCounter')
+	const lossCounter = document.getElementById('lossCounter')
+}
+
+function fillFriends() {
+	const table = document.getElementById('gameHistoryTableBody')
+
 }
 
 
