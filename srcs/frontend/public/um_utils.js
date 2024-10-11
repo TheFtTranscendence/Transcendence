@@ -199,7 +199,7 @@ function set_online() {
 	window.social_socket.onmessage = async function(e) {
 		const data = JSON.parse(e.data);
 		
-		console.log(data);
+		console.log("social socket: ", data);
 		await update_user_info();
 
 		switch (data.type) {
@@ -209,32 +209,28 @@ function set_online() {
 				 * user: user_id
 				 * status: true/false (online status)
 				 */
+				chat()
 				break ;
 			case 'friend_request':
 				/**
-				 * sender = e.sender
-				 * request id = e.request_id
 				 * type: friend_request
 				 * sender: sender_id
 				 */
 				new_user = await get_user_info(data.sender)
+				addFriendRequest(data.sender, new_user.username)
 				toast_alert(`${new_user.username} sent a friend request`)
-				//todo: maybe this toast can have a accept and decline
-				//todo: add this to the notification list
 				break ;
-			case 'request_reponse':
-				/**
-				 * response: "Friend request from ID1 to ID2 accepted/dennied"
-				 * type: request_reponse
-				 * sender: sender_id
-				 * response: true/false
-				 */
-				new_user = await get_user_info(data.sender)
-				if (data.response == true)	{
-					toast_alert(`You and ${new_user.username} are now friends`)
-
+				case 'request_reponse':
+					/**
+					 * type: request_reponse
+					 * sender: sender_id
+					 * response: true/false
+					*/
+					new_user = await get_user_info(data.sender)
+					if (data.response == true)	{
+						toast_alert(`You and ${new_user.username} are now friends`)
+						
 					chat()
-					//? if in chat screen update chat screen because we have one more friend?
 				}	else	{
 					//? Do nothing?
 				}
@@ -248,7 +244,6 @@ function set_online() {
 				toast_alert(`You and ${new_user.username} are no longer friends`)
 				
 				chat()
-				//? if in chat screen update chat screen because we have one less friend?
 				break ;
 			case 'game_invite':
 				/**
@@ -260,13 +255,11 @@ function set_online() {
 				 */
 				new_user = await get_user_info(data.player1)
 				toast_alert(`${new_user.username} invited you to a game of ${data.game}`)
-				//todo: maybe this can go into the chat with that person
-				//todo: I belive u can only send invites to friends so this would work
 				break ;
 			case 'error':
 				switch (data.detail) {
 					case 'Friend Request already exists':
-						// When sending a friend request
+						toast_alert(`You already sent a friend request to this user`)
 						//? Do nothing?
 						break ;
 					case 'User not found':
@@ -298,7 +291,6 @@ function set_online() {
 						break ;
 					case 'User already blocked':
 						//! This should also not appear since they should only have the option to block someone if they are friends
-						//? Are u ok with this behavior? should they be able to block anyone?
 						break ;
 				}
 				break ;
@@ -342,7 +334,7 @@ function accept_friend_request(target) {
 }
 
 // Target should be an ID
-function denie_friend_request(target) {
+function deny_friend_request(target) {
 	const data = {
 		type: "request_response",
 		target: target,

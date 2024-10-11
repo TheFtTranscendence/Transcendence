@@ -93,8 +93,39 @@ async function uploadAvatar(file) {
 	}
 }
 
-function changeNickname() {
+document.getElementById('changeUsername').addEventListener('click', handleUsernameChange);
 
+function handleUsernameChange() {
+	const changeUsernameForm = document.getElementById('changeUsernameForm');
+	const submitButton = document.getElementById('submitUsernameChange');
+
+	if (changeUsernameForm) {
+		if (changeUsernameForm.classList.contains('hidden')) {
+			changeUsernameForm.classList.remove('hidden');
+			if (!isListenerAdded2) {
+				submitButton.addEventListener('click', handleUsernameChangeForm);
+				isListenerAdded2 = true; // Set to true when listener is added
+			}
+		} else {
+			console.log("add hidden");
+			changeUsernameForm.classList.add('hidden');
+			submitButton.removeEventListener('click', handleUsernameChangeForm);
+			isListenerAdded2 = false; // Reset the status
+		}
+	} else {
+		console.error('Element #changeUsernameForm not found');
+	}
+}
+
+function handleUsernameChangeForm() {
+	event.preventDefault();
+
+	const newUsername = document.getElementById('newusername').value;
+	const errorField = document.getElementById('changeUsernameError');
+	const changePasswordForm = document.getElementById('changeUsernameForm');
+	const sidebar = document.getElementById('sidebar');
+
+	modify_user("username", newUsername)
 }
 
 // LOGOUT
@@ -154,6 +185,8 @@ function handlePasswordChangeForm(event) {
 		confirm_new_password: confirmNewPassword
 	};
 
+
+	//todo: dont think this is working
 	const url = `https://${window.IP}:3000/user-management/auth/users/${window.user.id}/`;
 
 	fetch(url, {
@@ -181,10 +214,16 @@ function handlePasswordChangeForm(event) {
 	});
 }
 
+function updateFileName(input) {
+	const fileName = document.getElementById("fileName");
+	if (input.files.length > 0) {
+		fileName.textContent = input.files[0].name;
+	} else {
+		fileName.textContent = "No file chosen";
+	}
+}
 
 // GAME HISTORY TABLE
-
-
 
 // dummy data
 const Game = {
@@ -196,25 +235,234 @@ const Game = {
 	tournamentIndex: ""    // -1: not a tournament, then the index of the tournament
 }
 
-
 function	fillInfos() {
+	populateUserDropdown()
 	fillGame()
 	fillWinLoss()
-	fillFriends()
 }
 
 function fillGame() {
-	const table = document.getElementById('friendsTableBody')
+	const table = document.getElementById('gameHistoryTableBody')
+	
+	//todo: ask loris get all games if possible
+	const url = `https://${window.IP}:3000/solidity/solidity/getgames/${window.user.blockchain_id}/Pongy`;
 
+	fetch(url, {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+	})
+	.then(response => {
+		if (!response.ok) {
+			return response.json().then(err => { throw err; });
+		}
+		return response.json();
+	})
+	.then(data => {
+		console.log(data)
+		//todo: understand how information comes, needs actual games
+	})
+	.catch(error => {
+		throw new Error(error.message || "An unknown error occurred");
+	});
+
+	// cicly to do this for everygame in history
+	// const newRow = document.createElement("tr");
+	
+	// newRow.innerHTML = `
+	//     <td>${game}</td>
+	//     <td>${date}</td>
+	//     <td>${player1}</td>
+	//     <td>${player2}</td>
+	//     <td>${score1}</td>
+	//     <td>${score2}</td>
+	//     <td>${result}</td>
+	// `;
+	
+	// tableBody.appendChild(newRow);
 }
 
 
 function fillWinLoss() {
 	const winCounter = document.getElementById('winCounter')
 	const lossCounter = document.getElementById('lossCounter')
+
+	//todo:
+	winCounter.textContent = 5
+	lossCounter.textContent = 6
 }
 
-function fillFriends() {
-	const table = document.getElementById('gameHistoryTableBody')
+function addNotification(notificationText) {
+	const tableBody = document.getElementById("notificationsTableBody");
+	const newRow = document.createElement("tr");
+	
+	newRow.innerHTML = `
+		<td>
+			${notificationText}
+		</td>
+	`;
+	
+	tableBody.insertBefore(newRow, tableBody.firstChild);
+}
 
+function addPongyGameInvite(data) {
+	const tableBody = document.getElementById("notificationsTableBody");
+	const newRow = document.createElement("tr");
+	
+	notificationText = "TEST"
+	newRow.innerHTML = `
+		<td>
+			<div class="notification-row">
+				<span>${notificationText}</span>
+				<div>
+					<button class="btn btn-success btn-sm ms-2" onclick="acceptPongyGameInvite(this)">Accept</button>
+					<button class="btn btn-danger btn-sm" onclick="declinePongyGameInvite(this)">Decline</button>
+				</div>
+			</div>
+		</td>
+	`;
+	
+	tableBody.insertBefore(newRow, tableBody.firstChild);
+}
+
+function acceptPongyGameInvite(button) {
+	const buttons = button.parentElement.querySelectorAll('button');
+	buttons.forEach(btn => btn.remove());
+	alert("Notification accepted!");
+	// Add further logic for accepting the notification
+}
+
+function declinePongyGameInvite(button) {
+	const buttons = button.parentElement.querySelectorAll('button');
+	buttons.forEach(btn => btn.remove());
+	alert("Notification declined!");
+	// Add further logic for declining the notification
+}
+
+function addFightyGameInvite(data) {
+	const tableBody = document.getElementById("notificationsTableBody");
+	const newRow = document.createElement("tr");
+	
+	notificationText = "TEST"
+	newRow.innerHTML = `
+		<td>
+			<div class="notification-row">
+				<span>${notificationText}</span>
+				<div>
+					<button class="btn btn-success btn-sm ms-2" onclick="acceptFightyGameInvite(this)">Accept</button>
+					<button class="btn btn-danger btn-sm" onclick="declineFightyGameInvite(this)">Decline</button>
+				</div>
+			</div>
+		</td>
+	`;
+	
+	tableBody.insertBefore(newRow, tableBody.firstChild);
+}
+
+function acceptFightyGameInvite(button) {
+	const buttons = button.parentElement.querySelectorAll('button');
+	buttons.forEach(btn => btn.remove());
+	alert("Notification accepted!");
+	// Add further logic for accepting the notification
+}
+
+function declineFightyGameInvite(button) {
+	const buttons = button.parentElement.querySelectorAll('button');
+	buttons.forEach(btn => btn.remove());
+	alert("Notification declined!");
+	// Add further logic for declining the notification
+}
+
+function addFriendRequest(sender_id, sender_username) {
+	const tableBody = document.getElementById("notificationsTableBody");
+	const newRow = document.createElement("tr");
+	
+	notificationText = "Friend Request from: " + sender_username
+	newRow.innerHTML = `
+		<td>
+			<div class="notification-row">
+				<span>${notificationText}</span>
+				<div>
+					<button class="btn btn-success btn-sm ms-2" onclick="acceptFriendRequest(this, '${sender_id}')">Accept</button>
+					<button class="btn btn-danger btn-sm" onclick="declineFriendRequest(this, '${sender_id}')">Decline</button>
+				</div>
+			</div>
+		</td>
+	`;
+	
+	tableBody.insertBefore(newRow, tableBody.firstChild);
+}
+
+function acceptFriendRequest(button, sender_id) {
+	const buttons = button.parentElement.querySelectorAll('button');
+	buttons.forEach(btn => btn.remove());
+	accept_friend_request(sender_id)
+}
+
+function declineFriendRequest(button, sender_id) {
+	const buttons = button.parentElement.querySelectorAll('button');
+	buttons.forEach(btn => btn.remove());
+	deny_friend_request(sender_id)
+}
+
+//match history
+function populateUserDropdown() {
+	const userSelect = document.getElementById("userSelect");
+
+	userSelect.innerHTML = '';
+	
+	const currentUserOption = document.createElement("option");
+    currentUserOption.value = window.user.username;
+    currentUserOption.textContent = window.user.username; // Display the current user's username
+    userSelect.appendChild(currentUserOption);
+
+	for (const username in window.user.friend_list) {
+		const option = document.createElement("option");
+		option.value = username;
+		option.textContent = username;
+		userSelect.appendChild(option);
+	}
+}
+
+function updateContent(selectedUser) {
+    const gameHistoryTableBody = document.getElementById("gameHistoryTableBody");
+    gameHistoryTableBody.innerHTML = ''; // Clear previous content
+
+    // Sample data, replace with actual game data from the user object
+    const sampleData = {
+        user1: [
+            { game: "Game A", date: "2023-10-01", player1: "User 1", player2: "User 2", score1: 3, score2: 1, result: "Win" },
+            { game: "Game B", date: "2023-10-05", player1: "User 1", player2: "User 3", score1: 2, score2: 3, result: "Loss" }
+        ],
+        user2: [
+            { game: "Pongy", date: "2024-10-11", player1: "user2", player2: "admin", score1: 3, score2: 5, result: "Loss" },
+            { game: "Fighty", date: "2024-10-11", player1: "admin", player2: "user2", score1: 1, score2: 0, result: "Loss" },
+            { game: "Fighty", date: "2024-10-11", player1: "admin", player2: "user2", score1: 0, score2: 1, result: "Win" },
+            { game: "Fighty", date: "2024-10-11", player1: "user2", player2: "admin", score1: 0, score2: 1, result: "Loss" }
+        ],
+        user3: [
+            { game: "Game D", date: "2023-10-03", player1: "User 3", player2: "User 1", score1: 5, score2: 0, result: "Win" }
+        ]
+    };
+
+    if (selectedUser && sampleData[selectedUser]) {
+        sampleData[selectedUser].forEach(row => {
+            const newRow = document.createElement("tr");
+            newRow.innerHTML = `
+                <td>${row.game}</td>
+                <td>${row.date}</td>
+                <td>${row.player1}</td>
+                <td>${row.player2}</td>
+                <td>${row.score1}</td>
+                <td>${row.score2}</td>
+                <td>${row.result}</td>
+            `;
+            gameHistoryTableBody.appendChild(newRow);
+        });
+    } else {
+        const noDataRow = document.createElement("tr");
+        noDataRow.innerHTML = '<td colspan="7" class="text-center">No data available.</td>';
+        gameHistoryTableBody.appendChild(noDataRow);
+    }
 }

@@ -51,7 +51,7 @@ class UserViewSet(viewsets.ModelViewSet):
 		serializer = self.get_serializer(user)
 		user_data = serializer.data.copy()
 
-		fields_to_remove = ['email', 'blockchain_id', 'is_staff', 'is_superuser', 'friend_list', 'block_list']
+		fields_to_remove = ['email', 'is_staff', 'is_superuser', 'friend_list', 'block_list']
 		for field in fields_to_remove:
 			user_data.pop(field, None)
 

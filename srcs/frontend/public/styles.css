@@ -11,36 +11,36 @@
 }
 
 body {
-    margin: 0;
-    padding: 0;
-
-    font-family: Arial, sans-serif;
-    text-align: center;
 	margin: 0;
-    overflow: hidden;
-    overflow: hidden;
+	padding: 0;
+
+	font-family: Arial, sans-serif;
+	text-align: center;
+	margin: 0;
+	overflow: hidden;
+	overflow: hidden;
 }
 
 body::before {
 	content: ""; /* Required for pseudo-element */
-    position: fixed; /* Make sure it covers the viewport */
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+	position: fixed; /* Make sure it covers the viewport */
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
 
-    background-image: url('img/background.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
+	background-image: url('img/background.png');
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
 
-    filter: brightness(0.5) blur(5px) contrast(0.9) saturate(0.8); /* Apply filters */
-    z-index: -1; /* Send it behind everything else */
+	filter: brightness(0.5) blur(5px) contrast(0.9) saturate(0.8); /* Apply filters */
+	z-index: -1; /* Send it behind everything else */
 }
 
 .hidden {
-    display: none !important;
+	display: none !important;
 }
 
 .invisible {
@@ -49,17 +49,17 @@ body::before {
 
 #auth {
 	border: 7px transparent;
-    display: flex;
+	display: flex;
 }
 
 .horizontal-line {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    background-color: transparent;
-    transform: translateY(-50%);
+	position: absolute;
+	top: 50%;
+	left: 0;
+	width: 100%;
+	height: 4px;
+	background-color: transparent;
+	transform: translateY(-50%);
 }
 
 .left-side, .right-side {
@@ -84,7 +84,7 @@ body::before {
 }
 
 .expanded{
-    flex: 8; /* Adjust this value to control text movement */
+	flex: 8; /* Adjust this value to control text movement */
 }
 
 .left-side {
@@ -112,25 +112,25 @@ body::before {
 
 /*
 .logo-container {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    z-index: 1000;
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	z-index: 1000;
 }
 
 .logo {
-    width: 50px;
-    height: auto;
+	width: 50px;
+	height: auto;
 } */
 
 #game-area {
 	width: 800px;
-    height: 600px;
-    background-color: black;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%); /* Centering trick */
+	height: 600px;
+	background-color: black;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%); /* Centering trick */
 }
 
 @font-face {
@@ -144,46 +144,46 @@ body::before {
 #games-local-menu,
 #games-tournament-menu {
 	width: 1366px;
-    height: 768px;
+	height: 768px;
 	position: fixed;
-    top: 50%;
-    left: 50%;
+	top: 50%;
+	left: 50%;
 	z-index: 2;
 	display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    background-color: #2c2c2c;
-    color: white;
-    border-radius: 10px;
+	flex-direction: column;
+	align-items: center;
+	padding: 20px;
+	background-color: #2c2c2c;
+	color: white;
+	border-radius: 10px;
 	transform: translate(-50%, -50%); /* Centering trick */
 	overflow-y: auto; /* Allows scrolling if needed */
 }
 
 #games-menu-title {
-    font-size: 48px;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 40px;
-    color: #ff4444;
-    letter-spacing: 2px;
+	font-size: 48px;
+	font-weight: bold;
+	text-align: center;
+	margin-bottom: 40px;
+	color: #ff4444;
+	letter-spacing: 2px;
 }
 
 #games-menu-area2 {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
+	display: flex;
+	justify-content: space-between;
+	width: 100%;
 }
 
 #games-menu-player-info  {
-    width: 35%;
-    text-align: center;
+	width: 35%;
+	text-align: center;
 }
 
 #player-info h2 {
-    margin-bottom: 20px;
-    font-size: 24px;
-    color: #ffcc00;
+	margin-bottom: 20px;
+	font-size: 24px;
+	color: #ffcc00;
 }
 
 #games-menu-player-buttons {
@@ -195,189 +195,189 @@ body::before {
 
 
 #games-menu-selected-skin {
-    width: 300px;
-    height: 500px;
-    background-color: #444;
-    margin: 20px auto;
-    border: 3px solid #ffcc00;
-    border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+	width: 300px;
+	height: 500px;
+	background-color: #444;
+	margin: 20px auto;
+	border: 3px solid #ffcc00;
+	border-radius: 10px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 
 	/* Set the background GIF */
 
-    background-image: url('game2/assets/Mask/Sprites/preview.gif');
-    background-size: cover;
+	background-image: url('game2/assets/Mask/Sprites/preview.gif');
+	background-size: cover;
 	background-position: center;
-    background-repeat: repeat;
+	background-repeat: repeat;
 
 }
 
 #games-menu-game-options {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 100px;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 100px;
 	align-items: center;
 	margin: 50px auto 0;
 }
 
 #games-menu-game-options button {
-    width: 80%; /* Adjust the width of the buttons */
-    padding: 15px;
-    font-size: 18px;
-    background-color: #ff4444;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+	width: 80%; /* Adjust the width of the buttons */
+	padding: 15px;
+	font-size: 18px;
+	background-color: #ff4444;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: background-color 0.3s;
 }
 
 #games-menu-game-options button:hover {
-    background-color: #ffcc00;
-    color: #2c2c2c;
+	background-color: #ffcc00;
+	color: #2c2c2c;
 }
 
 #games-local-menu-area {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    padding: 0 20px;  /* Added horizontal padding for more spacing */
-    margin-top: 40px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	padding: 0 20px;  /* Added horizontal padding for more spacing */
+	margin-top: 40px;
 }
 
 #games-local-player1-info,
 #games-local-player2-info {
-    width: 35%;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+	width: 35%;
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
 .player-name-input {
-    width: 80%;
-    padding: 10px;
-    margin-bottom: 30px;  /* Increased margin for more space below input */
-    font-size: 16px;
-    border: 2px solid #ff4444;
-    border-radius: 5px;
-    background-color: #2c2c2c;
-    color: white;
-    text-align: center;
+	width: 80%;
+	padding: 10px;
+	margin-bottom: 30px;  /* Increased margin for more space below input */
+	font-size: 16px;
+	border: 2px solid #ff4444;
+	border-radius: 5px;
+	background-color: #2c2c2c;
+	color: white;
+	text-align: center;
 }
 
 #games-local-player1-wrapper,
 #games-local-player2-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center; /* Center content vertically */
-    width: 100%; /* Ensure the wrapper takes full width */
-    gap: 15px; /* Space between button and skin preview */
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center; /* Center content vertically */
+	width: 100%; /* Ensure the wrapper takes full width */
+	gap: 15px; /* Space between button and skin preview */
 }
 
 #games-local-player1-buttons,
 #games-local-player2-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;  /* Increased gap between buttons */
-    margin-bottom: 30px;  /* Increased margin for more space below buttons */
+	display: flex;
+	flex-direction: column;
+	gap: 15px;  /* Increased gap between buttons */
+	margin-bottom: 30px;  /* Increased margin for more space below buttons */
 }
 
 #games-local-player1-skin,
 #games-local-player2-skin {
-    width: 200px;
-    height: 300px;
-    background-color: #444;
-    border: 3px solid #ffcc00;
-    border-radius: 10px;
-    background-image: url('game2/assets/Mask/Sprites/preview.gif');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+	width: 200px;
+	height: 300px;
+	background-color: #444;
+	border: 3px solid #ffcc00;
+	border-radius: 10px;
+	background-image: url('game2/assets/Mask/Sprites/preview.gif');
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
 }
 
 #games-local-play-button {
-    width: 20%;
-    display: flex;
-    justify-content: center;
-    margin-top: 30px;  /* Increased margin to create more space above the play button */
+	width: 20%;
+	display: flex;
+	justify-content: center;
+	margin-top: 30px;  /* Increased margin to create more space above the play button */
 	gap: 10px;
 }
 
 #games-local-play-button button {
-    width: 100%;
-    padding: 20px;
-    font-size: 24px;
-    background-color: #ff4444;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+	width: 100%;
+	padding: 20px;
+	font-size: 24px;
+	background-color: #ff4444;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: background-color 0.3s;
 }
 
 #games-local-play-button button:hover,
 #games-tournament-play-button button:hover {
-    background-color: #ffcc00;
-    color: #2c2c2c;
+	background-color: #ffcc00;
+	color: #2c2c2c;
 }
 
 #games-tournament-menu-area {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    margin-top: 20px;
-    gap: 30px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 100%;
+	margin-top: 20px;
+	gap: 30px;
 }
 #games-players-wrapper {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 columns */
-    grid-template-rows: repeat(2, auto);  /* 2 rows */
-    grid-gap: 20px;
-    width: 100%;
+	display: grid;
+	grid-template-columns: repeat(4, 1fr); /* 4 columns */
+	grid-template-rows: repeat(2, auto);  /* 2 rows */
+	grid-gap: 20px;
+	width: 100%;
 }
 
 .games-tournament-player-info,
 .games-tournament-player-info2 {
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: #1c1c1c;
-    padding: 10px;
-    border-radius: 10px;
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	background-color: #1c1c1c;
+	padding: 10px;
+	border-radius: 10px;
 }
 
 .player-name-input {
-    width: 80%;
-    padding: 10px;
-    margin-bottom: 20px;
-    font-size: 16px;
-    border: 2px solid #ff4444;
-    border-radius: 5px;
-    background-color: #2c2c2c;
-    color: white;
-    text-align: center;
+	width: 80%;
+	padding: 10px;
+	margin-bottom: 20px;
+	font-size: 16px;
+	border: 2px solid #ff4444;
+	border-radius: 5px;
+	background-color: #2c2c2c;
+	color: white;
+	text-align: center;
 }
 
 .games-tournament-player-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-    width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 15px;
+	width: 100%;
 }
 
 .games-tournament-player-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
 }
 
 .games-tournament-player-skin1,
@@ -388,59 +388,59 @@ body::before {
 .games-tournament-player-skin6,
 .games-tournament-player-skin7,
 .games-tournament-player-skin8 {
-    width: 150px;
-    height: 200px;
-    background-color: #444;
-    border: 3px solid #ffcc00;
-    border-radius: 10px;
-    background-image: url('game2/assets/Mask/Sprites/normal_preview.gif');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+	width: 150px;
+	height: 200px;
+	background-color: #444;
+	border: 3px solid #ffcc00;
+	border-radius: 10px;
+	background-image: url('game2/assets/Mask/Sprites/normal_preview.gif');
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
 }
 
 #games-tournament-play-button {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 20px;
+	display: flex;
+	justify-content: center;
+	gap: 15px;
+	margin-top: 20px;
 }
 
 #games-tournament-play-button button {
-    padding: 10px 20px;
-    font-size: 20px;
-    background-color: #ff4444;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+	padding: 10px 20px;
+	font-size: 20px;
+	background-color: #ff4444;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: background-color 0.3s;
 }
 
 .games-tournament-player-info2 {
-    display: none;
+	display: none;
 }
 
 #game2-area {
-    width: 1366px;
-    height: 768px;
-    background-color: black;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%); /* Centering trick */
+	width: 1366px;
+	height: 768px;
+	background-color: black;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%); /* Centering trick */
 	z-index: 1;
 	display: inline-block;
 }
 
 #game2-canvas {
-    width: 1366px;
-    height: 768px;
-    background-color: black;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%); /* Centering trick */
+	width: 1366px;
+	height: 768px;
+	background-color: black;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%); /* Centering trick */
 	z-index: 10;
 	display: inline-block;
 }
@@ -448,13 +448,13 @@ body::before {
 
 #div-game2-area {
 	width: 1366px;
-    height: 768px;
+	height: 768px;
 	position: fixed;
-    top: 50%;
-    left: 50%;
+	top: 50%;
+	left: 50%;
 	z-index: 2;
 
-    transform: translate(-50%, -50%); /* Centering trick */
+	transform: translate(-50%, -50%); /* Centering trick */
 }
 
 #div-game2-top {
@@ -560,137 +560,137 @@ body::before {
 
 #chat {
 	width: 1366px;
-    height: 768px;
+	height: 768px;
 	position: fixed;
-    top: 50%;
-    left: 50%;
+	top: 50%;
+	left: 50%;
 	z-index: 2;
 	display: flex;
-    flex-direction: row; /* Ensures children are laid out side by side */
-    align-items: center;
-    padding: 20px;
-    background-color: #2c2c2c;
-    color: white;
-    border-radius: 10px;
+	flex-direction: row; /* Ensures children are laid out side by side */
+	align-items: center;
+	padding: 20px;
+	background-color: #2c2c2c;
+	color: white;
+	border-radius: 10px;
 	transform: translate(-50%, -50%); /* Centering trick */
 	overflow-y: auto; /* Allows scrolling if needed */
 }
 
 #chat-list {
-    width: 25%; /* Set the chat list to take up 25% of the container's width */
-    height: 100%;
-    border-right: 1px solid #444;
-    padding-right: 10px;
-    overflow-y: auto; /* Scroll if there are many chats */
+	width: 25%; /* Set the chat list to take up 25% of the container's width */
+	height: 100%;
+	border-right: 1px solid #444;
+	padding-right: 10px;
+	overflow-y: auto; /* Scroll if there are many chats */
 }
 #chat-content-container {
-    display: flex;
-    flex-direction: column;
-    width: 75%;
-    height: 100%;
+	display: flex;
+	flex-direction: column;
+	width: 75%;
+	height: 100%;
 }
 
 #chat-content {
-    flex-grow: 1;
-    padding: 10px;
-    overflow-y: auto;
-    background-color: #1e1e1e;
-    box-sizing: border-box;
+	flex-grow: 1;
+	padding: 10px;
+	overflow-y: auto;
+	background-color: #1e1e1e;
+	box-sizing: border-box;
 }
 
 #chat-buttons button {
-    padding: 8px 12px;
-    background-color: #2c2c2c;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+	padding: 8px 12px;
+	background-color: #2c2c2c;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
 }
 
 #chat-buttons button:hover {
-    background-color: #444;
+	background-color: #444;
 }
 
 
 #chat-input-container {
-    display: flex;
-    border-top: 1px solid #444;
-    padding: 10px;
-    background-color: #2c2c2c;
+	display: flex;
+	border-top: 1px solid #444;
+	padding: 10px;
+	background-color: #2c2c2c;
 }
 
 .input-container {
-    display: none;
-    margin-top: 10px;
+	display: none;
+	margin-top: 10px;
 }
 
 .input-container input {
-    padding: 8px;
-    width: 60%;
-    margin-right: 10px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
+	padding: 8px;
+	width: 60%;
+	margin-right: 10px;
+	border-radius: 4px;
+	border: 1px solid #ccc;
 }
 
 .input-container button {
-    padding: 8px 12px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+	padding: 8px 12px;
+	background-color: #007bff;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
 }
 
 .input-container button:hover {
-    background-color: #0056b3;
+	background-color: #0056b3;
 }
 
 #chat-input, #chat-input-buttons {
-    flex-grow: 1;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    margin-right: 10px;
-    font-size: 16px;
-    background-color: #3a3a3a;
-    color: white;
+	flex-grow: 1;
+	padding: 10px;
+	border: none;
+	border-radius: 5px;
+	margin-right: 10px;
+	font-size: 16px;
+	background-color: #3a3a3a;
+	color: white;
 }
 
 #send-button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    background-color: #4a76a8;
-    color: white;
-    cursor: pointer;
-    font-size: 16px;
+	padding: 10px 20px;
+	border: none;
+	border-radius: 5px;
+	background-color: #4a76a8;
+	color: white;
+	cursor: pointer;
+	font-size: 16px;
 }
 
 #send-button:hover {
-    background-color: #3e6385;
+	background-color: #3e6385;
 }
 
 .chat-item {
-    padding: 10px;
-    border-bottom: 1px solid #444;
-    cursor: pointer;
+	padding: 10px;
+	border-bottom: 1px solid #444;
+	cursor: pointer;
 }
 
 .chat-item:hover {
-    background-color: #3d3d3d;
+	background-color: #3d3d3d;
 }
 
 .friend-name {
-    font-weight: bold;
-    font-size: 1.1em;
+	font-weight: bold;
+	font-size: 1.1em;
 }
 
 .last-message {
-    font-size: 0.9em;
-    color: #bbb;
-    margin-top: 5px;
+	font-size: 0.9em;
+	color: #bbb;
+	margin-top: 5px;
 }
 
 .sent-message {
@@ -714,15 +714,15 @@ body::before {
 .sent-message + .sent-message,
 .received-message + .received-message
 {
-    margin-top: -1px;
-    border-top: none;
-    border-bottom: none;
+	margin-top: -1px;
+	border-top: none;
+	border-bottom: none;
 }
 
 .sent-message + .sent-message strong,
 .received-message + .received-message strong
 {
-    display: none;
+	display: none;
 }
 
 .sent-message:has(+ .received-message), .sent-message:last-child,
@@ -743,18 +743,18 @@ body::before {
 
 #auth {
 	border: 7px solid var(--background-color);
-    display: flex;
-    /* transition: all 0.5s ease; */
+	display: flex;
+	/* transition: all 0.5s ease; */
 }
 
 .horizontal-line {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    background-color: var(--background-color);
-    transform: translateY(-50%);
+	position: absolute;
+	top: 50%;
+	left: 0;
+	width: 100%;
+	height: 4px;
+	background-color: var(--background-color);
+	transform: translateY(-50%);
 }
 
 .left-side, .right-side {
@@ -779,7 +779,7 @@ body::before {
 }
 
 .expanded{
-    flex: 8; /* Adjust this value to control text movement */
+	flex: 8; /* Adjust this value to control text movement */
 }
 
 .left-side {
@@ -858,31 +858,196 @@ body::before {
 
 /* Sidebar */
 .sidebar {
-	position: fixed;
-	right: 0;
-	top: 0;
-	height: 100%;
-	width: 250px;
-	background-color: #333;
-	color: white;
-	z-index: 999;
-	padding-top: 60px;
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 250px;
+    background-color: #333;
+    color: white;
+    z-index: 999;
+    padding-top: 60px;
 }
 
 .sidebar ul {
-	list-style-type: none;
-	padding: 0;
+    list-style-type: none;
+    padding: 0;
 }
 
 .sidebar ul li {
-	padding: 15px 20px;
+    padding: 15px 20px;
 }
 
 .sidebar ul li a {
-	color: white;
-	text-decoration: none;
+    color: white;
+    text-decoration: none;
 }
 
 .sidebar ul li a:hover {
-	background-color: #444;
+    background-color: #444;
+}
+
+Style the file input button
+.sidebar input[type="file"] {
+    display: none; /* Hide the default file input */
+}
+
+/* Custom file upload button */
+.sidebar .file-upload {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #2c2c2c; /* Match button color */
+    color: white;
+    cursor: pointer;
+    width: calc(100% - 40px); /* Full width */
+    display: block; /* Center the button */
+    margin: 0 auto; /* Center the button */
+    text-align: center; /* Center text inside button */
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.sidebar .file-upload:hover {
+    background-color: #444;
+}
+
+/* Show the selected file name */
+.sidebar .file-name {
+    margin-top: 5px;
+    color: white; /* File name color */
+    text-align: center; /* Center the file name */
+}
+
+/* General button styles */
+.sidebar button {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #2c2c2c; /* Default button color */
+    color: white;
+    cursor: pointer;
+    width: calc(100% - 40px); /* Full width */
+    display: block;
+    margin: 0 auto;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.sidebar button:hover {
+    background-color: #444;
+}
+
+.sidebar button:active {
+    transform: scale(0.98);
+}
+
+/* Submit button styles */
+.sidebar button.submit {
+    background-color: #ff0000;
+    padding: 8px;
+}
+
+.sidebar .form-group {
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.sidebar .form-control {
+    width: calc(100% - 40px);
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    background-color: #2c2c2c;
+    color: white;
+	margin: 0 auto;
+}
+
+.sidebar .form-control:focus {
+    border-color: #0026ff; /* Change border color on focus */
+    outline: none;
+}
+
+.sidebar .btn-block {
+    display: block;
+    width: calc(100% - 40px); /* Ensures buttons are nearly full width */
+}
+
+.sidebar .text-danger {
+    color: #dc3545;
+}
+
+.sidebar .bg-dark {
+    background-color: #343a40;
+}
+
+.sidebar .mt-3 {
+    margin-top: 1rem;
+}
+
+.sidebar .p-2 {
+    padding: 0.5rem;
+}
+
+.sidebar .rounded {
+    border-radius: 5px;
+}
+
+.sidebar .hidden {
+    display: none;
+}
+
+.table-responsive {
+	margin-bottom: 1.5rem;
+	overflow-x: auto;
+}
+
+
+/* Common table styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    background-color: #343a40; /* Dark background */
+    color: white; /* White text */
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 2px solid #dee2e6; /* Thicker bottom border for headers */
+}
+
+td {
+    padding: 1rem;
+    border-bottom: 1px solid #dee2e6; /* Regular bottom border */
+    transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+tr:hover td {
+    background-color: #f8f9fa; /* Light gray background on row hover */
+}
+
+/* Shared styles for both tables */
+.table tbody {
+    background-color: #ffffff; /* White background for table body */
+}
+
+.notifications-table th {
+    background-color: #007bff; /* Blue background for notifications header */
+}
+
+/* Override the th color for the notifications table */
+.notifications-table th,
+table th {
+    background-color: #343a40; /* Dark background for both tables */
+}
+
+/* Notifications table specific styles */
+.notifications-table td {
+    background-color: #f7f7f7; /* Light background for notifications */
+    border: 1px solid #007bff; /* Blue border for notifications */
+}
+
+.notification-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
