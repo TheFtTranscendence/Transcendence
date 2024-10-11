@@ -145,3 +145,5 @@ window.game2Skins = [
 			hitInv: { imageSrc: 'game2/assets/Samu/Sprites/inverted/Take-Hit-white-silhouette.png', framesMax: 4},
 		}
 ]
+
+window.isRegistering = false;

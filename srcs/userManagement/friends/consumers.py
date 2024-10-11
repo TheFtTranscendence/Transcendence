@@ -234,7 +234,7 @@ class	SocialConsumer(AsyncWebsocketConsumer):
 					'type': 'friend_removed',
 					'user': target.id
 				}))
-			group_name = f'user_{self.user.id}'
+			group_name = f's_{target.id}'
 			await self.channel_layer.group_send(
 				group_name,
 				{

@@ -90,7 +90,7 @@ function handleLogin() {
 function handleRegisterEvent(event) {
 	event.preventDefault();
 
-	if (isRegistering) {
+	if (window.isRegistering) {
 		return;
 	}
 
@@ -100,7 +100,7 @@ function handleRegisterEvent(event) {
 function handleRegister() {
 	document.getElementById('registerForm').removeEventListener('submit', handleRegisterEvent);
 
-	isRegistering = true;
+	window.isRegistering = true;
 
 	const username = document.getElementById('registerUsername').value;
 	const password = document.getElementById('registerPassword').value;
@@ -158,7 +158,7 @@ function handleRegister() {
 		errorField.classList.remove('hidden');
 	})
 	.finally(() => {
-		isRegistering = false;
+		window.isRegistering = false;
 	});
 }
 

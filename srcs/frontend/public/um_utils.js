@@ -33,12 +33,12 @@ function _update_user_chats() {
 	});
 }
 
-function update_user_info() {
+async function update_user_info() {
 	const userheaders = {
 		'Authorization': 'Token ' + window.usertoken,
 	};
 
-	return fetch(`https://${window.IP}:3000/user-management/auth/users/`, {
+	return await fetch(`https://${window.IP}:3000/user-management/auth/users/`, {
 		method: 'GET',
 		headers: userheaders,
 	})
@@ -49,7 +49,7 @@ function update_user_info() {
 		return response.json();
 	})
 	.then(data => {
-		window.user = data; // Access the user data
+		window.user = data;
 		_update_user_chats();
 	})
 	.catch(error => {
@@ -209,18 +209,6 @@ function set_online() {
 				 * user: user_id
 				 * status: true/false (online status)
 				 */
-				try {
-					window.chatDivs.forEach(({ element, listener }) => {
-						element.removeEventListener('click', listener)
-					})
-				} catch {}
-			
-				// Clear the chat list container's contents
-				window.chatListContainer.innerHTML = ''
-				window.chatContent.innerHTML = ''
-			
-				window.chatConfirmInput.value = '' // Clear input box
-				window.chatInput.value = '' // Clear input box
 				break ;
 			case 'friend_request':
 				/**
@@ -229,8 +217,8 @@ function set_online() {
 				 * type: friend_request
 				 * sender: sender_id
 				 */
-				user = get_user_info(data.sender)
-				toast_alert(`${user.username} sent a friend request`)
+				new_user = await get_user_info(data.sender)
+				toast_alert(`${new_user.username} sent a friend request`)
 				//todo: maybe this toast can have a accept and decline
 				//todo: add this to the notification list
 				break ;
@@ -241,9 +229,11 @@ function set_online() {
 				 * sender: sender_id
 				 * response: true/false
 				 */
-				user = get_user_info(data.sender)
+				new_user = await get_user_info(data.sender)
 				if (data.response == true)	{
-					toast_alert(`You and ${user.username} are now friends`)
+					toast_alert(`You and ${new_user.username} are now friends`)
+
+					chat()
 					//? if in chat screen update chat screen because we have one more friend?
 				}	else	{
 					//? Do nothing?
@@ -254,8 +244,10 @@ function set_online() {
 				 * type: friend_removed
 				 * user: user_id
 				 */
-				user = get_user_info(data.user)
-				toast_alert(`You and ${user.username} are no longer friends`)
+				new_user = await get_user_info(data.user)
+				toast_alert(`You and ${new_user.username} are no longer friends`)
+				
+				chat()
 				//? if in chat screen update chat screen because we have one less friend?
 				break ;
 			case 'game_invite':
@@ -266,8 +258,8 @@ function set_online() {
 				 * player1: player1_id,
 				 * player2: player2_id,
 				 */
-				user = get_user_info(data.player1)
-				toast_alert(`${user.username} invited you to a game of ${data.game}`)
+				new_user = await get_user_info(data.player1)
+				toast_alert(`${new_user.username} invited you to a game of ${data.game}`)
 				//todo: maybe this can go into the chat with that person
 				//todo: I belive u can only send invites to friends so this would work
 				break ;
@@ -315,6 +307,8 @@ function set_online() {
 					// When a user responds to a request, these are the messages that the sender gets
 					case 'Friend request accepted':
 						toast_alert(`You and ${user.username} are now friends`)
+
+						chat()
 						break;
 					case 'Friend request dennied':
 						//? Do nothing
