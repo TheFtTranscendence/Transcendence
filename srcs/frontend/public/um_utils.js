@@ -24,13 +24,9 @@ function ping_Solidity() {
 
 function _update_user_chats() {
 	Object.entries(window.user.friend_list).forEach(([key, friend]) => {
-		friend.socket = new WebSocket(`wss://${window.IP}:3000/chat/ws/chat/?user=${window.user.username}&chat_id=${friend.chat_id}`);
-		
-		// friend.socket.onmessage = function(e) {
-		// 		const data = JSON.parse(e.data);
-		// 		console.log(data);
-
-		// };
+		window.chat_socket.send(JSON.stringify({
+			join_chat_id: friend.chat_id
+		}));
 	});
 }
 
@@ -193,9 +189,23 @@ function modify_user_preferences(field, new_value, target = '') {
 	});
 }
 
+function sendMessage(message) {
+	if (window.chat_socket.readyState === WebSocket.OPEN) {
+		window.chat_socket.send(JSON.stringify(message));
+	} else {
+		// Add to queue if socket is not open
+		messageQueue.push(message);
+	}
+}
+
 //* Im updating the entire user every time there is a small update, this is obviously not the best way to do it, but it works well enough for our project
 function set_online() {
 	window.social_socket = new WebSocket(`wss://${window.IP}:3000/user-management/ws/social/?user=${window.user.username}`);
+	window.chat_socket = new WebSocket(`wss://${window.IP}:3000/chat/ws/chat/?user=${window.user.username}`);
+
+	window.chat_socket.onopen = function(event) {
+		_update_user_chats();
+	};
 
 	window.social_socket.onmessage = async function(e) {
 		const data = JSON.parse(e.data);
@@ -210,10 +220,11 @@ function set_online() {
 				 * user: user_id
 				 * status: true/false (online status)
 				 */
-				if (window.location.hash == '#chat') {
-					chat_hashchange()
-					chat()
-				}
+				// if (window.location.hash == '#chat') {
+				// 	window.location.hash = 'home'
+				// 	window.location.hash = 'chat'
+				// 	// chat()
+				// }
 				break ;
 			case 'friend_request':
 				/**
@@ -234,10 +245,11 @@ function set_online() {
 				if (data.response == true)	{
 					toast_alert(`You and ${new_user.username} are now friends`)
 					
-					if (window.location.hash == '#chat') {
-						chat_hashchange()
-						chat()
-					}
+					// if (window.location.hash == '#chat') {
+					// 	window.location.hash = 'home'
+					// 	window.location.hash = 'chat'
+					// 	// chat()
+					// }
 				}	else	{
 					//? Do nothing?
 				}
@@ -250,10 +262,11 @@ function set_online() {
 				new_user = await get_user_info(data.user)
 				toast_alert(`You and ${new_user.username} are no longer friends`)
 				
-				if (window.location.hash == '#chat') {
-					chat_hashchange()
-					chat()
-				}
+				// if (window.location.hash == '#chat') {
+				// 	window.location.hash = 'home'
+				// 	window.location.hash = 'chat'
+				// 	// chat()
+				// }
 				break ;
 			case 'game_invite':
 				/**
@@ -318,10 +331,11 @@ function set_online() {
 					case 'Friend request accepted':
 						toast_alert(`You and ${user.username} are now friends`)
 
-						if (window.location.hash == '#chat') {
-							chat_hashchange()
-							chat()
-						}
+						// if (window.location.hash == '#chat') {
+						// 	window.location.hash = 'home'
+						// 	window.location.hash = 'chat'
+						// 	// chat()
+						// }
 						break;
 					case 'Friend request dennied':
 						//? Do nothing

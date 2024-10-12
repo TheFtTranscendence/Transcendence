@@ -120,7 +120,7 @@ function send_update(v, force = false) {
 		offset_p1: v.player.attackbox,
 		offset_p2: v.enemy.attackbox,
 
-		time: v.g.time
+		// time: v.g.time - 1
 	}
 	
 	// console.log('sending game state from ' + window.user.id)
@@ -186,7 +186,7 @@ function Matchmaking_setup_socket(v) {
 			v.player.attackbox = msg.stats.offset_p1
 			v.enemy.attackbox = msg.stats.offset_p2
 
-			v.g.time = msg.stats.time
+			// v.g.time = msg.stats.time
 		}
 	}
 }
