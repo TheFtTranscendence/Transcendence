@@ -85,6 +85,8 @@ function send_update(v, force = false) {
 	}
 
 	stats = {
+		sender: window.user.username,
+
 		health_p1: v.player.health,
 		health_p2: v.enemy.health,
 
@@ -148,7 +150,9 @@ function Matchmaking_setup_socket(v) {
 		else if (msg.type == 'game_state')
 		{
 
-			console.log('GM from ' + window.user.id, msg)
+			// console.log('GM from ' + window.user.id, msg)
+			console.log("sender", msg.stats.sender)
+			
 			v.player.health = msg.stats.health_p1
 			v.enemy.health = msg.stats.health_p2
 
