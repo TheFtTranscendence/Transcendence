@@ -257,7 +257,7 @@ function fillGame() {
 					if (games_dict[timestamp].score1 > games_dict[timestamp].score2 && games_dict[timestamp].player1 === window.user.username) {
 						result = 'Win';
 						window.scores.wins = window.scores.wins + 1;
-					} else if (score1 < score2 && player2 === window.user.username) {
+					} else if (games_dict[timestamp].score1 < games_dict[timestamp].score2 && games_dict[timestamp].player2 === window.user.username) {
 						result = 'Win';
 						window.scores.wins = window.scores.wins + 1;
 					} else {
@@ -545,7 +545,7 @@ async function updateContent(selectedUser) {
 					if (games_dict[timestamp].score1 > games_dict[timestamp].score2 && games_dict[timestamp].player1 === selectedUser.username ) {
 						result = 'Win';
 						window.scores.wins = window.scores.wins + 1;
-					} else if (score1 < score2 && player2 === selectedUser.username ) {
+					} else if (games_dict[timestamp].score1 < games_dict[timestamp].score2 && games_dict[timestamp].player2 === selectedUser.username ) {
 						result = 'Win';
 						window.scores.wins = window.scores.wins + 1;
 					} else {
