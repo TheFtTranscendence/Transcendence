@@ -27,22 +27,9 @@ function _update_user_chats() {
 		friend.socket = new WebSocket(`wss://${window.IP}:3000/chat/ws/chat/?user=${window.user.username}&chat_id=${friend.chat_id}`);
 		
 		friend.socket.onmessage = function(e) {
-			if (window.location.hash == 'chat' && window.CurrentChatting == friend[0]) {
-
 				const data = JSON.parse(e.data);
 				console.log(data);
 
-				
-				window.Messages.push(data)
-				const messageDiv = document.createElement('div')
-				messageDiv.classList.add('message-item', 'received-message')
-				messageDiv.innerHTML = `
-				<strong>${data.sender}:</strong> ${data.content}
-				`
-
-				window.chatContent.appendChild(messageDiv)
-				window.chatContent.scrollTop = window.chatContent.scrollHeight
-			}
 		};
 	});
 }

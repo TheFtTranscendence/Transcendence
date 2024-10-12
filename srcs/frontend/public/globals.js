@@ -151,4 +151,3 @@ window.isRegistering = false;
 window.scores = {};
 window.scores.wins = 0;
 window.scores.losses = 0;
-
