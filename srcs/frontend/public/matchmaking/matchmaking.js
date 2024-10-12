@@ -111,7 +111,7 @@ function Matchmaking_setup_socket(v) {
 	
 	v.s.game_socket = new WebSocket(`wss://${window.IP}:3000/remote-players/ws/remote_access/?game_id=` + v.s.gameId);
 	
-	v.s.socketupdate = window.setInterval(() => {send_update(v)}, 5000)
+	v.s.socketupdate = window.setInterval(() => {send_update(v)}, 1000)
 
 	v.s.game_socket.onmessage = function(event) {
 		msg = JSON.parse(event.data)
@@ -147,6 +147,7 @@ function Matchmaking_setup_socket(v) {
 			}
 		else if (msg.type == 'game_state')
 		{
+
 			console.log('GM from ' + window.user.id, msg)
 			v.player.health = msg.stats.health_p1
 			v.enemy.health = msg.stats.health_p2
