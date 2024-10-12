@@ -99,6 +99,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 					'info': 'User dennied game invite',
 				}
 			)
+			await self._deleteGame()
 		else:
 			try:
 				await self.channel_layer.group_send(
