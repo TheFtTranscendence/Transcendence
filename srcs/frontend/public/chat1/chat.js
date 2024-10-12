@@ -199,6 +199,10 @@ async function chat_confirmButton() {
 
 	const holder = document.getElementById('chat-input-buttons').placeholder
 	const userInput = document.getElementById('chat-input-buttons').value
+	if (userInput === '') {
+		toast_alert('Enter a username')
+		return
+	}
 	await get_user_info(userInput).then((response) => {
 		console.log('response ', response)
 		user_to_send = response.id
