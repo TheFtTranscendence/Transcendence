@@ -213,8 +213,7 @@ window.playerCounter = 0;
 
 /* ------------> FRONTEND TOURNAMENT HEALTHCHECK BOOLS <------------ */
 
-let fightyTournamentHeathcheck = false;
-let pongyTournamentHeathcheck = false;
+window.frontendHealthCheck = false;
 
 
 /* ------------> FRONTEND TOURNAMENT MANAGMENT CLASSES START <------------ */
@@ -234,19 +233,34 @@ class Tournament {
     constructor() {
         this.nrPlayers = 0;
         this.nrMatches = 0;
+		this.matchCounter = 0;
 		this.nrRounds = 0;
+		this.roundOneMatches = 0;
+		this.roundTwoMatches = 0;
+		this.roundThreeMatches = 0;
         this.matchList = [];  // Array to hold Match objects
     }
 
 	// Sets tournament size information (Number of players, rounds and matches)
-    setTournamentSize(nrPlayers, nrRounds) {
+    setTournamentSize(nrPlayers) {
         if (nrPlayers !== 4 && nrPlayers !== 8) {
             throw new Error("Tournament only supports 4 or 8 players.");
         }
         this.nrPlayers = nrPlayers;
         this.nrMatches = nrPlayers - 1;
-		this.nrRounds = nrRounds;
-    }
+		if (nrPlayers === 4) {
+			this.nrRounds = 2;
+			this.roundOneMatches = 2;
+			this.roundTwoMatches = 1;
+			this.roundThreeMatches = 0;
+		}
+		else {
+			this.nrRounds = 3;
+			this.roundOneMatches = 4;
+			this.roundTwoMatches = 2;
+			this.roundThreeMatches = 1;
+    	}
+	}
 
 	// Adds match for all players in first round
 	addStartingPlayers(playerList)
@@ -286,6 +300,7 @@ class Tournament {
 	{
 		for (let match of this.matchList) {
             if (!match.matchPlayed) {
+				console.log("NEXT MATCH PLAYERS: ", match.players)
                 return match.players;
             }
         }
@@ -297,6 +312,7 @@ class Tournament {
 	{
 		for (let match of this.matchList) {
 			if (!match.matchPlayed && players.every(player => match.players.includes(player))) {
+				this.matchCounter++;
 				match.matchPlayed = true;
             }
         }
@@ -316,6 +332,42 @@ class Tournament {
 		return bracketPlayerList;
 	}
 
+    getRoundInfo() {
+        return {
+            nrRounds: this.nrRounds,
+            roundOneMatches: this.roundOneMatches,
+            roundTwoMatches: this.roundTwoMatches,
+            roundThreeMatches: this.roundThreeMatches
+        };
+	}
+
+	getTournamentWinner()
+	{
+		if (this.matchCounter === this.nrMatches)
+		{
+			for (let match of this.matchList)
+			{
+				if (match.players.length === 1)
+					return match.players[0]
+			}
+		}
+		console.log("getTournamentWinner | NO WINNER FOUND")
+	}
+
+	// prints all matches stored
+	printAllMatches()
+	{
+		console.log("--> MATCHES STORED <--")
+		let counter = 1
+		for (let match of this.matchList) {
+			console.log("Match Number: ", counter)
+			console.log("Player1 -> ", match.players[0])
+			console.log("Player2 -> ", match.players[1])
+			console.log("Has Match been played: ", match.matchPlayed)
+			counter++;
+		}
+	}
+
 	// Return tournament size
 	getTournamentSize()
 	{
@@ -323,10 +375,15 @@ class Tournament {
 	}
 
 	// Reset tournament once it's over
-	resetTournament() {
+	resetTournament()
+	{
         this.nrPlayers = 0;
-		this.nrMatches = 0;
-        this.nrRounds = 0;
+        this.nrMatches = 0;
+		this.matchCounter = 0;
+		this.nrRounds = 0;
+		this.roundOneMatches = 0;
+		this.roundTwoMatches = 0;
+		this.roundThreeMatches = 0;
         this.matchList = [];  // Clear all matches
 	}
 
@@ -346,9 +403,9 @@ class Tournament {
 		const databseInitialPlayers = await window.getTournamentPlayers();
 		
 		if (databseInitialPlayers.length === 4)
-			this.setTournamentSize(4, 2)
+			this.setTournamentSize(4)
 		else
-			this.setTournamentSize(8, 3)
+			this.setTournamentSize(8)
 		
 		this.addStartingPlayers(databseInitialPlayers)
 	}
@@ -358,21 +415,28 @@ class Tournament {
 	{
 		const winnerList = []
 		const databaseTournamentRankings = await window.getTournamentRankings();
+		console.log("DATABASE TOURNAMENT RANKS: ", databaseTournamentRankings)
 		for (let player of databaseTournamentRankings) {
 			const loser = player;
+			console.log("DATABASE PLAYER FROM RANKS: ", player)
 			const databaseAllGames = await window.getAllGames();
+			console.log("DATABASE ALL GAMES: ", databaseAllGames)
+			console.log("database ALL GAES BEFORE FOR 1", databaseAllGames[0][1])
+			console.log("database ALL GAES BEFORE FOR 2", databaseAllGames[0][2])
 			for (let i = databaseAllGames.length - 1; i >= 0; i--) {
-				if (loser === databaseAllGames[1]) {
-					winnerList.push(databaseAllGames[2])
+				if (loser === databaseAllGames[i][1]) {
+					winnerList.push(databaseAllGames[i][2])
+					console.log("DATABASE GAME PLAYED PLAYER2: ", databaseAllGames[i][2])
 					break;
 				}
-				if (loser === databaseAllGames[2]) {
-					winnerList.push(databaseAllGames[1])
+				if (loser === databaseAllGames[i][2]) {
+					winnerList.push(databaseAllGames[i][1])
+					console.log("DATABASE GAME PLAYED PLAYER1: ", databaseAllGames[i][1])
 					break;
 				}
 			}
 		}
-
+		console.log("DATABASE WINNER LIST: ", winnerList)
 		for (let winner of winnerList) {
 			this.addGameWinner(winner)
 		}
@@ -400,8 +464,8 @@ class Tournament {
 
 }
 
-const fightyTournamentData = new Tournament();
-const pongyTournamentData = new Tournament();
+window.fightyTournamentData = new Tournament();
+window.pongyTournamentData = new Tournament();
 
 /* ------------> FRONTEND TOURNAMENT MANAGMENT CLASSES END <------------ */
 

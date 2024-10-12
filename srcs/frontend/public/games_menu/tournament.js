@@ -8,61 +8,22 @@ function clearTournament() {
         window.nextGameButton.removeEventListener('click', next_game);
     }
 
+    if (window.endTournamentButton) {
+        window.endTournamentButton.removeEventListener('click', leaveTournament);
+    }
+
     unloadScripts(window.tournamentScripts);
 }
-// function tournament_hashchange()
-// {
-//     clearTournament()
-// 	unloadScripts(window.tournamentScripts)
-// }
+
 
 async function next_game_players() {
     let nextGamePlayers = [];
 
     if (window.location.hash == '#fighters') {
-        const url = `https://${window.IP}:3000/solidity/solidity/getnexttournamentplayers/${window.user.blockchain_id}/Fighty`;
-
-        // Move the fetch logic here and use await to wait for the data
-        try {
-            const response = await fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error(`Error fetching data: ${response.statusText}`);
-            }
-
-            const data = await response.json(); // Wait for the response to be parsed as JSON
-            console.log('Tournament players:', data);
-            nextGamePlayers = data.success;  // Now this will contain the fetched data
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    } else {
-        const url = `https://${window.IP}:3000/solidity/solidity/getnexttournamentplayers/${window.user.blockchain_id}/Pongy`;
-
-        // Same approach here, await the fetch
-        try {
-            const response = await fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error(`Error fetching data: ${response.statusText}`);
-            }
-
-            const data = await response.json(); // Wait for the response to be parsed as JSON
-            console.log('Tournament players:', data);
-            nextGamePlayers = data.success;  // Now this will contain the fetched data
-        } catch (error) {
-            console.error('Error:', error);
-        }
+        nextGamePlayers = fightyTournamentData.getNextTournamentMatch()
+    }
+    else {
+        nextGamePlayers = pongyTournamentData.getNextTournamentMatch()
     }
 
     // Now log after the players are fetched and the array is populated
@@ -85,6 +46,8 @@ async function next_game_players() {
 
 async function next_game() {
     document.getElementById('tournament-area').classList.add("hidden");
+    document.getElementById('tournament-bracket').classList.add("hidden");
+    document.getElementById('winner-screen').classList.add("hidden");
     window.tournamentVars.tournamentMatch = true;
 
     let playerNames = [];
@@ -113,33 +76,63 @@ async function next_game() {
 
 async function show_bracket()
 {
-	const players = await window.getTournamentPlayers();
-	if (players.length === 4)
-	{
-		const elements = document.querySelectorAll('.four-players');
-		elements.forEach((element, index) => {
-			element.classList.remove('hidden')
-		})
-	}
-	else
-	{
-		const elements = document.querySelectorAll('.eight-players');
-		elements.forEach((element, index) => {
-			element.classList.remove('hidden')
-		})
-	}
+    document.getElementById('tournament-bracket').classList.remove("hidden");
 
-	// roundOnePlayers = "";
-    for (i = 0; i < players.length; i++)
+    let players = []
+    let roundInfo = {}
+    let tournamentSize = 0
+ 
+    if (window.location.hash == '#fighters') {
+        players = fightyTournamentData.getBracketPlayerList()
+        roundInfo = fightyTournamentData.getRoundInfo()
+        tournamentSize = fightyTournamentData.nrPlayers
+    }
+    else {
+        players = pongyTournamentData.getBracketPlayerList()
+        roundInfo = pongyTournamentData.getRoundInfo()
+        tournamentSize = pongyTournamentData.nrPlayers
+    }
+
+    // show divs
+	if (tournamentSize === 4)
+    {
+        const elements = document.querySelectorAll('.four-players');
+        elements.forEach((element, index) => {
+            element.classList.remove('hidden')
+        })
+    }
+    else
+    {
+        const elements = document.querySelectorAll('.eight-players');
+        elements.forEach((element, index) => {
+            element.classList.remove('hidden')
+        })
+    }
+
+
+
+    // Print round one
+    for (i = 0; i < roundInfo.roundOneMatches * 2; i++)
     {
         input_id = 'player' + (i + 1) + '-r1';
         document.getElementById(input_id).textContent = players[i];
     }
 
-	const tournamentRakings = await window.getTournamentRankings();
+    // Print round two
+    for (i = roundInfo.roundOneMatches * 2; i < roundInfo.roundTwoMatches * 2; i++)
+    {
+        input_id = 'player' + (i + 1) + '-r2';
+        if (players[i])
+            document.getElementById(input_id).textContent = players[i];
+    }
 
-	console.log("tournament rakings!!! -> ", tournamentRakings)
-
+    // Print round three
+    for (i = roundInfo.roundTwoMatches * 2; i < roundInfo.roundThreeMatches * 2; i++)
+    {
+        input_id = 'player' + (i + 1) + '-r3';
+        if (players[i])
+            document.getElementById(input_id).textContent = players[i];
+    }
 }
 
 function shuffle_names(playerNames, playerSkins)
@@ -154,8 +147,24 @@ function shuffle_names(playerNames, playerSkins)
     return [playerNames, playerSkins];
 }
 
+function leaveTournament()
+{
+    clearTournament()
+    if (window.location.hash == '#fighters') {
+        fightyTournamentData.resetTournament()
+    }
+    else {
+        pongyTournamentData.resetTournament()
+    }
+    loadScripts(window.menuScripts)
+    main_menu()
+}
 
 function tournament_loop() {
+
+    // debug func | delete after
+    pongyTournamentData.printAllMatches()
+
     // Make sure you clear the hashchange listener first
     window.removeEventListener('hashchange', clearTournament);
     
@@ -163,32 +172,47 @@ function tournament_loop() {
 
     document.getElementById('tournament-area').classList.remove("hidden");
 
+    let tournamentOver = false
+    let winner = ""
+
     if (window.location.hash == '#fighters') {
         document.getElementById('div-game2-area').classList.add("hidden");
-        // show_bracket(window.playerNames);
+        if (fightyTournamentData.matchCounter !== 0 && fightyTournamentData.matchCounter === fightyTournamentData.nrMatches) {
+            tournamentOver = true
+            winner = fightyTournamentData.getTournamentWinner()
+        }
     } else {
         document.getElementById('game-area').classList.add("hidden");
+        if (pongyTournamentData.matchCounter !== 0 && pongyTournamentData.matchCounter === pongyTournamentData.nrMatches) {
+            tournamentOver = true
+            winner = pongyTournamentData.getTournamentWinner()
+        }
     }
 
-	show_bracket();
-	
-    // Make sure you are not registering multiple listeners
-    if (window.nextGameButton) {
-        window.nextGameButton.removeEventListener('click', next_game);
+    if (tournamentOver) {
+        //tournament over
+        document.getElementById('winner-screen').classList.remove("hidden");
+        document.getElementById('winner-screen').innerHTML = "Congratulations, " + winner + "! You are the winner!"
+   
+        window.endTournamentButton = document.getElementById('leave-tournament-button');
+        window.endTournamentButton.addEventListener('click', leaveTournament);
     }
-
-    window.nextGameButton = document.getElementById('next-game-button');
-    window.nextGameButton.addEventListener('click', next_game);
-
-    if (window.location.hash == '#fighters') {
-        loadScripts(window.game2Scripts);
-    } else {
-        loadScripts(window.gameScripts);
+    else {
+        show_bracket();
+        // Make sure you are not registering multiple listeners
+        if (window.nextGameButton) {
+            window.nextGameButton.removeEventListener('click', next_game);
+        }
+    
+        window.nextGameButton = document.getElementById('next-game-button');
+        window.nextGameButton.addEventListener('click', next_game);
+    
+        if (window.location.hash == '#fighters') {
+            loadScripts(window.game2Scripts);
+        } else {
+            loadScripts(window.gameScripts);
+        }
     }
-
-    // console.log(window.pongPlayerNames);
-    // console.log(window.pongPlayerSkins);
-
 }
 
 async function storeTournament(namesAndSkins) {
@@ -199,8 +223,12 @@ async function storeTournament(namesAndSkins) {
     let url;
     if (window.location.hash == '#fighters') {
         url = `https://${window.IP}:3000/solidity/solidity/addtournament/${window.user.blockchain_id}/Fighty`;
+        fightyTournamentData.setTournamentSize(namesAndSkins.length)
+        fightyTournamentData.addStartingPlayers(namesAndSkins)
     } else {
         url = `https://${window.IP}:3000/solidity/solidity/addtournament/${window.user.blockchain_id}/Pongy`;
+        pongyTournamentData.setTournamentSize(namesAndSkins.length)
+        pongyTournamentData.addStartingPlayers(namesAndSkins)
     }
 
     console.log("Storing tournament:", JSON.stringify(data));
@@ -234,6 +262,7 @@ async function start_tournament(playerNamesOrd, playerSkinsOrd) {
     // Store tournament data and wait for the result
     if (!gameStatus) {
         await storeTournament(namesAndSkins);  // Wait for the tournament to be stored
+
     }
 
     // Now the tournament is stored, proceed with the tournament loop

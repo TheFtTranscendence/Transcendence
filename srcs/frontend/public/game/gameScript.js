@@ -53,6 +53,17 @@ function cleanUpAfterFinish(vars)
 
 async function storeMatch(vars)
 {
+	players = [
+		vars.gameVars.p1Name + vars.gameVars.p1SkinId,
+		vars.gameVars.p2Name + vars.gameVars.p2SkinId,
+	]
+	pongyTournamentData.setMatchAsPlayed(players)
+	if (vars.gameVars.p1Score > vars.gameVars.p2Score) {
+		pongyTournamentData.addGameWinner(vars.gameVars.p1Name + vars.gameVars.p1SkinId)
+	}
+	else {
+		pongyTournamentData.addGameWinner(vars.gameVars.p2Name + vars.gameVars.p2SkinId)
+	}
 	console.log(vars.gameVars.p1Name + vars.gameVars.p1SkinId);
 	console.log(vars.gameVars.p2Name + vars.gameVars.p2SkinId);
 	if (vars.gameVars.tournamentGame)
@@ -80,8 +91,8 @@ async function storeMatch(vars)
 		const url = `https://${window.IP}:3000/solidity/solidity/addgame/${window.user.blockchain_id}/Pongy`;
 
 		const data = {
-			player1: vars.gameVars.p1Name,
-			player2: vars.gameVars.p2Name,
+			player1: vars.gameVars.p1Name + vars.gameVars.p1SkinId,
+			player2: vars.gameVars.p2Name + vars.gameVars.p2SkinId,
 			score1: vars.gameVars.p1Score,
 			score2: vars.gameVars.p2Score,
 		};
