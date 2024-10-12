@@ -111,93 +111,9 @@ async function next_game() {
     }
 }
 
-async function getTournamentPlayers() {
-    let players = []; // Default value
-    
-    try {
-        let url;
-        // Check the hash in the URL and choose the correct API endpoint
-        if (window.location.hash == '#fighters') {
-            url = `https://${window.IP}:3000/solidity/solidity/getcurrenttournamentplayerslist/${window.user.blockchain_id}/Fighty`;
-        } else {
-            url = `https://${window.IP}:3000/solidity/solidity/getcurrenttournamentplayerslist/${window.user.blockchain_id}/Pongy`;
-        }
-        
-        // Use await to wait for the fetch request to complete
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
-
-        // Check if the response is okay
-        if (!response.ok) {
-            throw new Error(`Error fetching data: ${response.statusText}`);
-        }
-
-        // Parse the response JSON
-        const data = await response.json();
-        
-        // Store the status from the response
-        players = data.success;
-
-        console.log('Current Tournament Players:', players); // Log the gameStatus
-        
-    } catch (error) {
-        // Handle any errors
-        console.error('Error:', error);
-    }
-
-    // Return the gameStatus after the fetch request completes
-    return players;
-}
-
-async function getTournamentRankings() {
-    let tournamentRakings = {}; // Default value
-    
-    try {
-        let url;
-        // Check the hash in the URL and choose the correct API endpoint
-        if (window.location.hash == '#fighters') {
-            url = `https://${window.IP}:3000/solidity/solidity/getlasttournamentranking/${window.user.blockchain_id}/Fighty`;
-        } else {
-            url = `https://${window.IP}:3000/solidity/solidity/getlasttournamentranking/${window.user.blockchain_id}/Pongy`;
-        }
-        
-        // Use await to wait for the fetch request to complete
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
-
-        // Check if the response is okay
-        if (!response.ok) {
-            throw new Error(`Error fetching data: ${response.statusText}`);
-        }
-
-        // Parse the response JSON
-        const data = await response.json();
-        
-        // Store the status from the response
-        tournamentRakings = data.success;
-
-        console.log('Current tournamentRakings:', tournamentRakings); // Log the gameStatus
-        
-    } catch (error) {
-        // Handle any errors
-        console.error('Error:', error);
-    }
-
-    // Return the gameStatus after the fetch request completes
-    return tournamentRakings;
-}
-
 async function show_bracket()
 {
-	const players = await getTournamentPlayers();
+	const players = await window.getTournamentPlayers();
 	if (players.length === 4)
 	{
 		const elements = document.querySelectorAll('.four-players');
@@ -220,7 +136,7 @@ async function show_bracket()
         document.getElementById(input_id).textContent = players[i];
     }
 
-	const tournamentRakings = await getTournamentRankings();
+	const tournamentRakings = await window.getTournamentRankings();
 
 	console.log("tournament rakings!!! -> ", tournamentRakings)
 
@@ -238,22 +154,6 @@ function shuffle_names(playerNames, playerSkins)
     return [playerNames, playerSkins];
 }
 
-function unloadScriptIfLoaded(scriptPath) {
-    const scripts = document.getElementsByTagName('script');
-    
-    // Check if the script is already loaded
-    for (let i = 0; i < scripts.length; i++) {
-        if (scripts[i].src.includes(scriptPath)) {
-            // Script is loaded, now remove it
-            scripts[i].parentNode.removeChild(scripts[i]);
-            console.log(`Script with path ${scriptPath} has been unloaded.`);
-            return;  // Exit after unloading the script
-        }
-    }
-
-    console.log(`Script with path ${scriptPath} is not loaded.`);
-}
-
 
 function tournament_loop() {
     // Make sure you clear the hashchange listener first
@@ -268,7 +168,6 @@ function tournament_loop() {
         // show_bracket(window.playerNames);
     } else {
         document.getElementById('game-area').classList.add("hidden");
-        unloadScriptIfLoaded(window.gameScripts);
     }
 
 	show_bracket();
@@ -340,45 +239,3 @@ async function start_tournament(playerNamesOrd, playerSkinsOrd) {
     // Now the tournament is stored, proceed with the tournament loop
     tournament_loop();
 }
-
-// async function getTournamentStatus() {
-//     let gameStatus = false; // Default value
-    
-//     try {
-//         let url;
-//         // Check the hash in the URL and choose the correct API endpoint
-//         if (window.location.hash == '#fighters') {
-//             url = `https://${window.IP}:3000/solidity/solidity/gettournamentstatus/${window.user.blockchain_id}/Fighty`;
-//         } else {
-//             url = `https://${window.IP}:3000/solidity/solidity/gettournamentstatus/${window.user.blockchain_id}/Pongy`;
-//         }
-        
-//         // Use await to wait for the fetch request to complete
-//         const response = await fetch(url, {
-//             method: 'GET',
-//             headers: {
-//                 'Content-Type': 'application/json',
-//             }
-//         });
-
-//         // Check if the response is okay
-//         if (!response.ok) {
-//             throw new Error(`Error fetching data: ${response.statusText}`);
-//         }
-
-//         // Parse the response JSON
-//         const data = await response.json();
-        
-//         // Store the status from the response
-//         gameStatus = data.success;
-
-//         console.log('gameStatus:', gameStatus); // Log the gameStatus
-        
-//     } catch (error) {
-//         // Handle any errors
-//         console.error('Error:', error);
-//     }
-
-//     // Return the gameStatus after the fetch request completes
-//     return gameStatus;
-// }

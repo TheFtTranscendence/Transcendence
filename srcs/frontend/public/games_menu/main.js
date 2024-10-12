@@ -77,30 +77,11 @@ async function main_menu_tournamentButton() {
 	console.log('Tournament button clicked')
 	clearMenu()
 
-    // axios.get('http://localhost:8001/solidity/getlasttournamentranking/' + window.user.blockchain_id + "/Pongy")
-	// .then((response) => {
-    //     console.log("Current TOURNEY");
-	// 	console.log(response.data);
-	// })
-	// .catch((error) => {
-	// 	console.error(error);
-	// 	if (error.response)	{
-	// 		const status = error.response.status;
-	// 	}
-	// });
 
+	const allTouneys = await window.getAllTournamentRankings();
+	console.log("ALL TOURNEYSSSS: ", allTouneys)
 
-	// axios.get('http://localhost:8001/solidity/getalltournamentsrankings/' + window.user.blockchain_id + "/Pongy")
-	// .then((response) => {
-	// 	console.log("ALL TOURNEY");
-	// 	console.log(response.data);
-	// })
-	// .catch((error) => {
-	// 	console.error(error);
-	// 	if (error.response)	{
-	// 		const status = error.response.status;
-	// 	}
-	// });
+	
 
 	const gameStatus = await window.getTournamentStatus();
 
@@ -140,27 +121,14 @@ function main_menu() {
 		document.getElementById('games-menu-selected-skin').style.backgroundImage = "url('" + window.game1SkinsPreview[window.pongPlayerSkins] + "')" 
 	}
 
+	// let allGames = await window.getAllGames();
 
-	// const url = `https://${window.IP}:3000/solidity/solidity/gettournamentstatus/${window.user.blockchain_id}/Pongy`;
-	// fetch(url, {
-	// 	method: 'GET', // Use 'GET' for fetching data
-	// 	headers: {
-	// 		'Content-Type': 'application/json',
-	// 	}
-	// })
-	// .then(response => {
-	// 	if (!response.ok) {
-	// 		throw new Error(`Error fetching data: ${response.statusText}`);
-	// 	}
-	// 	return response.json(); // Assuming the response is in JSON format
-	// })
-	// .then(data => {
-	// 	console.log('TOURNEY STATUS:', data);
-	// 	// Process the data here (for example, display it on the UI)
-	// })
-	// .catch(error => {
-	// 	console.error('Error:', error);
-	// });
+	// console.log("last game form all games -> ", allGames[allGames.length - 1])
+	// for (let i = allGames.length - 1; i >= 0; i--) {
+	// 	console.log(allGames[i]);
+	// }
+
+
 
 	// const url2 = `https://${window.IP}:3000/solidity/solidity/getcurrenttournamentplayerslist/${window.user.blockchain_id}/Pongy`;
 	// fetch(url2, {
