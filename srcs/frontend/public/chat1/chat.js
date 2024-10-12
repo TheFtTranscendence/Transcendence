@@ -95,19 +95,19 @@ async function openChat(friend) {
 	await getMessages(friend)
 	window.CurrentChatting = friend[0]
 
-	window.user.friend_list[window.CurrentChatting].socket.onmessage = function(e) {
-		const data = JSON.parse(e.data);
-		console.log(data);
-		window.Messages.push(data)
-		const messageDiv = document.createElement('div')
-		messageDiv.classList.add('message-item', 'received-message')
-		messageDiv.innerHTML = `
-		<strong>${data.sender}:</strong> ${data.content}
-		`
+	// window.user.friend_list[window.CurrentChatting].socket.onmessage = function(e) {
+	// 	const data = JSON.parse(e.data);
+	// 	console.log(data);
+	// 	window.Messages.push(data)
+	// 	const messageDiv = document.createElement('div')
+	// 	messageDiv.classList.add('message-item', 'received-message')
+	// 	messageDiv.innerHTML = `
+	// 	<strong>${data.sender}:</strong> ${data.content}
+	// 	`
 
-		window.chatContent.appendChild(messageDiv)
-		window.chatContent.scrollTop = window.chatContent.scrollHeight
-	}
+	// 	window.chatContent.appendChild(messageDiv)
+	// 	window.chatContent.scrollTop = window.chatContent.scrollHeight
+	// }
 
 	// Clear previous chat content
 	window.chatContent.innerHTML = ''
