@@ -78,9 +78,9 @@ async function Matchmaking_queue(v)
 function send_update(v, force = false) {
 
 	if (force == false) {
-		if (window.user.username == v.player.name && v.g.time % 10 == 0)
+		if (window.user.username == v.player.name && v.g.time % 2 == 0)
 			return ;
-		else if (window.user.username == v.enemy.name && v.g.time % 10 == 5)
+		else if (window.user.username == v.enemy.name && v.g.time % 2 == 1)
 			return ;
 	}
 
@@ -100,7 +100,7 @@ function send_update(v, force = false) {
 		time: v.g.time
 	}
 	
-	console.log('sending game state from ' + window.user.id, stats)
+	// console.log('sending game state from ' + window.user.id)
 	
 	v.s.game_socket.send(JSON.stringify({type: 'game_state', stats: stats}))
 
@@ -138,9 +138,16 @@ function Matchmaking_setup_socket(v) {
 				case 'attack_2': v.enemy.attack(); break;
 			}
 		}
-		else
+		else if (msg.type == 'game_info') {
+				if (msg.info == 'Disconenct') {
+					toast_alert('Opponent disconnected')
+					Matchmaking_leave_game(v)
+					// todo GUARDAR NA BASE DE DADOS JA SENAO COMO WIN
+				}
+			}
+		else if (msg.type == 'game_state')
 		{
-			console.log('game state from ' + window.user.id, msg)
+			console.log('GM from ' + window.user.id, msg)
 			v.player.health = msg.stats.health_p1
 			v.enemy.health = msg.stats.health_p2
 

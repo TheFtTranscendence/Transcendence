@@ -162,6 +162,10 @@ function leave_game(v) {
 
 	v.g.timer.innerHTML = 200
 
+	v.player.bar.style.width = '100%'
+	v.enemy.bar.style.width = '100%'
+	document.querySelector('#game2-end-text').style.display = 'none'
+
 	document.getElementById('div-game2-area').classList.add("hidden");
 	document.getElementById('game2-menu').classList.add("hidden");
 	document.getElementById('game2').classList.add("hidden");
