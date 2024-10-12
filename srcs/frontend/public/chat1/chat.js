@@ -91,14 +91,13 @@ async function openChat(friend) {
 
 	// Clear previous chat content
 	window.chatContent.innerHTML = ''
-}
 
 	await getMessages(friend)
 	window.CurrentChatting = friend[0]
 
-	// window.user.friend_list.forEach((friend) => {
-	// 	friend.onmessage = function () { return ; }
-	// })
+	window.user.friend_list.forEach((friend) => {
+		friend.onmessage = function () { return ; }
+	})
 		
 	window.user.friend_list[window.CurrentChatting].socket.onmessage = function(e) {
 		const data = JSON.parse(e.data);
