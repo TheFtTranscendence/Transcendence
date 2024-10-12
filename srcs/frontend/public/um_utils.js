@@ -26,11 +26,11 @@ function _update_user_chats() {
 	Object.entries(window.user.friend_list).forEach(([key, friend]) => {
 		friend.socket = new WebSocket(`wss://${window.IP}:3000/chat/ws/chat/?user=${window.user.username}&chat_id=${friend.chat_id}`);
 		
-		friend.socket.onmessage = function(e) {
-				const data = JSON.parse(e.data);
-				console.log(data);
+		// friend.socket.onmessage = function(e) {
+		// 		const data = JSON.parse(e.data);
+		// 		console.log(data);
 
-		};
+		// };
 	});
 }
 
