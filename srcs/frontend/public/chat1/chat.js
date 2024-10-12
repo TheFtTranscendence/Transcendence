@@ -96,7 +96,7 @@ async function openChat(friend) {
 	window.CurrentChatting = friend[0]
 
 	window.user.friend_list.forEach((friend) => {
-		friend.onmessage = function () { return ; }
+		friend.socket.onmessage = null
 	})
 		
 	window.user.friend_list[window.CurrentChatting].socket.onmessage = function(e) {
