@@ -1,11 +1,6 @@
-function Matchmaking_before_game()
+function Matchmaking_before_game(invite = false, sender = null, receiver = null)
 {
-	// Ask nickname from the players
-	// v.player.name = nickname1
-	// v.enemy.name = nickname2
-	
 	console.log('before game 2')
-
 	
 	try {
 		toast_alert('Searching for match...')
@@ -16,6 +11,8 @@ function Matchmaking_before_game()
 	v = Matchmaking_init_vars()
 	Matchmaking_setup_canvas(v)
 
-	Matchmaking_queue(v)
-
+	if (invite == false)
+		Matchmaking_queue(v)
+	else 
+		Matchmaking_invite(v, sender, receiver)
 }

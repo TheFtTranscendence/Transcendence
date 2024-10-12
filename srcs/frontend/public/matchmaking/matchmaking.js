@@ -15,6 +15,27 @@ async function side_get_user_info(id) {
 	};
 }
 
+function Matchmaking_invite(v, sender, receiver) {
+
+	window.addEventListener('hashchange', matchmaking_hashchange)
+
+	fighters = Matchmaking_init_fighters(
+		receiver.username,
+		receiver.skin,
+		sender.username,
+		sender.skin,
+		v.g.stun_time,
+	)
+
+	v.player = fighters.player
+	v.enemy = fighters.enemy
+
+	v.s.player1 = sender.username
+	v.s.player2 = receiver.username
+
+	v.s.gameId = sender.gameId
+	
+}
 
 async function Matchmaking_queue(v)
 {

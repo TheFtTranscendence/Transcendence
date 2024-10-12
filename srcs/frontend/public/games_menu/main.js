@@ -40,13 +40,14 @@ async function main_menu_changeSkinButton () {
 	}
 }
 
-function main_menu_matchmakingButton () {
+function main_menu_matchmakingButton (invite = false) {
 	console.log('Matchmaking button clicked')
 	if (window.location.hash == '#fighters') {
 
 		clearMenu()
 		unloadScripts(window.menuScripts)
-		loadScripts(window.matchmakingScripts, 'Matchmaking_before_game') // To change for optimization
+		if (invite == false)
+			loadScripts(window.matchmakingScripts, 'Matchmaking_before_game') // To change for optimization
 	}
 	else {
 		// Load the scripts for pong matchmaking

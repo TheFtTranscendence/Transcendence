@@ -402,7 +402,7 @@ function declinePongyGameInvite(button) {
 	// todo: Add further logic for declining the notification
 }
 
-function addFightyGameInvite(data, hfsagfhag) {
+function addFightyGameInvite(sender) {
 	const tableBody = document.getElementById("notificationsTableBody");
 	const newRow = document.createElement("tr");
 	
@@ -412,8 +412,8 @@ function addFightyGameInvite(data, hfsagfhag) {
 			<div class="notification-row">
 				<span>${notificationText}</span>
 				<div>
-					<button class="btn btn-success btn-sm ms-2" onclick="acceptFightyGameInvite(this, ${hfsagfhag})">Accept</button>
-					<button class="btn btn-danger btn-sm" onclick="declineFightyGameInvite(this)">Decline</button>
+					<button class="btn btn-success btn-sm ms-2" onclick="acceptFightyGameInvite(this, ${sender})">Accept</button>
+					<button class="btn btn-danger btn-sm" onclick="declineFightyGameInvite(this, ${sender})">Decline</button>
 				</div>
 			</div>
 		</td>
@@ -422,17 +422,34 @@ function addFightyGameInvite(data, hfsagfhag) {
 	tableBody.insertBefore(newRow, tableBody.firstChild);
 }
 
+<<<<<<< Updated upstream
 async function acceptFightyGameInvite(button) {
+=======
+function acceptFightyGameInvite(button, sender) {
+>>>>>>> Stashed changes
 	const buttons = button.parentElement.querySelectorAll('button');
 	buttons.forEach(btn => btn.remove());
 	alert("Notification accepted!");
 	// todo: Add further logic for accepting the notification
+	const receiver = {
+		id: window.user.id,
+		username: window.user.username,
+		skin: window.user.preferences.fighty_skin,
+		game_id: game_id
+	}
+
+	window.location.hash = '#fighters'
+	clearMenu()
+	loadScripts(window.matchmakingScripts)
+	Matchmaking_before_game(true, sender, receiver) 
 }
 
-function declineFightyGameInvite(button) {
+function declineFightyGameInvite(button, sender) {
 	const buttons = button.parentElement.querySelectorAll('button');
 	buttons.forEach(btn => btn.remove());
 	alert("Notification declined!");
+
+
 	// todo: Add further logic for declining the notification
 }
 

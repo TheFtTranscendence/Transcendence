@@ -263,6 +263,14 @@ function set_online() {
 				 * player1: player1_id,
 				 * player2: player2_id,
 				 */
+				if (game == 'fighty') {
+					addFightyGameInvite({
+						id: window.user.id,
+						username: window.user.username,
+						skin: window.user.preferences.fighty_skin,
+						game_id: game_id
+					})
+				}
 				new_user = await get_user_info(data.player1)
 				toast_alert(`${new_user.username} invited you to a game of ${data.game}`)
 				break ;
