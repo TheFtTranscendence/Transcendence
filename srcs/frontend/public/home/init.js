@@ -234,6 +234,8 @@ function	fillInfos() {
 function fillGame() {
 	const tableBody = document.getElementById('gameHistoryTableBody');
 	
+	tableBody.innerHTML = '';
+
 	Promise.all([
 		getGames('Pongy', window.user.blockchain_id),
 		getGames('Fighty', window.user.blockchain_id)
@@ -479,7 +481,7 @@ function populateUserDropdown() {
 
 async function updateContent(selectedUser) {
 	const gameHistoryTableBody = document.getElementById("gameHistoryTableBody");
-	gameHistoryTableBody.innerHTML = ''; // Clear previous content
+	gameHistoryTableBody.innerHTML = '';
 
 	const selectedUserInfo = await get_user_info(selectedUser);
 
