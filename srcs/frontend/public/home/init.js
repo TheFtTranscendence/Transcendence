@@ -8,7 +8,6 @@ function home()
 {
 	getAvatar()
 	fillInfos()
-	fillInfos()
 	document.getElementById('home').classList.remove('hidden');
 	window.addEventListener('hashchange', home_hashchange);
 	document.getElementById('profile-img').addEventListener('click', showSideBar);
@@ -58,31 +57,36 @@ function triggerFileDialog() {
 	document.getElementById('changeProfilePicture').click();
 }
 
-function handleUpload() {
+async function handleUpload() {
 	const fileInput = document.getElementById('avatarInput');
 
+	console.log(fileInput.files[0]);
 	if (fileInput.files.length > 0) {
 		uploadAvatar(fileInput.files[0]);
+		await update_user_info();
+		getAvatar()
 	} else {
 		toast_alert('Please select a file to upload.');
 	}
 }
 
 async function uploadAvatar(file) {
-	const formData = new FormData();
-	formData.append('avatar', file);
+
+	const data = {
+		avatar: file,
+	}
 
 	try {
 		const response = await fetch(`https://${window.IP}:3000/user-management/auth/users/${window.user.id}/`, {
 			method: 'PATCH',
-			body: formData,
+			body: JSON.stringify(data),
 			headers: {
 				'Authorization': 'Token ' + window.usertoken,
 			},
 		});
 
 		if (!response.ok) {
-			const errorData = await response.json(); // Parse error response if available
+			const errorData = await response.json();
 			throw new Error(errorData.message || 'Network response was not ok');
 		}
 
@@ -228,7 +232,6 @@ function updateFileName(input) {
 function	fillInfos() {
 	populateUserDropdown()
 	fillGame()
-	fillWinLoss()
 }
 
 function fillGame() {
@@ -255,9 +258,12 @@ function fillGame() {
 				if (window.user.username === player1 || window.user.username === player2) {
 					if (score1 > score2 && player1 === window.user.username) {
 						result = 'Win';
+						window.scores.wins = window.scores.wins + 1;
 					} else if (score1 < score2 && player2 === window.user.username) {
 						result = 'Win';
+						window.scores.wins = window.scores.wins + 1;
 					} else {
+						window.scores.losses = window.scores.losses + 1;
 						result = 'Loss';
 					}
 				} else {
@@ -289,7 +295,10 @@ function fillGame() {
 			const noDataRow = document.createElement("tr");
 			noDataRow.innerHTML = '<td colspan="7" class="text-center">No data available.</td>';
 			tableBody.appendChild(noDataRow);
+			window.scores.wins = 0;
+			window.scores.losses = 0;
 		}
+		fillWinLoss()
 	})
 	.catch(error => {
 		console.error("Error fetching games:", error.message || "An unknown error occurred");
@@ -342,9 +351,8 @@ function fillWinLoss() {
 	const winCounter = document.getElementById('winCounter')
 	const lossCounter = document.getElementById('lossCounter')
 
-	//todo:
-	winCounter.textContent = 5
-	lossCounter.textContent = 6
+	winCounter.textContent = window.scores.wins;
+	lossCounter.textContent = window.scores.losses;
 }
 
 function addNotification(notificationText) {
@@ -538,7 +546,10 @@ async function updateContent(selectedUser) {
 			const noDataRow = document.createElement("tr");
 			noDataRow.innerHTML = '<td colspan="7" class="text-center">No data available.</td>';
 			gameHistoryTableBody.appendChild(noDataRow);
+			window.scores.wins = 0;
+			window.scores.losses = 0;
 		}
+		fillWinLoss()
 	})
 	.catch(error => {
 		console.error("Error fetching games:", error.message || "An unknown error occurred");
