@@ -52,6 +52,8 @@ function Matchmaking_init_vars() {
 			hit_dmg: 5, // %
 			stun_time: stun_time, // ms
 			ground_height: ground_height, // px
+
+			invite: false
 			
 		},
 		

@@ -34,6 +34,11 @@ function Matchmaking_invite(v, sender, receiver) {
 	v.s.player2 = receiver.username
 
 	v.s.gameId = sender.gameId
+
+	document.getElementById('div-game2-area').classList.remove("hidden");
+
+	Matchmaking_setup_socket(v)
+	Matchmaking_startGame2(v)
 	
 }
 
@@ -171,7 +176,6 @@ function Matchmaking_setup_socket(v) {
 		else if (msg.type == 'game_state')
 		{
 
-			// console.log('GM from ' + window.user.id, msg)
 			console.log("sender", msg.stats.sender)
 			
 			v.player.health = msg.stats.health_p1
@@ -186,7 +190,13 @@ function Matchmaking_setup_socket(v) {
 			v.player.attackbox = msg.stats.offset_p1
 			v.enemy.attackbox = msg.stats.offset_p2
 
-			v.g.time = msg.stats.time
+			// v.g.time = msg.stats.time
 		}
+		else if (msg.type == 'ready_msg')
+		{
+			v.g.invite = true
+			toast_alert('Game started!!')
+		}
+
 	}
 }

@@ -10,11 +10,13 @@ function Matchmaking_startGame2(v) {
 	
 	
 function Matchmaking_decreaseTimer(v) {
-	if (v.g.time > 0)
-		v.g.time -= 1
-	v.g.timer.innerHTML = v.g.time
-	if (v.g.time == 0) {
-		Matchmaking_game_end(v)
+	if (v.g.invite = false ) {
+		if (v.g.time > 0)
+			v.g.time -= 1
+		v.g.timer.innerHTML = v.g.time
+		if (v.g.time == 0) {
+			Matchmaking_game_end(v)
+		}
 	}
 }
 

@@ -422,11 +422,7 @@ function addFightyGameInvite(sender) {
 	tableBody.insertBefore(newRow, tableBody.firstChild);
 }
 
-<<<<<<< Updated upstream
-async function acceptFightyGameInvite(button) {
-=======
-function acceptFightyGameInvite(button, sender) {
->>>>>>> Stashed changes
+async function acceptFightyGameInvite(button, sender) {
 	const buttons = button.parentElement.querySelectorAll('button');
 	buttons.forEach(btn => btn.remove());
 	alert("Notification accepted!");
@@ -440,7 +436,7 @@ function acceptFightyGameInvite(button, sender) {
 
 	window.location.hash = '#fighters'
 	clearMenu()
-	loadScripts(window.matchmakingScripts)
+	await LoadPROMISEscripts(window.matchmakingScripts)
 	Matchmaking_before_game(true, sender, receiver) 
 }
 

@@ -263,13 +263,40 @@ function set_online() {
 				 * player1: player1_id,
 				 * player2: player2_id,
 				 */
-				if (game == 'fighty') {
-					addFightyGameInvite({
-						id: window.user.id,
-						username: window.user.username,
-						skin: window.user.preferences.fighty_skin,
-						game_id: game_id
-					})
+				if (data.game == 'fighty') {
+					if (window.user.id == data.player1)	{
+						toast_alert('Game invite sent, awaiting for person to accept')
+						window.location.hash = '#fighters'
+					
+						await LoadPROMISEscripts(window.matchmakingScripts)
+					
+						const sender = {
+							id: window.user.id,
+							username: window.user.username,
+							skin: window.user.preferences.fighty_skin,
+							game_id: data.game_id,
+						}
+					
+						const user_invited = await get_user_info(data.player2) 
+						
+						const receiver = {
+							id: user_invited.id,
+							username: user_invited.username,
+							skin: user_invited.preferences.fighty_skin,
+							game_id: data.game_id,
+						}
+					
+						Matchmaking_before_game(true, sender, receiver)
+					}
+					else
+					{
+						addFightyGameInvite({
+							id: window.user.id,
+							username: window.user.username,
+							skin: window.user.preferences.fighty_skin,
+							game_id: data.game_id
+						})
+					}
 				}
 				new_user = await get_user_info(data.player1)
 				toast_alert(`${new_user.username} invited you to a game of ${data.game}`)
@@ -396,7 +423,8 @@ function unblock(target) {
 }
 
 // Target should be an ID
-function send_game_invite(target, game) {
+async function send_game_invite(target, game) {
+
 	const data = {
 		type: "game_invite",
 		target: target,
