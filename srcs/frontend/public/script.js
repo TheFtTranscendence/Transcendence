@@ -12,7 +12,7 @@ function navigate() {
 		window.location.hash = '#auth';
 	}
 
-	if (window.user == undefined)
+	if (window.user == undefined) 
 		window.location.hash = '#auth';
 
 	switch (window.location.hash) {

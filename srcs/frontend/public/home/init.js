@@ -402,7 +402,7 @@ function declinePongyGameInvite(button) {
 	// todo: Add further logic for declining the notification
 }
 
-function addFightyGameInvite(data) {
+function addFightyGameInvite(data, hfsagfhag) {
 	const tableBody = document.getElementById("notificationsTableBody");
 	const newRow = document.createElement("tr");
 	
@@ -412,7 +412,7 @@ function addFightyGameInvite(data) {
 			<div class="notification-row">
 				<span>${notificationText}</span>
 				<div>
-					<button class="btn btn-success btn-sm ms-2" onclick="acceptFightyGameInvite(this)">Accept</button>
+					<button class="btn btn-success btn-sm ms-2" onclick="acceptFightyGameInvite(this, ${hfsagfhag})">Accept</button>
 					<button class="btn btn-danger btn-sm" onclick="declineFightyGameInvite(this)">Decline</button>
 				</div>
 			</div>

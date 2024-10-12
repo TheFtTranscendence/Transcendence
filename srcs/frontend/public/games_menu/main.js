@@ -29,7 +29,7 @@ async function main_menu_changeSkinButton () {
 		}
 		else {
 			await modify_user_preferences("fighty_skin", window.user.preferences.fighty_skin + 1)
-			new_skin = 0
+			new_skin = window.user.preferences.fighty_skin + 1
 		}
 
 		update_user_info()
