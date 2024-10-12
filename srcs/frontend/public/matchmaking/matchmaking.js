@@ -125,7 +125,7 @@ function send_update(v, force = false) {
 		offset_p1: v.player.attackbox,
 		offset_p2: v.enemy.attackbox,
 
-		time: v.g.time
+		// time: v.g.time - 1
 	}
 	
 	// console.log('sending game state from ' + window.user.id)

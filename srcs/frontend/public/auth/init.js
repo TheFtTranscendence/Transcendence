@@ -36,6 +36,8 @@ function handleSuccessAuth(errorField) {
 
 	set_online();
 
+	_update_user_chats();
+
 	window.currentUser.username = window.user.username; // Ensure 'currentUser' is a global object
 	localStorage.setItem('currentUser', JSON.stringify(window.currentUser));
 }
@@ -66,7 +68,6 @@ function handleLogin() {
 	.then(data => {
 		window.user = data.user;
 		window.usertoken = data.token;
-		_update_user_chats();
 		handleSuccessAuth(errorField);
 	})
 	.catch(error => {

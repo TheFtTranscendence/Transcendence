@@ -37,7 +37,11 @@ function sendChatMessage() {
 
 	const newMessage = chatInput.value.trim()
 	if (newMessage) {
-		const messageObject = {sender: window.user.username, content: newMessage }
+		const messageObject = {
+			chat_id: window.CurrentChatting_id,
+			sender: window.user.username,
+			content: newMessage
+		}
 
 		// Add the message to the database and to chat
 		//   Messages.push_to_db(messageObject)
@@ -51,7 +55,7 @@ function sendChatMessage() {
 		`
 		window.chatContent.appendChild(messageDiv)
 
-		window.user.friend_list[window.CurrentChatting].socket.send(JSON.stringify(messageObject))
+		window.chat_socket.send(JSON.stringify(messageObject))
 
 		// Clear the input box
 		chatInput.value = ''
@@ -94,24 +98,46 @@ async function openChat(friend) {
 
 	await getMessages(friend)
 	window.CurrentChatting = friend[0]
+	window.CurrentChatting_id = friend[1].chat_id
 
-	Object.entries(window.user.friend_list).forEach((friend) => {
-		friend.onmessage = null;
-	});
+	window.chat_socket.onmessage = function (e) {
 		
-	window.user.friend_list[window.CurrentChatting].socket.onmessage = function(e) {
 		const data = JSON.parse(e.data);
 		console.log(data);
-		window.Messages.push(data)
-		const messageDiv = document.createElement('div')
-		messageDiv.classList.add('message-item', 'received-message')
-		messageDiv.innerHTML = `
-		<strong>${data.sender}:</strong> ${data.content}
-		`
+		
+		if (data.chat_id == window.CurrentChatting_id)
+		{
+			window.Messages.push(data)
+			const messageDiv = document.createElement('div')
+			messageDiv.classList.add('message-item', 'received-message')
+			
+			messageDiv.innerHTML = `
+			<strong>${data.sender}:</strong> ${data.content}
+			`
+			window.chatContent.appendChild(messageDiv)
+			window.chatContent.scrollTop = window.chatContent.scrollHeight
 
-		window.chatContent.appendChild(messageDiv)
-		window.chatContent.scrollTop = window.chatContent.scrollHeight
+		}
+
 	}
+
+	// Object.entries(window.user.friend_list).forEach((friend) => {
+	// 	friend.onmessage = null;
+	// });
+		
+	// window.user.friend_list[window.CurrentChatting].socket.onmessage = function(e) {
+	// 	const data = JSON.parse(e.data);
+	// 	console.log(data);
+	// 	window.Messages.push(data)
+	// 	const messageDiv = document.createElement('div')
+	// 	messageDiv.classList.add('message-item', 'received-message')
+	// 	messageDiv.innerHTML = `
+	// 	<strong>${data.sender}:</strong> ${data.content}
+	// 	`
+
+	// 	window.chatContent.appendChild(messageDiv)
+	// 	window.chatContent.scrollTop = window.chatContent.scrollHeight
+	// }
 
 	// Clear previous chat content
 	window.chatContent.innerHTML = ''
@@ -150,8 +176,10 @@ async function openChat(friend) {
 	window.sendButton = document.getElementById('send-button')
 	window.chatInput = document.getElementById('chat-input')
 
+	window.sendButton.removeEventListener('click', sendChatMessage)
 	window.sendButton.addEventListener('click', sendChatMessage)
 	keypress = keypress.bind(window)
+	window.removeEventListener('keydown', keypress)
 	window.addEventListener('keydown', keypress)
 }
 
@@ -183,6 +211,7 @@ function displayChatList(chatListContainer, friendList) {
 
 		// Add the click event listener
 		const listener = () => openChat(friend)
+		chatDiv.removeEventListener('click', listener)
 		chatDiv.addEventListener('click', listener)
 		
 		// Store the chatDiv and its listener
