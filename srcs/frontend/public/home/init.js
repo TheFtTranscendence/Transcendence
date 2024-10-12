@@ -225,16 +225,6 @@ function updateFileName(input) {
 
 // GAME HISTORY TABLE
 
-// dummy data
-const Game = {
-	timestamp: "",
-	player1: "",
-	player2: "",
-	score1: "",
-	score2: "",
-	tournamentIndex: ""    // -1: not a tournament, then the index of the tournament
-}
-
 function	fillInfos() {
 	populateUserDropdown()
 	fillGame()
@@ -242,12 +232,71 @@ function	fillInfos() {
 }
 
 function fillGame() {
-	const table = document.getElementById('gameHistoryTableBody')
+	const tableBody = document.getElementById('gameHistoryTableBody');
 	
-	//todo: ask loris get all games if possible
-	const url = `https://${window.IP}:3000/solidity/solidity/getgames/${window.user.blockchain_id}/Pongy`;
+	Promise.all([
+		getGames('Pongy', window.user.blockchain_id),
+		getGames('Fighty', window.user.blockchain_id)
+	])
+	.then(([pongy_games, fighty_games]) => {
+		const games_dict = { ...pongy_games, ...fighty_games };
 
-	fetch(url, {
+		if (Object.keys(games_dict).length > 0) {
+			const timestamps = Object.keys(games_dict).sort((a, b) => a - b);
+			tableBody.innerHTML = '';
+
+			for (const timestamp of timestamps) {
+				const { game_type, player1, player2, score1, score2, tournament_id } = games_dict[timestamp];
+				const date = new Date(timestamp).toLocaleString();
+				const result = '';
+
+				if (window.user.username === player1 || window.user.username === player2) {
+					if (score1 > score2 && player1 === window.user.username) {
+						result = 'Win';
+					} else if (score1 < score2 && player2 === window.user.username) {
+						result = 'Win';
+					} else {
+						result = 'Loss';
+					}
+				} else {
+					result = 'N/A';
+				}
+
+				const game_name = '';
+
+				if (tournament_id != -1) {
+					game_name = game_type + ' Tournament' + tournament_id;
+				}	else {
+					game_name = game_type;
+				}
+
+				const newRow = document.createElement("tr");
+				newRow.innerHTML = `
+					<td>${game_name}</td>
+					<td>${date}</td>
+					<td>${player1}</td>
+					<td>${player2}</td>
+					<td>${score1}</td>
+					<td>${score2}</td>
+					<td>${result}</td>
+				`;
+
+				tableBody.appendChild(newRow);
+			}
+		} else {
+			const noDataRow = document.createElement("tr");
+			noDataRow.innerHTML = '<td colspan="7" class="text-center">No data available.</td>';
+			tableBody.appendChild(noDataRow);
+		}
+	})
+	.catch(error => {
+		console.error("Error fetching games:", error.message || "An unknown error occurred");
+	});
+}
+
+function getGames(gameType, instance) {
+	const url = `https://${window.IP}:3000/solidity/solidity/getgames/${instance}/${gameType}`;
+	return fetch(url, {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
@@ -255,34 +304,37 @@ function fillGame() {
 	})
 	.then(response => {
 		if (!response.ok) {
-			return response.json().then(err => { throw err; });
+			throw new Error(`Failed to fetch ${gameType} games: ${response.statusText}`);
 		}
 		return response.json();
 	})
 	.then(data => {
-		console.log(data)
-		//todo: understand how information comes, needs actual games
+		const matchDictionary = {};
+		data.success.forEach(game => {
+			const { timestamp, player1, player2, score1, score2, tournament_id } = game;
+			matchDictionary[timestamp] = {
+				gameType,
+				player1,
+				player2,
+				score1,
+				score2,
+				tournament_id
+			};
+		});
+
+		const sortedKeys = Object.keys(matchDictionary).sort((a, b) => a - b);
+		const sortedMatchDictionary = {};
+		sortedKeys.forEach(key => {
+			sortedMatchDictionary[key] = matchDictionary[key];
+		});
+
+		return sortedMatchDictionary;
 	})
 	.catch(error => {
-		throw new Error(error.message || "An unknown error occurred");
+		console.error(`Error fetching ${gameType} games:`, error.message);
+		return {};
 	});
-
-	// cicly to do this for everygame in history
-	// const newRow = document.createElement("tr");
-	
-	// newRow.innerHTML = `
-	//     <td>${game}</td>
-	//     <td>${date}</td>
-	//     <td>${player1}</td>
-	//     <td>${player2}</td>
-	//     <td>${score1}</td>
-	//     <td>${score2}</td>
-	//     <td>${result}</td>
-	// `;
-	
-	// tableBody.appendChild(newRow);
 }
-
 
 function fillWinLoss() {
 	const winCounter = document.getElementById('winCounter')
@@ -330,14 +382,14 @@ function acceptPongyGameInvite(button) {
 	const buttons = button.parentElement.querySelectorAll('button');
 	buttons.forEach(btn => btn.remove());
 	alert("Notification accepted!");
-	// Add further logic for accepting the notification
+	// todo: Add further logic for accepting the notification
 }
 
 function declinePongyGameInvite(button) {
 	const buttons = button.parentElement.querySelectorAll('button');
 	buttons.forEach(btn => btn.remove());
 	alert("Notification declined!");
-	// Add further logic for declining the notification
+	// todo: Add further logic for declining the notification
 }
 
 function addFightyGameInvite(data) {
@@ -364,14 +416,14 @@ function acceptFightyGameInvite(button) {
 	const buttons = button.parentElement.querySelectorAll('button');
 	buttons.forEach(btn => btn.remove());
 	alert("Notification accepted!");
-	// Add further logic for accepting the notification
+	// todo: Add further logic for accepting the notification
 }
 
 function declineFightyGameInvite(button) {
 	const buttons = button.parentElement.querySelectorAll('button');
 	buttons.forEach(btn => btn.remove());
 	alert("Notification declined!");
-	// Add further logic for declining the notification
+	// todo: Add further logic for declining the notification
 }
 
 function addFriendRequest(sender_id, sender_username) {
@@ -413,9 +465,9 @@ function populateUserDropdown() {
 	userSelect.innerHTML = '';
 	
 	const currentUserOption = document.createElement("option");
-    currentUserOption.value = window.user.username;
-    currentUserOption.textContent = window.user.username; // Display the current user's username
-    userSelect.appendChild(currentUserOption);
+	currentUserOption.value = window.user.username;
+	currentUserOption.textContent = window.user.username; // Display the current user's username
+	userSelect.appendChild(currentUserOption);
 
 	for (const username in window.user.friend_list) {
 		const option = document.createElement("option");
@@ -425,44 +477,68 @@ function populateUserDropdown() {
 	}
 }
 
-function updateContent(selectedUser) {
-    const gameHistoryTableBody = document.getElementById("gameHistoryTableBody");
-    gameHistoryTableBody.innerHTML = ''; // Clear previous content
+async function updateContent(selectedUser) {
+	const gameHistoryTableBody = document.getElementById("gameHistoryTableBody");
+	gameHistoryTableBody.innerHTML = ''; // Clear previous content
 
-    // Sample data, replace with actual game data from the user object
-    const sampleData = {
-        user1: [
-            { game: "Game A", date: "2023-10-01", player1: "User 1", player2: "User 2", score1: 3, score2: 1, result: "Win" },
-            { game: "Game B", date: "2023-10-05", player1: "User 1", player2: "User 3", score1: 2, score2: 3, result: "Loss" }
-        ],
-        user2: [
-            { game: "Pongy", date: "2024-10-11", player1: "user2", player2: "admin", score1: 3, score2: 5, result: "Loss" },
-            { game: "Fighty", date: "2024-10-11", player1: "admin", player2: "user2", score1: 1, score2: 0, result: "Loss" },
-            { game: "Fighty", date: "2024-10-11", player1: "admin", player2: "user2", score1: 0, score2: 1, result: "Win" },
-            { game: "Fighty", date: "2024-10-11", player1: "user2", player2: "admin", score1: 0, score2: 1, result: "Loss" }
-        ],
-        user3: [
-            { game: "Game D", date: "2023-10-03", player1: "User 3", player2: "User 1", score1: 5, score2: 0, result: "Win" }
-        ]
-    };
+	const selectedUserInfo = await get_user_info(selectedUser);
 
-    if (selectedUser && sampleData[selectedUser]) {
-        sampleData[selectedUser].forEach(row => {
-            const newRow = document.createElement("tr");
-            newRow.innerHTML = `
-                <td>${row.game}</td>
-                <td>${row.date}</td>
-                <td>${row.player1}</td>
-                <td>${row.player2}</td>
-                <td>${row.score1}</td>
-                <td>${row.score2}</td>
-                <td>${row.result}</td>
-            `;
-            gameHistoryTableBody.appendChild(newRow);
-        });
-    } else {
-        const noDataRow = document.createElement("tr");
-        noDataRow.innerHTML = '<td colspan="7" class="text-center">No data available.</td>';
-        gameHistoryTableBody.appendChild(noDataRow);
-    }
+	Promise.all([
+		getGames('Pongy', selectedUserInfo.blockchain_id),
+		getGames('Fighty', selectedUserInfo.blockchain_id)
+	])
+	.then(([pongy_games, fighty_games]) => {
+		const games_dict = { ...pongy_games, ...fighty_games };
+
+		if (Object.keys(games_dict).length > 0) {
+			const timestamps = Object.keys(games_dict).sort((a, b) => a - b);
+			tableBody.innerHTML = '';
+
+			for (const timestamp of timestamps) {
+				const { game_type, player1, player2, score1, score2, tournament_id } = games_dict[timestamp];
+				const date = new Date(timestamp).toLocaleString();
+				const result = '';
+
+				if (window.user.username === player1 || window.user.username === player2) {
+					if (score1 > score2 && player1 === window.user.username) {
+						result = 'Win';
+					} else if (score1 < score2 && player2 === window.user.username) {
+						result = 'Win';
+					} else {
+						result = 'Loss';
+					}
+				} else {
+					result = 'N/A';
+				}
+
+				const game_name = '';
+
+				if (tournament_id != -1) {
+					game_name = game_type + ' Tournament' + tournament_id;
+				}	else {
+					game_name = game_type;
+				}
+
+				const newRow = document.createElement("tr");
+				newRow.innerHTML = `
+					<td>${game_name}</td>
+					<td>${date}</td>
+					<td>${player1}</td>
+					<td>${player2}</td>
+					<td>${score1}</td>
+					<td>${score2}</td>
+					<td>${result}</td>
+				`;
+
+				tableBody.appendChild(newRow);
+			}
+		} else {
+			const noDataRow = document.createElement("tr");
+			noDataRow.innerHTML = '<td colspan="7" class="text-center">No data available.</td>';
+			gameHistoryTableBody.appendChild(noDataRow);
+		}
+	})
+	.catch(error => {
+		console.error("Error fetching games:", error.message || "An unknown error occurred");
+	});
 }

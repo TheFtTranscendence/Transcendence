@@ -1,5 +1,9 @@
-navigate();
+window.onload = function() {
+	// Set the hash to #auth when the page loads
+	window.location.hash = '#auth';
+};
 
+navigate();
 // Function to handle navigation
 function navigate() {
 	let element, scripts, startFunction;
