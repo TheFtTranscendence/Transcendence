@@ -21,9 +21,9 @@ function Matchmaking_invite(v, sender, receiver) {
 
 	fighters = Matchmaking_init_fighters(
 		receiver.username,
-		receiver.skin,
+		window.game2Skins[receiver.skin],
 		sender.username,
-		sender.skin,
+		window.game2Skins[sender.skin],
 		v.g.stun_time,
 	)
 

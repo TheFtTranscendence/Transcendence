@@ -406,14 +406,14 @@ function addFightyGameInvite(sender) {
 	const tableBody = document.getElementById("notificationsTableBody");
 	const newRow = document.createElement("tr");
 	
-	notificationText = "TEST"
+	notificationText = "You've been invited by " + sender.username + "!"
 	newRow.innerHTML = `
 		<td>
 			<div class="notification-row">
 				<span>${notificationText}</span>
 				<div>
-					<button class="btn btn-success btn-sm ms-2" onclick="acceptFightyGameInvite(this, ${sender})">Accept</button>
-					<button class="btn btn-danger btn-sm" onclick="declineFightyGameInvite(this, ${sender})">Decline</button>
+					<button class="btn btn-success btn-sm ms-2" onclick="acceptFightyGameInvite(this, ${sender.id}, '${sender.username}', ${sender.skin}, ${sender.game_id})">Accept</button>
+					<button class="btn btn-danger btn-sm" onclick="declineFightyGameInvite(this, ${sender.id}, '${sender.username}', ${sender.skin}, ${sender.game_id}})">Decline</button>
 				</div>
 			</div>
 		</td>
@@ -422,11 +422,18 @@ function addFightyGameInvite(sender) {
 	tableBody.insertBefore(newRow, tableBody.firstChild);
 }
 
-async function acceptFightyGameInvite(button, sender) {
+async function acceptFightyGameInvite(button, id, UserName, skin, game_id) {
 	const buttons = button.parentElement.querySelectorAll('button');
 	buttons.forEach(btn => btn.remove());
 	alert("Notification accepted!");
 	// todo: Add further logic for accepting the notification
+	const sender = {
+		id: id,
+		username: UserName, 
+		skin: skin,
+		game_id: game_id
+	}
+
 	const receiver = {
 		id: window.user.id,
 		username: window.user.username,
@@ -434,9 +441,16 @@ async function acceptFightyGameInvite(button, sender) {
 		game_id: game_id
 	}
 
+	console.log("hello")
+
+	
 	window.location.hash = '#fighters'
-	clearMenu()
+
+	document.getElementById('games').classList.remove("hidden")
+	unloadScripts(window.menuScripts)
+	
 	await LoadPROMISEscripts(window.matchmakingScripts)
+
 	Matchmaking_before_game(true, sender, receiver) 
 }
 

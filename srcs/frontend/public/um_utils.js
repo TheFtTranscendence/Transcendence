@@ -298,7 +298,11 @@ function set_online() {
 							skin: user_invited.preferences.fighty_skin,
 							game_id: data.game_id,
 						}
-					
+
+						clearMenu()
+						document.getElementById('games').classList.remove("hidden")
+						unloadScripts(window.menuScripts)
+						
 						Matchmaking_before_game(true, sender, receiver)
 					}
 					else
