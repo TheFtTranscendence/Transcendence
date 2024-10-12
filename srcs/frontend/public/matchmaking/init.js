@@ -199,6 +199,10 @@ function Matchmaking_leave_game(v) {
 	window.removeEventListener('hashchange', Matchmaking_game2_hashchange)
 
 	v.g.timer.innerHTML = 200
+	v.player.bar.style.width = '100%'
+	v.enemy.bar.style.width = '100%'
+
+	document.querySelector('#game2-end-text').style.display = 'none'
 
 	v.s.game_socket.close()
 	v.s.queue_socket.close()
