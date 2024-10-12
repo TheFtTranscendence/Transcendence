@@ -422,7 +422,7 @@ function addFightyGameInvite(data, hfsagfhag) {
 	tableBody.insertBefore(newRow, tableBody.firstChild);
 }
 
-function acceptFightyGameInvite(button) {
+async function acceptFightyGameInvite(button) {
 	const buttons = button.parentElement.querySelectorAll('button');
 	buttons.forEach(btn => btn.remove());
 	alert("Notification accepted!");

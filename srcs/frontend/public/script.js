@@ -52,6 +52,18 @@ function navigate() {
 	loadScripts(scripts, startFunction);
 }
 
+function LoadPROMISEscripts(scriptUrls) {
+    return Promise.all(scriptUrls.map(url => {
+        return new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = url;
+            script.onload = () => resolve();
+            script.onerror = () => reject(new Error(`Failed to load script: ${url}`));
+            document.head.appendChild(script);
+        });
+    }));
+}
+
 // Function to load a script and return a Promise
 function loadScript(src) {
 	return new Promise((resolve, reject) => {
