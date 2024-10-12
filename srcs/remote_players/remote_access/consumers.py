@@ -69,13 +69,14 @@ class GameConsumer(AsyncWebsocketConsumer):
 
 	@database_sync_to_async
 	def _startGame(self):
+		logger.info("HEREEEEEEEEEEEEEEEEEEEe")
 		self.game.started = True
 		self.game.save()
 
 	async def ready_msg(self, event):
 		await self._startGame()
 		await self.send(text_data=json.dumps({
-			'type': 'ready',
+			'type': 'ready_msg',
 		}))
 
 	async def game_info(self, event):
@@ -124,6 +125,8 @@ class GameConsumer(AsyncWebsocketConsumer):
 	async def receive(self, text_data):
 		text_data_json = json.loads(text_data)
 		msg_type = text_data_json['type']
+
+		logger.info(f"msg: {text_data_json}")
 
 		if msg_type == 'move' and self.game.started:
 			player_id = text_data_json['player_id']

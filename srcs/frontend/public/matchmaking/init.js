@@ -207,8 +207,35 @@ function Matchmaking_leave_game(v) {
 
 
 	v.s.game_socket.close()
-	v.s.queue_socket.close()
 
+	try {
+		v.s.queue_socket.close()
+	}
+	catch {}
+
+
+	try {
+		const url = `https://${window.IP}:3000/solidity/solidity/addgame/${window.user.blockchain_id}/Fighty`;
+		
+		const data = {
+			player1: v.player.name,
+			player2: v.enemy.name,
+			score1: v.player.health,
+			score2: v.enemy.health,
+		};
+		
+		fetch(url, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(data),
+		})
+		toast_alert("Game stores on DB!")
+	} catch {
+		toast_alert("Couldn't store game on blockchain")
+	}
+		
 	document.getElementById('div-game2-area').classList.add("hidden");
 	document.getElementById('games').classList.add("hidden");
 	unloadScripts(window.matchmakingScripts);

@@ -251,12 +251,10 @@ function fillGame() {
 			tableBody.innerHTML = '';
 
 			for (const timestamp of timestamps) {
-				const { game_type, player1, player2, score1, score2, tournament_id } = games_dict[timestamp];
-				const date = new Date(timestamp).toLocaleString();
-				const result = '';
+				let result = '';
 
-				if (window.user.username === player1 || window.user.username === player2) {
-					if (score1 > score2 && player1 === window.user.username) {
+				if (window.user.username === games_dict[timestamp].player1 || window.user.username === games_dict[timestamp].player2) {
+					if (games_dict[timestamp].score1 > games_dict[timestamp].score2 && games_dict[timestamp].player1 === window.user.username) {
 						result = 'Win';
 						window.scores.wins = window.scores.wins + 1;
 					} else if (score1 < score2 && player2 === window.user.username) {
@@ -270,22 +268,21 @@ function fillGame() {
 					result = 'N/A';
 				}
 
-				const game_name = '';
+				let game_name = '';
 
-				if (tournament_id != -1) {
-					game_name = game_type + ' Tournament' + tournament_id;
+				if (games_dict[timestamp].tournament_id != -1) {
+					game_name = "!" + games_dict[timestamp].game_type + ' Tournament' + games_dict[timestamp].tournament_id;
 				}	else {
-					game_name = game_type;
+					game_name = "!" + games_dict[timestamp].game_type;
 				}
 
 				const newRow = document.createElement("tr");
 				newRow.innerHTML = `
 					<td>${game_name}</td>
-					<td>${date}</td>
-					<td>${player1}</td>
-					<td>${player2}</td>
-					<td>${score1}</td>
-					<td>${score2}</td>
+					<td>${games_dict[timestamp].player1}</td>
+					<td>${games_dict[timestamp].player2}</td>
+					<td>${games_dict[timestamp].score1}</td>
+					<td>${games_dict[timestamp].score2}</td>
 					<td>${result}</td>
 				`;
 
@@ -303,6 +300,7 @@ function fillGame() {
 	.catch(error => {
 		console.error("Error fetching games:", error.message || "An unknown error occurred");
 	});
+
 }
 
 function getGames(gameType, instance) {
@@ -322,16 +320,24 @@ function getGames(gameType, instance) {
 	.then(data => {
 		const matchDictionary = {};
 		data.success.forEach(game => {
-			const { timestamp, player1, player2, score1, score2, tournament_id } = game;
-			matchDictionary[timestamp] = {
-				gameType,
-				player1,
-				player2,
-				score1,
-				score2,
-				tournament_id
+			const info = {
+				timestamp: game[0],
+				player1: game[1],
+				player2: game[2],
+				score1: game[3],
+				score2: game[4],
+				tournament_id: game[5],
+			}
+			matchDictionary[info.timestamp] = {
+				game_type: gameType,
+				player1: info.player1,
+				player2: info.player2,
+				score1: info.score1,
+				score2: info.score2,
+				tournament_id: info.tournament_id
 			};
 		});
+
 
 		const sortedKeys = Object.keys(matchDictionary).sort((a, b) => a - b);
 		const sortedMatchDictionary = {};
@@ -413,8 +419,8 @@ function addFightyGameInvite(sender) {
 				<span>${notificationText}</span>
 				<div>
 					<button class="btn btn-success btn-sm ms-2" onclick="acceptFightyGameInvite(this, ${sender.id}, '${sender.username}', ${sender.skin}, ${sender.game_id})">Accept</button>
-					<button class="btn btn-danger btn-sm" onclick="declineFightyGameInvite(this, ${sender.id}, '${sender.username}', ${sender.skin}, ${sender.game_id}})">Decline</button>
-				</div>
+					<button class="btn btn-danger btn-sm" onclick="declineFightyGameInvite(this, ${sender.id}, '${sender.username}', ${sender.skin}, ${sender.game_id})">Decline</button>
+				</div>	
 			</div>
 		</td>
 	`;
@@ -434,6 +440,7 @@ async function acceptFightyGameInvite(button, id, UserName, skin, game_id) {
 		game_id: game_id
 	}
 
+
 	const receiver = {
 		id: window.user.id,
 		username: window.user.username,
@@ -441,16 +448,16 @@ async function acceptFightyGameInvite(button, id, UserName, skin, game_id) {
 		game_id: game_id
 	}
 
-	console.log("hello")
-
 	
 	window.location.hash = '#fighters'
 
 	document.getElementById('games').classList.remove("hidden")
 	unloadScripts(window.menuScripts)
 	
-	await LoadPROMISEscripts(window.matchmakingScripts)
-
+	console.log('sender', sender )
+	console.log('receiver', receiver )
+	
+	await PromiseloadScripts(window.matchmakingScripts)
 	Matchmaking_before_game(true, sender, receiver) 
 }
 
@@ -459,7 +466,7 @@ function declineFightyGameInvite(button, sender) {
 	buttons.forEach(btn => btn.remove());
 	alert("Notification declined!");
 
-
+	
 	// todo: Add further logic for declining the notification
 }
 
@@ -515,8 +522,8 @@ function populateUserDropdown() {
 }
 
 async function updateContent(selectedUser) {
-	const gameHistoryTableBody = document.getElementById("gameHistoryTableBody");
-	gameHistoryTableBody.innerHTML = '';
+	const tableBody = document.getElementById("gameHistoryTableBody");
+	tableBody.innerHTML = '';
 
 	const selectedUserInfo = await get_user_info(selectedUser);
 
@@ -532,38 +539,38 @@ async function updateContent(selectedUser) {
 			tableBody.innerHTML = '';
 
 			for (const timestamp of timestamps) {
-				const { game_type, player1, player2, score1, score2, tournament_id } = games_dict[timestamp];
-				const date = new Date(timestamp).toLocaleString();
-				const result = '';
+				let result = '';
 
-				if (window.user.username === player1 || window.user.username === player2) {
-					if (score1 > score2 && player1 === window.user.username) {
+				if (selectedUser.username === games_dict[timestamp].player1 || selectedUser.username === games_dict[timestamp].player2) {
+					if (games_dict[timestamp].score1 > games_dict[timestamp].score2 && games_dict[timestamp].player1 === selectedUser.username ) {
 						result = 'Win';
-					} else if (score1 < score2 && player2 === window.user.username) {
+						window.scores.wins = window.scores.wins + 1;
+					} else if (score1 < score2 && player2 === selectedUser.username ) {
 						result = 'Win';
+						window.scores.wins = window.scores.wins + 1;
 					} else {
+						window.scores.losses = window.scores.losses + 1;
 						result = 'Loss';
 					}
 				} else {
 					result = 'N/A';
 				}
 
-				const game_name = '';
+				let game_name = '';
 
-				if (tournament_id != -1) {
-					game_name = game_type + ' Tournament' + tournament_id;
+				if (games_dict[timestamp].tournament_id != -1) {
+					game_name = "!" + games_dict[timestamp].game_type + ' Tournament' + games_dict[timestamp].tournament_id;
 				}	else {
-					game_name = game_type;
+					game_name = "!" + games_dict[timestamp].game_type;
 				}
 
 				const newRow = document.createElement("tr");
 				newRow.innerHTML = `
 					<td>${game_name}</td>
-					<td>${date}</td>
-					<td>${player1}</td>
-					<td>${player2}</td>
-					<td>${score1}</td>
-					<td>${score2}</td>
+					<td>${games_dict[timestamp].player1}</td>
+					<td>${games_dict[timestamp].player2}</td>
+					<td>${games_dict[timestamp].score1}</td>
+					<td>${games_dict[timestamp].score2}</td>
 					<td>${result}</td>
 				`;
 
@@ -572,7 +579,7 @@ async function updateContent(selectedUser) {
 		} else {
 			const noDataRow = document.createElement("tr");
 			noDataRow.innerHTML = '<td colspan="7" class="text-center">No data available.</td>';
-			gameHistoryTableBody.appendChild(noDataRow);
+			tableBody.appendChild(noDataRow);
 			window.scores.wins = 0;
 			window.scores.losses = 0;
 		}

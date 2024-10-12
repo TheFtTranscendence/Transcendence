@@ -27,22 +27,32 @@ function Matchmaking_invite(v, sender, receiver) {
 		v.g.stun_time,
 	)
 
+	
+	console.log('sender', sender )
+	console.log('receiver', receiver )
+
+
 	v.player = fighters.player
 	v.enemy = fighters.enemy
 
-	v.s.player1 = sender.username
-	v.s.player2 = receiver.username
+	v.s.player1 = sender.id
+	v.s.player2 = receiver.id
 
-	v.s.gameId = sender.gameId
+	v.s.gameId = sender.game_id
 
 	document.getElementById('div-game2-area').classList.remove("hidden");
+
+
+	console.log('game id in invite ', v.s.gameId)
+
+	v.g.invite = true
 
 	Matchmaking_setup_socket(v)
 	Matchmaking_startGame2(v)
 	
 }
 
-async function Matchmaking_queue(v)
+function Matchmaking_queue(v)
 {
 	console.log('connecting to WebSocket')
 	v.s.queue_socket = new WebSocket(`wss://${window.IP}:3000/remote-players/ws/queue/?game=Fighty&user_id=` + window.user.id);
@@ -93,10 +103,10 @@ async function Matchmaking_queue(v)
 		v.s.player2 = msg.player2
 
 		v.s.gameId = msg.game_id
-
-		Matchmaking_setup_socket(v)
 		
 		document.getElementById('div-game2-area').classList.remove("hidden");
+
+		Matchmaking_setup_socket(v)
 		Matchmaking_startGame2(v)
 	}
 }
@@ -139,12 +149,21 @@ function Matchmaking_setup_socket(v) {
 	
 	v.s.game_socket = new WebSocket(`wss://${window.IP}:3000/remote-players/ws/remote_access/?game_id=` + v.s.gameId);
 	
-	v.s.socketupdate = window.setInterval(() => {send_update(v)}, 1000)
-
+	
 	v.s.game_socket.onmessage = function(event) {
 		msg = JSON.parse(event.data)
 		console.log(window.user.id, " received: ", msg)
-		console.log(msg.action)
+		
+		if (msg.type == 'ready_msg')
+		{
+			v.g.invite = false
+			v.s.socketupdate = window.setInterval(() => {send_update(v)}, 1000)
+			console.log("AAAAAAAAAAAAAAAAHHHHHHHHHHH")
+			console.log("AAAAAAAAAAAAAAAAHHHHHHHHHHH")
+			console.log("AAAAAAAAAAAAAAAAHHHHHHHHHHH")
+			toast_alert('Game started!!')
+			return ;
+		}
 
 		if (msg.type == 'move') {
 			switch (msg.action) {
@@ -192,10 +211,14 @@ function Matchmaking_setup_socket(v) {
 
 			// v.g.time = msg.stats.time
 		}
-		else if (msg.type == 'ready_msg')
+
+		else if (msg.type == 'game_info')
 		{
-			v.g.invite = true
-			toast_alert('Game started!!')
+			if (msg.info == 'Disconnect')
+			{
+				Matchmaking_leave_game(v)
+				toast_alert("Your opponent Left")
+			}
 		}
 
 	}

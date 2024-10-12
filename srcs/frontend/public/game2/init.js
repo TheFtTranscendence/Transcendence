@@ -167,11 +167,30 @@ function leave_game(v) {
 	document.querySelector('#game2-end-text').style.display = 'none'
 
 	document.getElementById('div-game2-area').classList.add("hidden");
-	document.getElementById('game2-menu').classList.add("hidden");
-	document.getElementById('game2').classList.add("hidden");
-	unloadScripts(window.game2Scripts);
+	document.getElementById('games').classList.add("hidden");
 
-	document.getElementById('game2').classList.add("hidden");
+	try {
+		const url = `https://${window.IP}:3000/solidity/solidity/addgame/${window.user.blockchain_id}/Fighty`;
+		
+		const data = {
+			player1: v.player.name,
+			player2: v.enemy.name,
+			score1: v.player.health,
+			score2: v.enemy.health,
+		};
+		
+		fetch(url, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(data),
+		})
+		toast_alert("Game stores on DB!")
+	} catch {
+		toast_alert("Couldn't store game on blockchain")
+	}
+	
 	unloadScripts(window.game2Scripts);
 
 }

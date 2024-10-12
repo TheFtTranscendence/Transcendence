@@ -52,18 +52,6 @@ function navigate() {
 	loadScripts(scripts, startFunction);
 }
 
-function LoadPROMISEscripts(scriptUrls) {
-    return Promise.all(scriptUrls.map(url => {
-        return new Promise((resolve, reject) => {
-            const script = document.createElement('script');
-            script.src = url;
-            script.onload = () => resolve();
-            script.onerror = () => reject(new Error(`Failed to load script: ${url}`));
-            document.head.appendChild(script);
-        });
-    }));
-}
-
 // Function to load a script and return a Promise
 function loadScript(src) {
 	return new Promise((resolve, reject) => {
@@ -83,18 +71,44 @@ function loadScript(src) {
 	});
 }
 
+async function PromiseloadScripts(scripts, functionName = 'none') {
+	return new Promise(async (resolve, reject) => {
+		try {
+			// Loop through the scripts array and load them sequentially using async/await
+			for (const src of scripts) {
+				await loadScript(src);
+			}
+
+			// If a function name is provided, check if it exists and call it
+			if (functionName !== 'none') {
+				if (typeof window[functionName] === 'function') {
+					window[functionName]();
+				} else {
+					console.error("Function " + functionName + " not found");
+				}
+			}
+
+			// Resolve the promise when everything is done
+			resolve(true);
+		} catch (error) {
+			// Reject the promise if an error occurs
+			console.error(error);
+			reject(error);
+		}
+	});
+}
+
 // Function to load all scripts
-function loadScripts(scripts, functionName = 'none') {
-
-	scripts.reduce((promise, src) => {
-
-		return promise.then(() => loadScript(src));
-	}, Promise.resolve())
-	.then(() => {
+async function loadScripts(scripts, functionName = 'none') {
+		scripts.reduce((promise, src) => {
+			
+			return promise.then(() => loadScript(src));
+		}, Promise.resolve())
+		.then(() => {
 		if (functionName != 'none') {
 			if (typeof window[functionName] === 'function') {
 				window[functionName]();
-						} else {
+			} else {
 				console.error("Function " + functionName + " not found");
 			}
 		}
@@ -102,6 +116,7 @@ function loadScripts(scripts, functionName = 'none') {
 	.catch(error => {
 		console.error(error);
 	});
+	return true
 }
 
 function unloadScripts(scripts) {

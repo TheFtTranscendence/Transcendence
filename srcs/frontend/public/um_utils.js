@@ -281,15 +281,14 @@ function set_online() {
 						toast_alert('Game invite sent, awaiting for person to accept')
 						window.location.hash = '#fighters'
 					
-						await LoadPROMISEscripts(window.matchmakingScripts)
-					
+						
 						const sender = {
 							id: window.user.id,
 							username: window.user.username,
 							skin: window.user.preferences.fighty_skin,
 							game_id: data.game_id,
 						}
-					
+						
 						const user_invited = await get_user_info(data.player2) 
 						
 						const receiver = {
@@ -298,19 +297,25 @@ function set_online() {
 							skin: user_invited.preferences.fighty_skin,
 							game_id: data.game_id,
 						}
-
+						
 						clearMenu()
 						document.getElementById('games').classList.remove("hidden")
 						unloadScripts(window.menuScripts)
+
+						console.log('sender', sender )
+						console.log('receiver', receiver )
 						
+						await PromiseloadScripts(window.matchmakingScripts)
 						Matchmaking_before_game(true, sender, receiver)
 					}
 					else
 					{
+						const sender = await get_user_info(data.player1) 
+
 						addFightyGameInvite({
-							id: window.user.id,
-							username: window.user.username,
-							skin: window.user.preferences.fighty_skin,
+							id: sender.id,
+							username: sender.username,
+							skin: sender.preferences.fighty_skin,
 							game_id: data.game_id
 						})
 					}
