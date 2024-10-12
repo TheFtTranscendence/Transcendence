@@ -271,9 +271,9 @@ function fillGame() {
 				let game_name = '';
 
 				if (games_dict[timestamp].tournament_id != -1) {
-					game_name = "!" + games_dict[timestamp].game_type + ' Tournament' + games_dict[timestamp].tournament_id;
+					game_name = games_dict[timestamp].game_type + ' Tournament' + games_dict[timestamp].tournament_id;
 				}	else {
-					game_name = "!" + games_dict[timestamp].game_type;
+					game_name = games_dict[timestamp].game_type;
 				}
 
 				const newRow = document.createElement("tr");
@@ -559,9 +559,9 @@ async function updateContent(selectedUser) {
 				let game_name = '';
 
 				if (games_dict[timestamp].tournament_id != -1) {
-					game_name = "!" + games_dict[timestamp].game_type + ' Tournament' + games_dict[timestamp].tournament_id;
+					game_name = games_dict[timestamp].game_type + ' Tournament' + games_dict[timestamp].tournament_id;
 				}	else {
-					game_name = "!" + games_dict[timestamp].game_type;
+					game_name = games_dict[timestamp].game_type;
 				}
 
 				const newRow = document.createElement("tr");
