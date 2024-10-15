@@ -19,14 +19,12 @@ volumes:
       o: bind
       device: ${CHAT_DATA_PATH}
   shared_static:
-  #Remote Players database volume
-  remote_players_data:
+  online_games_data:
     driver: local
     driver_opts:
       type: none
       o: bind
-      device: ${REMOTE_PLAYERS_DATA_PATH}
-  #Remote Players database volume
+      device: ${ONLINE_GAMES_DATA_PATH}
   solidity_data:
     driver: local
     driver_opts:
@@ -67,20 +65,18 @@ services:
     networks:
       - app-network
     restart: unless-stopped
-    #Container for the Remote Players database
-  remoteplayers_db:
-    container_name: remoteplayers_db
+  online_games_db:
+    container_name: online_games_db
     image: postgres:13
     environment:
-      POSTGRES_DB: ${REMOTE_PLAYERS_DATA_DB}
+      POSTGRES_DB: ${ONLINE_GAMES_DATA_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
-      - remote_players_data:/var/lib/postgresql/data
+      - online_players_data:/var/lib/postgresql/data
     networks:
       - app-network
     restart: unless-stopped
-  #Container for the Remote Players database
   solidity_db:
     container_name: solidity_db
     image: postgres:13
@@ -110,19 +106,19 @@ services:
     volumes:
       - images_data:/app/images
     restart: unless-stopped
-  remote-players:
-    container_name: remote-players
-    build: ./remote_players
+  online-games:
+    container_name: online-games
+    build: ./online_games
     env_file:
       - .env
     environment:
-      - POSTGRES_HOST=remoteplayers_db
+      - POSTGRES_HOST=online_games_db
     ports:
       - "8004:8004"
     networks:
       - app-network
     depends_on:
-      - remoteplayers_db
+      - online_games_db
     restart: unless-stopped
   chat:
     container_name: chat

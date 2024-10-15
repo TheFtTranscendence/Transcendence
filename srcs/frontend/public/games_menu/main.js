@@ -63,7 +63,7 @@ async function main_menu_matchmakingButton () {
 		clearMenu()
 		unloadScripts(window.menuScripts)
 		loadScriptss(window.gameScripts)
-		startMatchmakingGame("p1", "p2", window.game1Skins[0], window.game1Skins[1], 0, 1, false, true)
+		startMatchmakingGame()
 	}
 }
 
