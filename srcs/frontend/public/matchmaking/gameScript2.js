@@ -1,22 +1,26 @@
 function Matchmaking_startGame2(v) {
 	
+	console.log("HELP BITCH")
+
 	window.addEventListener('keydown', Matchmaking_game2_keydown)
 	window.addEventListener('keyup', Matchmaking_game2_keyup)
 	window.addEventListener('hashchange', Matchmaking_game2_hashchange)
 
-	// v.g.backgroundMusic.play();
-
+	
 	v.g.gameInterval = window.setInterval(() => Matchmaking_game_loop(v), 1000 / v.g.fps)
+	
 	v.g.timerInterval = window.setInterval(() => Matchmaking_decreaseTimer(v), 1000)
 }
 	
 	
 function Matchmaking_decreaseTimer(v) {
-	if (v.g.time > 0)
-		v.g.time -= 1
-	v.g.timer.innerHTML = v.g.time
-	if (v.g.time == 0) {
-		Matchmaking_game_end(v)
+	if (v.g.invite == false ) {
+		if (v.g.time > 0)
+			v.g.time -= 1
+		v.g.timer.innerHTML = v.g.time
+		if (v.g.time == 0) {
+			Matchmaking_game_end(v)
+		}
 	}
 }
 

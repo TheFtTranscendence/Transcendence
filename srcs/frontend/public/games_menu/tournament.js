@@ -43,7 +43,6 @@ function clearTournament() {
     unloadScripts(window.tournamentScripts);
 }
 
-
 function next_game_players() {
     let nextGamePlayers = [];
 

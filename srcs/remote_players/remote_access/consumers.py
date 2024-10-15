@@ -69,13 +69,14 @@ class GameConsumer(AsyncWebsocketConsumer):
 
 	@database_sync_to_async
 	def _startGame(self):
+		logger.info("HEREEEEEEEEEEEEEEEEEEEe")
 		self.game.started = True
 		self.game.save()
 
 	async def ready_msg(self, event):
 		await self._startGame()
 		await self.send(text_data=json.dumps({
-			'type': 'ready',
+			'type': 'ready_msg',
 		}))
 
 	async def game_info(self, event):
@@ -99,6 +100,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 					'info': 'User dennied game invite',
 				}
 			)
+			await self._deleteGame()
 		else:
 			try:
 				await self.channel_layer.group_send(
@@ -124,6 +126,8 @@ class GameConsumer(AsyncWebsocketConsumer):
 		text_data_json = json.loads(text_data)
 		msg_type = text_data_json['type']
 
+		logger.info(f"msg: {text_data_json}")
+
 		if msg_type == 'move' and self.game.started:
 			player_id = text_data_json['player_id']
 			action = text_data_json['action']
@@ -136,6 +140,15 @@ class GameConsumer(AsyncWebsocketConsumer):
 					'action': action
 				}
 			)
+		if msg_type == 'game_state':
+			stats = text_data_json['stats']
+			await self.channel_layer.group_send(
+				self.room_group_name,
+				{
+					'type': 'game_state',
+					'stats': stats,
+				}
+			)
 
 	async def move(self, event):
 		player_id = event['player_id']
@@ -145,6 +158,14 @@ class GameConsumer(AsyncWebsocketConsumer):
 			'type': 'move',
 			'player_id': player_id,
 			'action': action
+		}))
+
+	async def game_state(self, event):
+		stats = event['stats']
+
+		await self.send(text_data=json.dumps({
+			'type': 'game_state',
+			'stats': stats
 		}))
 
 	@database_sync_to_async
@@ -178,9 +199,6 @@ class QueueConsumer(AsyncWebsocketConsumer):
 				await self.close()
 				return
 			
-			logger.info(f"game = {self.game}")
-			logger.info(f"user_id = {self.user_id}")
-
 			await self.accept()
 
 			if self.is_user_in_any_queue(self.user_id):
@@ -274,6 +292,7 @@ class QueueConsumer(AsyncWebsocketConsumer):
 				player_1 = data['player_1'],
 				player_2 = data['player_2'],
 			)
+			return game
 		except Exception as e:
 			logger.exception(f'exception: {e}')
-		return game
+		return None

@@ -1,5 +1,9 @@
-navigate();
+window.onload = function() {
+	// Set the hash to #auth when the page loads
+	window.location.hash = '#auth';
+};
 
+navigate();
 // Function to handle navigation
 function navigate() {
 	let element, scripts, startFunction;
@@ -7,6 +11,9 @@ function navigate() {
 	if (!window.location.hash) {
 		window.location.hash = '#auth';
 	}
+
+	if (window.user == undefined) 
+		window.location.hash = '#auth';
 
 	switch (window.location.hash) {
 
@@ -69,18 +76,44 @@ function loadScript(src) {
 	});
 }
 
+async function PromiseloadScripts(scripts, functionName = 'none') {
+	return new Promise(async (resolve, reject) => {
+		try {
+			// Loop through the scripts array and load them sequentially using async/await
+			for (const src of scripts) {
+				await loadScript(src);
+			}
+
+			// If a function name is provided, check if it exists and call it
+			if (functionName !== 'none') {
+				if (typeof window[functionName] === 'function') {
+					window[functionName]();
+				} else {
+					console.error("Function " + functionName + " not found");
+				}
+			}
+
+			// Resolve the promise when everything is done
+			resolve(true);
+		} catch (error) {
+			// Reject the promise if an error occurs
+			console.error(error);
+			reject(error);
+		}
+	});
+}
+
 // Function to load all scripts
-function loadScripts(scripts, functionName = 'none') {
-
-	scripts.reduce((promise, src) => {
-
-		return promise.then(() => loadScript(src));
-	}, Promise.resolve())
-	.then(() => {
+async function loadScripts(scripts, functionName = 'none') {
+		scripts.reduce((promise, src) => {
+			
+			return promise.then(() => loadScript(src));
+		}, Promise.resolve())
+		.then(() => {
 		if (functionName != 'none') {
 			if (typeof window[functionName] === 'function') {
 				window[functionName]();
-						} else {
+			} else {
 				console.error("Function " + functionName + " not found");
 			}
 		}
@@ -88,6 +121,7 @@ function loadScripts(scripts, functionName = 'none') {
 	.catch(error => {
 		console.error(error);
 	});
+	return true
 }
 
 function unloadScripts(scripts) {
@@ -302,3 +336,20 @@ document.querySelectorAll('.nav-link').forEach(link => {
 
 // Event listener for hash changes
 window.addEventListener('hashchange', navigate);
+
+
+function toast_alert(message, duration = 5000) {
+	const toastElement = document.getElementById('liveToast');
+	
+	const toastInstance = new bootstrap.Toast(toastElement, {
+		autohide: true, 
+		delay: duration 
+	  });
+
+    const toastBody = toastElement.querySelector('.toast-body');
+    toastBody.textContent = message;
+
+
+    // Show the toast
+    toastInstance.show();
+}

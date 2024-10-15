@@ -36,8 +36,16 @@ function handleSuccessAuth(errorField) {
 
 	set_online();
 
+	_update_user_chats();
+
 	window.currentUser.username = window.user.username; // Ensure 'currentUser' is a global object
 	localStorage.setItem('currentUser', JSON.stringify(window.currentUser));
+
+	if (window.frontendHealthCheck === false) 
+	{
+		window.frontendHealthCheck = true
+		checkTournamentStatus()
+	}
 }
 
 function handleLogin() {
@@ -66,7 +74,6 @@ function handleLogin() {
 	.then(data => {
 		window.user = data.user;
 		window.usertoken = data.token;
-		_update_user_chats();
 		handleSuccessAuth(errorField);
 	})
 	.catch(error => {
@@ -85,8 +92,22 @@ function handleLogin() {
 		errorField.classList.remove('hidden');
 	});
 }
+// Define the event listener as a named function
+function handleRegisterEvent(event) {
+	event.preventDefault();
+
+	if (window.isRegistering) {
+		return;
+	}
+
+	handleRegister();
+}
 
 function handleRegister() {
+	document.getElementById('registerForm').removeEventListener('submit', handleRegisterEvent);
+
+	window.isRegistering = true;
+
 	const username = document.getElementById('registerUsername').value;
 	const password = document.getElementById('registerPassword').value;
 	const confirm_password = document.getElementById('registerPasswordConfirm').value;
@@ -141,6 +162,9 @@ function handleRegister() {
 		}
 		errorField.textContent = errorMsg;
 		errorField.classList.remove('hidden');
+	})
+	.finally(() => {
+		window.isRegistering = false;
 	});
 }
 
@@ -150,10 +174,9 @@ document.getElementById('loginForm').addEventListener('submit', (event) => {
 	handleLogin();
 });
 
-document.getElementById('registerForm').addEventListener('submit', (event) => {
-	event.preventDefault();
-	handleRegister();
-});
+// Add the event listener for the register form
+document.getElementById('registerForm').addEventListener('submit', handleRegisterEvent);
+
 
 // AUTH ANIMATION
 const leftSide = document.querySelector('.left-side');
@@ -182,3 +205,74 @@ leftSide.addEventListener('click', () => {
 rightSide.addEventListener('click', () => {
 	handleClick(rightSide, leftSide, rightContent, leftContent, rightForm, leftForm);
 });
+
+
+async function checkTournamentStatus()
+{
+	console.log("HERE CHECKING TOURNEY DATABASE")
+	let pongyStatus = false
+	let url = `https://${window.IP}:3000/solidity/solidity/gettournamentstatus/${window.user.blockchain_id}/Pongy`;
+	
+	try {
+		// Use await to wait for the fetch request to complete
+		const response = await fetch(url, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+			}
+		});
+		
+		// Check if the response is okay
+		if (!response.ok) {
+			throw new Error(`Error fetching data: ${response.statusText}`);
+		}
+
+		// Parse the response JSON
+		const data = await response.json();
+		
+		// Store the status from the response
+		pongyStatus = data.success;
+
+		console.log('INITIAL PONGY STATUS:', pongyStatus); // Log the pongyStatus
+		
+	} catch (error) {
+		// Handle any errors
+		console.error('Error:', error);
+	}
+	
+	let fightyStatus = false
+	const url2 = `https://${window.IP}:3000/solidity/solidity/gettournamentstatus/${window.user.blockchain_id}/Fighty`;
+
+	try {
+		// Use await to wait for the fetch request to complete
+		const response = await fetch(url2, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+			}
+		});
+		
+		// Check if the response is okay
+		if (!response.ok) {
+			throw new Error(`Error fetching data: ${response.statusText}`);
+		}
+
+		// Parse the response JSON
+		const data = await response.json();
+		
+		// Store the status from the response
+		fightyStatus = data.success;
+
+		console.log('INITIAL FIGHTY STATUS:', fightyStatus); // Log the fightyStatus
+		
+	} catch (error) {
+		// Handle any errors
+		console.error('Error:', error);
+	}
+
+	if (pongyStatus)
+		pongyTournamentData.retriveTournamentInfo()
+	if (fightyStatus)
+		fightyTournamentData.retriveTournamentInfo()
+
+}

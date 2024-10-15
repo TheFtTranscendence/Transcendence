@@ -91,7 +91,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 	username = models.CharField(max_length=150, unique=True)
 	blockchain_id = models.IntegerField(blank=True, null=True)
 
-	avatar = models.ImageField(upload_to='', default='detectiveGoose.jpg', blank=True, null=True)
+	avatar = models.ImageField(upload_to='', default='default.jpg', blank=True, null=True)
 	
 	friend_list = models.ManyToManyField('self', symmetrical=False, related_name='friend_of', blank=True)
 	block_list = models.ManyToManyField('self', symmetrical=False, related_name='blocked_by', blank=True)

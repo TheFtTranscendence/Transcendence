@@ -27,28 +27,28 @@ function init_vars(player1, player2, skins1, skins2, tournamentGame) {
             color: 'lightblue',
             offset: { x: 0, y: 0},
             bar: 1,
-            imageSrc: skins1.normal.idle.imageSrc,
-            framesMax: skins1.normal.idle.framesMax,
+            imageSrc: skins1.idle.imageSrc,
+            framesMax: skins1.idle.framesMax,
             scale: 2.5,
             img_offset: {x: 215, y: 180},
             sprites: {
-				attack1: { imageSrc: skins1.normal.attack1.imageSrc, framesMax: skins1.normal.attack1.framesMax, time: skins1.normal.attack1.time },
-				attack2: { imageSrc: skins1.normal.attack2.imageSrc, framesMax: skins1.normal.attack2.framesMax, time: skins1.normal.attack2.time },
-				death: { imageSrc: skins1.normal.death.imageSrc, framesMax: skins1.normal.death.framesMax, time: skins1.normal.death.time },
-				fall: { imageSrc: skins1.normal.fall.imageSrc, framesMax: skins1.normal.fall.framesMax, time: skins1.normal.fall.time },
-				idle: { imageSrc: skins1.normal.idle.imageSrc, framesMax: skins1.normal.idle.framesMax, time: skins1.normal.idle.time },
-				jump: { imageSrc: skins1.normal.jump.imageSrc, framesMax: skins1.normal.jump.framesMax, time: skins1.normal.jump.time },
-				run: { imageSrc: skins1.normal.run.imageSrc, framesMax: skins1.normal.run.framesMax, time: skins1.normal.run.time },
-				hit: { imageSrc: skins1.normal.hit.imageSrc, framesMax: skins1.normal.hit.framesMax, time: stun_time / skins1.normal.hit.framesMax },
+				attack1: { imageSrc: skins1.attack1.imageSrc, framesMax: skins1.attack1.framesMax, time: skins1.attack1.time },
+				attack2: { imageSrc: skins1.attack2.imageSrc, framesMax: skins1.attack2.framesMax, time: skins1.attack2.time },
+				death: { imageSrc: skins1.death.imageSrc, framesMax: skins1.death.framesMax, time: skins1.death.time },
+				fall: { imageSrc: skins1.fall.imageSrc, framesMax: skins1.fall.framesMax, time: skins1.fall.time },
+				idle: { imageSrc: skins1.idle.imageSrc, framesMax: skins1.idle.framesMax, time: skins1.idle.time },
+				jump: { imageSrc: skins1.jump.imageSrc, framesMax: skins1.jump.framesMax, time: skins1.jump.time },
+				run: { imageSrc: skins1.run.imageSrc, framesMax: skins1.run.framesMax, time: skins1.run.time },
+				hit: { imageSrc: skins1.hit.imageSrc, framesMax: skins1.hit.framesMax, time: stun_time / skins1.hit.framesMax },
 
-				attack1Inv: { imageSrc: skins1.inverted.attack1.imageSrc, framesMax: skins1.inverted.attack1.framesMax, time: skins1.inverted.attack1.time },
-				attack2Inv: { imageSrc: skins1.inverted.attack2.imageSrc, framesMax: skins1.inverted.attack2.framesMax, time: skins1.inverted.attack2.time },
-				deathInv: { imageSrc: skins1.inverted.death.imageSrc, framesMax: skins1.inverted.death.framesMax, time: skins1.inverted.death.time },
-				fallInv: { imageSrc: skins1.inverted.fall.imageSrc, framesMax: skins1.inverted.fall.framesMax, time: skins1.inverted.fall.time },
-				idleInv: { imageSrc: skins1.inverted.idle.imageSrc, framesMax: skins1.inverted.idle.framesMax, time: skins1.inverted.idle.time },
-				jumpInv: { imageSrc: skins1.inverted.jump.imageSrc, framesMax: skins1.inverted.jump.framesMax, time: skins1.inverted.jump.time },
-				runInv: { imageSrc: skins1.inverted.run.imageSrc, framesMax: skins1.inverted.run.framesMax, time: skins1.inverted.run.time },
-				hitInv: { imageSrc: skins1.inverted.hit.imageSrc, framesMax: skins1.inverted.hit.framesMax, time: stun_time / skins1.inverted.hit.framesMax },
+				attack1Inv: { imageSrc: skins1.attack1Inv.imageSrc, framesMax: skins1.attack1Inv.framesMax, time: skins1.attack1Inv.time },
+				attack2Inv: { imageSrc: skins1.attack2Inv.imageSrc, framesMax: skins1.attack2Inv.framesMax, time: skins1.attack2Inv.time },
+				deathInv: { imageSrc: skins1.deathInv.imageSrc, framesMax: skins1.deathInv.framesMax, time: skins1.deathInv.time },
+				fallInv: { imageSrc: skins1.fallInv.imageSrc, framesMax: skins1.fallInv.framesMax, time: skins1.fallInv.time },
+				idleInv: { imageSrc: skins1.idleInv.imageSrc, framesMax: skins1.idleInv.framesMax, time: skins1.idleInv.time },
+				jumpInv: { imageSrc: skins1.jumpInv.imageSrc, framesMax: skins1.jumpInv.framesMax, time: skins1.jumpInv.time },
+				runInv: { imageSrc: skins1.runInv.imageSrc, framesMax: skins1.runInv.framesMax, time: skins1.runInv.time },
+				hitInv: { imageSrc: skins1.hitInv.imageSrc, framesMax: skins1.hitInv.framesMax, time: stun_time / skins1.hitInv.framesMax },
 			},
             hit_frame: 2,
             hit_frameInv: 0,
@@ -62,28 +62,28 @@ function init_vars(player1, player2, skins1, skins2, tournamentGame) {
             color: 'white',
             offset: { x: -50, y: 0},
             bar: 2,
-            imageSrc: skins2.inverted.idle.imageSrc,
-            framesMax: skins2.inverted.idle.framesMax,
+            imageSrc: skins2.idleInv.imageSrc,
+            framesMax: skins2.idleInv.framesMax,
             scale: 2.5,
             img_offset: {x: 215, y: 165},
             sprites: {
-				attack1: { imageSrc: skins2.normal.attack1.imageSrc, framesMax: skins2.normal.attack1.framesMax, time: skins2.normal.attack1.time },
-				attack2: { imageSrc: skins2.normal.attack2.imageSrc, framesMax: skins2.normal.attack2.framesMax, time: skins2.normal.attack2.time },
-				death: { imageSrc: skins2.normal.death.imageSrc, framesMax: skins2.normal.death.framesMax, time: skins2.normal.death.time },
-				fall: { imageSrc: skins2.normal.fall.imageSrc, framesMax: skins2.normal.fall.framesMax, time: skins2.normal.fall.time },
-				idle: { imageSrc: skins2.normal.idle.imageSrc, framesMax: skins2.normal.idle.framesMax, time: skins2.normal.idle.time },
-				jump: { imageSrc: skins2.normal.jump.imageSrc, framesMax: skins2.normal.jump.framesMax, time: skins2.normal.jump.time },
-				run: { imageSrc: skins2.normal.run.imageSrc, framesMax: skins2.normal.run.framesMax, time: skins2.normal.run.time },
-				hit: { imageSrc: skins2.normal.hit.imageSrc, framesMax: skins2.normal.hit.framesMax, time: stun_time / skins2.normal.hit.framesMax },
+				attack1: { imageSrc: skins2.attack1.imageSrc, framesMax: skins2.attack1.framesMax, time: skins2.attack1.time },
+				attack2: { imageSrc: skins2.attack2.imageSrc, framesMax: skins2.attack2.framesMax, time: skins2.attack2.time },
+				death: { imageSrc: skins2.death.imageSrc, framesMax: skins2.death.framesMax, time: skins2.death.time },
+				fall: { imageSrc: skins2.fall.imageSrc, framesMax: skins2.fall.framesMax, time: skins2.fall.time },
+				idle: { imageSrc: skins2.idle.imageSrc, framesMax: skins2.idle.framesMax, time: skins2.idle.time },
+				jump: { imageSrc: skins2.jump.imageSrc, framesMax: skins2.jump.framesMax, time: skins2.jump.time },
+				run: { imageSrc: skins2.run.imageSrc, framesMax: skins2.run.framesMax, time: skins2.run.time },
+				hit: { imageSrc: skins2.hit.imageSrc, framesMax: skins2.hit.framesMax, time: stun_time / skins2.hit.framesMax },
 
-				attack1Inv: { imageSrc: skins2.inverted.attack1.imageSrc, framesMax: skins2.inverted.attack1.framesMax, time: skins2.inverted.attack1.time },
-				attack2Inv: { imageSrc: skins2.inverted.attack2.imageSrc, framesMax: skins2.inverted.attack2.framesMax, time: skins2.inverted.attack2.time },
-				deathInv: { imageSrc: skins2.inverted.death.imageSrc, framesMax: skins2.inverted.death.framesMax, time: skins2.inverted.death.time },
-				fallInv: { imageSrc: skins2.inverted.fall.imageSrc, framesMax: skins2.inverted.fall.framesMax, time: skins2.inverted.fall.time },
-				idleInv: { imageSrc: skins2.inverted.idle.imageSrc, framesMax: skins2.inverted.idle.framesMax, time: skins2.inverted.idle.time },
-				jumpInv: { imageSrc: skins2.inverted.jump.imageSrc, framesMax: skins2.inverted.jump.framesMax, time: skins2.inverted.jump.time },
-				runInv: { imageSrc: skins2.inverted.run.imageSrc, framesMax: skins2.inverted.run.framesMax, time: skins2.inverted.run.time },
-				hitInv: { imageSrc: skins2.inverted.hit.imageSrc, framesMax: skins2.inverted.hit.framesMax, time: stun_time / skins2.inverted.hit.framesMax },
+				attack1Inv: { imageSrc: skins2.attack1Inv.imageSrc, framesMax: skins2.attack1Inv.framesMax, time: skins2.attack1Inv.time },
+				attack2Inv: { imageSrc: skins2.attack2Inv.imageSrc, framesMax: skins2.attack2Inv.framesMax, time: skins2.attack2Inv.time },
+				deathInv: { imageSrc: skins2.deathInv.imageSrc, framesMax: skins2.deathInv.framesMax, time: skins2.deathInv.time },
+				fallInv: { imageSrc: skins2.fallInv.imageSrc, framesMax: skins2.fallInv.framesMax, time: skins2.fallInv.time },
+				idleInv: { imageSrc: skins2.idleInv.imageSrc, framesMax: skins2.idleInv.framesMax, time: skins2.idleInv.time },
+				jumpInv: { imageSrc: skins2.jumpInv.imageSrc, framesMax: skins2.jumpInv.framesMax, time: skins2.jumpInv.time },
+				runInv: { imageSrc: skins2.runInv.imageSrc, framesMax: skins2.runInv.framesMax, time: skins2.runInv.time },
+				hitInv: { imageSrc: skins2.hitInv.imageSrc, framesMax: skins2.hitInv.framesMax, time: stun_time / skins2.hitInv.framesMax },
 			},
             hit_frame: 1,
             hit_frameInv: 1,
@@ -123,9 +123,8 @@ function init_vars(player1, player2, skins1, skins2, tournamentGame) {
             stun_time: stun_time, // ms
             ground_height: ground_height, // px
 
-			backgroundMusic: 0,
-
             tournamentGame: tournamentGame,
+
         }
     }
 }
@@ -139,12 +138,6 @@ function setup_canvas(v)
 
 	v.g.timer = document.querySelector('#game2-timer')
 	v.g.time = parseInt(v.g.timer.innerHTML)
-}
-
-function setup_music(v) {
-	v.g.backgroundMusic = new Audio('./game2/assets/background.mp3')
-	v.g.backgroundMusic.loop = true;
-	v.g.backgroundMusic.volume = 0.02;
 }
 
 function reset_keys(v) {
@@ -161,23 +154,18 @@ function reset_keys(v) {
 function leave_game(v) {
 	console.log('hashchange game2');
 
-    storeMatch(v)
     console.log("WE HERE")
 
     clearInterval(v.g.gameInterval)
     clearInterval(v.g.timerInterval)
     clearInterval(v.g.backgroundInterval)
+
+    storeMatch(v)
         
     window.removeEventListener('keydown', game2_keydown)
 	window.removeEventListener('keyup', game2_keyup)
 	window.removeEventListener('hashchange', game2_hashchange)
 
-	try {
-		v.g.backgroundMusic.pause()
-		v.g.backgroundMusic = null
-	}
-	catch {}
-	
     window.addEventListener('keydown', quit);
 
 }
@@ -185,11 +173,15 @@ function leave_game(v) {
 function quit(event)
 {
     if (event.key === 'x' || event.key === 'X') {
-        v.g.timer.innerHTML = 250
-        document.querySelector('#game2-end-text').style.display = 'none'
-    
+
+
+        v.g.timer.innerHTML = 200 // TODO: check if this works - restart timer
+        
         document.querySelector('#game2-bar1').style.width = '100%'
         document.querySelector('#game2-bar2').style.width = '100%'
+
+        document.querySelector('#game2-end-text').style.display = 'none'
+
         
         unloadScripts(window.game2Scripts);
         document.getElementById('div-game2-area').classList.add("hidden");
@@ -206,6 +198,7 @@ function quit(event)
     }
 }
 
+// TODO: CHANGE TO FETCH
 function storeMatch(v)
 {
 // 	console.log(vars.gameVars.p1Name + vars.gameVars.p1SkinId);
@@ -230,20 +223,41 @@ function storeMatch(v)
 	}
 	else
 	{
-		axios.post('http://localhost:8001/solidity/addgame/' +  window.user.blockchain_id + "/Fighty", {
-            player1: v.player.name,
-            player2: v.enemy.name,
-            score1: v.player.health,
-            score2: v.enemy.health
-		})
-		.then((response) => {
-			console.log(response.data);
-		})
-		.catch((error) => {
-			console.error(error);
-			if (error.response)	{
-				const status = error.response.status;
-			}
-		});
+        try {
+            const url = `https://${window.IP}:3000/solidity/solidity/addgame/${window.user.blockchain_id}/Fighty`;
+            
+            const data = {
+                player1: v.player.name,
+                player2: v.enemy.name,
+                score1: v.player.health,
+                score2: v.enemy.health,
+            };
+            
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            toast_alert("Game stores on DB!")
+        } catch {
+            toast_alert("Couldn't store game on blockchain")
+        }
+		// axios.post('http://localhost:8001/solidity/addgame/' +  window.user.blockchain_id + "/Fighty", {
+        //     player1: v.player.name,
+        //     player2: v.enemy.name,
+        //     score1: v.player.health,
+        //     score2: v.enemy.health
+		// })
+		// .then((response) => {
+		// 	console.log(response.data);
+		// })
+		// .catch((error) => {
+		// 	console.error(error);
+		// 	if (error.response)	{
+		// 		const status = error.response.status;
+		// 	}
+		// });
 	}
 }

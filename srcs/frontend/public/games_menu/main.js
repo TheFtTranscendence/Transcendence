@@ -18,18 +18,22 @@ function games_menu_hashchange() {
 	document.getElementById('games').classList.add("hidden")
 }
 
-function main_menu_changeSkinButton () {
+async function main_menu_changeSkinButton () {
 	console.log('Change Skin button clicked')
 
 	if (window.location.hash == '#fighters') {
 
-		if (window.user.preferences.fighty_skin == window.game2SkinsPreviews.length - 1)
-			modify_user("preferences", {fighty_skin: 0, pongy: window.user.preferences.pongy_skin})
-		else
-			modify_user("preferences", {fighty_skin: window.user.preferences.pongy_skin + 1, pongy: window.user.preferences.pongy_skin})
+		if (window.user.preferences.fighty_skin == window.game2SkinsPreviews.length - 1) {
+			await modify_user_preferences("fighty_skin", 0)
+			new_skin = 0
+		}
+		else {
+			await modify_user_preferences("fighty_skin", window.user.preferences.fighty_skin + 1)
+			new_skin = window.user.preferences.fighty_skin + 1
+		}
 
 		update_user_info()
-		document.getElementById('games-menu-selected-skin').style.backgroundImage = "url('" + window.game2SkinsPreviews[window.user.preferences.fighty_skin] + "')" 
+		document.getElementById('games-menu-selected-skin').style.backgroundImage = "url('" + window.game2SkinsPreviews[new_skin] + "')" 
 	}
 	else {
 
@@ -42,13 +46,16 @@ function main_menu_changeSkinButton () {
 	}
 }
 
-function main_menu_matchmakingButton () {
+async function main_menu_matchmakingButton () {
 	console.log('Matchmaking button clicked')
 	if (window.location.hash == '#fighters') {
 
 		clearMenu()
 		unloadScripts(window.menuScripts)
-		loadScripts(window.matchmakingScripts, 'Matchmaking_before_game') // To change for optimization
+		await PromiseloadScripts(window.matchmakingScripts)
+		Matchmaking_before_game()
+		
+		
 	}
 	else {
 		// Load the scripts for pong matchmaking
@@ -108,7 +115,11 @@ function main_menu() {
 	if (window.location.hash == '#fighters') {
 		
 		document.getElementById('games-menu-title').textContent = 'Fighty Fighters'
-		document.getElementById('games-menu-selected-skin').style.backgroundImage = "url('" + window.game2SkinsPreviews[window.user.preferences.fighty_skin] + "')" 
+		try {
+			document.getElementById('games-menu-selected-skin').style.backgroundImage = "url('" + window.game2SkinsPreviews[window.user.preferences.fighty_skin] + "')" 
+		} catch {
+			toast_alert("Error setting skin")
+		}
 	} else {
 		window.pongPlayerSkins = 0
 		document.getElementById('games-menu-title').textContent = 'Pongy'

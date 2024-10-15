@@ -45,8 +45,24 @@
 	<div id="sidebar" class="sidebar hidden">
 		<ul>
 			<li>
-				<input type="file" id="avatarInput" />
+				<!-- <label class="file-upload" for="avatarInput">Choose File</label> -->
+				<input type="file" id="avatarInput" onchange="updateFileName(this)" />
+				<div class="file-name" id="fileName">No file chosen</div>
 				<button onclick="handleUpload()">Upload Avatar</button>
+			</li>
+			
+			<li>
+				<button id="changeUsername">Change Username</button>
+				<div id="changeUsernameForm" class="hidden">
+					<form>
+						<div class="form-group">
+							<label for="newUsername">New username:</label>
+							<input type="text" class="form-control" id="newusername" name="newusername">
+						</div>
+						<button id="submitUsernameChange" type="submit" class="btn btn-primary btn-block">Change Username</button>
+					</form>
+					<div id="changeUsernameError" class="text-danger bg-dark mt-3 p-2 rounded hidden"></div>
+				</div>
 			</li>
 			<li>
 				<button id="changePassword">Change Password</button>
@@ -125,44 +141,71 @@
 	</div>
 
 
-	<div id="home" class="container mt-4 hidden">
+	<div id="home" class="row mb-4 justify-content-center mt-3">
 
-		<!-- Win/Loss Counter using Bootstrap cards -->
-		<div class="row mb-4 justify-content-center">
-			<div class="col-md-5 mb-3">
-				<div class="card text-center bg-success text-white">
-					<div class="card-body">
-						<h5 class="card-title">Total Wins</h5>
-						<p class="card-text" id="winCounter">0</p>
+		<div class="col-md-8"> <!-- 70% width -->
+			<div class="row mb-4">
+				<div class="col-md-6 mb-3">
+					<div class="card text-center bg-success text-white">
+						<div class="card-body">
+							<h5 class="card-title">Total Wins</h5>
+							<p class="card-text" id="winCounter">0</p>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6 mb-3">
+					<div class="card text-center bg-danger text-white">
+						<div class="card-body">
+							<h5 class="card-title">Total Losses</h5>
+							<p class="card-text" id="lossCounter">0</p>
+						</div>
 					</div>
 				</div>
 			</div>
-			<div class="col-md-5 mb-3">
-				<div class="card text-center bg-danger text-white">
-					<div class="card-body">
-						<h5 class="card-title">Total Losses</h5>
-						<p class="card-text" id="lossCounter">0</p>
-					</div>
-				</div>
+	
+			<!-- Game History Table -->
+			<div class="table-responsive mb-4">
+				<table class="table table-bordered table-hover">
+					<thead class="thead-dark">
+						<tr>
+							<th scope="col">Game</th>
+							<th scope="col">Player1</th>
+							<th scope="col">Player2</th>
+							<th scope="col">Score1</th>
+							<th scope="col">Score2</th>
+							<th scope="col">
+								Win/Loss
+								<select class="form-select form-select-sm mt-1" id="userSelect" onchange="updateContent(this.value)">
+									<option value="">Choose a user</option>
+									<!-- Options will be populated dynamically -->
+								</select>
+							</th>
+						</tr>
+					</thead>
+					<tbody id="gameHistoryTableBody">
+						<!-- Table rows will be dynamically added here -->
+					</tbody>
+				</table>
+			</div>
+		</div>
+	
+		<!-- Right Side: Notifications Table -->
+		<div class="col-md-4"> <!-- 30% width -->
+			<!-- Notifications Table -->
+			<div class="table-responsive">
+				<table class="table table-bordered table-hover">
+					<thead class="thead-dark">
+						<tr>
+							<th scope="col">Notifications</th>
+						</tr>
+					</thead>
+					<tbody id="notificationsTableBody">
+						<!-- Table rows will be dynamically added here -->
+					</tbody>
+				</table>
 			</div>
 		</div>
 
-		<!-- Game History Table with Bootstrap styling -->
-		<div class="table-responsive">
-			<table class="table table-bordered table-hover">
-				<thead class="thead-dark">
-					<tr>
-						<th scope="col">Game</th>
-						<th scope="col">Date</th>
-						<th scope="col">Players</th>
-						<th scope="col">Win/Loss</th>
-					</tr>
-				</thead>
-				<tbody id="gameHistoryTableBody">
-					<!-- Table rows will be dynamically added here -->
-				</tbody>
-			</table>
-		</div>
 	</div>
 
 
@@ -190,7 +233,7 @@
 			<button id="toLogin">Already a user?</button>
 		</div>
 	</div>
-	-->
+	
 	<nav class="hidden">
 		<a href="#home" class="nav-link">Home</a>
 		<a href="#pongy" class="nav-link">Pongy</a>
@@ -198,10 +241,8 @@
 		<a href="#chat" class="nav-link">Chat</a>
 	</nav>
 	<div id="content">
-		<div id="home" class="hidden">
-			<h1>Home</h1>
-			<p>Click on the links above to navigate to the different sections of the website.</p>
-			<p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Architecto quaerat alias, adipisci laborum labore reprehenderit quae doloremque repellendus magnam consectetur, dolore necessitatibus explicabo ipsum tenetur accusantium minus iste! Sed, voluptas.</p>
+		<div id="game" class="hidden">
+			<canvas id="game-area"></canvas>
 		</div>
 
 		<div id="games" class="hidden">
@@ -452,17 +493,14 @@
 	</div>
 
 		<div id="chat" class="hidden">
-			
-			
-			
-			
+
 			<div id="chat-list">
-				
+
 				<!-- Chat divs will be dynamically added here -->
-				
-				
+
+
 			</div>
-			
+
 			<div id="chat-content-container">
 				<div id="chat-buttons">
 
@@ -485,6 +523,21 @@
 				</div>
 			</div>
 	</div>
+
+	<div class="toast-container position-fixed bottom-0 end-0 p-3">
+		<div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+		  <div class="toast-header">
+			<img src="..." class="rounded me-2" alt="...">
+			<strong class="me-auto">Bootstrap</strong>
+			<small>Just now</small>
+			<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+		  </div>
+		  <div class="toast-body">
+			<!-- This content will be updated with the custom message -->
+			Hello, world! This is a toast message.
+		  </div>
+		</div>
+	  </div>
 
 
 	<!-- Bootstrap JS and dependencies -->
