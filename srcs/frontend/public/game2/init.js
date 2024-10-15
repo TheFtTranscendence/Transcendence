@@ -1,4 +1,4 @@
-function init_vars(player1, player2, skins1, skins2) {
+function init_vars(player1, player2, skins1, skins2, tournamentGame) {
 
     canvas_width = 1366
 	canvas_height = 768
@@ -123,6 +123,8 @@ function init_vars(player1, player2, skins1, skins2) {
             stun_time: stun_time, // ms
             ground_height: ground_height, // px
 
+            tournamentGame: tournamentGame,
+
         }
     }
 }
@@ -152,45 +154,110 @@ function reset_keys(v) {
 function leave_game(v) {
 	console.log('hashchange game2');
 
+    console.log("WE HERE")
+
     clearInterval(v.g.gameInterval)
     clearInterval(v.g.timerInterval)
     clearInterval(v.g.backgroundInterval)
 
+    storeMatch(v)
+        
     window.removeEventListener('keydown', game2_keydown)
 	window.removeEventListener('keyup', game2_keyup)
 	window.removeEventListener('hashchange', game2_hashchange)
 
-	v.g.timer.innerHTML = 200
+    window.addEventListener('keydown', quit);
 
-	v.player.bar.style.width = '100%'
-	v.enemy.bar.style.width = '100%'
-	document.querySelector('#game2-end-text').style.display = 'none'
+}
 
-	document.getElementById('div-game2-area').classList.add("hidden");
-	document.getElementById('games').classList.add("hidden");
+function quit(event)
+{
+    if (event.key === 'x' || event.key === 'X') {
 
-	try {
-		const url = `https://${window.IP}:3000/solidity/solidity/addgame/${window.user.blockchain_id}/Fighty`;
-		
-		const data = {
-			player1: v.player.name,
-			player2: v.enemy.name,
-			score1: v.player.health,
-			score2: v.enemy.health,
-		};
-		
-		fetch(url, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(data),
+
+        v.g.timer.innerHTML = 200 // TODO: check if this works - restart timer
+        
+        document.querySelector('#game2-bar1').style.width = '100%'
+        document.querySelector('#game2-bar2').style.width = '100%'
+
+        document.querySelector('#game2-end-text').style.display = 'none'
+
+        
+        unloadScripts(window.game2Scripts);
+        document.getElementById('div-game2-area').classList.add("hidden");
+        console.log("WE also HERE")
+        if (v.g.tournamentGame) {
+            loadScripts(window.tournamentScripts);
+            tournament_loop();
+        }
+        else {
+            loadScripts(window.menuScripts);
+            main_menu();
+        }
+        window.removeEventListener('keydown', quit);
+    }
+}
+
+// TODO: CHANGE TO FETCH
+function storeMatch(v)
+{
+// 	console.log(vars.gameVars.p1Name + vars.gameVars.p1SkinId);
+// 	console.log(vars.gameVars.p2Name + vars.gameVars.p2SkinId);
+	if (v.g.tournamentGame)
+	{
+        axios.post('http://localhost:8001/solidity/addgame/' + window.user.blockchain_id + "/Fighty", {
+            player1: v.player.name,
+            player2: v.enemy.name,
+            score1: v.player.health,
+            score2: v.enemy.health
+        })
+		.then((response) => {
+			console.log(response.data);
 		})
-		toast_alert("Game stores on DB!")
-	} catch {
-		toast_alert("Couldn't store game on blockchain")
+		.catch((error) => {
+			console.error(error);
+			if (error.response)	{
+				const status = error.response.status;
+			}
+		});
 	}
-	
-	unloadScripts(window.game2Scripts);
-
+	else
+	{
+        try {
+            const url = `https://${window.IP}:3000/solidity/solidity/addgame/${window.user.blockchain_id}/Fighty`;
+            
+            const data = {
+                player1: v.player.name,
+                player2: v.enemy.name,
+                score1: v.player.health,
+                score2: v.enemy.health,
+            };
+            
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            toast_alert("Game stores on DB!")
+        } catch {
+            toast_alert("Couldn't store game on blockchain")
+        }
+		// axios.post('http://localhost:8001/solidity/addgame/' +  window.user.blockchain_id + "/Fighty", {
+        //     player1: v.player.name,
+        //     player2: v.enemy.name,
+        //     score1: v.player.health,
+        //     score2: v.enemy.health
+		// })
+		// .then((response) => {
+		// 	console.log(response.data);
+		// })
+		// .catch((error) => {
+		// 	console.error(error);
+		// 	if (error.response)	{
+		// 		const status = error.response.status;
+		// 	}
+		// });
+	}
 }

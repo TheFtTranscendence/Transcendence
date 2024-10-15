@@ -36,7 +36,13 @@ async function main_menu_changeSkinButton () {
 		document.getElementById('games-menu-selected-skin').style.backgroundImage = "url('" + window.game2SkinsPreviews[new_skin] + "')" 
 	}
 	else {
-		// Add functionality for changing the skin Pong Change
+
+		if (window.pongPlayerSkins == window.game1SkinsPreview.length - 1)
+			window.pongPlayerSkins = 0
+		else
+			window.pongPlayerSkins++
+
+		document.getElementById('games-menu-selected-skin').style.backgroundImage = "url('" + window.game1SkinsPreview[window.pongPlayerSkins] + "')" 
 	}
 }
 
@@ -54,13 +60,45 @@ async function main_menu_matchmakingButton () {
 	else {
 		// Load the scripts for pong matchmaking
 		// Pong change
+		clearMenu()
+		unloadScripts(window.menuScripts)
+		loadScriptss(window.gameScripts)
+		startMatchmakingGame("p1", "p2", window.game1Skins[0], window.game1Skins[1], 0, 1, false, true)
 	}
 }
 
-function main_menu_tournamentButton() {
+function loadScriptss(scriptUrls) {
+    return Promise.all(scriptUrls.map(url => {
+        return new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = url;
+            script.onload = () => resolve();
+            script.onerror = () => reject(new Error(`Failed to load script: ${url}`));
+            document.head.appendChild(script);
+        });
+    }));
+}
+
+
+async function main_menu_tournamentButton() {
 	console.log('Tournament button clicked')
-	clearMenu()
-	games_tournament_menu()
+	clearMenu()	
+
+	const gameStatus = await window.getTournamentStatus();
+
+	if (window.location.hash == '#fighters' && !gameStatus) {
+		games_tournament_menu()
+	}
+	else if (window.location.hash == '#game' && !gameStatus)
+	{
+		games_tournament_menu()
+	}
+	else
+	{
+		unloadScripts(window.menuScripts)
+		await loadScriptss(window.tournamentScripts)
+		tournament_loop()
+	}
 }
 
 function main_menu_localButton() {
@@ -70,7 +108,8 @@ function main_menu_localButton() {
 }
 
 function main_menu() {
-	
+
+	document.getElementById('games').classList.remove("hidden")
 	document.getElementById('games-menu-area').classList.remove("hidden")
 	
 	if (window.location.hash == '#fighters') {
@@ -82,10 +121,12 @@ function main_menu() {
 			toast_alert("Error setting skin")
 		}
 	} else {
-		
+		window.pongPlayerSkins = 0
 		document.getElementById('games-menu-title').textContent = 'Pongy'
-		document.getElementById('games-menu-selected-skin').style.backgroundImage = "url('game/path/skin.png')" // Pong Change
+		document.getElementById('games-menu-selected-skin').style.backgroundImage = "url('" + window.game1SkinsPreview[window.pongPlayerSkins] + "')" 
 	}
+
+	pongyTournamentData.printAllMatches()
 
 	window.addEventListener('hashchange', games_menu_hashchange)
 	

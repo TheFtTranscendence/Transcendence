@@ -9,7 +9,7 @@ function clearLocalMenu() {
 		unloadScripts(window.game2Scripts)
 	}
 	else {
-		// unloadScripts(window.gameScripts) Pong Change
+		unloadScripts(window.gameScripts)
 	}
 
 	document.getElementById('games-local-menu').classList.add("hidden")
@@ -33,7 +33,12 @@ function local_changeSkinButton1() {
 	}
 	else 
 	{
-		// Pong Change
+		if (window.pongPlayer1Skin == window.game1SkinsPreview.length - 1)
+			window.pongPlayer1Skin = 0
+		else
+			window.pongPlayer1Skin++
+
+		document.getElementById('games-local-player1-skin').style.backgroundImage =  "url('" + window.game1SkinsPreview[window.pongPlayer1Skin] + "')" 
 	}
 }
 
@@ -50,7 +55,12 @@ function local_changeSkinButton2() {
 	}
 	else 
 	{
-		// Pong Change
+		if (window.pongPlayer2Skin == window.game1SkinsPreview.length - 1)
+			window.pongPlayer2Skin = 0
+		else
+			window.pongPlayer2Skin++
+
+		document.getElementById('games-local-player2-skin').style.backgroundImage =  "url('" + window.game1SkinsPreview[window.pongPlayer2Skin] + "')" 
 	}
 }
 
@@ -77,11 +87,11 @@ function local_play() {
 	unloadScripts(window.menuScripts)
 	if (window.location.hash == '#fighters') {
 		document.getElementById('div-game2-area').classList.remove("hidden")
-		startGame2(player1name, player2name, window.game2Skins[window.player1Skin], window.game2Skins[window.player2Skin])
+		startGame2(player1name, player2name, window.game2Skins[window.player1Skin], window.game2Skins[window.player2Skin], -1, -1, false)
 	} else {
 
-		// document.getElementById('div-game-area').classList.remove("hidden") // Pong Change
-		// Load scritps here for Pong game so there's no delay when starting// Pong Change
+		document.getElementById('game-area').classList.remove("hidden")
+		startGame(player1name, player2name, window.game1Skins[window.pongPlayer1Skin], window.game1Skins[window.pongPlayer2Skin], -1, -1, false, false)
 	}
 
 }
@@ -103,10 +113,11 @@ function games_local_menu() {
 		document.getElementById('games-local-player2-skin').style.backgroundImage =  "url('" + window.game2SkinsPreviewsInverted[window.player2Skin] + "')" 
 	} else {
 
-		// loadScripts(window.gameScritps) Load scripts for pong game so there's no delay when user presses play button  // Pong Change
-		
-		document.getElementById('games-local-player1-skin').style.backgroundImage = "url('path/to/skin.png')" // Pong Change
-		document.getElementById('games-local-player2-skin').style.backgroundImage = "url('path/to/skin.png')" // Pong Change
+		loadScripts(window.gameScripts)
+		window.pongPlayer1Skin = 0
+		window.pongPlayer2Skin = 0
+		document.getElementById('games-local-player1-skin').style.backgroundImage = "url('" + window.game1SkinsPreview[window.pongPlayer1Skin] + "')" 
+		document.getElementById('games-local-player2-skin').style.backgroundImage = "url('" + window.game1SkinsPreview[window.pongPlayer2Skin] + "')" 
 	}
 
 	window.addEventListener('hashchange', local_menu_hashchange)

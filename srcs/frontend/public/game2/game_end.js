@@ -83,7 +83,7 @@ async function game_end_winner(v, winner, loser) {
 	
 	console.log('Game ending sequence ended')
 
-	document.querySelector('#game2-end-text').innerHTML = winner.name + ' wins!'
+	document.querySelector('#game2-end-text').innerHTML = winner.name + ' wins!\nPRESS X TO LEAVE'
 	document.querySelector('#game2-end-text').style.display = 'flex'
 
 
@@ -94,24 +94,26 @@ async function game_end_winner(v, winner, loser) {
 
 	// leave_game(v)
 
-	const url = `https://${window.IP}:3000/solidity/solidity/addgame/${window.user.smartcontract_id}`;
+	// NEW WAY OF USING BCH
+	// const url = `https://${window.IP}:3000/solidity/solidity/addgame/${window.user.smartcontract_id}`;
 
-	const data = {
-		player1: v.player.name,
-		player2: v.enemy.name,
-		score1: v.player.health,
-		score2: v.enemy.health,
-	};
+	// const data = {
+	// 	player1: v.player.name,
+	// 	player2: v.enemy.name,
+	// 	score1: v.player.health,
+	// 	score2: v.enemy.health,
+	// };
 
-	fetch(url, {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		body: JSON.stringify(data),
-	})
+	// fetch(url, {
+	// 	method: 'POST',
+	// 	headers: {
+	// 		'Content-Type': 'application/json',
+	// 	},
+	// 	body: JSON.stringify(data),
+	// })
 	
 	console.log('Game Ended!')
+	leave_game(v)
 }
 
 async function game_end_tie(v) {
@@ -146,24 +148,24 @@ async function game_end_tie(v) {
 	document.querySelector('#game2-end-text').innerHTML = 'Tie!'
 	document.querySelector('#game2-end-text').style.display = 'flex'
 
-	const url = `https://${window.IP}:3000/solidity/solidity/addgame/${window.user.smartcontract_id}`;
+	// const url = `https://${window.IP}:3000/solidity/solidity/addgame/${window.user.blockchain_id}/Pongy`;
 
-	const data = {
-		player1: v.player.name,
-		player2: v.enemy.name,
-		score1: v.player.health,
-		score2: v.enemy.health,
-	};
+	// const data = {
+	// 	player1: v.player.name,
+	// 	player2: v.enemy.name,
+	// 	score1: v.player.health,
+	// 	score2: v.enemy.health,
+	// };
 
-	fetch(url, {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		body: JSON.stringify(data),
-	})
+	// fetch(url, {
+	// 	method: 'POST',
+	// 	headers: {
+	// 		'Content-Type': 'application/json',
+	// 	},
+	// 	body: JSON.stringify(data),
+	// })
+
 
 	leave_game(v)
 	
 }
-

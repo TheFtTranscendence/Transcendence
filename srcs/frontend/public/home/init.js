@@ -1,5 +1,6 @@
 function home_hashchange(event)
 {
+
 	document.getElementById('home').classList.add('hidden');
 	unloadScripts(window.homeScripts);
 }
