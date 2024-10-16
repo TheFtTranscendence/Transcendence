@@ -1,7 +1,7 @@
 class Tournament {
 
 	constructor(game_name, number_of_players, host, player_list, player_info=null) {
-		const url = 'http://localhost:8004/tournaments/';
+		const url = 'https://' + window.IP + ':3000/online-games/tournaments/';
 
 		const data = {
 			game_name: game_name,
@@ -37,7 +37,7 @@ class Tournament {
 	}
 
 	async #fetchWinners() {
-		const url = 'http://localhost:8004/tournaments/' + this.id + '/winners/';
+		const url = 'https://' + window.IP + ':3000/online-games/tournaments/' + this.id + '/winners/';
 
 		return fetch(url, {
 			method: 'GET',
@@ -62,8 +62,8 @@ class Tournament {
 		})();
 	}
 
-	async postGames(game) {
-		const url = `http://localhost:8004/tournaments/${this.id}/games/`;
+	async post(game) {
+		const url = `https://' + window.IP + ':3000/online-games/tournaments/${this.id}/games/`;
 
 		return fetch(url, {
 			method: 'POST',
@@ -89,7 +89,7 @@ class Tournament {
 }
 
 async function inTournament(game)	{
-	const url = 'http://localhost:8004/tournaments/my_tournament/' + window.user.id + '/' + game + '/';
+	const url = 'https://' + window.IP + ':3000/online-games/tournaments/my_tournament/' + window.user.id + '/' + game + '/';
 
 		return fetch(url, {
 			method: 'GET',

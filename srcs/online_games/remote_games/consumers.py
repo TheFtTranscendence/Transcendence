@@ -41,8 +41,6 @@ class GameConsumer(AsyncWebsocketConsumer):
 			# 	await sync_to_async(self.game.change_status)('completed')
 
 			game_player = await GamePlayer.objects.get(user=self.user, game=self.game)
-			game_player.delete()
-
 
 			self.close(close_code)
 		except GamePlayer.DoesNotExist:

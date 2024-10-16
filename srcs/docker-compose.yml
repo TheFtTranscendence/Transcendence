@@ -131,18 +131,18 @@ services:
       - chat_db
     restart: unless-stopped
 
-  frontend:
-    container_name: frontend
-    build: ./frontend
-    environment:
-      - IP=${IP}
-    ports:
-      - "3000:443"
-    networks:
-      - app-network
-    volumes:
-      - shared_static:/usr/share/nginx/html
-    restart: unless-stopped
+  # frontend:
+  #   container_name: frontend
+  #   build: ./frontend
+  #   environment:
+  #     - IP=${IP}
+  #   ports:
+  #     - "3000:443"
+  #   networks:
+  #     - app-network
+  #   volumes:
+  #     - shared_static:/usr/share/nginx/html
+  #   restart: unless-stopped
     
 
   solidity:
