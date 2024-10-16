@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.db.models import Q
 
+#todo: add to the creation and the post of games's response the next 2 players
+
 class Tournament(models.Model):
 	STATUS_CHOICES = [
 		('ongoing', 'Ongoing'),

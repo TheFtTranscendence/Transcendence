@@ -24,7 +24,7 @@ class TournamentViewSet(viewsets.ModelViewSet):
 		try:
 			tournament = self.get_object()
 			tournament.change_status('aborted')
-			return Response({'status': 'Tournament aborted'}, status=status.HTTP_200_OK)
+			return Response({'status': tournament.status}, status=status.HTTP_200_OK)
 		except Tournament.DoesNotExist:
 			return Response({'detail': 'Tournament not found.'}, status=status.HTTP_404_NOT_FOUND)
 		except ValueError as e:
@@ -73,6 +73,4 @@ class TournamentGameViewSet(viewsets.ModelViewSet):
 
 		if total_games_played == tournament.number_of_players - 1:
 			tournament.change_status('completed')
-			return Response({'detail': 'game_ended', 'data': serializer.data}, status=status.HTTP_201_CREATED)
-		else:
-			return Response(serializer.data, status=status.HTTP_201_CREATED)
+		return Response({'status': tournament.status, 'data': serializer.data}, status=status.HTTP_201_CREATED)
