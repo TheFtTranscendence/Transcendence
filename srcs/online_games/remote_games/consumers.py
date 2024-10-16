@@ -68,11 +68,9 @@ class GameConsumer(AsyncWebsocketConsumer):
 		elif action == 'leave':
 			score = data.get('score')
 			await self.disconnect(3000, score)
-		elif action == 'move' and self.game.status == 'ongoing':
+		elif action == 'move':
 			move = data.get('move')
 			await self.handle_move(move)
-		elif action == 'move':
-			await self.send(text_data=json.dumps({'error': 'WTF?'}))
 		elif action == 'game_info' and self.game.status == 'ongoing':
 			info = data.get('info')
 			await self.handle_game_info(info)

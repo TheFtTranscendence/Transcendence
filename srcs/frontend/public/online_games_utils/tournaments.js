@@ -2,7 +2,12 @@ function create_tournament(game_name, number_of_players, host, player_list)	{
 
 	url = 'http://localhost:8004/tournaments/'
 
-	
+	data =	{
+		game_name: game_name,
+		number_of_players: number_of_players,
+		host: host,
+		player_list: player_list
+	}
 
 	fetch(url, {
 		method: 'POST',
@@ -12,7 +17,7 @@ function create_tournament(game_name, number_of_players, host, player_list)	{
 		body: JSON.stringify(data),
 	})
 	.then((response) => {
-			
+		
 	})
 	.catch((error) => {
 		
