@@ -92,7 +92,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 		await self.send(text_data=json.dumps({
 			'type': 'game_info',
 			'sender_id': self.user,
-			'action': info
+			'info': info
 		}))
 
 	async def handle_move(self, move):
