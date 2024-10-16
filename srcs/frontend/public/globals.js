@@ -49,6 +49,10 @@ window.matchmakingScripts = [
 	'matchmaking/matchmaking.js'
 ];
 
+window.queueScripts = [
+	"online_games_utils/queues.js",
+]
+
 /* ----------------------- Game 1 Skins ----------------------- */
 
 window.game1Skins = [
