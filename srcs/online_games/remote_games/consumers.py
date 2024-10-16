@@ -70,8 +70,29 @@ class GameConsumer(AsyncWebsocketConsumer):
 			await self.disconnect(3000, score)
 		elif action == 'move' and self.game.status == 'ongoing':
 			await self.handle_move(data)
+		elif action == 'game_info' and self.game.status == 'ongoing':
+			info = data.get('info')
+			await self.handle_game_info(info)
 		else:
 			await self.send(text_data=json.dumps({'error': 'Unknown action.'}))
+
+	async def handle_game_info(self, info):
+		await self.channel_layer.group_send(
+			self.game_group_name,
+			{
+				'type': 'game_info_message',
+				'info': info
+			}
+		)
+
+	async def game_info_message(self, event):
+		info = event['info']
+
+		await self.send(text_data=json.dumps({
+			'type': 'game_info',
+			'sender_id': self.user,
+			'action': info
+		}))
 
 	async def handle_move(self, data):
 		await self.channel_layer.group_send(
