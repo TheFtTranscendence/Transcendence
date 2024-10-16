@@ -68,7 +68,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 		elif action == 'leave':
 			score = data.get('score')
 			await self.disconnect(3000, score)
-		elif action == 'move':
+		elif action == 'move' and self.game.status == 'ongoing':
 			move = data.get('move')
 			await self.handle_move(move)
 		elif action == 'game_info' and self.game.status == 'ongoing':
@@ -148,6 +148,8 @@ class GameConsumer(AsyncWebsocketConsumer):
 
 	async def game_ready_message(self, event):
 		users_info = event['users_info']
+
+		self.game = await sync_to_async(Game.objects.get)(id=self.game_id)
 
 		await self.send(text_data=json.dumps({
 			'type': 'GameReady',
