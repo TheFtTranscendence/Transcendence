@@ -82,24 +82,20 @@ def add_instance(request):
 
 # Add a game
 @api_view(['POST'])
-def add_game(request, instanceIndex, gameType):
-    logger.info(f"instanceIndex -> {instanceIndex}, gameType -> {gameType}")
+def add_game(request, instanceIndex, gameName):
     data = request.data
-    player1 = data.get('player1')
-    player2 = data.get('player2')
-    score1 = data.get('score1')
-    score2 = data.get('score2')
-    logger.info(f"p1 -> {player1}, p2 -> {player2}")
-    logger.info(f"s1 -> {score1}, s2 -> {score2}")
+    players = data.get('players')  # Expecting a list with two players
+    scores = data.get('scores')    # Expecting a list with two scores
 
-    if player1 is None or player2 is None or score1 is None or score2 is None:
-        return JsonResponse({'missing fields': 'Data isnt format as expected'}, status=450)
+    if players is None or len(players) != 2 or scores is None or len(scores) != 2:
+        return JsonResponse({'missing fields': 'Data isn’t formatted as expected'}, status=450)
 
     def add_game_func():
         # Estimate gas and gas price
         base_gas_price = web3.eth.gas_price
         gas_price = int(base_gas_price * 3)
-        base_gas = contract.functions.addGame(instanceIndex, gameType, player1, player2, score1, score2).estimate_gas({
+        
+        base_gas = contract.functions.addGame(instanceIndex, gameName, players, scores).estimate_gas({
             'from': web3.eth.default_account
         })
         gas = int(base_gas * 5)
@@ -107,7 +103,7 @@ def add_game(request, instanceIndex, gameType):
         max_fee_per_gas = base_gas_price + max_priority_fee_per_gas
 
         # Build the transaction
-        tx = contract.functions.addGame(instanceIndex, gameType, player1, player2, score1, score2).build_transaction({
+        tx = contract.functions.addGame(instanceIndex, gameName, players, scores).build_transaction({
             'chainId': 17000,
             'maxPriorityFeePerGas': max_priority_fee_per_gas,  # Fixed tip of 0.005 ETH
             'maxFeePerGas': max_fee_per_gas,
@@ -138,18 +134,29 @@ def add_game(request, instanceIndex, gameType):
 
 # Add tournament (4 or 8 players)
 @api_view(['POST'])
-def add_tournament(request, instanceIndex, gameType):
+def add_tournament(request, instanceIndex, gameName):
     data = request.data
-    players = data.get('players')
+    players = data.get('players')  # Expecting a list of players
+    tournamentId = data.get('tournamentId')  # Expecting a tournament ID
+    games = data.get('games')  # Expecting a list of games
 
-    if players is None:
-        return JsonResponse({'missing fields': 'Data isnt format as expected'}, status=450)
+    # Validate input
+    if players is None or len(players) not in [4, 8]:
+        return JsonResponse({'missing fields': 'Players list is missing or does not contain 4 or 8 players'}, status=450)
+
+    if tournamentId is None:
+        return JsonResponse({'missing fields': 'Tournament ID is missing'}, status=450)
+
+    if games is None:
+        return JsonResponse({'missing fields': 'Games data is missing'}, status=450)
 
     def add_tournament_func():
         # Estimate gas and gas price
         base_gas_price = web3.eth.gas_price
         gas_price = int(base_gas_price * 3)
-        base_gas = contract.functions.addTournament(instanceIndex, gameType, players).estimate_gas({
+
+        # Estimate the gas required for the contract function call
+        base_gas = contract.functions.addTournament(instanceIndex, gameName, tournamentId, players, games).estimate_gas({
             'from': web3.eth.default_account
         })
         gas = int(base_gas * 5)
@@ -157,7 +164,7 @@ def add_tournament(request, instanceIndex, gameType):
         max_fee_per_gas = base_gas_price + max_priority_fee_per_gas
 
         # Build the transaction
-        tx = contract.functions.addTournament(instanceIndex, gameType, players).build_transaction({
+        tx = contract.functions.addTournament(instanceIndex, gameName, tournamentId, players, games).build_transaction({
             'chainId': 17000,
             'maxPriorityFeePerGas': max_priority_fee_per_gas,  # Fixed tip of 0.005 ETH
             'maxFeePerGas': max_fee_per_gas,
@@ -168,6 +175,7 @@ def add_tournament(request, instanceIndex, gameType):
         tx_hash = web3.eth.send_raw_transaction(signed_tx.raw_transaction)
         return tx_hash
 
+    # Check for pending transactions to avoid nonce conflicts
     while True:
         pending_nonce = web3.eth.get_transaction_count(web3.eth.default_account, 'pending')
         latest_nonce = web3.eth.get_transaction_count(web3.eth.default_account, 'latest')
@@ -185,116 +193,42 @@ def add_tournament(request, instanceIndex, gameType):
 
     return JsonResponse({'success': 'Tournament added'}, status=200)
 
-# Add a tournament game
-@api_view(['POST'])
-def add_tournament_game(request, instanceIndex, gameType):
-    data = request.data
-    player1 = data.get('player1')
-    player2 = data.get('player2')
-    score1 = data.get('score1')
-    score2 = data.get('score2')
-
-    if player1 is None or player2 is None or score1 is None or score2 is None:
-        return JsonResponse({'missing fields': 'Data isnt format as expected'}, status=450)
-
-    def add_tournament_game_func():
-        # Estimate gas and gas price
-        base_gas_price = web3.eth.gas_price
-        gas_price = int(base_gas_price * 3)
-        base_gas = contract.functions.addTournamentGame(instanceIndex, gameType, player1, player2, score1, score2).estimate_gas({
-            'from': web3.eth.default_account
-        })
-        gas = int(base_gas * 5)
-        max_priority_fee_per_gas = web3.to_wei(200, 'gwei')  # 0.005 ETH in Gwei
-        max_fee_per_gas = base_gas_price + max_priority_fee_per_gas
-
-        # Build the transaction
-        tx = contract.functions.addTournamentGame(instanceIndex, gameType, player1, player2, score1, score2).build_transaction({
-            'chainId': 17000,
-            'maxPriorityFeePerGas': max_priority_fee_per_gas,  # Fixed tip of 0.005 ETH
-            'maxFeePerGas': max_fee_per_gas,
-            'gas': gas,
-            'nonce': web3.eth.get_transaction_count(web3.eth.default_account),
-        })
-        signed_tx = web3.eth.account.sign_transaction(tx, private_key)
-        tx_hash = web3.eth.send_raw_transaction(signed_tx.raw_transaction)
-        return tx_hash
-
-    while True:
-        pending_nonce = web3.eth.get_transaction_count(web3.eth.default_account, 'pending')
-        latest_nonce = web3.eth.get_transaction_count(web3.eth.default_account, 'latest')
-        if pending_nonce == latest_nonce:
-            break
-        time.sleep(5)
-        
-    try:
-        tx_hash = add_tournament_game_func()
-    except Exception as e:
-        return JsonResponse({'exception': str(e)}, status=400)
-
-    # Wait for the transaction to be mined
-    tx_receipt = web3.eth.wait_for_transaction_receipt(tx_hash)
-
-    return JsonResponse({'success': 'Tournament game added'}, status=200)
-
-### GETTER FUNCTIONS ###
-
-# Get all the games from an instance (for the history)
+# Get the pongy games
 @api_view(['GET'])
-def get_games(request, instanceIndex, gameType):
+def get_pongy_games(request, instanceIndex):
     try:
-        games = contract.functions.getGames(instanceIndex, gameType).call()
+        games = contract.functions.getPongyGames(instanceIndex).call()
     except Exception as e:
         return JsonResponse({'exception': str(e)}, status=400)
 
     return JsonResponse({'success': games}, status=200)
 
-# Get the current tournament players list
+# Get the fighty games
 @api_view(['GET'])
-def get_tournament_status(request, instanceIndex, gameType):
+def get_fighty_games(request, instanceIndex):
     try:
-        players = contract.functions.getTournamentStatus(instanceIndex, gameType).call()
+        games = contract.functions.getFightyGames(instanceIndex).call()
     except Exception as e:
         return JsonResponse({'exception': str(e)}, status=400)
 
-    return JsonResponse({'success': players}, status=200)
+    return JsonResponse({'success': games}, status=200)
 
-# Get the current tournament players list
+# Get the pongy tournaments
 @api_view(['GET'])
-def get_current_tournament_players_list(request, instanceIndex, gameType):
+def get_pongy_tournaments(request, instanceIndex):
     try:
-        players = contract.functions.getCurrentTournamentPlayersList(instanceIndex, gameType).call()
+        tournaments = contract.functions.getPongyTournaments(instanceIndex).call()
     except Exception as e:
         return JsonResponse({'exception': str(e)}, status=400)
 
-    return JsonResponse({'success': players}, status=200)
+    return JsonResponse({'success': tournaments}, status=200)
 
-# Get the next tournament game to play (returns 2 players)
+# Get the fighty tournaments
 @api_view(['GET'])
-def get_next_tournament_player(request, instanceIndex, gameType):
+def get_fighty_tournaments(request, instanceIndex):
     try:
-        players = contract.functions.getNextTournamentPlayers(instanceIndex, gameType).call()
+        tournaments = contract.functions.getFightyTournaments(instanceIndex).call()
     except Exception as e:
         return JsonResponse({'exception': str(e)}, status=400)
 
-    return JsonResponse({'success': players}, status=200)
-
-# Get the last tournament ranking
-@api_view(['GET'])
-def get_last_tournament_ranking(request, instanceIndex, gameType):
-    try:
-        ranking = contract.functions.getLastTournamentRanking(instanceIndex, gameType).call()
-    except Exception as e:
-        return JsonResponse({'exception': str(e)}, status=400)
-
-    return JsonResponse({'success': ranking}, status=200)
-
-# Get all the tournaments rankings
-@api_view(['GET'])
-def get_all_tournaments_rankings(request, instanceIndex, gameType):
-    try:
-        rankings = contract.functions.getAllTournamentsRankings(instanceIndex, gameType).call()
-    except Exception as e:
-        return JsonResponse({'exception': str(e)}, status=400)
-
-    return JsonResponse({'success': rankings}, status=200)
+    return JsonResponse({'success': tournaments}, status=200)
