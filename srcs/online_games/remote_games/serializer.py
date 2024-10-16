@@ -4,7 +4,7 @@ from .models import Game, GamePlayer
 class GamePlayerSerializer(serializers.ModelSerializer):
     class Meta:
         model = GamePlayer
-        fields = ['user', 'skin_id']
+        fields = ['user', 'blockchain_id', 'username', 'user_info']
 
 class GameSerializer(serializers.ModelSerializer):
     game_players = GamePlayerSerializer(many=True, read_only=True)

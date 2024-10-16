@@ -44,7 +44,7 @@ INSTALLED_APPS = [
 	'invites',
 	'queues',
 	'remote_games',
-	# 'tournaments',
+	'tournaments',
 	'base'
 ]
 

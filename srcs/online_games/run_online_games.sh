@@ -8,4 +8,4 @@ python manage.py makemigrations remote_games > /dev/null 2>&1
 python manage.py makemigrations tournaments > /dev/null 2>&1
 python manage.py migrate
 
-python manage.py runserver 0.0.0.0:8000
+python manage.py runserver 0.0.0.0:8004

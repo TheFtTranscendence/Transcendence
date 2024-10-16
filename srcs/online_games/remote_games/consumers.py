@@ -1,8 +1,9 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from .models import Game, GamePlayer
-import logging
 from asgiref.sync import sync_to_async
+from channels.db import database_sync_to_async
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -13,6 +14,10 @@ class GameConsumer(AsyncWebsocketConsumer):
 
 		try:
 			self.game = await sync_to_async(Game.objects.get)(id=self.game_id)
+			# game_is_full = await sync_to_async(self.game.is_full)()
+			# if game_is_full:
+			# 	await self.send(text_data=json.dumps({'error': "Cannot add player because game is already full."}))
+			# 	return ;
 			await self.channel_layer.group_add(
 				self.game_group_name,
 				self.channel_name
@@ -28,8 +33,22 @@ class GameConsumer(AsyncWebsocketConsumer):
 			logger.info(f"error: {e}")
 			await self.send(text_data=json.dumps({'error': str(e)}))
 
-	async def disconnect(self, close_code):
-		await self.handle_leave(close_code)
+	async def disconnect(self, close_code, score=None):
+		try:
+			# if close_code == 3000 and self.game.status == 'ongoing':
+			# 	for players in self.game.game_players.all():
+			# 		#todo: upload the game to the block_chain
+			# 	await sync_to_async(self.game.change_status)('completed')
+
+			game_player = await GamePlayer.objects.get(user=self.user, game=self.game)
+			game_player.delete()
+
+
+			self.close(close_code)
+		except GamePlayer.DoesNotExist:
+			await self.send(text_data=json.dumps({
+				'error': 'User not in the game.'
+			}))
 
 		await self.channel_layer.group_discard(
 			self.game_group_name,
@@ -42,11 +61,13 @@ class GameConsumer(AsyncWebsocketConsumer):
 
 		if action == 'ready':
 			user = data.get('user')
-			skin_id = data.get('skin_id')
-			await self.handle_ready(user, skin_id)
+			username = data.get('username')
+			blockchain_id = data.get('blockchain_id')
+			user_info = data.get('user_info')
+			await self.handle_ready(user, username, blockchain_id, user_info)
 		elif action == 'leave':
-			close_code = data.get('close_code')
-			await self.handle_leave(close_code)
+			score = data.get('score')
+			await self.disconnect(3000, score)
 		elif action == 'move' and self.game.status == 'ongoing':
 			await self.handle_move(data)
 		else:
@@ -65,21 +86,37 @@ class GameConsumer(AsyncWebsocketConsumer):
 		action = event['action']
 
 		await self.send(text_data=json.dumps({
+			'type': 'move',
 			'sender_id': self.user,
 			'action': action
 		}))
 
-	async def handle_ready(self, user, skin_id):
+	async def handle_ready(self, user, username, blockchain_id, user_info):
 		try:
 			self.user = user
-			await sync_to_async(self.game.add_player)(self.user, skin_id)
+			await sync_to_async(self.game.add_player)(self.user, username, blockchain_id, user_info)
 
-			await self.send_to_group(f'user_{self.user} is ready')
-		
 			all_ready = await sync_to_async(self.game.is_full)()
-
 			if all_ready:
-				await self.send_to_group('Game is starting')
+				players = await sync_to_async(list)(self.game.game_players.all())
+
+				player_list = []
+				for player in players:
+					player_dict = {
+						'user': player.user,
+						'username': player.username,
+						'user_info': player.user_info
+					}
+					player_list.append(player_dict)
+				
+				await self.channel_layer.group_send(
+					self.game_group_name,
+					{
+						'type': 'game_ready_message',
+						'users_info': player_list
+					}
+				)
+
 				await sync_to_async(self.game.change_status)('ongoing')
 				return
 			
@@ -87,34 +124,10 @@ class GameConsumer(AsyncWebsocketConsumer):
 			logger.info(f"error: {e}")
 			await self.send(text_data=json.dumps({'error': str(e)}))
 
-
-	async def handle_leave(self, close_code):
-		try:
-			game_player = await GamePlayer.objects.get(user=self.user, game=self.game)
-			game_player.delete()
-
-			self.close(close_code)
-
-			#todo: maybe the upload to the blockchain should be done here and not in the frontend
-
-		except GamePlayer.DoesNotExist:
-			await self.send(text_data=json.dumps({
-				'error': 'User not in the game.'
-			}))
-
-
-	async def send_to_group(self, message):
-		await self.channel_layer.group_send(
-			self.game_group_name,
-			{
-				'type': 'game_message',
-				'message': message
-			}
-		)
-
-	async def game_message(self, event):
-		message = event['message']
+	async def game_ready_message(self, event):
+		users_info = event['users_info']
 
 		await self.send(text_data=json.dumps({
-			'message': message
+			'type': 'GameReady',
+			'users_info': users_info
 		}))

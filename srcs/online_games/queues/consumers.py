@@ -23,7 +23,7 @@ class GameQueueConsumer(AsyncWebsocketConsumer):
 
 	async def disconnect(self, close_code):
 		try:
-			if close_code is not 3000:
+			if close_code != 3000:
 				if (self.user):
 					await sync_to_async(self.game_queue.remove_player)(self.user)
 

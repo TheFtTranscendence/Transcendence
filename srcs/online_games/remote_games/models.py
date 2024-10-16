@@ -22,15 +22,23 @@ class Game(models.Model):
 		else:
 			raise ValueError(f"Invalid status: {new_status}")
 		
-	def add_player(self, player_id, skin_id):
+	def add_player(self, player_id, username, blockchain_id, user_info):
 		if self.is_full():
 			raise ValueError("Cannot add player because game is already full.")
 		if GamePlayer.objects.filter(game=self, user=player_id).exists():
 			raise ValueError("Player is already in this game.")
 		
-		GamePlayer.objects.create(game=self, user=player_id, skin_id=skin_id)
+		GamePlayer.objects.create(
+			game=self,
+			user=player_id,
+			username=username,
+			blockchain_id=blockchain_id,
+			user_info=user_info
+		)
 
 class GamePlayer(models.Model):
 	user = models.IntegerField()
+	blockchain_id = models.IntegerField(blank=True, null=True)
+	username = models.CharField(max_length=100)
 	game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='game_players')
-	skin_id = models.IntegerField(blank=True, null=True)
+	user_info = models.JSONField(blank=True, null=True)

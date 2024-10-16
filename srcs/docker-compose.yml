@@ -4,14 +4,12 @@ networks:
     driver: bridge
 
 volumes:
-  #Usermanagement database volume
   usermanagement_data:
     driver: local
     driver_opts:
       type: none
       o: bind
       device: ${USERMANAGEMENT_DATA_PATH}
-  #Chat database volume
   chat_data:
     driver: local
     driver_opts:
@@ -39,7 +37,6 @@ volumes:
       device: ${IMAGES_DATA_PATH}
 
 services:
-  #Container for the usermanagement database
   usermanagement_db:
     container_name: usermanagement_db
     image: postgres:13
@@ -52,7 +49,6 @@ services:
     networks:
       - app-network
     restart: unless-stopped
-  #Container for the chat database
   chat_db:
     container_name: chat_db
     image: postgres:13
@@ -73,7 +69,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
-      - online_players_data:/var/lib/postgresql/data
+      - online_games_data:/var/lib/postgresql/data
     networks:
       - app-network
     restart: unless-stopped
@@ -135,18 +131,18 @@ services:
       - chat_db
     restart: unless-stopped
 
-  frontend:
-    container_name: frontend
-    build: ./frontend
-    environment:
-      - IP=${IP}
-    ports:
-      - "3000:443"
-    networks:
-      - app-network
-    volumes:
-      - shared_static:/usr/share/nginx/html
-    restart: unless-stopped
+  # frontend:
+  #   container_name: frontend
+  #   build: ./frontend
+  #   environment:
+  #     - IP=${IP}
+  #   ports:
+  #     - "3000:443"
+  #   networks:
+  #     - app-network
+  #   volumes:
+  #     - shared_static:/usr/share/nginx/html
+  #   restart: unless-stopped
     
 
   solidity:
