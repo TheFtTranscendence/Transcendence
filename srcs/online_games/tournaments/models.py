@@ -1,24 +1,38 @@
-# from django.db import models
+from django.db import models
+from django.contrib.postgres.fields import ArrayField
+from django.db.models import Q
 
-# class Tournament(models.Model):
-# 	STATUS_CHOICES = [
-# 		('upcoming', 'Upcoming'),
-# 		('ongoing', 'Ongoing'),
-# 		('completed', 'Completed'),
-# 	]
+class Tournament(models.Model):
+	STATUS_CHOICES = [
+		('ongoing', 'Ongoing'),
+		('completed', 'Completed'),
+		('aborted', 'Aborted'),
+	]
 
-# 	game_name = models.CharField(max_length=100)
-# 	number_of_players = models.IntegerField(default=4)
-# 	players = models.ManyToManyField(User, blank=True, related_name='tournaments')
-# 	host = models.ForeignKey(User, on_delete=models.CASCADE, related_name='hosted_tournaments')
-# 	bracket = models.JSONField(blank=True, null=True)  # Updated JSONField
-# 	status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='upcoming')
+	game_name = models.CharField(max_length=100)
+	number_of_players = models.IntegerField(default=4)
+	host = models.IntegerField()
+	player_list = ArrayField(models.CharField(max_length=100), blank=True, null=True)
+	player_info = ArrayField(models.JSONField(blank=True, null=True), blank=True, null=True)
+	status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='ongoing')
 
-# 	def is_full(self):
-# 		return self.players.count() >= self.number_of_players
+	def change_status(self, new_status):
+		if new_status in dict(self.STATUS_CHOICES):
+			self.status = new_status
+			self.save()
+		else:
+			raise ValueError(f"Invalid status: {new_status}")
+		
+	class Meta:
+		constraints = [
+			models.UniqueConstraint(
+				fields=['host', 'game_name'], 
+				name='unique_ongoing_tournament', 
+				condition=Q(status='ongoing')
+			)
+		]
 
-# 	def add_player(self, user):
-# 		if not self.is_full():
-# 			self.players.add(user)
-# 		else:
-# 			raise ValueError("Tournament is full")
+class TournamentGame(models.Model):
+	tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name='tournament_game')
+	users = ArrayField(models.CharField(max_length=100), blank=True, null=True)
+	scores = ArrayField(models.IntegerField(), blank=True, null=True)
