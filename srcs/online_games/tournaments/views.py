@@ -26,9 +26,9 @@ class TournamentViewSet(viewsets.ModelViewSet):
 			tournament.change_status('aborted')
 			return Response({'status': 'Tournament aborted'}, status=status.HTTP_200_OK)
 		except Tournament.DoesNotExist:
-			return Response({"detail": "Tournament not found."}, status=status.HTTP_404_NOT_FOUND)
+			return Response({'detail': 'Tournament not found.'}, status=status.HTTP_404_NOT_FOUND)
 		except ValueError as e:
-			return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+			return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 		
 	@action(detail=False, methods=['get'], url_path='my_tournament/(?P<user_id>[^/.]+)/(?P<game_name>[^/.]+)')
 	def get_tournament_by_host_and_game(self, request, user_id=None, game_name=None):
@@ -38,10 +38,10 @@ class TournamentViewSet(viewsets.ModelViewSet):
 			serializer = self.get_serializer(tournaments, many=True)
 			return Response(serializer.data, status=status.HTTP_200_OK)
 		else:
-			return Response({"detail": False}, status=status.HTTP_404_NOT_FOUND)
+			return Response({'detail': False}, status=status.HTTP_404_NOT_FOUND)
 		
-	@action(detail=False, methods=['get'], url_path='winners')
-	def get_tournament_by_host_and_game(self, request, pk=None):
+	@action(detail=True, methods=['get'], url_path='winners')
+	def get_tournament_winners(self, request, pk=None):
 		try:
 			tournament = self.get_object()
 			winners = []
@@ -50,9 +50,9 @@ class TournamentViewSet(viewsets.ModelViewSet):
 				
 			return Response({'winners': winners}, status=status.HTTP_200_OK)
 		except Tournament.DoesNotExist:
-			return Response({"detail": "Tournament not found."}, status=status.HTTP_404_NOT_FOUND)
+			return Response({'detail': 'Tournament not found.'}, status=status.HTTP_404_NOT_FOUND)
 		except ValueError as e:
-			return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+			return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 class TournamentGameViewSet(viewsets.ModelViewSet):
 	queryset = TournamentGame.objects.all()
@@ -63,9 +63,16 @@ class TournamentGameViewSet(viewsets.ModelViewSet):
 		try:
 			tournament = Tournament.objects.get(id=tournament_id)
 		except Tournament.DoesNotExist:
-			return Response({"detail": "Tournament not found."}, status=status.HTTP_404_NOT_FOUND)
+			return Response({'detail': 'Tournament not found.'}, status=status.HTTP_404_NOT_FOUND)
 
 		serializer = self.get_serializer(data=request.data)
 		serializer.is_valid(raise_exception=True)
 		serializer.save(tournament=tournament)
-		return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+		total_games_played = tournament.tournament_game.count()
+
+		if total_games_played == tournament.number_of_players - 1:
+			tournament.change_status('completed')
+			return Response({'detail': 'game_ended', 'data': serializer.data}, status=status.HTTP_201_CREATED)
+		else:
+			return Response(serializer.data, status=status.HTTP_201_CREATED)

@@ -69,7 +69,8 @@ class GameConsumer(AsyncWebsocketConsumer):
 			score = data.get('score')
 			await self.disconnect(3000, score)
 		elif action == 'move' and self.game.status == 'ongoing':
-			await self.handle_move(data)
+			move = data.get('move')
+			await self.handle_move(move)
 		elif action == 'game_info' and self.game.status == 'ongoing':
 			info = data.get('info')
 			await self.handle_game_info(info)
@@ -94,22 +95,22 @@ class GameConsumer(AsyncWebsocketConsumer):
 			'action': info
 		}))
 
-	async def handle_move(self, data):
+	async def handle_move(self, move):
 		await self.channel_layer.group_send(
 			self.game_group_name,
 			{
 				'type': 'move_message',
-				'action': data
+				'move': move
 			}
 		)
 
 	async def move_message(self, event):
-		action = event['action']
+		move = event['move']
 
 		await self.send(text_data=json.dumps({
 			'type': 'move',
 			'sender_id': self.user,
-			'action': action
+			'move': move
 		}))
 
 	async def handle_ready(self, user, username, blockchain_id, user_info):
