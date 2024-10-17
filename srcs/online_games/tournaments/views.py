@@ -38,7 +38,7 @@ class TournamentViewSet(viewsets.ModelViewSet):
 			tournament = tournaments.first()
 			return Response({'detail': True, 'id': tournament.id}, status=status.HTTP_200_OK)
 		else:
-			return Response({'detail': False}, status=status.HTTP_404_NOT_FOUND)
+			return Response({'detail': False}, status=status.HTTP_200_OK)
 		
 	@action(detail=True, methods=['get'], url_path='winners')
 	def get_tournament_winners(self, request, pk=None):
