@@ -19,10 +19,9 @@ class MatchmakingGame	{
 	oninfo = null;
 	onclose = null;
 	
-	//todo: implement in the back end to receive a message when a player disconencts
 	ondisconnect = null;
 
-	#performMoveset (action)	{
+	performMoveset (action)	{
 		const func = this.moveset[action];
 
 		if (func) {
@@ -66,15 +65,13 @@ class MatchmakingGame	{
 		
 		this.socket.onmessage = function(e) {
 			msg = JSON.parse(e.data)
-			if (msg.type === 'GameReady' && this.onready)	{
+			if (msg.type === 'GameReady' && this.onready)					{
 				this.users_info = msg.users_info;
-				if (this.onready)	{
-					if (game_vars)
-						this.onready(this.game_vars, msg.users_info);
-					else
-						this.onready(msg.users_info);
-				}
-			}	else if (msg.type === 'move' && this.onmove) {
+				if (game_vars)
+					this.onready(this.game_vars, msg.users_info);
+				else
+					this.onready(msg.users_info);
+			}	else if (msg.type === 'move' && (this.onmove || this.moveset)) 				{
 				if (this.onmove)	{
 					if (game_vars)
 						this.onmove(this.game_vars, msg.sender_id, msg.action)
@@ -84,13 +81,16 @@ class MatchmakingGame	{
 				if (this.moveset)	{
 					this.performMoveset(msg.action)
 				}
-			}	else if (msg.type === 'game_info' && this.oninfo)	{
-				if (this.oninfo)	{
-					if (game_vars)
-						this.oninfo(this.game_vars, msg.info)
-					else
-						this.oninfo(msg.info)
-				}
+			}	else if (msg.type === 'game_info' && this.oninfo)			{
+				if (game_vars)
+					this.oninfo(this.game_vars, msg.info)
+				else
+					this.oninfo(msg.info)
+			}	else if (msg.type === 'disconnect' && this.ondisconnect)	{
+				if (game_vars)
+					this.ondisconnect(this.game_vars, msg.user)
+				else
+					this.ondisconnect(msg.user)
 			}
 		};		
 	}

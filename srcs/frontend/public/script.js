@@ -1,8 +1,11 @@
+
 // Event listener for hash changes
 window.addEventListener('hashchange', navigate);
 
 //todo: test this on school chrome
+//!Still not perfect
 window.onload = function() {
+	document.getElementById('favicon').href = `https://${window.IP}:3000/favicon.ico`;
 
 	try {
 		console.log("HERE!");
@@ -15,6 +18,7 @@ window.onload = function() {
 			console.log("saved");
 			window.user = new User(null, stored_user);
 			window.user.init()
+			localStorage.setItem('user', JSON.stringify(window.user));
 			window.location.hash = '#home';
 		}
 	} catch (error) {
@@ -209,9 +213,6 @@ document.querySelectorAll('.nav-link').forEach(link => {
 	});
 });
 
-
-// Event listener for hash changes
-window.addEventListener('hashchange', navigate);
 
 
 function toast_alert(message, duration = 5000) {

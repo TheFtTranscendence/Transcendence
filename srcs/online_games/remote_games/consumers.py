@@ -33,14 +33,15 @@ class GameConsumer(AsyncWebsocketConsumer):
 			logger.info(f"error: {e}")
 			await self.send(text_data=json.dumps({'error': str(e)}))
 
-	async def disconnect(self, close_code, score=None):
+	async def disconnect(self, close_code):
 		try:
-			# if close_code == 3000 and self.game.status == 'ongoing':
-			# 	for players in self.game.game_players.all():
-			# 		#todo: upload the game to the block_chain
-			# 	await sync_to_async(self.game.change_status)('completed')
-
-			game_player = await GamePlayer.objects.get(user=self.user, game=self.game)
+			await self.channel_layer.group_send(
+				self.game_group_name,
+				{
+					'type': 'disconnect_message',
+					'user': self.user
+				}
+			)
 
 			self.close(close_code)
 		except GamePlayer.DoesNotExist:
@@ -52,6 +53,14 @@ class GameConsumer(AsyncWebsocketConsumer):
 			self.game_group_name,
 			self.channel_name
 		)
+
+	async def disconnect_message(self, event):
+		user = event['user']
+
+		await self.send(text_data=json.dumps({
+			'type': 'disconnect',
+			'user': user,
+		}))
 
 	async def receive(self, text_data):
 		data = json.loads(text_data)
@@ -65,7 +74,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 			await self.handle_ready(user, username, blockchain_id, user_info)
 		elif action == 'leave':
 			score = data.get('score')
-			await self.disconnect(3000, score)
+			await self.disconnect()
 		elif action == 'move' and self.game.status == 'ongoing':
 			move = data.get('move')
 			await self.handle_move(move)
