@@ -33,10 +33,11 @@ class MatchmakingGame	{
 	}
 
 	constructor (game_id, game_vars = null, user_info = null)	{
+		this.game_id = game_id;
 		this.game_vars = game_vars;
 		this.user_info = user_info;
 		
-		const url = 'https://' + window.IP + ':3000/online-games/games/' + game_id + '/';
+		const url = 'https://' + window.IP + ':3000/online-games/games/' + this.game_id + '/';
 
 		fetch(url, {
 			method: 'GET',
@@ -62,7 +63,7 @@ class MatchmakingGame	{
 			this.socket.onopen = this.onopen;
 		else
 			this.socket.onopen = this.ready()
-		
+
 		this.socket.onmessage = function(e) {
 			msg = JSON.parse(e.data)
 			if (msg.type === 'GameReady' && this.onready)					{
