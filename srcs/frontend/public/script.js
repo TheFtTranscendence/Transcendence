@@ -6,28 +6,21 @@ window,onload = function() {
 
 	try {
 		console.log("HERE!");
-		const store_user = JSON.parse(localStorage.getItem('user'));
+		const stored_user = JSON.parse(localStorage.getItem('user'));
 
-		if (!store_user) {
+		if (!stored_user) {
 			console.log("not saved!");
 			window.location.hash = '#auth';
 		} else {
 			console.log("saved");
-			window.user = new User(null, store_user);
+			window.user = new User(null, stored_user);
+			window.user.init()
 			window.location.hash = '#home';
 		}
 	} catch (error) {
 		console.error("An error occurred:", error);
 		window.location.hash = '#auth';
 	}
-
-	//? what is this?
-	if (window.frontendHealthCheck === false) 
-	{
-		window.frontendHealthCheck = true
-		checkTournamentStatus()
-	}
-
 };
 
 function navigate() {

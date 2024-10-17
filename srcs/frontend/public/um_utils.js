@@ -24,7 +24,7 @@ function ping_Solidity() {
 
 function get_all_users() {
 	const userheaders = {
-		'Authorization': 'Token ' + window.usertoken,
+		'Authorization': 'Token ' + window.user.token,
 	};
 
 	return fetch(`https://${window.IP}:3000/user-management/auth/users/all/`, {
@@ -44,7 +44,7 @@ function get_all_users() {
 
 async function get_user_info(target) {
 	const userheaders = {
-		'Authorization': 'Token ' + window.usertoken,
+		'Authorization': 'Token ' + window.user.token,
 	};
 
 	return fetch(`https://${window.IP}:3000/user-management/auth/users/${target}/`, {
@@ -68,7 +68,7 @@ function delete_user(target = '') {
 		: `https://${window.IP}:3000/user-management/auth/users/${target}`;
 
 	const userheaders = {
-		'Authorization': 'Token ' + window.usertoken,
+		'Authorization': 'Token ' + window.user.token,
 	};
 
 	return fetch(url, {

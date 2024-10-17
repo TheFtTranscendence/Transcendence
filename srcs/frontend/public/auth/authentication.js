@@ -214,7 +214,7 @@ class ChatSocket {
 
 class User {
 	
-	#authtoken;
+	authtoken;
 	id;
 	email;
 	username;
@@ -246,6 +246,7 @@ class User {
 			this.block_list = auth_return.user.block_list;
 			this.online = auth_return.user.online;
 			this.preference = auth_return.user.preference;
+			this.authtoken = auth_return.token;
 		}	else if (user_cpy)	{
 			this.id = user_cpy.id;
 			this.email = user_cpy.email;
@@ -258,19 +259,32 @@ class User {
 			this.block_list = user_cpy.block_list;
 			this.online = user_cpy.online;
 			this.preference = user_cpy.preference;
+			this.authtoken = user_cpy.authtoken
 		}
-		this.refresh();
 
-		//todo:
-		//this.game_invite_socket = new GameInviteSocket()
-		this.social = new SocialSocket();
-		this.chat = new ChatSocket();
+		this.social = null;
+		this.chat = null;
+
+		//? what is this?
+		if (window.frontendHealthCheck === false) 
+		{
+			window.frontendHealthCheck = true
+			checkTournamentStatus()
+		}
 	}
+
+	async init() {
+        await this.refresh();
+        console.info("USERNAME: ", this.username);
+
+        this.social = new SocialSocket();
+        this.chat = new ChatSocket();
+    }
 
 
 	async refresh()	{
 		const userheaders = {
-			'Authorization': 'Token ' + window.usertoken,
+			'Authorization': 'Token ' + window.user.token,
 		};
 	
 		await fetch(`https://${window.IP}:3000/user-management/auth/users/`, {
@@ -311,7 +325,7 @@ class User {
 		};
 
 		const userheaders = {
-			'Authorization': 'Token ' + this.#authtoken,
+			'Authorization': 'Token ' + this.authtoken,
 			'Content-Type': 'application/json',
 		};
 
@@ -336,8 +350,31 @@ class User {
 
 	}
 
-	changeAvatar(new_photo)	{
-
+	async changeAvatar(file)	{
+		const data = {
+			avatar: file,
+		}
+	
+		try {
+			const response = await fetch(`https://${window.IP}:3000/user-management/auth/users/${window.user.id}/`, {
+				method: 'PATCH',
+				body: JSON.stringify(data),
+				headers: {
+					'Authorization': 'Token ' + window.user.token,
+				},
+			});
+	
+			if (!response.ok) {
+				const errorData = await response.json();
+				throw new Error(errorData.message || 'Network response was not ok');
+			}
+	
+			const data = await response.json();
+			console.log('Avatar uploaded successfully:', data);
+		} catch (error) {
+			console.error('Error uploading avatar:', error);
+		}
+		this.refresh()
 	}
 
 	changePreference(preference, new_value)	{
@@ -370,6 +407,7 @@ async function login(username, password)	{
 	})
 	.then(data => {
 		window.user = new User(data)
+		window.user.init()
 		localStorage.setItem('user', JSON.stringify(window.user));
 		window.location.hash = "#home";
 		document.getElementById('auth').classList.add('hidden');
@@ -401,6 +439,7 @@ async function register(email, username, password, confirm_password)	{
 	})
 	.then(data => {
 		window.user = new User(data);
+		window.user.init()
 		localStorage.setItem('user', JSON.stringify(window.user));
 		window.location.hash = "#home";
 		document.getElementById('auth').classList.add('hidden');

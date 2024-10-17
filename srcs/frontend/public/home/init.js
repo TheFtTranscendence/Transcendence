@@ -63,38 +63,11 @@ async function handleUpload() {
 
 	console.log(fileInput.files[0]);
 	if (fileInput.files.length > 0) {
-		uploadAvatar(fileInput.files[0]);
+		window.user.changeAvatar(fileInput.files[0]);
 		await window.user.refresh();
 		getAvatar()
 	} else {
 		toast_alert('Please select a file to upload.');
-	}
-}
-
-async function uploadAvatar(file) {
-
-	const data = {
-		avatar: file,
-	}
-
-	try {
-		const response = await fetch(`https://${window.IP}:3000/user-management/auth/users/${window.user.id}/`, {
-			method: 'PATCH',
-			body: JSON.stringify(data),
-			headers: {
-				'Authorization': 'Token ' + window.usertoken,
-			},
-		});
-
-		if (!response.ok) {
-			const errorData = await response.json();
-			throw new Error(errorData.message || 'Network response was not ok');
-		}
-
-		const data = await response.json();
-		console.log('Avatar uploaded successfully:', data);
-	} catch (error) {
-		console.error('Error uploading avatar:', error);
 	}
 }
 
@@ -124,12 +97,7 @@ function handleUsernameChange() {
 
 function handleUsernameChangeForm() {
 	event.preventDefault();
-
 	const newUsername = document.getElementById('newusername').value;
-	const errorField = document.getElementById('changeUsernameError');
-	const changePasswordForm = document.getElementById('changeUsernameForm');
-	const sidebar = document.getElementById('sidebar');
-
 	window.user.changeUsername(newUsername)
 }
 
@@ -140,12 +108,12 @@ document.getElementById('logoutButton').addEventListener('click', handleLogout);
 function handleLogout() {
 	const sidebar = document.getElementById('sidebar');
 
+	localStorage.removeItem('user');
+	window.user = null;
 	document.querySelector('nav').classList.add('hidden');
 	sidebar.classList.add('hidden');
 	document.removeEventListener('click', handleOutsideClick);
-	localStorage.removeItem('currentUser');
 	window.location.hash = '#auth';
-	localStorage.removeItem('user');
 }
 
 // CHANGE PASSWORD
@@ -199,7 +167,7 @@ function handlePasswordChangeForm(event) {
 		method: 'PATCH',
 		headers: {
 			'Content-Type': 'application/json',
-			'Authorization': 'Token ' + window.usertoken
+			'Authorization': 'Token ' + window.user.token
 		},
 		body: JSON.stringify(data),
 	})
