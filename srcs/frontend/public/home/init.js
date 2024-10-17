@@ -64,7 +64,7 @@ async function handleUpload() {
 	console.log(fileInput.files[0]);
 	if (fileInput.files.length > 0) {
 		uploadAvatar(fileInput.files[0]);
-		await update_user_info();
+		await window.user.refresh();
 		getAvatar()
 	} else {
 		toast_alert('Please select a file to upload.');
@@ -130,7 +130,7 @@ function handleUsernameChangeForm() {
 	const changePasswordForm = document.getElementById('changeUsernameForm');
 	const sidebar = document.getElementById('sidebar');
 
-	modify_user("username", newUsername)
+	window.user.changeUsername(newUsername)
 }
 
 // LOGOUT
@@ -145,6 +145,7 @@ function handleLogout() {
 	document.removeEventListener('click', handleOutsideClick);
 	localStorage.removeItem('currentUser');
 	window.location.hash = '#auth';
+	localStorage.removeItem('user');
 }
 
 // CHANGE PASSWORD
@@ -362,19 +363,6 @@ function fillWinLoss() {
 	lossCounter.textContent = window.scores.losses;
 }
 
-function addNotification(notificationText) {
-	const tableBody = document.getElementById("notificationsTableBody");
-	const newRow = document.createElement("tr");
-	
-	newRow.innerHTML = `
-		<td>
-			${notificationText}
-		</td>
-	`;
-	
-	tableBody.insertBefore(newRow, tableBody.firstChild);
-}
-
 function addPongyGameInvite(data) {
 	const tableBody = document.getElementById("notificationsTableBody");
 	const newRow = document.createElement("tr");
@@ -469,38 +457,6 @@ function declineFightyGameInvite(button, sender) {
 
 	
 	// todo: Add further logic for declining the notification
-}
-
-function addFriendRequest(sender_id, sender_username) {
-	const tableBody = document.getElementById("notificationsTableBody");
-	const newRow = document.createElement("tr");
-	
-	notificationText = "Friend Request from: " + sender_username
-	newRow.innerHTML = `
-		<td>
-			<div class="notification-row">
-				<span>${notificationText}</span>
-				<div>
-					<button class="btn btn-success btn-sm ms-2" onclick="acceptFriendRequest(this, '${sender_id}')">Accept</button>
-					<button class="btn btn-danger btn-sm" onclick="declineFriendRequest(this, '${sender_id}')">Decline</button>
-				</div>
-			</div>
-		</td>
-	`;
-	
-	tableBody.insertBefore(newRow, tableBody.firstChild);
-}
-
-function acceptFriendRequest(button, sender_id) {
-	const buttons = button.parentElement.querySelectorAll('button');
-	buttons.forEach(btn => btn.remove());
-	accept_friend_request(sender_id)
-}
-
-function declineFriendRequest(button, sender_id) {
-	const buttons = button.parentElement.querySelectorAll('button');
-	buttons.forEach(btn => btn.remove());
-	deny_friend_request(sender_id)
 }
 
 //match history

@@ -55,7 +55,7 @@ function sendChatMessage() {
 		`
 		window.chatContent.appendChild(messageDiv)
 
-		window.chat_socket.send(JSON.stringify(messageObject))
+		window.user.chat.send(JSON.stringify(messageObject))
 
 		// Clear the input box
 		chatInput.value = ''
@@ -100,7 +100,7 @@ async function openChat(friend) {
 	window.CurrentChatting = friend[0]
 	window.CurrentChatting_id = friend[1].chat_id
 
-	window.chat_socket.onmessage = function (e) {
+	window.user.chat.onmessage = function (e) {
 		
 		const data = JSON.parse(e.data);
 		console.log(data);
@@ -250,17 +250,18 @@ async function chat_confirmButton() {
 	console.log('holder ', holder)
 
 	switch (holder) {
-		case "add": send_friend_request(user_to_send); toast_alert('Friend request sent')
+		case "add": window.user.social.sendFriendRequest(user_to_send); toast_alert('Friend request sent')
 			break
-		case "remove": remove_friend(user_to_send); toast_alert('Friend removed')
+		case "remove": window.user.social.removeRriend(user_to_send); toast_alert('Friend removed')
 			break
-		case "block": block(user_to_send); toast_alert('User blocked')
+		case "block": window.user.social.block(user_to_send); toast_alert('User blocked')
 			break
-		case "unblock": unblock(user_to_send); toast_alert('User unblocked')
+		case "unblock": window.user.social.unblock(user_to_send); toast_alert('User unblocked')
 			break
-		case "pongy": send_game_invite(user_to_send, 'pongy'); toast_alert('Pong invite sent')
+		//todo: invites
+		case "pongy": window.user.social.send(user_to_send, 'pongy'); toast_alert('Pong invite sent')
 			break
-		case "fighty": send_game_invite(user_to_send, 'fighty'); toast_alert('Fighty invite sent')
+		case "fighty": window.user.social.send(user_to_send, 'fighty'); toast_alert('Fighty invite sent')
 			break
 		default: toast_alert('Select an option first')
 	}

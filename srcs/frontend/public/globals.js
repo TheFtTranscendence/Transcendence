@@ -4,7 +4,7 @@ const currentUser = {
 };
 
 window.authScripts = [
-	'auth/init.js'
+	// 'auth/init.js'
 ]
 
 window.chatScripts = [
