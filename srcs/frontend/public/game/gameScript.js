@@ -69,50 +69,77 @@ async function cleanUpAfterFinish(vars)
 function storeMatch(vars)
 {
 	players = [
-		vars.gameVars.p1Name + vars.gameVars.p1SkinId,
-		vars.gameVars.p2Name + vars.gameVars.p2SkinId,
+		vars.gameVars.p1Name,
+		vars.gameVars.p2Name,
+	]
+	scores = [
+		vars.gameVars.p1Score,
+		vars.gameVars.p2Score,
 	]
 	if (vars.gameVars.tournamentGame)
 	{
 		if (vars.gameVars.p1Score > vars.gameVars.p2Score) {
-			pongyTournamentData.addGameWinner(vars.gameVars.p1Name + vars.gameVars.p1SkinId)
+			pongyTournamentData.addGameWinner(vars.gameVars.p1Name)
 		}
 		else {
-			pongyTournamentData.addGameWinner(vars.gameVars.p2Name + vars.gameVars.p2SkinId)
+			pongyTournamentData.addGameWinner(vars.gameVars.p2Name)
 		}
 		
 		pongyTournamentData.setMatchAsPlayed(players)
 
-		const url = `https://${window.IP}:3000/solidity/solidity/addtournamentgame/${window.user.blockchain_id}/Pongy`;
+		const url = 'http://' + window.IP + ':3000/online-game/tournaments/' + pongyTournamentData.id + '/games/';
 
-		const data = {
-			player1: vars.gameVars.p1Name + vars.gameVars.p1SkinId,
-			player2: vars.gameVars.p2Name + vars.gameVars.p2SkinId,
-			score1: vars.gameVars.p1Score,
-			score2: vars.gameVars.p2Score,
-		};
+		const game = {
+			users: players,
+			scores: scores,
+		}
 
-		fetch(url, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(data),
-		})
+        return fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(game),
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => { throw err; });
+            }
+            return response.json();
+        })
+        .then(data => {
+			// if (data.status === "completed")
+			// {
+			// 	const url = `https://${window.IP}:3000/solidity/solidity/addtournament/${window.user.blockchain_id}/Pongy`;
 
+			// 	const data = {
+			// 		players:,
+			// 		tournamentId: pongyTournamentData.id,
+			// 		gameName: "Pongy",
+			// 		games: pongyTournamentData.getthisshit() // do this
+			// 	};
+		
+			// 	fetch(url, {
+			// 		method: 'POST',
+			// 		headers: {
+			// 			'Content-Type': 'application/json',
+			// 		},
+			// 		body: JSON.stringify(data),
+			// 	})
+			// }
+        })
+        .catch(error => {
+            throw new Error(error.message);
+        });
 
-		console.log("MatchStored")
-		console.log(data)
 	}
 	else
 	{
 		const url = `https://${window.IP}:3000/solidity/solidity/addgame/${window.user.blockchain_id}/Pongy`;
 
 		const data = {
-			player1: vars.gameVars.p1Name + vars.gameVars.p1SkinId,
-			player2: vars.gameVars.p2Name + vars.gameVars.p2SkinId,
-			score1: vars.gameVars.p1Score,
-			score2: vars.gameVars.p2Score,
+			players: players,
+			scores: scores,
 		};
 
 		fetch(url, {
