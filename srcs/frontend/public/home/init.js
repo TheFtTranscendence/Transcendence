@@ -167,7 +167,7 @@ function handlePasswordChangeForm(event) {
 		method: 'PATCH',
 		headers: {
 			'Content-Type': 'application/json',
-			'Authorization': 'Token ' + window.user.token
+			'Authorization': 'Token ' + window.user.authtoken
 		},
 		body: JSON.stringify(data),
 	})

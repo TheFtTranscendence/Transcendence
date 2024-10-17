@@ -151,13 +151,13 @@ class SocialSocket {
 	acceptFriendRequest(button, sender_id) {
 		const buttons = button.parentElement.querySelectorAll('button');
 		buttons.forEach(btn => btn.remove());
-		accept_friend_request(sender_id)
+		acceptFriendRequest(sender_id)
 	}
 	
 	declineFriendRequest(button, sender_id) {
 		const buttons = button.parentElement.querySelectorAll('button');
 		buttons.forEach(btn => btn.remove());
-		deny_friend_request(sender_id)
+		denyFriendRequest(sender_id)
 	}
 
 	addNotification(notificationText) {
@@ -188,7 +188,7 @@ class ChatSocket {
 
 	refresh()	{
 		Object.entries(window.user.friend_list).forEach(([key, friend]) => {
-			window.chat_socket.send(JSON.stringify({
+			this.socket.send(JSON.stringify({
 				join_chat_id: friend.chat_id
 			}));
 		});
@@ -264,57 +264,63 @@ class User {
 
 		this.social = null;
 		this.chat = null;
-
+	}
+	
+	async init() {
+		console.info("USERNAME: ", this.username);
+		
+        this.social = new SocialSocket();
+        this.chat = new ChatSocket();
+		
 		//? what is this?
 		if (window.frontendHealthCheck === false) 
 		{
 			window.frontendHealthCheck = true
 			checkTournamentStatus()
 		}
-	}
 
-	async init() {
-        await this.refresh();
-        console.info("USERNAME: ", this.username);
-
-        this.social = new SocialSocket();
-        this.chat = new ChatSocket();
+		await this.refresh();
     }
 
 
 	async refresh()	{
-		const userheaders = {
-			'Authorization': 'Token ' + window.user.token,
-		};
-	
-		await fetch(`https://${window.IP}:3000/user-management/auth/users/`, {
-			method: 'GET',
-			headers: userheaders,
-		})
-		.then(response => {
-			if (!response.ok) {
-				return response.json().then(err => { throw err; });
-			}
-			return response.json();
-		})
-		.then(data => {
-			this.id = data.id;
-			this.email = data.email;
-			this.username = data.username;
-			this.blockchain_id = data.blockchain_id;
-			this.avatar = data.avatar;
-			this.isstaff = data.staff;
-			this.issuperuser = data.superuser;
-			this.friend_list = data.friend_list;
-			this.block_list = data.block_list;
-			this.online = data.online;
-			this.preference = data.preference;
-		})
-		.catch(error => {
-			throw new Error(error.message || "An unknown error occurred");
-		});
+		if (window.user.authtoken)	{
+			const userheaders = {
+				'Authorization': 'Token ' + window.user.authtoken,
+			};
+		
+			await fetch(`https://${window.IP}:3000/user-management/auth/users/`, {
+				method: 'GET',
+				headers: userheaders,
+			})
+			.then(response => {
+				if (!response.ok) {
+					return response.json().then(err => { throw err; });
+				}
+				return response.json();
+			})
+			.then(data => {
+				this.id = data.id;
+				this.email = data.email;
+				this.username = data.username;
+				this.blockchain_id = data.blockchain_id;
+				this.avatar = data.avatar;
+				this.isstaff = data.staff;
+				this.issuperuser = data.superuser;
+				this.friend_list = data.friend_list;
+				this.block_list = data.block_list;
+				this.online = data.online;
+				this.preference = data.preference;
+			})
+			.catch(error => {
+				throw new Error(error.message);
+			});
 
-		this.chat.refresh()
+			this.chat.refresh()
+		}	else	{
+			console.log("This is stupid...")
+			this.refresh();
+		}
 	}
 
 	async changeUsername(new_username)	{
@@ -360,7 +366,7 @@ class User {
 				method: 'PATCH',
 				body: JSON.stringify(data),
 				headers: {
-					'Authorization': 'Token ' + window.user.token,
+					'Authorization': 'Token ' + window.user.authtoken,
 				},
 			});
 	

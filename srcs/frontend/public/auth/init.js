@@ -66,30 +66,11 @@ function auth() {
 	});
 }
 
-// function handleSuccessAuth(errorField) {
-// 	document.getElementById('auth').classList.add('hidden');
-// 	document.querySelector('nav').classList.remove('hidden');
-// 	window.location.hash = '#home';
-// 	if (!errorField.classList.contains('hidden')) {
-// 		errorField.classList.add('hidden');
-// 	}
-
-// 	// ? is this being useranywhere? it shouldn't
-// 	// window.currentUser.username = window.user.username; // Ensure 'currentUser' is a global object
-// 	//localStorage.setItem('currentUser', JSON.stringify(window.currentUser));
-
-// 	// ? what is this ?
-// 	if (window.frontendHealthCheck === false) 
-// 	{
-// 		window.frontendHealthCheck = true
-// 		checkTournamentStatus()
-// 	}
-// }
-
 async function checkTournamentStatus()
 {
 	console.log("HERE CHECKING TOURNEY DATABASE")
 	let pongyStatus = false
+	console.log("BLOCKCHAIN_ID : ", window.user.blockchain_id)
 	let url = `https://${window.IP}:3000/solidity/solidity/gettournamentstatus/${window.user.blockchain_id}/Pongy`;
 	
 	try {

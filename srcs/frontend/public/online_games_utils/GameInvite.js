@@ -22,7 +22,6 @@ class GameInvite {
 
 }
 
-
 class GameInviteSocket {
 
 	onaccept = null;
