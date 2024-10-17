@@ -110,9 +110,11 @@ async function main_menu_tournamentButton() {
 			games_tournament_menu()
 		}
 		else {
-			unloadScripts(window.menuScripts)
-			await loadScriptss(window.tournamentScripts)
-			tournament_loop()
+			if (!areScriptsLoaded(window.tournamentScripts)) {
+				unloadScripts(window.menuScripts)
+				await loadScriptss(window.tournamentScripts)
+				tournament_loop()
+			}
 		}
 	}
 }

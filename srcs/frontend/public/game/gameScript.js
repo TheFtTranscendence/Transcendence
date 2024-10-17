@@ -16,8 +16,8 @@ function game_hashchange(vars)
 		vars.canvasVars.canvas.removeEventListener("click", vars.eventHandlers.eventCanvasClickLocal);
 	}
 
+	// window.isGameActive = false
 	clearInterval(vars.IntervalVars.gameLoop);
-	
 	document.getElementById('game').classList.add('hidden');
 	unloadScripts(window.gameScripts);
 
@@ -162,7 +162,7 @@ function loadImage(src, callback)
 
 function startGame(p1Name, p2Name, p1Skin, p2Skin, p1SkinId, p2SkinId, tournamentGame)
 {
-	window.gamesOnCounter++;
+	// window.gamesOnCounter++;
 	// if (!window.isGameActive)
 	// 	window.isGameActive = true
 	// else

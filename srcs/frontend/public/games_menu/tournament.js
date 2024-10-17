@@ -56,7 +56,7 @@ function next_game_players() {
 	return [nextGamePlayers, nextPlayersSkins];
 }
 
-function next_game() {
+async function next_game() {
 	document.getElementById('next-game-button').removeEventListener('click', next_game)
 	document.getElementById('tournament-area').classList.add("hidden");
 	document.getElementById('tournament-bracket').classList.add("hidden");
@@ -74,14 +74,23 @@ function next_game() {
 		window.player2Skin = 1;
 		unloadScripts(window.menuScripts);
 		clearTournament();
+		await loadScripts(window.game2Scripts);
 		startGame2(playerNames[0], playerNames[1], window.game2Skins[playerSkins[0]], window.game2Skins[playerSkins[1]], true);
 	} else {
 		document.getElementById('game-area').classList.remove("hidden");
 
 		clearTournament();
-
-		startGame(playerNames[0], playerNames[1], window.game1Skins[playerSkins[0]], window.game1Skins[playerSkins[1]], playerSkins[0], playerSkins[1], true, false);
+		if (!areScriptsLoaded(window.gameScripts)) {
+			await PromiseloadScripts(window.gameScripts);
+			startGame(playerNames[0], playerNames[1], window.game1Skins[playerSkins[0]], window.game1Skins[playerSkins[1]], playerSkins[0], playerSkins[1], true, false);
+		}
 	}
+	pongyTournamentData.printAllMatches()
+
+}
+
+function areScriptsLoaded(scripts) {
+    return scripts.every(src => document.querySelector(`script[src="${src}"]`));
 }
 
 function clearBracket()
@@ -209,6 +218,8 @@ async function show_bracket()
 		tournamentSize = pongyTournamentData.nrPlayers
 	}
 
+	console.log(pongyTournamentData.getBracketPlayerList())
+
 	// show divs
 	if (tournamentSize === 4)
 	{
@@ -259,9 +270,16 @@ async function show_bracket()
 	divId = 1
 
 	if (roundInfo.nrRounds === 3) {
-		// Print round three
+	// 	// Print round three
 		document.getElementById("first-match-r3").classList.remove("hidden"); 
-		for (i = (roundInfo.roundTwoMatches * 2) + lastValue; i < (roundInfo.roundThreeMatches * 2) + lastValue; i++)
+
+		console.log("---------------------")
+		console.log("SHOW BRACKET LIST FUNC: ", pongyTournamentData.getBracketPlayerList())
+		console.log("SHOW BRACKET LIST: ", players)
+		console.log("initial I: ", (roundInfo.roundTwoMatches * 2) + lastValue)
+		console.log("END I: ", (roundInfo.roundThreeMatches * 2) + lastValue)
+
+		for (i = lastValue; i < (roundInfo.roundThreeMatches * 2) + lastValue; i++)
 		{
 			input_id = 'player' + (divId) + '-r3';
 
@@ -334,7 +352,6 @@ function tournament_loop() {
 		winnerScreen.classList.remove("hidden");
 		console.log("ADD EVENT LISTNEERRR!!")
 		document.getElementById('leave-tournament-button').addEventListener('click', leaveTournament);
-		winner = winner.slice(0, -1);
 		document.getElementById("winner-message").textContent = "Congratulations, " + winner + "! You are the winner!";
 	
 	}
@@ -344,11 +361,6 @@ function tournament_loop() {
 		document.getElementById('next-game-button').removeEventListener('click', next_game)
 		document.getElementById('next-game-button').addEventListener('click', next_game);
 	
-		if (window.location.hash == '#fighters') {
-			loadScripts(window.game2Scripts);
-		} else {
-			loadScripts(window.gameScripts);
-		}
 	}
 }
 
