@@ -1,4 +1,4 @@
-function startGame2(player1, player2, skins1, skins2, tournamentGame) {
+function startGame2(player1, player2, skins1, skins2, skinId1, skinId2, tournamentGame) {
 	
 	v = init_vars(player1, player2, skins1, skins2, tournamentGame)
 	setup_canvas(v)
