@@ -310,15 +310,15 @@ function shuffle_names(playerNames, playerSkins)
     return [playerNames, playerSkins];
 }
 
-function unloadScripts(scripts) {
+// async function unloadScripts(scripts) {
 
-	scripts.forEach(script => {
-		const scriptElement = document.querySelector(`script[src="${script}"]`);
-		if (scriptElement) {
-			scriptElement.remove();
-		}
-	});
-}
+// 	await scripts.forEach(script => {
+// 		const scriptElement = document.querySelector(`script[src="${script}"]`);
+// 		if (scriptElement) {
+// 			scriptElement.remove();
+// 		}
+// 	});
+// }
 
 function tournament_loop() {
 	

@@ -1,16 +1,12 @@
-window.onload = function() {
-	// Set the hash to #auth when the page loads
-	window.location.hash = '#auth';
-};
+// window.onload = function() {
+// 	// Set the hash to #auth when the page loads
+// 	window.location.hash = '#auth';
+// };
 
 navigate();
 // Function to handle navigation
 function navigate() {
 	let element, scripts, startFunction;
-
-	if (!window.location.hash) {
-		window.location.hash = '#auth';
-	}
 
 	if (window.user == undefined) 
 		window.location.hash = '#auth';
@@ -29,12 +25,13 @@ function navigate() {
 			startFunction = 'home'
 			break;
 
-		case '#game':
-			element = 'games'
-			scripts = window.menuScripts
-			startFunction = 'main_menu'
-			break;
+		// case '#game':
+		// 	element = 'games'
+		// 	scripts = window.menuScripts
+		// 	startFunction = 'main_menu'
+		// 	break;
 
+		case '#game':
 		case '#fighters':
 			element = 'games'
 			scripts = window.menuScripts
@@ -49,6 +46,8 @@ function navigate() {
 	}
 
 	document.getElementById(element).classList.remove("hidden");
+	if (element === "games")
+		unloadScripts(scripts)
 	loadScripts(scripts, startFunction);
 }
 
@@ -58,22 +57,56 @@ function navigate() {
 // };
 
 // Function to load a script and return a Promise
-function loadScript(src) {
-	return new Promise((resolve, reject) => {
-		const script = document.createElement('script');
-		script.src = src;
-		script.type = 'text/javascript';
+// async function loadScript(src) {
+// 	await src.forEach(src => {
+// 		const scriptElement = document.querySelector(`script[src="${src}"]`);
+// 		console.log("Script element -> ", scriptElement)
+// 		if (!scriptElement) {
+// 			return new Promise((resolve, reject) => {
+// 				const script = document.createElement('script');
+// 				script.src = src;
+// 				script.type = 'text/javascript';
+		
+// 				script.onload = () => {
+// 					resolve();
+// 				};
+		
+// 				script.onerror = () => {
+// 					reject(new Error(`Failed to load script: ${src}`));
+// 				};
+		
+// 				document.body.appendChild(script);
+// 			});
+// 		}
+// 	});
+// }
 
-		script.onload = () => {
-			resolve();
-		};
-
-		script.onerror = () => {
-			reject(new Error(`Failed to load script: ${src}`));
-		};
-
-		document.body.appendChild(script);
-	});
+async function loadScript(src) {
+    // Check if the script is already loaded
+    const scriptElement = document.querySelector(`script[src="${src}"]`);
+    console.log("Script element -> ", scriptElement);
+    
+    if (scriptElement) {
+        // If the script is already loaded, return a resolved promise
+        return Promise.resolve();
+    } else {
+        // If not loaded, create a new promise to load the script
+        return new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = src;
+            script.type = 'text/javascript';
+    
+            script.onload = () => {
+                resolve(); // Resolve when the script is loaded
+            };
+    
+            script.onerror = () => {
+                reject(new Error(`Failed to load script: ${src}`)); // Reject on error
+            };
+    
+            document.body.appendChild(script); // Append the script to the body
+        });
+    }
 }
 
 async function PromiseloadScripts(scripts, functionName = 'none') {
@@ -124,35 +157,15 @@ async function loadScripts(scripts, functionName = 'none') {
 	return true
 }
 
-function unloadScripts(scripts) {
+async function unloadScripts(scripts) {
 
-	scripts.forEach(script => {
+	await scripts.forEach(script => {
 		const scriptElement = document.querySelector(`script[src="${script}"]`);
 		if (scriptElement) {
 			scriptElement.remove();
 		}
 	});
 }
-
-function loadGameScript()
-{
-	const script = document.createElement('script');
-	script.src = 'game/gameScript.js';
-	script.type = 'text/javascript';
-
-	script.onload = function() {
-		if (typeof startGame === 'function') {
-			startGame();
-		} else {
-			console.error("startGame function not found");
-		}
-	};
-
-	// if (typeof startGame === 'function')
-	//     startGame();
-	document.body.appendChild(script);
-}
-
 
 function handleLogin() {
 	const username = document.getElementById('loginUsername').value;

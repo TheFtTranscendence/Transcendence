@@ -49,6 +49,10 @@ window.matchmakingScripts = [
 	'matchmaking/matchmaking.js'
 ];
 
+window.queueScripts = [
+	"online_games_utils/queues.js",
+]
+
 /* ----------------------- Game 1 Skins ----------------------- */
 
 window.game1Skins = [
@@ -198,6 +202,7 @@ window.pongPlayerSkins = []
 
 window.playerCounter = 0;
 
+window.gamesOnCounter = 0
 window.isGameActive = false
 window.storeGame = false
 window.inHome = false
