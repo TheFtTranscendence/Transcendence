@@ -202,6 +202,7 @@ window.pongPlayerSkins = []
 
 window.playerCounter = 0;
 
+window.gamesOnCounter = 0
 window.isGameActive = false
 window.storeGame = false
 window.inHome = false
@@ -226,6 +227,8 @@ class Match {
 // TODO: Maybe need to handle the skins maybe dont. Check when implementing this class
 class Tournament {
     constructor() {
+		this.id = 0;
+		this.tournamentOver = false;
         this.nrPlayers = 0;
         this.nrMatches = 0;
 		this.matchCounter = 0;
@@ -469,215 +472,172 @@ window.pongyTournamentData = new Tournament();
 
 // Blockchain API call to get initial tournament players
 async function getTournamentPlayers() {
-    let players = []; // Default value
-    
-    try {
-        let url;
-        // Check the hash in the URL and choose the correct API endpoint
-        if (window.location.hash == '#fighters') {
-            url = `https://${window.IP}:3000/solidity/solidity/getcurrenttournamentplayerslist/${window.user.blockchain_id}/Fighty`;
-        } else {
-            url = `https://${window.IP}:3000/solidity/solidity/getcurrenttournamentplayerslist/${window.user.blockchain_id}/Pongy`;
-        }
-        
-        // Use await to wait for the fetch request to complete
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
+	
+	const url = 'https://' + window.IP + ':3000/online-games/tournaments/' + pongyTournamentData.id + '/';
 
-        // Check if the response is okay
+    return await fetch(url, {
+        method: 'GET',
+    })
+    .then(response => {
         if (!response.ok) {
-            throw new Error(`Error fetching data: ${response.statusText}`);
+            return response.json().then(err => { throw err; });
         }
-
-        // Parse the response JSON
-        const data = await response.json();
-        
-        // Store the status from the response
-        players = data.success;
-
-        console.log('Current Tournament Players:', players); // Log the gameStatus
-        
-    } catch (error) {
-        // Handle any errors
-        console.error('Error:', error);
-    }
-
-    return players;
+        return response.json();
+    })
+    .then(data => {
+        return data.players_list;
+    })
+    .catch(error => {
+        throw new Error(error.message);
+    });
 }
 
 // Blockchain API call to get Tournament Rankings (wtv that means)
 async function getTournamentRankings() {
-    let tournamentRakings = {}; // Default value
+    // let tournamentRakings = {}; // Default value
     
-    try {
-        let url;
-        // Check the hash in the URL and choose the correct API endpoint
-        if (window.location.hash == '#fighters') {
-            url = `https://${window.IP}:3000/solidity/solidity/getlasttournamentranking/${window.user.blockchain_id}/Fighty`;
-        } else {
-            url = `https://${window.IP}:3000/solidity/solidity/getlasttournamentranking/${window.user.blockchain_id}/Pongy`;
-        }
+    // try {
+    //     let url;
+    //     // Check the hash in the URL and choose the correct API endpoint
+    //     if (window.location.hash == '#fighters') {
+    //         url = `https://${window.IP}:3000/solidity/solidity/getlasttournamentranking/${window.user.blockchain_id}/Fighty`;
+    //     } else {
+    //         url = `https://${window.IP}:3000/solidity/solidity/getlasttournamentranking/${window.user.blockchain_id}/Pongy`;
+    //     }
         
-        // Use await to wait for the fetch request to complete
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
+    //     // Use await to wait for the fetch request to complete
+    //     const response = await fetch(url, {
+    //         method: 'GET',
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //         }
+    //     });
 
-        // Check if the response is okay
-        if (!response.ok) {
-            throw new Error(`Error fetching data: ${response.statusText}`);
-        }
+    //     // Check if the response is okay
+    //     if (!response.ok) {
+    //         throw new Error(`Error fetching data: ${response.statusText}`);
+    //     }
 
-        // Parse the response JSON
-        const data = await response.json();
+    //     // Parse the response JSON
+    //     const data = await response.json();
         
-        // Store the status from the response
-        tournamentRakings = data.success;
+    //     // Store the status from the response
+    //     tournamentRakings = data.success;
 
-        console.log('Current tournamentRakings:', tournamentRakings); // Log the gameStatus
+    //     console.log('Current tournamentRakings:', tournamentRakings); // Log the gameStatus
         
-    } catch (error) {
-        // Handle any errors
-        console.error('Error:', error);
-    }
+    // } catch (error) {
+    //     // Handle any errors
+    //     console.error('Error:', error);
+    // }
 
-    return tournamentRakings;
+    // return tournamentRakings;
 }
 
-// Blockchain API call to get All Tournament Rankings
-async function getAllTournamentRankings() {
-    let allTournamentRakings = {}; // Default value
-    
-    try {
-        let url;
-        // Check the hash in the URL and choose the correct API endpoint
-        if (window.location.hash == '#fighters') {
-            url = `https://${window.IP}:3000/solidity/solidity/getalltournamentsrankings/${window.user.blockchain_id}/Fighty`;
-        } else {
-            url = `https://${window.IP}:3000/solidity/solidity/getalltournamentsrankings/${window.user.blockchain_id}/Pongy`;
-        }
-        
-        // Use await to wait for the fetch request to complete
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
-
-        // Check if the response is okay
-        if (!response.ok) {
-            throw new Error(`Error fetching data: ${response.statusText}`);
-        }
-
-        // Parse the response JSON
-        const data = await response.json();
-        
-        // Store the status from the response
-        allTournamentRakings = data.success;
-
-        console.log('Current allTournamentRakings:', allTournamentRakings); // Log the gameStatus
-        
-    } catch (error) {
-        // Handle any errors
-        console.error('Error:', error);
-    }
-
-    return allTournamentRakings;
-}
 
 // Blockchain API call to get All Games
 async function getAllGames() {
-    let allGames = {}; // Default value
+    // let allGames = {}; // Default value
     
-    try {
-        let url;
-        // Check the hash in the URL and choose the correct API endpoint
-        if (window.location.hash == '#fighters') {
-            url = `https://${window.IP}:3000/solidity/solidity/getgames/${window.user.blockchain_id}/Fighty`;
-        } else {
-            url = `https://${window.IP}:3000/solidity/solidity/getgames/${window.user.blockchain_id}/Pongy`;
-        }
+    // try {
+    //     let url;
+    //     // Check the hash in the URL and choose the correct API endpoint
+    //     if (window.location.hash == '#fighters') {
+    //         url = `https://${window.IP}:3000/solidity/solidity/getgames/${window.user.blockchain_id}/Fighty`;
+    //     } else {
+    //         url = `https://${window.IP}:3000/solidity/solidity/getgames/${window.user.blockchain_id}/Pongy`;
+    //     }
         
-        // Use await to wait for the fetch request to complete
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
+    //     // Use await to wait for the fetch request to complete
+    //     const response = await fetch(url, {
+    //         method: 'GET',
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //         }
+    //     });
 
-        // Check if the response is okay
-        if (!response.ok) {
-            throw new Error(`Error fetching data: ${response.statusText}`);
-        }
+    //     // Check if the response is okay
+    //     if (!response.ok) {
+    //         throw new Error(`Error fetching data: ${response.statusText}`);
+    //     }
 
-        // Parse the response JSON
-        const data = await response.json();
+    //     // Parse the response JSON
+    //     const data = await response.json();
         
-        // Store the status from the response
-        allGames = data.success;
+    //     // Store the status from the response
+    //     allGames = data.success;
 
-        console.log('Current allGames:', allGames); // Log the gameStatus
+    //     console.log('Current allGames:', allGames); // Log the gameStatus
         
-    } catch (error) {
-        // Handle any errors
-        console.error('Error:', error);
-    }
+    // } catch (error) {
+    //     // Handle any errors
+    //     console.error('Error:', error);
+    // }
 
-    return allGames;
+    // return allGames;
 }
 
 // Blockchain API call to get Tournament Status
-async function getTournamentStatus() {
-    let gameStatus = false; // Default value
-    
-    try {
-        let url;
-        // Check the hash in the URL and choose the correct API endpoint
-        if (window.location.hash == '#fighters') {
-            url = `https://${window.IP}:3000/solidity/solidity/gettournamentstatus/${window.user.blockchain_id}/Fighty`;
-        } else {
-            url = `https://${window.IP}:3000/solidity/solidity/gettournamentstatus/${window.user.blockchain_id}/Pongy`;
-        }
-        
-        // Use await to wait for the fetch request to complete
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
+async function getTournamentStatus(gameName)
+{
+    const url = 'https://' + window.IP + ':3000/online-games/tournaments/my_tournament/' + window.user.id + '/' + gameName + '/';
 
-        // Check if the response is okay
+    return await fetch(url, {
+        method: 'GET',
+    })
+    .then(response => {
         if (!response.ok) {
-            throw new Error(`Error fetching data: ${response.statusText}`);
+            return response.json().then(err => { throw err; });
         }
-
-        // Parse the response JSON
-        const data = await response.json();
-        
-        // Store the status from the response
-        gameStatus = data.success;
-
-        console.log('gameStatus:', gameStatus); // Log the gameStatus
-        
-    } catch (error) {
-        // Handle any errors
-        console.error('Error:', error);
-    }
-
-    // Return the gameStatus after the fetch request completes
-    return gameStatus;
+        return response.json();
+    })
+    .then(data => {
+        return data.detail;
+    })
+    .catch(error => {
+        throw new Error(error.message);
+    });
 }
 
+// Blockchain API call to se Tournament players
+async function storeTournament(playerNames, playerSkins, gameName)
+{
+    const url = `https://${window.IP}:3000/online-games/tournaments/`;
+
+    let skinsList = []
+
+    for (let i = 0; i < playerSkins.length; i++) {
+        skinsList.push({ "skin_id": playerSkins[i] });
+    }
+
+    const data = {
+        game_name: gameName,
+        number_of_players: playerNames.length,
+        host: window.user.id,
+        players_list: namesAndSkins,
+        player_info: skinsList
+    }
+
+    return fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(err => { throw err; });
+        }
+        return response.json();
+    })
+    .then(data => {
+        return data.id;
+    })
+    .catch(error => {
+        throw new Error(error.message);
+    });
+}
 
 /* -------------> SOLIDITY CALL FUNCS END <------------- */
 

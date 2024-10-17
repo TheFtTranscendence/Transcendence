@@ -1,18 +1,15 @@
 from django.urls import path
-from .views import add_instance, add_game, add_tournament, add_tournament_game, get_games, get_tournament_status, get_current_tournament_players_list, get_next_tournament_player, get_last_tournament_ranking, get_all_tournaments_rankings
+from .views import add_instance, add_game, add_tournament, get_pongy_games, get_fighty_games, get_pongy_tournaments, get_fighty_tournaments
 
 urlpatterns = [
     # Setter functions
     path('addinstance/', add_instance),
-    path('addgame/<int:instanceIndex>/<str:gameType>', add_game),
-    path('addtournament/<int:instanceIndex>/<str:gameType>', add_tournament),
-    path('addtournamentgame/<int:instanceIndex>/<str:gameType>', add_tournament_game),
+    path('addgame/<int:instanceIndex>/<str:gameName>', add_game),
+    path('addtournament/<int:instanceIndex>/<str:gameName>', add_tournament),
 
     # Getter functions
-    path('getgames/<int:instanceIndex>/<str:gameType>', get_games),
-    path('gettournamentstatus/<int:instanceIndex>/<str:gameType>', get_tournament_status),
-    path('getcurrenttournamentplayerslist/<int:instanceIndex>/<str:gameType>', get_current_tournament_players_list),
-    path('getnexttournamentplayers/<int:instanceIndex>/<str:gameType>', get_next_tournament_player),
-    path('getlasttournamentranking/<int:instanceIndex>/<str:gameType>', get_last_tournament_ranking),
-    path('getalltournamentsrankings/<int:instanceIndex>/<str:gameType>', get_all_tournaments_rankings),
+    path('getpongygames/<int:instanceIndex>', get_pongy_games),
+    path('getfightygames/<int:instanceIndex>', get_fighty_games),
+    path('getpongytournaments/<int:instanceIndex>', get_pongy_tournaments),
+    path('getfightytournaments/<int:instanceIndex>', get_fighty_tournaments),
 ]

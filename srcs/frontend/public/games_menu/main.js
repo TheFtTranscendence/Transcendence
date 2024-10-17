@@ -7,6 +7,7 @@ function clearMenu() {
 	window.localButton.removeEventListener('click', main_menu_localButton)
 	window.tournament.removeEventListener('click', main_menu_tournamentButton)
 
+	console.log("CLEAR MENU LISTNERS")
 	
 	document.getElementById('games-menu-area').classList.add("hidden")
 }
@@ -46,24 +47,32 @@ async function main_menu_changeSkinButton () {
 	}
 }
 
+function areScriptsLoaded(scripts) {
+    return scripts.every(src => document.querySelector(`script[src="${src}"]`));
+}
+
 async function main_menu_matchmakingButton () {
 	console.log('Matchmaking button clicked')
+	console.log("GAMES GOING ON COUNTER ->", window.gamesOnCounter)
 	if (window.location.hash == '#fighters') {
 
 		clearMenu()
-		unloadScripts(window.menuScripts)
 		await PromiseloadScripts(window.matchmakingScripts)
+		unloadScripts(window.menuScripts)
 		Matchmaking_before_game()
-		
 		
 	}
 	else {
 		// Load the scripts for pong matchmaking
 		// Pong change
+		document.getElementById('games-button-Matchmaking').removeEventListener('click', main_menu_matchmakingButton)
 		clearMenu()
 		unloadScripts(window.menuScripts)
-		loadScriptss(window.gameScripts)
-		startMatchmakingGame()
+		if (!areScriptsLoaded(window.gameScripts)) {
+			await PromiseloadScripts(window.gameScripts)
+			console.log("AT main_menu_matchmakingButton")
+			startMatchmakingQueue()
+        }
 	}
 }
 
@@ -84,20 +93,27 @@ async function main_menu_tournamentButton() {
 	console.log('Tournament button clicked')
 	clearMenu()	
 
-	const gameStatus = await window.getTournamentStatus();
-
-	if (window.location.hash == '#fighters' && !gameStatus) {
-		games_tournament_menu()
+	if (window.location.hash == '#fighters') {
+		const gameStatus = await window.getTournamentStatus("Fighty");
+		if (!gameStatus) {
+			games_tournament_menu()
+		}
+		else {
+			unloadScripts(window.menuScripts)
+			await loadScriptss(window.tournamentScripts)
+			tournament_loop()
+		}
 	}
-	else if (window.location.hash == '#game' && !gameStatus)
-	{
-		games_tournament_menu()
-	}
-	else
-	{
-		unloadScripts(window.menuScripts)
-		await loadScriptss(window.tournamentScripts)
-		tournament_loop()
+	else if (window.location.hash == '#game') {
+		const gameStatus = await window.getTournamentStatus("Pongy");
+		if (!gameStatus) {
+			games_tournament_menu()
+		}
+		else {
+			unloadScripts(window.menuScripts)
+			await loadScriptss(window.tournamentScripts)
+			tournament_loop()
+		}
 	}
 }
 
@@ -126,7 +142,8 @@ function main_menu() {
 		document.getElementById('games-menu-selected-skin').style.backgroundImage = "url('" + window.game1SkinsPreview[window.pongPlayerSkins] + "')" 
 	}
 
-	pongyTournamentData.printAllMatches()
+	// pongyTournamentData.printAllMatches()
+	console.log("AT MAIN MENU ->")
 
 	window.addEventListener('hashchange', games_menu_hashchange)
 	
