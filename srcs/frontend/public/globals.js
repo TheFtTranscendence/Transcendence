@@ -202,6 +202,7 @@ window.pongPlayerSkins = []
 
 window.playerCounter = 0;
 
+window.gamesOnCounter = 0
 window.isGameActive = false
 window.storeGame = false
 window.inHome = false

@@ -1,47 +1,60 @@
 function game_hashchange(vars)
 {
-	if (vars.running == true)
+	window.removeEventListener("hashchange", vars.eventHandlers.eventHashChange);
+	if (vars.gameVars.matchmakingGame)
 	{
-		console.log('hashchange game');
-		window.removeEventListener("hashchange", game_hashchange);
-
-		
-		window.removeEventListener("keydown", handleKeyDown);
-		window.removeEventListener("keyup", handleKeyUp);
-		vars.canvasVars.canvas.removeEventListener("click", handleCanvasClick);
-		clearInterval(vars.IntervalVars.gameLoop);
-		
-		document.getElementById('game').classList.add('hidden');
-		unloadScripts(window.gameScripts);
+		window.removeEventListener("keyup", vars.eventHandlers.eventKeyUpMatchmaking);
+		window.removeEventListener("keydown", vars.eventHandlers.eventKeyDownMatchmaking);
+		vars.canvasVars.canvas.removeEventListener("click", vars.eventHandlers.eventCanvasClickMatchmaking);
+		vars.mm.game_socket.close()
+		// unloadScripts(queueScripts)	
 	}
-	
-	window.removeEventListener("keydown", handleKeyDown);
-	window.removeEventListener("keyup", handleKeyUp);
-	vars.canvasVars.canvas.removeEventListener("click", handleCanvasClick);
+	else
+	{
+		window.removeEventListener("keyup", vars.eventHandlers.eventKeyUpLocal);
+		window.removeEventListener("keydown", vars.eventHandlers.eventKeyDownLocal);
+		vars.canvasVars.canvas.removeEventListener("click", vars.eventHandlers.eventCanvasClickLocal);
+	}
+
 	clearInterval(vars.IntervalVars.gameLoop);
 	
 	document.getElementById('game').classList.add('hidden');
 	unloadScripts(window.gameScripts);
 
-	window.isGameActive = false
 	vars.running = false;
 }
 
-function cleanUpAfterFinish(vars)
+async function cleanUpAfterFinish(vars)
 {
 	console.log("cleanup Game");
-	window.removeEventListener("keydown", handleKeyDown);
-	window.removeEventListener("keyup", handleKeyUp);
-	vars.canvasVars.canvas.removeEventListener("click", handleCanvasClick);
-	clearInterval(vars.IntervalVars.gameLoop);
-	document.getElementById('game').classList.add('hidden');
 	
-	storeMatch(vars);
-	window.isGameActive = false
-	unloadScripts(window.gameScripts);
+	if (vars.gameVars.matchmakingGame)
+	{
+		window.removeEventListener("keyup", vars.eventHandlers.eventKeyUpMatchmaking);
+		window.removeEventListener("keydown", vars.eventHandlers.eventKeyDownMatchmaking);
+		vars.canvasVars.canvas.removeEventListener("click", vars.eventHandlers.eventCanvasClickMatchmaking);
+		vars.mm.game_socket.close()
+		// await unloadScripts(queueScripts)	
+	}
+	else
+	{
+		window.removeEventListener("keyup", vars.eventHandlers.eventKeyUpLocal);
+		window.removeEventListener("keydown", vars.eventHandlers.eventKeyDownLocal);
+		vars.canvasVars.canvas.removeEventListener("click", vars.eventHandlers.eventCanvasClickLocal);
+		storeMatch(vars);
+		
+	}
+
+	window.removeEventListener("hashchange", vars.eventHandlers.eventHashChange);
+	clearInterval(vars.IntervalVars.gameLoop);
+
+	window.gamesOnCounter--;
+	// window.isGameActive = false
+	await unloadScripts(window.gameScripts);
 	
 	vars.running = false;
-
+	document.getElementById('game').classList.add('hidden');
+		
 	if (vars.gameVars.tournamentGame) {
 		loadScripts(window.tournamentScripts);
 		tournament_loop();
@@ -59,8 +72,6 @@ function storeMatch(vars)
 		vars.gameVars.p1Name + vars.gameVars.p1SkinId,
 		vars.gameVars.p2Name + vars.gameVars.p2SkinId,
 	]
-	console.log(vars.gameVars.p1Name + vars.gameVars.p1SkinId);
-	console.log(vars.gameVars.p2Name + vars.gameVars.p2SkinId);
 	if (vars.gameVars.tournamentGame)
 	{
 		if (vars.gameVars.p1Score > vars.gameVars.p2Score) {
@@ -124,14 +135,14 @@ function loadImage(src, callback)
 
 function startGame(p1Name, p2Name, p1Skin, p2Skin, p1SkinId, p2SkinId, tournamentGame)
 {
-
-	if (!window.isGameActive)
-		window.isGameActive = true
-	else
-	{
-		console.log("GAME ALREADY FUCKING HAPPENING")
-		return
-	}
+	window.gamesOnCounter++;
+	// if (!window.isGameActive)
+	// 	window.isGameActive = true
+	// else
+	// {
+	// 	console.log("GAME ALREADY FUCKING HAPPENING")
+	// 	return
+	// }
 	const vars = initVars();
 
 	vars.gameVars.tournamentGame = tournamentGame;
@@ -146,26 +157,15 @@ function startGame(p1Name, p2Name, p1Skin, p2Skin, p1SkinId, p2SkinId, tournamen
 	vars.paddleVars.p2SkinPath = p2Skin;
 	vars.ballVars.ballSkin.src = "game/assets/ball.png";
 
-	vars.paddleVars.p1PaddleSkin = loadImage(p1Skin, function() {
-		console.log("P1 Paddle Image Loaded");
-	});
-	vars.paddleVars.p2PaddleSkin = loadImage(p2Skin, function() {
-		console.log("P2 Paddle Image Loaded");
-	});
-	vars.ballVars.ballSkin = loadImage("game/assets/ball.png", function() {
-		console.log("Ball Image Loaded");
-	});
-
-	// console.log('initing game');
 	document.getElementById('game').classList.remove('hidden');
 
 	// When leaving this hash (#game), trigger game_hashchange function
-	window.addEventListener("hashchange", (event) => {game_hashchange(vars)});
+	window.addEventListener("hashchange", vars.eventHandlers.eventHashChange);
 
 	
-	window.addEventListener("keydown", (event) => handleKeyDown(event, vars));
-	window.addEventListener("keyup", (event) => handleKeyUp(event, vars));
-	vars.canvasVars.canvas.addEventListener("click", (event) => handleCanvasClick(event, vars));
+	window.addEventListener("keyup", vars.eventHandlers.eventKeyUpLocal);
+	window.addEventListener("keydown", vars.eventHandlers.eventKeyDownLocal);
+	vars.canvasVars.canvas.addEventListener("click", vars.eventHandlers.eventCanvasClickLocal);
 
 	vars.IntervalVars.gameLoop = setInterval(() => gameLoop(vars), 1000 / 60);
 }
@@ -209,7 +209,9 @@ function initVars()
 		game_socket: null,
 		player1: 0,
 		player2: 0,
-		gameId: 0
+		gameId: 0,
+		p1SkinId: 0,
+		p2SkinId: 0
 	}
 
 	const paddleHeight = 80;
@@ -240,7 +242,8 @@ function initVars()
 		ballMoveLeft: false,
 		ballHitCounter: 0,
 		ballSpeedIncY: 3,
-		ballSkin: new Image()
+		ballSkin: new Image(),
+		nextBallDir: 0
 	}
 
 	const buttonVars = {
@@ -256,13 +259,26 @@ function initVars()
 		gameLoop: null
 	}
 
+	const eventHandlers = {
+		eventKeyUpMatchmaking: (event) => handleKeyUpMatchmaking(event, vars),
+		eventKeyDownMatchmaking: (event) => handleKeyDownMatchmaking(event, vars),
+		eventCanvasClickMatchmaking: (event) => handleCanvasClickMatchmaking(event, vars),
+		eventKeyUpLocal: (event) => handleKeyUp(event, vars),
+		eventKeyDownLocal: (event) => handleKeyDown(event, vars),
+		eventCanvasClickLocal: (event) => handleCanvasClick(event, vars),
+		eventHashChange: (event) => game_hashchange(vars)
+
+	}
+
 	const vars =  {
 		canvasVars: canvasVars,
 		gameVars: gameVars,
+		mm: mm,
 		paddleVars: paddleVars,
 		ballVars: ballVars,
 		buttonVars: buttonVars,
 		IntervalVars: IntervalVars,
+		eventHandlers: eventHandlers,
 		running: true
 	}
 
@@ -381,7 +397,24 @@ function ballMovement(vars)
 					vars.ballVars.ballSpeedX++;
 					vars.ballVars.ballSpeedIncY++;
 				}
-				vars.ballVars.ballSpeedY = (Math.random() * vars.ballVars.ballSpeedIncY - 1) * (Math.random() < 0.5 ? 1 : -1);
+				if (vars.gameVars.matchmakingGame)
+				{
+					vars.ballVars.ballSpeedY = vars.ballVars.nextBallDir;
+					const temp = (Math.random() * vars.ballVars.ballSpeedIncY - 1) * (Math.random() < 0.5 ? 1 : -1);
+					if (vars.gameVars.p1Name === window.user.username)
+					{
+						vars.mm.game_socket.send(JSON.stringify({
+							"action": "game_info",
+							"info": {
+								"nextBallDir": temp
+							},
+						}));
+					}						
+				}
+				else
+				{
+					vars.ballVars.ballSpeedY = (Math.random() * vars.ballVars.ballSpeedIncY - 1) * (Math.random() < 0.5 ? 1 : -1);
+				}				
 				vars.ballVars.ballX -= vars.ballVars.ballSpeedX;
 				vars.ballVars.ballY += vars.ballVars.ballSpeedY;
 				vars.ballVars.ballMoveRight = false;
@@ -418,7 +451,24 @@ function ballMovement(vars)
 					vars.ballVars.ballSpeedX++;
 					vars.ballVars.ballSpeedIncY++;
 				}
-				vars.ballVars.ballSpeedY = (Math.random() * vars.ballVars.ballSpeedIncY - 1) * (Math.random() < 0.5 ? 1 : -1);
+				if (vars.gameVars.matchmakingGame)
+				{
+					vars.ballVars.ballSpeedY = vars.ballVars.nextBallDir;
+					const temp = (Math.random() * vars.ballVars.ballSpeedIncY - 1) * (Math.random() < 0.5 ? 1 : -1);
+					if (vars.gameVars.p1Name === window.user.username)
+					{
+						vars.mm.game_socket.send(JSON.stringify({
+							"action": "game_info",
+							"info": {
+								"nextBallDir": temp
+							},
+						}));
+					}	
+				}
+				else
+				{
+					vars.ballVars.ballSpeedY = (Math.random() * vars.ballVars.ballSpeedIncY - 1) * (Math.random() < 0.5 ? 1 : -1);
+				}
 				vars.ballVars.ballX += vars.ballVars.ballSpeedX;
 				vars.ballVars.ballY += vars.ballVars.ballSpeedY;
 				vars.ballVars.ballMoveLeft = false;
@@ -458,8 +508,16 @@ function resetGame(vars)
 	vars.paddleVars.p2PaddleSkin = new Image();
 	vars.ballVars.ballSkin = new Image();
 
-	vars.paddleVars.p1PaddleSkin.src = vars.paddleVars.p1SkinPath;
-	vars.paddleVars.p2PaddleSkin.src = vars.paddleVars.p2SkinPath;
+	if (vars.gameVars.matchmakingGame)
+	{
+		vars.paddleVars.p1PaddleSkin.src = window.game1Skins[vars.mm.p1SkinId];
+		vars.paddleVars.p2PaddleSkin.src = window.game1Skins[vars.mm.p2SkinId];
+	}
+	else
+	{
+		vars.paddleVars.p1PaddleSkin.src = vars.paddleVars.p1SkinPath;
+		vars.paddleVars.p2PaddleSkin.src = vars.paddleVars.p2SkinPath;
+	}
 	vars.ballVars.ballSkin.src = "game/assets/ball.png";
 
 	if (vars.gameVars.p1Score >= vars.gameVars.maxPoints || vars.gameVars.p2Score >= vars.gameVars.maxPoints)
@@ -544,14 +602,17 @@ function endGame(vars)
 
 function gameLoop(vars)
 {
-	if (!vars.gameVars.gameStart && !vars.gameVars.matchmakingGame)
+	vars.canvasVars.ctx.clearRect(0, 0, vars.canvasVars.canvasWidth, vars.canvasVars.canvasHeight);
+	vars.canvasVars.ctx.fillStyle = "black";
+	vars.canvasVars.ctx.fillRect(0, 0, vars.canvasVars.canvasWidth, vars.canvasVars.canvasHeight);
+	if (!vars.gameVars.gameStart)
 	{
-		// maybe fucks the loop
-		vars.canvasVars.ctx.clearRect(0, 0, vars.canvasVars.canvasWidth, vars.canvasVars.canvasHeight);
-		vars.canvasVars.ctx.fillStyle = "black";
-		vars.canvasVars.ctx.fillRect(0, 0, vars.canvasVars.canvasWidth, vars.canvasVars.canvasHeight);
 		if (!vars.gameVars.gameReset)
-			drawButton("START", (vars.canvasVars.canvasWidth / 2) - 80, (vars.canvasVars.canvasHeight / 2) - 35, 160, 70, 40, "ARCADECLASSIC", vars);
+		{
+			if (!vars.gameVars.matchmakingGame)
+				drawButton("START", (vars.canvasVars.canvasWidth / 2) - 80, (vars.canvasVars.canvasHeight / 2) - 35, 160, 70, 40, "ARCADECLASSIC", vars);
+
+		}
 		else
 			endGame(vars);
 	}
@@ -579,11 +640,10 @@ function gameLoop(vars)
 
 function startMatchmakingQueue()
 {
-	loadScripts(window.queueScripts) // TODO: clean this
-	joinQueue("Pongy", startMatchmakingGame)
+	joinQueue("Pongy", startMatchmakingLobby)
 }
 
-function startMatchmakingGame(data)
+function startMatchmakingLobby(data)
 {
 	const vars = initVars();
 	vars.gameVars.matchmakingGame = true;
@@ -594,45 +654,50 @@ function startMatchmakingGame(data)
 
 }
 
-function initMatchmakingGame(data)
+function initMatchmakingGame(vars, data)
 {
-	vars.gameVars.p1Name = data.user_info[0].username;
-	vars.gameVars.p2Name = data.user_info[1].username;
+	// console.log("AT initMatchmakingGame")
+	vars.gameVars.p1Name = data.users_info[0].username;
+	vars.gameVars.p2Name = data.users_info[1].username;
 	// 	vars.gameVars.p1SkinId = p1SkinId;
 	// 	vars.gameVars.p2SkinId = p2SkinId;
-	vars.paddleVars.p1PaddleSkin.src = window.game1Skins[data.user_info[0].user_info.skin_id];
-	vars.paddleVars.p2PaddleSkin.src = window.game1Skins[data.user_info[1].user_info.skin_id];
+	vars.mm.p1SkinId = data.users_info[0].user_info.skin_id
+	vars.mm.p2SkinId = data.users_info[1].user_info.skin_id
+	vars.paddleVars.p1PaddleSkin.src = window.game1Skins[vars.mm.p1SkinId];
+	vars.paddleVars.p2PaddleSkin.src = window.game1Skins[vars.mm.p2SkinId];
 	vars.ballVars.ballSkin.src = "game/assets/ball.png";
 		
 		
 	
-	window.addEventListener("keydown", (event) => handleKeyDownMatchmaking(event, vars));
-	window.addEventListener("keyup", (event) => handleKeyUpMatchmaking(event, vars));
-	vars.canvasVars.canvas.addEventListener("click", (event) => handleCanvasClickMatchmaking(event, vars));
+	window.addEventListener("keyup", vars.eventHandlers.eventKeyUpMatchmaking);
+	window.addEventListener("keydown", vars.eventHandlers.eventKeyDownMatchmaking);
+	vars.canvasVars.canvas.addEventListener("click", vars.eventHandlers.eventCanvasClickMatchmaking);
 	vars.IntervalVars.gameLoop = setInterval(() => gameLoop(vars), 1000 / 60);
 }
 
 function Matchmaking_setup_socket(vars) {
 	
-	vars.mm.game_socket = new WebSocket(`wss://${window.IP}:3000/online_games/ws/games/${vars.mm.gameId}/`);
+	// console.log("AT Matchmaking_setup_socket")
+	vars.mm.game_socket = new WebSocket(`wss://${window.IP}:3000/online-games/ws/games/${vars.mm.gameId}/`);
 	
 	vars.mm.game_socket.onopen = function(event) {
 		document.getElementById('game').classList.remove('hidden');
-		window.addEventListener("hashchange", (event) => {game_hashchange(vars)});
-		vars.canvasVars.canvas.addEventListener("click", (event) => handleCanvasClickMatchmaking(event, vars));
+		window.addEventListener("hashchange", vars.eventHandlers.eventHashChange);
+		vars.canvasVars.canvas.addEventListener("click", vars.eventHandlers.eventCanvasClickMatchmaking);
 		vars.IntervalVars.lobbyLoop = setInterval(() => matchmakingLobby(vars), 1000 / 60);
 	}
 
 	vars.mm.game_socket.onmessage = function(event) {
 		msg = JSON.parse(event.data)
+		// console.log("MSG -> ", msg)
 		if (msg.type === "GameReady")
 		{
 			clearInterval(vars.IntervalVars.lobbyLoop);
-			initMatchmakingGame(msg)
+			initMatchmakingGame(vars, msg)
 		}
 		else if (msg.type === "move") {
 
-			switch (msg.action) {
+			switch (msg.move) {
 	
 				case 'ArrowUp_keydown': vars.paddleVars.p2PaddleState.up = true; break;
 				case 'ArrowUp_keyup': vars.paddleVars.p2PaddleState.up = false; break;
@@ -645,18 +710,23 @@ function Matchmaking_setup_socket(vars) {
 				case 's_keyup':vars.paddleVars.p1PaddleState.down = false; break;
 			}
 		}
+		else if (msg.type === "game_info") {
+			vars.ballVars.nextBallDir = msg.info.nextBallDir;
+		}
 	}
 }
 
-function matchmakingLobby()
+function matchmakingLobby(vars)
 {
-	if (vars.buttonState.buttonState === 0)
+	// console.log("AT matchmakingLobby")
+	if (vars.buttonVars.buttonState === 0)
 	{
 		drawButton("READY", (vars.canvasVars.canvasWidth / 2) - 80, (vars.canvasVars.canvasHeight / 2) - 35, 160, 70, 40, "ARCADECLASSIC", vars);
-		// vars.canvasVars.canvas.removeEventListener("click", handleCanvasClickMatchmaking);
 	}
 	else
+	{
 		drawButton("WAIT", (vars.canvasVars.canvasWidth / 2) - 80, (vars.canvasVars.canvasHeight / 2) - 35, 160, 70, 40, "ARCADECLASSIC", vars);
+	}
 }
 
 // Matchmaking keys
@@ -665,16 +735,16 @@ function handleKeyUpMatchmaking(event, vars) {
 	if (vars.gameVars.p1Name === window.user.username)
 	{
 		if (event.key === "w") {
-			vars.mm.game_socket.send(JSON.stringify({type:"move", player_id:window.user.id, action:"w_keyup"}))
+			vars.mm.game_socket.send(JSON.stringify({action:"move", move:"w_keyup"}))
 		} else if (event.key === "s") {
-			vars.mm.game_socket.send(JSON.stringify({type:"move", player_id:window.user.id, action:"s_keyup"}))
+			vars.mm.game_socket.send(JSON.stringify({action:"move", move:"s_keyup"}))
 		}
 	}
 	else {	
 		if (event.key === "w") {
-			vars.mm.game_socket.send(JSON.stringify({type:"move", player_id:window.user.id, action:"ArrowUp_keyup"}))
+			vars.mm.game_socket.send(JSON.stringify({action:"move", move:"ArrowUp_keyup"}))
 		} else if (event.key === "s") {
-			vars.mm.game_socket.send(JSON.stringify({type:"move", player_id:window.user.id, action:"ArrowDown_keyup"}))
+			vars.mm.game_socket.send(JSON.stringify({action:"move", move:"ArrowDown_keyup"}))
 		}
 	}
 }
@@ -684,17 +754,17 @@ function handleKeyDownMatchmaking(event, vars) {
 	if (vars.gameVars.p1Name === window.user.username)
 	{
 		if (event.key === "w") {
-			vars.mm.game_socket.send(JSON.stringify({type:"move", player_id:window.user.id, action:"w_keydown"}))
+			vars.mm.game_socket.send(JSON.stringify({action:"move", move:"w_keydown"}))
 		} else if (event.key === "s") {
-			vars.mm.game_socket.send(JSON.stringify({type:"move", player_id:window.user.id, action:"s_keydown"}))
+			vars.mm.game_socket.send(JSON.stringify({action:"move", move:"s_keydown"}))
 		}
 	}
 	else
 	{
 		if (event.key === "w") {
-			vars.mm.game_socket.send(JSON.stringify({type:"move", player_id:window.user.id, action:"ArrowUp_keydown"}))
+			vars.mm.game_socket.send(JSON.stringify({action:"move", move:"ArrowUp_keydown"}))
 		} else if (event.key === "s") {
-			vars.mm.game_socket.send(JSON.stringify({type:"move", player_id:window.user.id, action:"ArrowDown_keydown"}))
+			vars.mm.game_socket.send(JSON.stringify({action:"move", move:"ArrowDown_keydown"}))
 		}
 	}
 }
@@ -710,9 +780,11 @@ function handleCanvasClickMatchmaking(event, vars)
 	{
 		if (vars.gameVars.gameFinish)
 		{
+
+			window.gamesOnCounter++;
 			cleanUpAfterFinish(vars)
 		}
-		if (vars.buttonState.buttonState === 0)
+		if (vars.buttonVars.buttonState === 0)
 		{
 			vars.mm.game_socket.send(JSON.stringify({
 				"action": "ready",
@@ -723,8 +795,8 @@ function handleCanvasClickMatchmaking(event, vars)
 					"skin_id": window.user.preferences.pongy_skin
 				}
 			}));
-			vars.buttonState.buttonState = 1
-			vars.canvasVars.canvas.removeEventListener("click", handleCanvasClickMatchmaking);
+			vars.buttonVars.buttonState = 1
+			vars.canvasVars.canvas.removeEventListener("click", vars.eventHandlers.eventCanvasClickMatchmaking);
 		}
 
 		vars.gameVars.gameStart = true;
@@ -732,3 +804,4 @@ function handleCanvasClickMatchmaking(event, vars)
 		vars.gameVars.p2Score = 0;
 	}
 }
+
