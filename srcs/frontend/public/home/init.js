@@ -1,5 +1,10 @@
 function home_hashchange(event)
 {
+	if (window.frontendHealthCheck === false) 
+	{
+		window.frontendHealthCheck = true
+		checkTournamentStatus()
+	}
 
 	document.getElementById('home').classList.add('hidden');
 	unloadScripts(window.homeScripts);
@@ -589,4 +594,17 @@ async function updateContent(selectedUser) {
 	.catch(error => {
 		console.error("Error fetching games:", error.message || "An unknown error occurred");
 	});
+}
+
+async function checkTournamentStatus()
+{
+	console.log("HERE CHECKING TOURNEY DATABASE")
+	
+	let fightyStatus = await window.getTournamentStatus("Fighty")
+	let pongyStatus = await window.getTournamentStatus("Pongy")
+
+	if (pongyStatus)
+		pongyTournamentData.retriveTournamentInfo()
+	if (fightyStatus)
+		fightyTournamentData.retriveTournamentInfo()
 }

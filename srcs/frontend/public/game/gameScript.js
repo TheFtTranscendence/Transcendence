@@ -79,10 +79,10 @@ function storeMatch(vars)
 	if (vars.gameVars.tournamentGame)
 	{
 		if (vars.gameVars.p1Score > vars.gameVars.p2Score) {
-			pongyTournamentData.addGameWinner(vars.gameVars.p1Name)
+			pongyTournamentData.addGameWinner(vars.gameVars.p1Name, vars.gameVars.p1SkinId)
 		}
 		else {
-			pongyTournamentData.addGameWinner(vars.gameVars.p2Name)
+			pongyTournamentData.addGameWinner(vars.gameVars.p2Name, vars.gameVars.p2SkinId)
 		}
 		
 		pongyTournamentData.setMatchAsPlayed(players)
