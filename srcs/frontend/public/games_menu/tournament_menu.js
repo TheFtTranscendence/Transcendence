@@ -56,7 +56,6 @@ function loadScriptss(scriptUrls) {
 
 async function tournament_play() {
 	console.log('Play button clicked')
-	await loadScriptss(window.tournamentScripts)
 	
 	const playerNames = []
 	const playerSkins = []
@@ -91,7 +90,10 @@ async function tournament_play() {
 	console.log(window.pongPlayerNames)
     console.log(window.pongPlayerSkins)
 	unloadScripts(window.menuScripts)
-	start_tournament(playerNames, playerSkins)
+	if (!areScriptsLoaded(window.tournamentScripts)) {
+		await loadScriptss(window.tournamentScripts)
+		start_tournament(playerNames, playerSkins)
+	}
 }
 
 function games_tournament_menu() {

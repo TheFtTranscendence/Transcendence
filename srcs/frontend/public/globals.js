@@ -218,9 +218,9 @@ class Match {
     constructor(player1, skins1, player2 = null, skins2 = null) { // can recieve 1 or 2 player names
         this.players = [player1];
 		this.skins = [skins1];
-        if (player2 && skins2) {
+        if (player2) {
             this.players.push(player2);
-            this.skins.push(player2);
+            this.skins.push(skins2);
         }
 		this.matchPlayed = false;
     }

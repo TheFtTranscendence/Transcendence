@@ -603,6 +603,9 @@ async function checkTournamentStatus()
 	let fightyStatus = await window.getTournamentStatus("Fighty")
 	let pongyStatus = await window.getTournamentStatus("Pongy")
 
+	console.log("PONGY STATUS: ", pongyStatus)
+	
+	console.log("FIGHTY STATUS: ", fightyStatus)
 	if (pongyStatus)
 		pongyTournamentData.retriveTournamentInfo()
 	if (fightyStatus)
