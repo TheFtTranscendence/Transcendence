@@ -53,7 +53,7 @@ class GameInviteSocket {
 		}	
 	}
 	
-	send(game_name, receivers, onaccept, onaccept = null, onreject = null, game_size = 2)	{
+	send(game_name, receivers, onaccept = null, onjoin = null, onreject = null, game_size = 2)	{
 	
 		//todo: what else do we do with this?
 		window.game_invites_socket.send(JSON.stringify({
@@ -65,7 +65,7 @@ class GameInviteSocket {
 	}
 
 	//todo: this in the backend
-	cancel(game_name, receivers, onaccept, onaccept = null, onreject = null, game_size = 2)	{
+	cancel(game_name, receivers, onaccept = null, onjoin = null, onreject = null, game_size = 2)	{
 	
 	}
 

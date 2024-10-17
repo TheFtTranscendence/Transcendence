@@ -2,7 +2,7 @@
 window.addEventListener('hashchange', navigate);
 
 //todo: test this on school chrome
-window,onload = function() {
+window.onload = function() {
 
 	try {
 		console.log("HERE!");
@@ -22,6 +22,10 @@ window,onload = function() {
 		window.location.hash = '#auth';
 	}
 };
+
+window.onclose = function()	{
+	window.user.cleanup();
+}
 
 function navigate() {
 	let element, scripts, startFunction;
@@ -224,4 +228,76 @@ function toast_alert(message, duration = 5000) {
 
 	// Show the toast
 	toastInstance.show();
+}
+
+//? Is this the function beeing used? if yes why is it with the old url?
+async function checkTournamentStatus()
+{
+	console.log("HERE CHECKING TOURNEY DATABASE")
+	let pongyStatus = false
+	console.log("BLOCKCHAIN_ID : ", window.user.blockchain_id)
+	let url = `https://${window.IP}:3000/solidity/solidity/gettournamentstatus/${window.user.blockchain_id}/Pongy`;
+	
+	try {
+		// Use await to wait for the fetch request to complete
+		const response = await fetch(url, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+			}
+		});
+		
+		// Check if the response is okay
+		if (!response.ok) {
+			throw new Error(`Error fetching data: ${response.statusText}`);
+		}
+
+		// Parse the response JSON
+		const data = await response.json();
+		
+		// Store the status from the response
+		pongyStatus = data.success;
+
+		console.log('INITIAL PONGY STATUS:', pongyStatus); // Log the pongyStatus
+		
+	} catch (error) {
+		// Handle any errors
+		console.error('Error:', error);
+	}
+	
+	let fightyStatus = false
+	const url2 = `https://${window.IP}:3000/solidity/solidity/gettournamentstatus/${window.user.blockchain_id}/Fighty`;
+
+	try {
+		// Use await to wait for the fetch request to complete
+		const response = await fetch(url2, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+			}
+		});
+		
+		// Check if the response is okay
+		if (!response.ok) {
+			throw new Error(`Error fetching data: ${response.statusText}`);
+		}
+
+		// Parse the response JSON
+		const data = await response.json();
+		
+		// Store the status from the response
+		fightyStatus = data.success;
+
+		console.log('INITIAL FIGHTY STATUS:', fightyStatus); // Log the fightyStatus
+		
+	} catch (error) {
+		// Handle any errors
+		console.error('Error:', error);
+	}
+
+	if (pongyStatus)
+		pongyTournamentData.retriveTournamentInfo()
+	if (fightyStatus)
+		fightyTournamentData.retriveTournamentInfo()
+
 }

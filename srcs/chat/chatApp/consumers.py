@@ -26,7 +26,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
 	async def receive(self, text_data):
 		text_data_json = json.loads(text_data)
-		
+
 		if 'join_chat_id' in text_data_json:
 			await self.join_chat(text_data_json['join_chat_id'])
 		else:

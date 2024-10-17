@@ -1,4 +1,4 @@
-class Tournament {
+class Tournament2 {
 
 	constructor(game_name = null, number_of_players = null, host = null, player_list = null, player_info=null, tournament_id = null) {
 		if (!tournament_id)

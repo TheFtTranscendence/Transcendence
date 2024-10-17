@@ -45,7 +45,7 @@ function sendChatMessage() {
 
 		// Add the message to the database and to chat
 		//   Messages.push_to_db(messageObject)
-		window.Messages.push(messageObject)
+		window.user.chat.messages.push(messageObject)
 
 		// Display the new message
 		const messageDiv = document.createElement('div')
@@ -76,9 +76,7 @@ function getMessages(friend) {
 			return response.json();
 		})
 		.then((data) => {
-			console.log('data ', data);
-			console.log('messages ', data.messages);
-			window.Messages = data.messages;
+			window.user.chat.messages = data.messages;
 			resolve(data.messages); // Resolve with messages or data as needed
 		})
 		.catch((error) => {
@@ -97,17 +95,18 @@ async function openChat(friend) {
 	window.chatContent.innerHTML = ''
 
 	await getMessages(friend)
+
 	window.CurrentChatting = friend[0]
 	window.CurrentChatting_id = friend[1].chat_id
 
-	window.user.chat.onmessage = function (e) {
+	
+	window.user.chat.socket.onmessage = function (e) {
 		
 		const data = JSON.parse(e.data);
-		console.log(data);
 		
 		if (data.chat_id == window.CurrentChatting_id)
 		{
-			window.Messages.push(data)
+			window.user.chat.messages.push(data)
 			const messageDiv = document.createElement('div')
 			messageDiv.classList.add('message-item', 'received-message')
 			
@@ -140,14 +139,11 @@ async function openChat(friend) {
 	// }
 
 	// Clear previous chat content
+	//? Again?
 	window.chatContent.innerHTML = ''
 
-	console.log('window messages ', window.Messages)
-
 	// Filter the messages for the selected friend
-	const filteredMessages = window.Messages.filter(message => message.sender === friend[0] || message.sender === window.user.username)
-
-	console.log('filtered messages ', filteredMessages)
+	const filteredMessages = window.user.chat.messages.filter(message => message.sender === friend[0] || message.sender === window.user.username)
 
 	// Display the messages in the chat content div
 	filteredMessages.forEach(message => {
@@ -166,8 +162,6 @@ async function openChat(friend) {
 		`
 		window.chatContent.appendChild(messageDiv)
 	})
-
-	console.log(`Chat with ${friend[0]} opened`)
 
 	window.chatContent.scrollTop = window.chatContent.scrollHeight
 
@@ -303,7 +297,7 @@ function chat()
 	window.chatConfirmInput = document.getElementById('chat-input-buttons')
 
 
-	window.Messages = []
+	window.user.chat.messages = []
 
 	try {
 		friendList = window.user.friend_list
