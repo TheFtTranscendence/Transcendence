@@ -246,8 +246,8 @@ function fillGame() {
 	tableBody.innerHTML = '';
 
 	Promise.all([
-		getGames('Pongy', window.user.blockchain_id),
-		getGames('Fighty', window.user.blockchain_id)
+		getGames('pongy', window.user.blockchain_id),
+		getGames('fighty', window.user.blockchain_id)
 	])
 	.then(([pongy_games, fighty_games]) => {
 		const games_dict = { ...pongy_games, ...fighty_games };
@@ -310,7 +310,7 @@ function fillGame() {
 }
 
 function getGames(gameType, instance) {
-	const url = `https://${window.IP}:3000/solidity/solidity/getgames/${instance}/${gameType}`;
+	const url = `https://${window.IP}:3000/solidity/solidity/get${gameType}games/${instance}/`;
 	return fetch(url, {
 		method: 'GET',
 		headers: {
@@ -327,12 +327,13 @@ function getGames(gameType, instance) {
 		const matchDictionary = {};
 		data.success.forEach(game => {
 			const info = {
-				timestamp: game[0],
-				player1: game[1],
-				player2: game[2],
-				score1: game[3],
-				score2: game[4],
-				tournament_id: game[5],
+				timestamp: game[1],
+				players: game[2],
+				scores: game[3],
+				player1: players[0],
+				player2: players[1],
+				score1: scores[0],
+				score2: scores[1],
 			}
 			matchDictionary[info.timestamp] = {
 				game_type: gameType,
@@ -340,10 +341,8 @@ function getGames(gameType, instance) {
 				player2: info.player2,
 				score1: info.score1,
 				score2: info.score2,
-				tournament_id: info.tournament_id
 			};
 		});
-
 
 		const sortedKeys = Object.keys(matchDictionary).sort((a, b) => a - b);
 		const sortedMatchDictionary = {};
