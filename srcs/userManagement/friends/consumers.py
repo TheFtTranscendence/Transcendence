@@ -293,7 +293,7 @@ class	SocialConsumer(AsyncWebsocketConsumer):
 				"player_2": target.id
 			}
 
-			response = requests.post(f"http://remote-players:8004/game/", json_payload)
+			response = requests.post(f"http://remote-players:8003/game/", json_payload)
 			response.raise_for_status()
 			data = response.json()
 
