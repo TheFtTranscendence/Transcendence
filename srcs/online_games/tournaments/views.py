@@ -35,7 +35,8 @@ class TournamentViewSet(viewsets.ModelViewSet):
 		tournaments = Tournament.objects.filter(status='ongoing', host=int(user_id), game_name=game_name)
 
 		if tournaments.exists():
-			return Response({'detail': True}, status=status.HTTP_200_OK)
+			tournament = tournaments.first()
+			return Response({'detail': True, 'tournament_id': tournament.id}, status=status.HTTP_200_OK)
 		else:
 			return Response({'detail': False}, status=status.HTTP_404_NOT_FOUND)
 		

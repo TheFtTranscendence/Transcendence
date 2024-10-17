@@ -8,14 +8,21 @@ class MatchmakingGame	{
 	onready = null;
 	// If u give both an onmove function and a moveset it will execute the function first and then the moveset
 	onmove = null;
+	/*	moveset_example = {
+			'w_keyup': () => w.pressed = true,
+			'w_keydown': () => w.pressed = false,
+			's_keyup': () => s.pressed = true,
+			's_keydown': () => s.pressed = false
+		}
+	*/
 	moveset = null;
 	oninfo = null;
 	onclose = null;
 	
-	//todo: implement this in the backend
+	//todo: implement in the back end to receive a message when a player disconencts
 	ondisconnect = null;
 
-	#performMoveSet (action)	{
+	#performMoveset (action)	{
 		const func = this.moveset[action];
 
 		if (func) {
@@ -75,7 +82,7 @@ class MatchmakingGame	{
 						this.onmove(msg.sender_id, msg.action)
 				}
 				if (this.moveset)	{
-					this.performMoveSet(msg.action, )
+					this.performMoveset(msg.action)
 				}
 			}	else if (msg.type === 'game_info' && this.oninfo)	{
 				if (this.oninfo)	{
@@ -86,10 +93,6 @@ class MatchmakingGame	{
 				}
 			}
 		};		
-	}
-
-	postScore(score)	{
-		this.socket.send(JSON.stringify({'action': 'leave', 'score': score}));
 	}
 
 	end()	{
