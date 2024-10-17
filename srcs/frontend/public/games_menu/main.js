@@ -93,20 +93,27 @@ async function main_menu_tournamentButton() {
 	console.log('Tournament button clicked')
 	clearMenu()	
 
-	const gameStatus = await window.getTournamentStatus();
-
-	if (window.location.hash == '#fighters' && !gameStatus) {
-		games_tournament_menu()
+	if (window.location.hash == '#fighters') {
+		const gameStatus = await window.getTournamentStatus("Fighty");
+		if (!gameStatus) {
+			games_tournament_menu()
+		}
+		else {
+			unloadScripts(window.menuScripts)
+			await loadScriptss(window.tournamentScripts)
+			tournament_loop()
+		}
 	}
-	else if (window.location.hash == '#game' && !gameStatus)
-	{
-		games_tournament_menu()
-	}
-	else
-	{
-		unloadScripts(window.menuScripts)
-		await loadScriptss(window.tournamentScripts)
-		tournament_loop()
+	else if (window.location.hash == '#game') {
+		const gameStatus = await window.getTournamentStatus("Pongy");
+		if (!gameStatus) {
+			games_tournament_menu()
+		}
+		else {
+			unloadScripts(window.menuScripts)
+			await loadScriptss(window.tournamentScripts)
+			tournament_loop()
+		}
 	}
 }
 
