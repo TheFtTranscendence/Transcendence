@@ -44,28 +44,16 @@ function clearTournament() {
 
 function next_game_players() {
 	let nextGamePlayers = [];
+	let nextPlayersSkins = [];
 
 	if (window.location.hash == '#fighters') {
-		nextGamePlayers = fightyTournamentData.getNextTournamentMatch()
+		[nextGamePlayers, nextPlayersSkins] = fightyTournamentData.getNextTournamentMatch()
 	}
 	else {
-		nextGamePlayers = pongyTournamentData.getNextTournamentMatch()
+		[nextGamePlayers, nextPlayersSkins] = pongyTournamentData.getNextTournamentMatch()
 	}
 
-	// Now log after the players are fetched and the array is populated
-
-	let names = [];
-	let skins = [];
-
-	nextGamePlayers.forEach(item => {
-		let name = item.slice(0, -1);
-		let skin = parseInt(item.slice(-1));
-
-		names.push(name);
-		skins.push(skin);
-	});
-
-	return [names, skins];
+	return [nextGamePlayers, nextPlayersSkins];
 }
 
 function next_game() {
@@ -210,18 +198,16 @@ async function show_bracket()
  
 	if (window.location.hash == '#fighters') {
 		players = fightyTournamentData.getBracketPlayerList()
-		nextMatch = fightyTournamentData.getNextTournamentMatch()
+		nextMatch = fightyTournamentData.getNextTournamentMatch()[0]
 		roundInfo = fightyTournamentData.getRoundInfo()
 		tournamentSize = fightyTournamentData.nrPlayers
 	}
 	else {
 		players = pongyTournamentData.getBracketPlayerList()
-		nextMatch = pongyTournamentData.getNextTournamentMatch()
+		nextMatch = pongyTournamentData.getNextTournamentMatch()[0]
 		roundInfo = pongyTournamentData.getRoundInfo()
 		tournamentSize = pongyTournamentData.nrPlayers
 	}
-
-	players = players.map(str => str.slice(0, -1));
 
 	// show divs
 	if (tournamentSize === 4)
@@ -292,7 +278,6 @@ async function show_bracket()
 			divId++
 		}
 	}
-	nextMatch = nextMatch.map(str => str.slice(0, -1));
 	document.getElementById("next-game-players").textContent = nextMatch[0] + " vs " + nextMatch[1]
 
 }
@@ -308,16 +293,6 @@ function shuffle_names(playerNames, playerSkins)
 
 	return [playerNames, playerSkins];
 }
-
-// async function unloadScripts(scripts) {
-
-// 	await scripts.forEach(script => {
-// 		const scriptElement = document.querySelector(`script[src="${script}"]`);
-// 		if (scriptElement) {
-// 			scriptElement.remove();
-// 		}
-// 	});
-// }
 
 function tournament_loop() {
 	
@@ -377,44 +352,6 @@ function tournament_loop() {
 	}
 }
 
-// async function storeTournament(namesAndSkins) {
-//     const data = {
-//         players: namesAndSkins
-//     };
-
-//     let url;
-//     if (window.location.hash == '#fighters') {
-//         url = `https://${window.IP}:3000/solidity/solidity/addtournament/${window.user.blockchain_id}/Fighty`;
-//         fightyTournamentData.setTournamentSize(namesAndSkins.length)
-//         fightyTournamentData.addStartingPlayers(namesAndSkins)
-//     } else {
-//         url = `https://${window.IP}:3000/solidity/solidity/addtournament/${window.user.blockchain_id}/Pongy`;
-//         pongyTournamentData.setTournamentSize(namesAndSkins.length)
-//         pongyTournamentData.addStartingPlayers(namesAndSkins)
-//     }
-
-//     console.log("Storing tournament:", JSON.stringify(data));
-
-//     // Use fetch to store the tournament and wait for the response
-//     const response = await fetch(url, {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify(data),
-//     });
-
-//     // Check if the response is okay
-//     if (!response.ok) {
-//         throw new Error(`Failed to store tournament: ${response.statusText}`);
-//     }
-
-// 	if (window.storeGame)
-// 		window.storeGame = false
-//     return response.json(); // Assuming the response is in JSON format
-// }
-
-
 async function start_tournament(playerNamesOrd, playerSkinsOrd) {
 	document.getElementById('games-tournament-menu').classList.add("hidden");
 
@@ -425,12 +362,16 @@ async function start_tournament(playerNamesOrd, playerSkinsOrd) {
 	if (window.location.hash == '#fighters') {
 		const gameStatus = await window.getTournamentStatus("Fighty");
 		if (!gameStatus) {
+			fightyTournamentData.setTournamentSize(window.playerNames.length)
+			fightyTournamentData.addStartingPlayers(window.playerNames, window.playerSkins)
 			fightyTournamentData.id = await window.storeTournament(window.playerNames, window.playerSkins, "Fighty");  
 		}
 	}
 	else if (window.location.hash == '#game') {
 		const gameStatus = await window.getTournamentStatus("Pongy");
 		if (!gameStatus) {
+			pongyTournamentData.setTournamentSize(window.playerNames.length)
+			pongyTournamentData.addStartingPlayers(window.playerNames, window.playerSkins)
 			pongyTournamentData.id = await window.storeTournament(window.playerNames, window.playerSkins, "Pongy"); 
 		}
 	}

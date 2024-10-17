@@ -215,10 +215,12 @@ window.frontendHealthCheck = false;
 /* ------------> FRONTEND TOURNAMENT MANAGMENT CLASSES START <------------ */
 
 class Match {
-    constructor(player1, player2 = null) { // can recieve 1 or 2 player names
+    constructor(player1, skins1, player2 = null, skins2 = null) { // can recieve 1 or 2 player names
         this.players = [player1];
-        if (player2) {
+		this.skins = [skins1];
+        if (player2 && skins2) {
             this.players.push(player2);
+            this.skins.push(player2);
         }
 		this.matchPlayed = false;
     }
@@ -261,7 +263,7 @@ class Tournament {
 	}
 
 	// Adds match for all players in first round
-	addStartingPlayers(playerList)
+	addStartingPlayers(playerList, skinsList)
 	{
 		if (playerList.length !== this.nrPlayers) {
             throw new Error(`The number of players must be ${this.nrPlayers}.`);
@@ -270,26 +272,29 @@ class Tournament {
         for (let i = 0; i < playerList.length; i += 2) {
             const player1 = playerList[i];
             const player2 = playerList[i + 1];
-            this.addMatch(player1, player2);
+			const skin1 = skinsList[i];
+			const skin2 = skinsList[i + 1];
+            this.addMatch(player1, skin1, player2, skin2);
         }
 	}
 
 	// Adds the winner of a game to the next match
-	addGameWinner(winner)
+	addGameWinner(winner, skin)
 	{
         for (let match of this.matchList) {
             if (match.players.length === 1) {
                 match.players.push(winner);
+				match.skins.push(skin);
                 return;
             }
         }
         // If no match with one player exists, create a new match with the winner of previous game
-		this.addMatch(winner);
+		this.addMatch(winner, skin);
 	}
 
 	// Adds a Match obj to the matchList with 1 or 2 players
-	addMatch(player1, player2 = null) {
-        const match = new Match(player1, player2);
+	addMatch(player1, skin1, player2 = null, skin2 = null) {
+        const match = new Match(player1, skin1, player2, skin2);
         this.matchList.push(match);
     }
 
@@ -299,7 +304,7 @@ class Tournament {
 		for (let match of this.matchList) {
             if (!match.matchPlayed) {
 				console.log("NEXT MATCH PLAYERS: ", match.players)
-                return match.players;
+                return [match.players, match.skins];
             }
         }
 		console.log("getNextTournamentMatch | NO MORE PLAYERS IN LIST")
@@ -393,48 +398,55 @@ class Tournament {
 	// In case frontend goes down this function retrieves the lost data from the database
 	async retriveTournamentInfo()
 	{
-		await this.getStartingPlayersFromDatabase()
-		await this.addGameWinnersFromDatabase()
+		const playersAndSkinsDict = await this.getStartingPlayersFromDatabase()
+		await this.addGameWinnersFromDatabase(playersAndSkinsDict)
 	}
 
 	// Gets tournament size information and stores them back in tournament class
 	// Gets initial players names from database and stores them back in matchList
 	async getStartingPlayersFromDatabase()
 	{
-		const databseInitialPlayers = await window.getTournamentPlayers();
+		const databseInitialData = await window.getTournamentPlayers();
+		const databseInitialPlayers = databseInitialData.player_list;
+
+		const databaseInitialSkins = []
 		
+		for (let i = 0; i < databseInitialPlayers.length; i++) {
+			databaseInitialSkins.push(databseInitialData.player_info[i].skin_id);
+		}		
+
 		if (databseInitialPlayers.length === 4)
 			this.setTournamentSize(4)
 		else
 			this.setTournamentSize(8)
 		
-		this.addStartingPlayers(databseInitialPlayers)
+		this.addStartingPlayers(databseInitialPlayers, databaseInitialSkins)
+
+		let playersAndSkinsDict = {}
+		for (let i = 0; i < databseInitialPlayers.length; i++) {
+			playersAndSkinsDict[databseInitialPlayers[i]] = databaseInitialSkins[i];
+		}
+		return playersAndSkinsDict
 	}
 
 	// Gets all match winners from database and stores them back in matchList
-	async addGameWinnersFromDatabase()
+	async addGameWinnersFromDatabase(playersAndSkinsDict)
 	{
-		const winnerList = []
-		const databaseTournamentRankings = await window.getTournamentRankings();
-		for (let player of databaseTournamentRankings) {
-			const loser = player;
-			const databaseAllGames = await window.getAllGames();
-			for (let i = databaseAllGames.length - 1; i >= 0; i--) {
-				if (loser === databaseAllGames[i][1]) {
-					winnerList.push(databaseAllGames[i][2])
-					break;
-				}
-				if (loser === databaseAllGames[i][2]) {
-					winnerList.push(databaseAllGames[i][1])
-					break;
-				}
-			}
-		}
-		for (let winner of winnerList) {
-			this.addGameWinner(winner)
+		const databaseTournamentWinners = await window.getTournamentWinners();
+
+		const databaseWinnerSkins = []
+
+		for (let i = 0; i < databaseTournamentWinners.length; i++)
+		{
+			databaseWinnerSkins.push(playersAndSkinsDict.databaseTournamentWinners[i])
 		}
 
-		this.setMatchesPlayedFromDatabase(winnerList.length)
+		for (let i = 0; i < databaseTournamentWinners.length; i++) {
+
+			this.addGameWinner(databaseTournamentWinners[i], databaseWinnerSkins[i])
+		}
+
+		this.setMatchesPlayedFromDatabase(databaseTournamentWinners.length)
 	}
 
 	// Sets the number of matches as already played acording to the number of winners
@@ -485,7 +497,7 @@ async function getTournamentPlayers() {
         return response.json();
     })
     .then(data => {
-        return data.players_list;
+        return data;
     })
     .catch(error => {
         throw new Error(error.message);
@@ -493,88 +505,26 @@ async function getTournamentPlayers() {
 }
 
 // Blockchain API call to get Tournament Rankings (wtv that means)
-async function getTournamentRankings() {
-    // let tournamentRakings = {}; // Default value
-    
-    // try {
-    //     let url;
-    //     // Check the hash in the URL and choose the correct API endpoint
-    //     if (window.location.hash == '#fighters') {
-    //         url = `https://${window.IP}:3000/solidity/solidity/getlasttournamentranking/${window.user.blockchain_id}/Fighty`;
-    //     } else {
-    //         url = `https://${window.IP}:3000/solidity/solidity/getlasttournamentranking/${window.user.blockchain_id}/Pongy`;
-    //     }
-        
-    //     // Use await to wait for the fetch request to complete
-    //     const response = await fetch(url, {
-    //         method: 'GET',
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //         }
-    //     });
+async function getTournamentWinners() {
 
-    //     // Check if the response is okay
-    //     if (!response.ok) {
-    //         throw new Error(`Error fetching data: ${response.statusText}`);
-    //     }
+	const url = 'http://' + window.IP + ':3000/online-games/tournaments/' + pongyTournamentData.id + '/winners/';
 
-    //     // Parse the response JSON
-    //     const data = await response.json();
-        
-    //     // Store the status from the response
-    //     tournamentRakings = data.success;
-
-    //     console.log('Current tournamentRakings:', tournamentRakings); // Log the gameStatus
-        
-    // } catch (error) {
-    //     // Handle any errors
-    //     console.error('Error:', error);
-    // }
-
-    // return tournamentRakings;
-}
-
-
-// Blockchain API call to get All Games
-async function getAllGames() {
-    // let allGames = {}; // Default value
-    
-    // try {
-    //     let url;
-    //     // Check the hash in the URL and choose the correct API endpoint
-    //     if (window.location.hash == '#fighters') {
-    //         url = `https://${window.IP}:3000/solidity/solidity/getgames/${window.user.blockchain_id}/Fighty`;
-    //     } else {
-    //         url = `https://${window.IP}:3000/solidity/solidity/getgames/${window.user.blockchain_id}/Pongy`;
-    //     }
-        
-    //     // Use await to wait for the fetch request to complete
-    //     const response = await fetch(url, {
-    //         method: 'GET',
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //         }
-    //     });
-
-    //     // Check if the response is okay
-    //     if (!response.ok) {
-    //         throw new Error(`Error fetching data: ${response.statusText}`);
-    //     }
-
-    //     // Parse the response JSON
-    //     const data = await response.json();
-        
-    //     // Store the status from the response
-    //     allGames = data.success;
-
-    //     console.log('Current allGames:', allGames); // Log the gameStatus
-        
-    // } catch (error) {
-    //     // Handle any errors
-    //     console.error('Error:', error);
-    // }
-
-    // return allGames;
+	return fetch(url, {
+		method: 'GET',
+	})
+	.then(response => {
+		if (!response.ok) {
+			return response.json().then(err => { throw err; });
+		}
+		return response.json();
+	})
+	.then(data => {
+		return data.winners;
+	})
+	.catch(error => {
+		throw new Error(error.message);
+	});
+		
 }
 
 // Blockchain API call to get Tournament Status
@@ -592,6 +542,10 @@ async function getTournamentStatus(gameName)
         return response.json();
     })
     .then(data => {
+		if (data.detail)
+		{
+			pongyTournamentData.id = data.id
+		}
         return data.detail;
     })
     .catch(error => {
@@ -611,11 +565,11 @@ async function storeTournament(playerNames, playerSkins, gameName)
     }
 
     const data = {
-        game_name: gameName,
-        number_of_players: playerNames.length,
-        host: window.user.id,
-        players_list: namesAndSkins,
-        player_info: skinsList
+        "game_name": gameName,
+        "number_of_players": playerNames.length,
+        "host": window.user.id,
+        "player_list": playerNames,
+        "player_info": skinsList,
     }
 
     return fetch(url, {
@@ -632,9 +586,11 @@ async function storeTournament(playerNames, playerSkins, gameName)
         return response.json();
     })
     .then(data => {
+		console.log("DATA: ", data)
         return data.id;
     })
     .catch(error => {
+		console.log("ERRORR: ", error)
         throw new Error(error.message);
     });
 }
