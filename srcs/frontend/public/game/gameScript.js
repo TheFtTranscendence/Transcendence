@@ -645,11 +645,11 @@ function endGame(vars)
 {
 	if (vars.gameVars.p1Score === vars.gameVars.maxPoints)
 	{
-		drawText("red", "50px ARCADECLASSIC", "player1 WINS !", (vars.canvasVars.canvasWidth / 2) - 160, (vars.canvasVars.canvasHeight / 2) - 130, vars)
+		drawText("red", "50px ARCADECLASSIC", vars.gameVars.p1Name + " WINS !", (vars.canvasVars.canvasWidth / 2) - 160, (vars.canvasVars.canvasHeight / 2) - 130, vars)
 	}
 	else if (vars.gameVars.p2Score === vars.gameVars.maxPoints)
 	{
-		drawText("blue", "50px ARCADECLASSIC", "player2 WINS !", (vars.canvasVars.canvasWidth / 2) - 160, (vars.canvasVars.canvasHeight / 2) - 130, vars)
+		drawText("blue", "50px ARCADECLASSIC", vars.gameVars.p2Name + " WINS !", (vars.canvasVars.canvasWidth / 2) - 160, (vars.canvasVars.canvasHeight / 2) - 130, vars)
 	}
 	vars.gameVars.gameFinish = true;
 	drawButton("FINISH", (vars.canvasVars.canvasWidth / 2) - 80, (vars.canvasVars.canvasHeight / 2) - 35, 160, 70, 30, "ARCADECLASSIC", vars);
