@@ -1,15 +1,12 @@
 function game2_changeSkinButton () {
-	console.log('Change Skin button clicked');
 	// Add functionality for changing the skin
 }
 
 function game2_matchmakingButton () {
-	console.log('Matchmaking button clicked');
 	// Add functionality for changing the skin
 }
 
 function game2_tournamentButton() {
-	console.log('Tournament button clicked');
 	// Add functionality for changing the skin
 }
 
@@ -40,7 +37,6 @@ function before_game()
 	window.localButton = document.getElementById('game2-button-local')
 	window.tournament = document.getElementById('game2-button-tournament')
 	
-	console.log('before game 2')
 
 	try {
 		document.getElementById('game2-menu-player-name').textContent = window.user.username

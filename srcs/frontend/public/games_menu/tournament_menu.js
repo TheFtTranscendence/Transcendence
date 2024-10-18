@@ -17,21 +17,18 @@ function clearTournamentMenu() {
 
 
 function tournament_backButton() {
-	console.log("Tournament Back button clicked");
 
 	clearTournamentMenu()
 	main_menu()
 }
 
 function tournament_menu_hashchange() {
-	console.log("Tournament HashChange");
 	clearTournamentMenu()
 	unloadScripts(window.menuScripts)
 }
 
 function tournament_extendPlayers() {
 
-	console.log("Extend Players button clicked");
 	
 	document.querySelectorAll('.games-tournament-player-info2').forEach(function(player) {
 		if (player.style.display === 'flex') {
@@ -43,7 +40,6 @@ function tournament_extendPlayers() {
 }
 
 async function tournament_play() {
-	console.log('Play button clicked')
 	
 	const playerNames = []
 	const playerSkins = []
@@ -53,7 +49,6 @@ async function tournament_play() {
 	else
 		nb_players = 4
 
-	console.log(nb_players)
 	for (n = 1; n <= nb_players; n++) {
 		const playerName = document.getElementById('games-tournament-player-name' + n).value.trim()
 		if (playerName.length == 0) {
@@ -70,8 +65,6 @@ async function tournament_play() {
         return
     }
 
-	console.log(playerNames)
-	console.log(playerSkins)
 
 	// Uncomment when scripts apply
 	clearTournamentMenu()
@@ -138,7 +131,6 @@ function handleButtonClick(event) {
 }
 
 function tournament_skinbutton(buttonId) {
-    console.log(`Skin Button clicked: ${buttonId}`);
 	
 	if (window.location.hash == '#fighters')
 	{

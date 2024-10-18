@@ -143,7 +143,6 @@ function Matchmaking_init_fighters(enemyName, enenmySkin, playerName, playerSkin
 
 async function Matchmaking_init_skins(guy, skin_nbr)
 {
-	console.log('settings skins for ', skin_nbr)
 	if (skin_nbr == undefined)
 		return ;
 	guy.sprites = {
@@ -189,7 +188,6 @@ function Matchmaking_reset_keys(v) {
 }
 
 async function Matchmaking_leave_game(v, force = false) {
-	console.log('hashchange game2');
 
 	clearInterval(v.g.gameInterval)
 	clearInterval(v.g.timerInterval)
@@ -282,7 +280,6 @@ async function storeMatch(v)
 	})
 	.then(responseData => {
 		// Log success and the data returned by the server (if any)
-		console.log("Game stored successfully:", responseData);
 	})
 	.catch(error => {
 		

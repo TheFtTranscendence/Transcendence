@@ -55,7 +55,6 @@ function navigate() {
 async function loadScript(src) {
     // Check if the script is already loaded
     const scriptElement = document.querySelector(`script[src="${src}"]`);
-    console.log("Script element -> ", scriptElement);
     
     if (scriptElement) {
         // If the script is already loaded, return a resolved promise

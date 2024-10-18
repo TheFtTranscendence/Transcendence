@@ -219,7 +219,6 @@ function set_online() {
 	window.social_socket.onmessage = async function(e) {
 		const data = JSON.parse(e.data);
 		
-		console.log("social socket: ", data);
 		await update_user_info();
 
 		switch (data.type) {
@@ -311,8 +310,6 @@ function set_online() {
 						document.getElementById('games').classList.remove("hidden")
 						unloadScripts(window.menuScripts)
 
-						console.log('sender', sender )
-						console.log('receiver', receiver )
 						
 						await PromiseloadScripts(window.matchmakingScripts)
 						Matchmaking_before_game(true, sender, receiver)

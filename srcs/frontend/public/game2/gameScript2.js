@@ -104,7 +104,6 @@ function detect_colision(Attacker, Victim, g) {
 		Attacker.attackbox.position.y + Attacker.attackbox.height >= Victim.position.y &&
 		Attacker.attackbox.position.y <= Victim.position.y + Victim.height)
 	{
-		console.log(Attacker.name + " attacked!")
 		Attacker.isAttacking = false
 		Victim.get_hit(Attacker, g)
 	}

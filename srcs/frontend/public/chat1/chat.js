@@ -79,13 +79,10 @@ function getMessages(friend) {
 			return response.json();
 		})
 		.then((data) => {
-			console.log('data ', data);
-			console.log('messages ', data.messages);
 			window.Messages = data.messages;
 			resolve(data.messages); // Resolve with messages or data as needed
 		})
 		.catch((error) => {
-			console.error('Error getting messages:', error);
 			toast_alert('Error getting messages: ' + (error.message || 'An unknown error occurred.'));
 			reject(error); // Pass the error to the reject
 		});
@@ -94,7 +91,6 @@ function getMessages(friend) {
 
 
 async function openChat(friend) {
-	console.log(friend)
 
 	// Clear previous chat content
 	window.chatContent.innerHTML = ''
@@ -106,7 +102,6 @@ async function openChat(friend) {
 	window.chat_socket.onmessage = function (e) {
 		
 		const data = JSON.parse(e.data);
-		console.log(data);
 		
 		if (data.chat_id == window.CurrentChatting_id)
 		{
@@ -124,33 +119,13 @@ async function openChat(friend) {
 
 	}
 
-	// Object.entries(window.user.friend_list).forEach((friend) => {
-	// 	friend.onmessage = null;
-	// });
-		
-	// window.user.friend_list[window.CurrentChatting].socket.onmessage = function(e) {
-	// 	const data = JSON.parse(e.data);
-	// 	console.log(data);
-	// 	window.Messages.push(data)
-	// 	const messageDiv = document.createElement('div')
-	// 	messageDiv.classList.add('message-item', 'received-message')
-	// 	messageDiv.innerHTML = `
-	// 	<strong>${data.sender}:</strong> ${data.content}
-	// 	`
-
-	// 	window.chatContent.appendChild(messageDiv)
-	// 	window.chatContent.scrollTop = window.chatContent.scrollHeight
-	// }
-
 	// Clear previous chat content
 	window.chatContent.innerHTML = ''
 
-	console.log('window messages ', window.Messages)
 
 	// Filter the messages for the selected friend
 	const filteredMessages = window.Messages.filter(message => message.sender === friend[0] || message.sender === window.user.username)
 
-	console.log('filtered messages ', filteredMessages)
 
 	// Display the messages in the chat content div
 	filteredMessages.forEach(message => {
@@ -170,7 +145,6 @@ async function openChat(friend) {
 		window.chatContent.appendChild(messageDiv)
 	})
 
-	console.log(`Chat with ${friend[0]} opened`)
 
 	window.chatContent.scrollTop = window.chatContent.scrollHeight
 
@@ -195,10 +169,8 @@ function keypress(event) {
 function displayChatList(chatListContainer, friendList) {
 	window.chatDivs = []
 
-	console.log("friend list", friendList)
 
 	Object.entries(friendList).forEach(friend => {
-		console.log("friend", friend)
 		const chatDiv = document.createElement('div')
 		chatDiv.classList.add('chat-item')
 
@@ -243,14 +215,12 @@ async function chat_confirmButton() {
 		toast_alert('Username is yourself')
 	}
 	await get_user_info(userInput).then((response) => {
-		console.log('response ', response)
 		user_to_send = response.id
 	}).catch((error) => {
 		toast_alert('User not found', error)
 		return 
 	})
 
-	console.log('holder ', holder)
 
 	switch (holder) {
 		case "add": send_friend_request(user_to_send); toast_alert('Friend request sent')

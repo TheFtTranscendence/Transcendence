@@ -1,13 +1,10 @@
 function matchmaking_hashchange() {
-	console.log('hashchange game2');
 	window.removeEventListener('hashchange', matchmaking_hashchange)
 	toast_alert('Matchmaking cancelled')
 }
 
 async function side_get_user_info(id) {
 	const data = await get_user_info(id)
-	console.log("Data username:", data.username);
-	console.log("Data fighty_skin:", data.preferences.fighty_skin);
 
 	return {
 		username: data.username,
@@ -28,8 +25,6 @@ function Matchmaking_invite(v, sender, receiver) {
 	)
 
 	
-	console.log('sender', sender )
-	console.log('receiver', receiver )
 
 
 	v.player = fighters.player
@@ -43,7 +38,6 @@ function Matchmaking_invite(v, sender, receiver) {
 	document.getElementById('div-game2-area').classList.remove("hidden");
 
 
-	console.log('game id in invite ', v.s.gameId)
 
 	v.g.invite = true
 
@@ -54,7 +48,6 @@ function Matchmaking_invite(v, sender, receiver) {
 
 function Matchmaking_queue(v)
 {
-	console.log('connecting to WebSocket')
 	v.s.queue_socket = new WebSocket(`wss://${window.IP}:3000/remote-players/ws/queue/?game=Fighty&user_id=` + window.user.id);
 
 	window.addEventListener('hashchange', matchmaking_hashchange)
@@ -62,7 +55,6 @@ function Matchmaking_queue(v)
 	
 	v.s.queue_socket.onmessage = async function(event) {
 		msg = JSON.parse(event.data)
-		console.log(msg)
 		
 		if (msg.type == 'error') 
 			return ;
@@ -70,7 +62,6 @@ function Matchmaking_queue(v)
 		if (window.user.id == msg.player1 ) {
 			
 			const user2 = await side_get_user_info(msg.player2)
-			console.log('user2', user2)
 			
 			fighters = Matchmaking_init_fighters(
 				user2.username,
@@ -85,7 +76,6 @@ function Matchmaking_queue(v)
 
 		} else {
 			const user1 = await side_get_user_info(msg.player1)
-			console.log('user1', user1)
 
 			fighters = Matchmaking_init_fighters(
 				window.user.username,
@@ -138,7 +128,6 @@ function send_update(v, force = false) {
 		// time: v.g.time - 1
 	}
 	
-	// console.log('sending game state from ' + window.user.id)
 	
 	v.s.game_socket.send(JSON.stringify({type: 'game_state', stats: stats}))
 
@@ -152,15 +141,11 @@ function Matchmaking_setup_socket(v) {
 	
 	v.s.game_socket.onmessage = function(event) {
 		msg = JSON.parse(event.data)
-		console.log(window.user.id, " received: ", msg)
 		
 		if (msg.type == 'ready_msg')
 		{
 			v.g.invite = false
 			v.s.socketupdate = window.setInterval(() => {send_update(v)}, 1000)
-			console.log("AAAAAAAAAAAAAAAAHHHHHHHHHHH")
-			console.log("AAAAAAAAAAAAAAAAHHHHHHHHHHH")
-			console.log("AAAAAAAAAAAAAAAAHHHHHHHHHHH")
 			toast_alert('Game started!!')
 			return ;
 		}
@@ -199,7 +184,6 @@ function Matchmaking_setup_socket(v) {
 		else if (msg.type == 'game_state')
 		{
 
-			console.log("sender", msg.stats.sender)
 			
 			v.player.health = msg.stats.health_p1
 			v.enemy.health = msg.stats.health_p2

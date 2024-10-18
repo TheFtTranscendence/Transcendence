@@ -176,7 +176,6 @@ function clearBracket()
 
 function leaveTournament()
 {
-	console.log("heree clear tournament")
 
 	// Make sure you're removing the exact listener added previously
 	window.removeEventListener('hashchange', clearTournament); 

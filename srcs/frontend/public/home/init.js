@@ -296,8 +296,6 @@ async function acceptFightyGameInvite(button, id, UserName, skin, game_id) {
 	document.getElementById('games').classList.remove("hidden")
 	unloadScripts(window.menuScripts)
 	
-	console.log('sender', sender )
-	console.log('receiver', receiver )
 	
 	await PromiseloadScripts(window.matchmakingScripts)
 	Matchmaking_before_game(true, sender, receiver) 
@@ -344,103 +342,12 @@ function declineFriendRequest(button, sender_id) {
 	deny_friend_request(sender_id)
 }
 
-// match history
-// function populateUserDropdown() {
-// 	const userSelect = document.getElementById("userSelect");
-
-// 	userSelect.innerHTML = '';
-	
-// 	const currentUserOption = document.createElement("option");
-// 	currentUserOption.value = window.user.username;
-// 	currentUserOption.textContent = window.user.username; // Display the current user's username
-// 	userSelect.appendChild(currentUserOption);
-
-// 	for (const username in window.user.friend_list) {
-// 		const option = document.createElement("option");
-// 		option.value = username;
-// 		option.textContent = username;
-// 		userSelect.appendChild(option);
-// 	}
-// }
-
-// async function updateContent(selectedUser) {
-// 	const tableBody = document.getElementById("gameHistoryTableBody");
-// 	tableBody.innerHTML = '';
-
-// 	const selectedUserInfo = await get_user_info(selectedUser);
-
-// 	Promise.all([
-// 		getGames('Pongy', selectedUserInfo.blockchain_id),
-// 		getGames('Fighty', selectedUserInfo.blockchain_id)
-// 	])
-// 	.then(([pongy_games, fighty_games]) => {
-// 		const games_dict = { ...pongy_games, ...fighty_games };
-
-// 		if (Object.keys(games_dict).length > 0) {
-// 			const timestamps = Object.keys(games_dict).sort((a, b) => a - b);
-// 			tableBody.innerHTML = '';
-
-// 			for (const timestamp of timestamps) {
-// 				let result = '';
-
-// 				if (selectedUser.username === games_dict[timestamp].player1 || selectedUser.username === games_dict[timestamp].player2) {
-// 					if (games_dict[timestamp].score1 > games_dict[timestamp].score2 && games_dict[timestamp].player1 === selectedUser.username ) {
-// 						result = 'Win';
-// 						window.scores.wins = window.scores.wins + 1;
-// 					} else if (games_dict[timestamp].score1 < games_dict[timestamp].score2 && games_dict[timestamp].player2 === selectedUser.username ) {
-// 						result = 'Win';
-// 						window.scores.wins = window.scores.wins + 1;
-// 					} else {
-// 						window.scores.losses = window.scores.losses + 1;
-// 						result = 'Loss';
-// 					}
-// 				} else {
-// 					result = 'N/A';
-// 				}
-
-// 				let game_name = '';
-
-// 				if (games_dict[timestamp].tournament_id != -1) {
-// 					game_name = games_dict[timestamp].game_type + ' Tournament' + games_dict[timestamp].tournament_id;
-// 				}	else {
-// 					game_name = games_dict[timestamp].game_type;
-// 				}
-
-// 				const newRow = document.createElement("tr");
-// 				newRow.innerHTML = `
-// 					<td>${game_name}</td>
-// 					<td>${games_dict[timestamp].player1}</td>
-// 					<td>${games_dict[timestamp].player2}</td>
-// 					<td>${games_dict[timestamp].score1}</td>
-// 					<td>${games_dict[timestamp].score2}</td>
-// 					<td>${result}</td>
-// 				`;
-
-// 				tableBody.appendChild(newRow);
-// 			}
-// 		} else {
-// 			const noDataRow = document.createElement("tr");
-// 			noDataRow.innerHTML = '<td colspan="7" class="text-center">No data available.</td>';
-// 			tableBody.appendChild(noDataRow);
-// 			window.scores.wins = 0;
-// 			window.scores.losses = 0;
-// 		}
-// 		fillWinLoss()
-// 	})
-// 	.catch(error => {
-// 		console.error("Error fetching games:", error.message || "An unknown error occurred");
-// 	});
-// }
-
 async function checkTournamentStatus()
 {
-	console.log("HERE CHECKING TOURNEY DATABASE")
 	
 	let fightyStatus = await window.getTournamentStatus("Fighty")
 	let pongyStatus = await window.getTournamentStatus("Pongy")
 
-	console.log("FIGHTY STATUS: ", fightyStatus)
-	console.log("PONGY STATUS: ", pongyStatus)
 	
 	if (fightyStatus)
 		fightyTournamentData.retriveTournamentInfo()
@@ -466,7 +373,6 @@ async function loadData() {
 			const tableBody = document.querySelector('#resultsTable tbody');
 			tableBody.innerHTML = '';
 
-			console.log(data);
 			const results = data.success;
 			results.forEach(result => {
 				const row = document.createElement('tr');
@@ -480,7 +386,6 @@ async function loadData() {
 					`;
 				}
 				else {
-					console.log(result)
 					const tournamentMatches = result[3];
 					tournamentMatches.forEach(match => {
 						const matchRow = document.createElement('tr');

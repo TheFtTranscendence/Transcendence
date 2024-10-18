@@ -1,6 +1,5 @@
 function Matchmaking_startGame2(v) {
 	
-	console.log("HELP BITCH")
 
 	window.addEventListener('keydown', Matchmaking_game2_keydown)
 	window.addEventListener('keyup', Matchmaking_game2_keyup)
@@ -107,7 +106,6 @@ function Matchmaking_detect_colision(Attacker, Victim, g) {
 		Attacker.attackbox.position.y + Attacker.attackbox.height >= Victim.position.y &&
 		Attacker.attackbox.position.y <= Victim.position.y + Victim.height)
 	{
-		console.log(Attacker.name + " attacked!")
 		Attacker.isAttacking = false
 		Victim.get_hit(Attacker, g)
 	}

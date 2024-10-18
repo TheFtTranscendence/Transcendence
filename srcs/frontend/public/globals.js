@@ -302,11 +302,9 @@ class Tournament {
 	{
 		for (let match of this.matchList) {
             if (!match.matchPlayed) {
-				console.log("NEXT MATCH PLAYERS: ", match.players)
                 return [match.players, match.skins];
             }
         }
-		console.log("getNextTournamentMatch | NO MORE PLAYERS IN LIST")
 	}
 
 	// Sets a match as played
@@ -318,7 +316,6 @@ class Tournament {
 				this.matchCounter++;
             }
         }
-		console.log("setMatchAsPlayed | DID NOT FIND MATCH TO SET HAS PLAYED")
 	}
 
 	// Return a list with the player names ready to be shown in the tournament bracket
@@ -353,7 +350,6 @@ class Tournament {
 					return match.players[0]
 			}
 		}
-		console.log("getTournamentWinner | NO WINNER FOUND")
 	}
 
 	getFinalTournamentForBlockchain()
@@ -379,7 +375,6 @@ class Tournament {
 			finalTournamentForBlockchain.games.push(game)
 		}
 
-		console.log(finalTournamentForBlockchain)
 
 		return finalTournamentForBlockchain
 	}
@@ -467,9 +462,6 @@ class Tournament {
 		const databaseTournamentWinners = await window.getTournamentWinners();
 
 		const databaseWinnerSkins = []
-
-		console.log("playersAndSkinsDict: ", playersAndSkinsDict)
-		console.log("databaseTournamentWinners: ", databaseTournamentWinners)
 
 		for (let i = 0; i < databaseTournamentWinners.length; i++)
 		{
@@ -625,11 +617,9 @@ async function storeTournament(playerNames, playerSkins, gameName)
         return response.json();
     })
     .then(data => {
-		console.log("DATA: ", data)
         return data.id;
     })
     .catch(error => {
-		console.log("ERRORR: ", error)
         throw new Error(error.message);
     });
 }
@@ -649,7 +639,6 @@ async function getFinalTournamentPongy() {
         }
 
         const data = await response.json();
-		console.log("MINE ", data)
         return data;  
 
 
@@ -686,11 +675,6 @@ async function storeTournamentBlockchainPongy()
 	const url = `https://${window.IP}:3000/solidity/solidity/addtournament/${window.user.blockchain_id}/Pongy`;
 	const tournament = pongyTournamentData.getFinalTournamentForBlockchain()
 
-	console.log("TOURNAMENT TO BE STORED")
-	console.log("------------------")
-	console.log("Tournament", tournament)
-	console.log("------------------")
-
 	fetch(url, {
 		method: 'POST',
 		headers: {
@@ -707,12 +691,10 @@ async function storeTournamentBlockchainPongy()
 		}
 	})
 	.then(responseData => {
-		// Log success and the data returned by the server (if any)
-		console.log("Tournament stored successfully:", responseData);
+
 	})
 	.catch(error => {
-		// Log any error that happens during the fetch request
-		console.error("Error storing the Tournament:", error);
+
 	});
 }
 
@@ -722,7 +704,6 @@ async function storeTournamentBlockchainFighty()
 	const url = `https://${window.IP}:3000/solidity/solidity/addtournament/${window.user.blockchain_id}/Fighty`;
 	const tournament = fightyTournamentData.getFinalTournamentForBlockchain()
 
-	console.log(tournament)
 
 	fetch(url, {
 		method: 'POST',
@@ -740,12 +721,10 @@ async function storeTournamentBlockchainFighty()
 		}
 	})
 	.then(responseData => {
-		// Log success and the data returned by the server (if any)
-		console.log("Tournament stored successfully:", responseData);
+
 	})
 	.catch(error => {
-		// Log any error that happens during the fetch request
-		console.error("Error storing the Tournament:", error);
+
 	});
 }
 

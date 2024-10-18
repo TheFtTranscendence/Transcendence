@@ -26,7 +26,6 @@ function game_hashchange(vars)
 
 async function cleanUpAfterFinish(vars)
 {
-	console.log("cleanup Game");
 	
 	if (vars.gameVars.matchmakingGame)
 	{
@@ -192,13 +191,6 @@ function loadImage(src, callback)
 
 function startGame(p1Name, p2Name, p1Skin, p2Skin, p1SkinId, p2SkinId, tournamentGame)
 {
-	// if (!window.isGameActive)
-	// 	window.isGameActive = true
-	// else
-	// {
-	// 	console.log("GAME ALREADY FUCKING HAPPENING")
-	// 	return
-	// }
 	const vars = initVars();
 
 	vars.gameVars.tournamentGame = tournamentGame;
@@ -711,11 +703,8 @@ function startMatchmakingLobby(data)
 
 function initMatchmakingGame(vars, data)
 {
-	// console.log("AT initMatchmakingGame")
 	vars.gameVars.p1Name = data.users_info[0].username;
 	vars.gameVars.p2Name = data.users_info[1].username;
-	// 	vars.gameVars.p1SkinId = p1SkinId;
-	// 	vars.gameVars.p2SkinId = p2SkinId;
 	vars.mm.p1SkinId = data.users_info[0].user_info.skin_id
 	vars.mm.p2SkinId = data.users_info[1].user_info.skin_id
 	vars.paddleVars.p1PaddleSkin.src = window.game1Skins[vars.mm.p1SkinId];
@@ -732,7 +721,6 @@ function initMatchmakingGame(vars, data)
 
 function Matchmaking_setup_socket(vars) {
 	
-	// console.log("AT Matchmaking_setup_socket")
 	vars.mm.game_socket = new WebSocket(`wss://${window.IP}:3000/online-games/ws/games/${vars.mm.gameId}/`);
 	
 	vars.mm.game_socket.onopen = function(event) {
@@ -744,7 +732,6 @@ function Matchmaking_setup_socket(vars) {
 
 	vars.mm.game_socket.onmessage = function(event) {
 		msg = JSON.parse(event.data)
-		// console.log("MSG -> ", msg)
 		if (msg.type === "GameReady")
 		{
 			clearInterval(vars.IntervalVars.lobbyLoop);
@@ -773,7 +760,6 @@ function Matchmaking_setup_socket(vars) {
 
 function matchmakingLobby(vars)
 {
-	// console.log("AT matchmakingLobby")
 	if (vars.buttonVars.buttonState === 0)
 	{
 		drawButton("READY", (vars.canvasVars.canvasWidth / 2) - 80, (vars.canvasVars.canvasHeight / 2) - 35, 160, 70, 40, "ARCADECLASSIC", vars);

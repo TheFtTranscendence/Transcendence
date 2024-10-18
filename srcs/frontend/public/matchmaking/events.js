@@ -1,11 +1,9 @@
 function Matchmaking_game2_keydown(event) {
-	console.log("SENDIND aahh")
 	
 	if (window.user.id == v.s.player1)
 	{
 		switch (event.key) {
 			case 'd':
-				console.log("SENDIND D")
 				v.s.game_socket.send(JSON.stringify({type: 'move', player_id: window.user.id, action: 'd_keydown'}))
 				break
 	
@@ -26,7 +24,6 @@ function Matchmaking_game2_keydown(event) {
 	{
 		switch (event.key) {
 			case 'd':
-				console.log("SENDIND D")
 				v.s.game_socket.send(JSON.stringify({type: 'move', player_id: window.user.id, action: 'ArrowRight_keydown'}))
 				break
 	
@@ -82,7 +79,6 @@ function Matchmaking_game2_keyup(event) {
 }
 
 function Matchmaking_game2_hashchange(event) {
-	console.log('leaving game')
 	Matchmaking_leave_game(v, true)
 	
 }

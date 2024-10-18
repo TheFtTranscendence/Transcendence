@@ -27,7 +27,6 @@ function joinQueue(game_name, on_find_function, on_player_join_function = null, 
 					on_player_leave_function(user_id);
 			}
 		}	else	{
-			console.log("AT FIND FUNCTION")
 			on_find_function(data)
 		}
 	}

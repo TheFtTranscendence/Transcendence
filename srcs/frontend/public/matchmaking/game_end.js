@@ -33,7 +33,6 @@ async function Matchmaking_game_end_winner(v, winner, loser) {
 	v.shop.update_frame(v.g.c)
 	v.player.draw(v.g.c)
 	v.enemy.draw(v.g.c)
-	console.log('Players drawn')
 	await Matchmaking_sleep(1000)
 
 	// if (winner.attacking == true) {
@@ -84,7 +83,6 @@ async function Matchmaking_game_end_winner(v, winner, loser) {
 		
 	}, 1000 / v.g.fps)
 	
-	console.log('Game ending sequence ended')
 
 	document.querySelector('#game2-end-text').innerHTML = winner.name + ' wins!\nPRESS X TO LEAVE'
 	document.querySelector('#game2-end-text').style.display = 'flex'
@@ -98,7 +96,6 @@ async function Matchmaking_game_end_winner(v, winner, loser) {
 	Matchmaking_leave_game(v)
 
 	
-	console.log('Game Ended!')
 }
 
 async function Matchmaking_game_end_tie(v) {

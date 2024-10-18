@@ -21,7 +21,6 @@ function local_menu_hashchange() {
 }
 
 function local_changeSkinButton1() {
-	console.log('Change Skin button 1 clicked');
 
 	if (window.location.hash == '#fighters') {
 		if (window.player1Skin == window.game2SkinsPreviews.length - 1)
@@ -43,7 +42,6 @@ function local_changeSkinButton1() {
 }
 
 function local_changeSkinButton2() {
-	console.log('Change Skin button 2 clicked');
 
 	if (window.location.hash == '#fighters') {
 		if (window.player2Skin == window.game2SkinsPreviews.length - 1)

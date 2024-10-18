@@ -32,7 +32,6 @@ async function game_end_winner(v, winner, loser) {
 	v.shop.update_frame(v.g.c)
 	v.player.draw(v.g.c)
 	v.enemy.draw(v.g.c)
-	console.log('Players drawn')
 	await sleep(1000)
 
 	// if (winner.attacking == true) {
@@ -81,7 +80,6 @@ async function game_end_winner(v, winner, loser) {
 		
 	}, 1000 / v.g.fps)
 	
-	console.log('Game ending sequence ended')
 
 	document.querySelector('#game2-end-text').innerHTML = winner.name + ' wins!\nPRESS X TO LEAVE'
 	document.querySelector('#game2-end-text').style.display = 'flex'
@@ -94,7 +92,6 @@ async function game_end_winner(v, winner, loser) {
 
 	// leave_game(v)
 	
-	console.log('Game Ended!')
 	leave_game(v)
 }
 
@@ -126,7 +123,7 @@ async function game_end_tie(v) {
 		v.enemy.update(v.g)
 	}
 	, 1000 / v.g.fps)
-	
+
 	document.querySelector('#game2-end-text').innerHTML = 'Tie!\nPRESS X TO LEAVE'
 	document.querySelector('#game2-end-text').style.display = 'flex'
 

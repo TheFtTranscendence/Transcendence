@@ -7,7 +7,6 @@ function clearMenu() {
 	window.localButton.removeEventListener('click', main_menu_localButton)
 	window.tournament.removeEventListener('click', main_menu_tournamentButton)
 
-	console.log("CLEAR MENU LISTNERS")
 	
 	document.getElementById('games-menu-area').classList.add("hidden")
 }
@@ -20,7 +19,6 @@ function games_menu_hashchange() {
 }
 
 async function main_menu_changeSkinButton () {
-	console.log('Change Skin button clicked')
 
 	if (window.location.hash == '#fighters') {
 
@@ -52,8 +50,6 @@ function areScriptsLoaded(scripts) {
 }
 
 async function main_menu_matchmakingButton () {
-	console.log('Matchmaking button clicked')
-	console.log("GAMES GOING ON COUNTER ->", window.gamesOnCounter)
 	if (window.location.hash == '#fighters') {
 		clearMenu()
 		unloadScripts(window.menuScripts)
@@ -76,7 +72,6 @@ async function main_menu_matchmakingButton () {
 }
 
 async function main_menu_tournamentButton() {
-	console.log('Tournament button clicked')
 	clearMenu()	
 
 	if (window.location.hash == '#fighters') {
@@ -108,7 +103,6 @@ async function main_menu_tournamentButton() {
 }
 
 function main_menu_localButton() {
-	console.log('Local button clicked')
 	clearMenu()
 	games_local_menu()
 }
@@ -131,7 +125,6 @@ function main_menu() {
 		document.getElementById('games-menu-selected-skin').style.backgroundImage = "url('" + window.game1SkinsPreview[window.user.preferences.pongy_skin] + "')" 
 	}
 
-	console.log("AT MAIN MENU ->")
 
 	window.addEventListener('hashchange', games_menu_hashchange)
 	
