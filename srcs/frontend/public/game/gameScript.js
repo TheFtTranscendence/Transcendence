@@ -33,6 +33,8 @@ async function cleanUpAfterFinish(vars)
 		window.removeEventListener("keyup", vars.eventHandlers.eventKeyUpMatchmaking);
 		window.removeEventListener("keydown", vars.eventHandlers.eventKeyDownMatchmaking);
 		vars.canvasVars.canvas.removeEventListener("click", vars.eventHandlers.eventCanvasClickMatchmaking);
+		clearInterval(vars.IntervalVars.lobbyLoop);
+		await storeMatch(vars);
 		vars.mm.game_socket.close()
 	}
 	else
