@@ -83,6 +83,6 @@ function Matchmaking_game2_keyup(event) {
 
 function Matchmaking_game2_hashchange(event) {
 	console.log('leaving game')
-	Matchmaking_leave_game(v)
+	Matchmaking_leave_game(v, true)
 	
 }

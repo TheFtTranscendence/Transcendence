@@ -57,16 +57,16 @@ function next_game_players() {
 
 async function next_game() {
 	
-	console.log("-------------------")
-	console.log("TOURNAMENT COUNTER", window.tournamentC)
-	console.log("-------------------")
+	// console.log("-------------------")
+	// console.log("TOURNAMENT COUNTER", window.tournamentC)
+	// console.log("-------------------")
 	
-	window.tournamentC++;
-	if (window.tournamentC > 2)
-	{
-		window.tournamentC--;
-		return
-	}
+	// window.tournamentC++;
+	// if (window.tournamentC > 2)
+	// {
+	// 	window.tournamentC--;
+	// 	return
+	// }
 	document.getElementById('next-game-button').removeEventListener('click', next_game)
 
 	let playerNames = [];
