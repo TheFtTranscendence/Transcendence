@@ -41,10 +41,15 @@ function navigate() {
 			break;
 	}
 
+	
 	document.getElementById(element).classList.remove("hidden");
 	if (element === "games")
 		unloadScripts(scripts)
-	loadScripts(scripts, startFunction);
+	if (window.invite_hash_change)	{
+		window.invite_hash_change = false;		
+	}	else	{
+		loadScripts(scripts, startFunction);
+	}
 }
 
 

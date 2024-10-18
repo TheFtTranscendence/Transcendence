@@ -208,17 +208,17 @@ function addNotification(notificationText) {
 	tableBody.insertBefore(newRow, tableBody.firstChild);
 }
 
-function addPongyGameInvite(data) {
+function addPongyGameInvite(game_id, sender_username) {
 	const tableBody = document.getElementById("notificationsTableBody");
 	const newRow = document.createElement("tr");
 	
-	notificationText = "TEST"
+	notificationText = "You've been invited by " + sender_username + " to a game of pongy!"
 	newRow.innerHTML = `
 		<td>
 			<div class="notification-row">
 				<span>${notificationText}</span>
 				<div>
-					<button class="btn btn-success btn-sm ms-2" onclick="acceptPongyGameInvite(this)">Accept</button>
+					<button class="btn btn-success btn-sm ms-2" onclick="acceptPongyGameInvite(this, ${game_id})">Accept</button>
 					<button class="btn btn-danger btn-sm" onclick="declinePongyGameInvite(this)">Decline</button>
 				</div>
 			</div>
@@ -228,25 +228,31 @@ function addPongyGameInvite(data) {
 	tableBody.insertBefore(newRow, tableBody.firstChild);
 }
 
-function acceptPongyGameInvite(button) {
+async function acceptPongyGameInvite(button, game_id) {
 	const buttons = button.parentElement.querySelectorAll('button');
 	buttons.forEach(btn => btn.remove());
-	alert("Notification accepted!");
-	// todo: Add further logic for accepting the notification
+
+	window.invite_hash_change = true;
+	window.location.hash = '#game'
+
+	data = {
+		game_id: game_id
+	}
+
+	await PromiseloadScripts(window.gameScripts);
+	startMatchmakingLobby(data)
 }
 
 function declinePongyGameInvite(button) {
 	const buttons = button.parentElement.querySelectorAll('button');
 	buttons.forEach(btn => btn.remove());
-	alert("Notification declined!");
-	// todo: Add further logic for declining the notification
 }
 
 function addFightyGameInvite(sender) {
 	const tableBody = document.getElementById("notificationsTableBody");
 	const newRow = document.createElement("tr");
 	
-	notificationText = "You've been invited by " + sender.username + "!"
+	notificationText = "You've been invited by " + sender.username + " to a game of fighty!"
 	newRow.innerHTML = `
 		<td>
 			<div class="notification-row">

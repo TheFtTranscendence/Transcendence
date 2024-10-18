@@ -2,6 +2,8 @@ window.authScripts = [
 	// 'auth/init.js'
 ]
 
+window.invite_hash_change = false;
+
 window.chatScripts = [
 	'chat1/chat.js',
 ];

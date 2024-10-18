@@ -25,6 +25,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 
 			await self.accept()
 		except Game.DoesNotExist:
+			logger.info("Game does not exist")
 			await self.send(text_data=json.dumps({
 				'error': 'Game not found.'
 			}))
@@ -35,11 +36,6 @@ class GameConsumer(AsyncWebsocketConsumer):
 
 	async def disconnect(self, close_code, score=None):
 		try:
-			# if close_code == 3000 and self.game.status == 'ongoing':
-			# 	for players in self.game.game_players.all():
-			# 		#todo: upload the game to the block_chain
-			# 	await sync_to_async(self.game.change_status)('completed')
-
 			game_player = await GamePlayer.objects.get(user=self.user, game=self.game)
 			game_player.delete()
 

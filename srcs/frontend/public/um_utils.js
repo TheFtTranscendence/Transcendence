@@ -209,8 +209,8 @@ function update_user_in_socket() {
 
 //* Im updating the entire user every time there is a small update, this is obviously not the best way to do it, but it works well enough for our project
 function set_online() {
-	window.social_socket = new WebSocket(`wss://${window.IP}:3000/user-management/ws/social/?user=${window.user.username}`);
-	window.chat_socket = new WebSocket(`wss://${window.IP}:3000/chat/ws/chat/?user=${window.user.username}`);
+	window.social_socket = window.social_socket || new WebSocket(`wss://${window.IP}:3000/user-management/ws/social/?user=${window.user.username}`);
+	window.chat_socket = window.chat_socket || new WebSocket(`wss://${window.IP}:3000/chat/ws/chat/?user=${window.user.username}`);
 
 	window.chat_socket.onopen = function(event) {
 		_update_user_chats();
@@ -327,6 +327,18 @@ function set_online() {
 							skin: sender.preferences.fighty_skin,
 							game_id: data.game_id
 						})
+					}
+				} else if (data.game == 'pongy') {
+					if (window.user.id == data.player1)	{
+						window.invite_hash_change = true;
+
+						window.location.hash = '#game'
+						await PromiseloadScripts(window.gameScripts);
+						startMatchmakingLobby(data)
+					}	else	{
+						const sender = await get_user_info(data.player1)
+
+						addPongyGameInvite(data.game_id, sender.username)
 					}
 				}
 				new_user = await get_user_info(data.player1)

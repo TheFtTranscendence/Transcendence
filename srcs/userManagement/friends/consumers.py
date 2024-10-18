@@ -300,35 +300,62 @@ class	SocialConsumer(AsyncWebsocketConsumer):
 
 			target = await self._getUser(id=target_id)
 
-			json_payload = {
-				"player_1": self.user.id,
-				"player_2": target.id
-			}
 
-			response = requests.post(f"http://remote-players:8003/game/", json_payload)
+			if game == 'fighty':
+				json_payload = {
+					"player_1": self.user.id,
+					"player_2": target.id
+				}
+				response = requests.post(f"http://remote-players:8003/game/", json_payload)
+			else:
+				json_payload = {
+					"game_name": "pongy",
+					"game_size": 2
+				}
+				response = requests.post(f"http://online-games:8004/games/", json_payload)	
 			response.raise_for_status()
 			data = response.json()
 
 			game_id = data['id']
 
-			await self.send(json.dumps({
-				'type': 'game_invite',
-				'game': game,
-				'game_id': game_id,
-				'player1': self.user.id,
-				'player2': target.id,
-			}))
-			group_name = f"s_{target.id}"
-			await self.channel_layer.group_send(
-				group_name,
-				{
+			if game == 'fighty':
+				await self.send(json.dumps({
 					'type': 'game_invite',
 					'game': game,
 					'game_id': game_id,
 					'player1': self.user.id,
 					'player2': target.id,
-				}
-			)
+				}))
+				group_name = f"s_{target.id}"
+				await self.channel_layer.group_send(
+					group_name,
+					{
+						'type': 'game_invite',
+						'game': game,
+						'game_id': game_id,
+						'player1': self.user.id,
+						'player2': target.id,
+					}
+				)
+			else:
+				await self.send(json.dumps({
+					'type': 'game_invite',
+					'game': game,
+					'game_id': game_id,
+					'player1': self.user.id,
+					'player2': target.id,
+				}))
+				group_name = f"s_{target.id}"
+				await self.channel_layer.group_send(
+					group_name,
+					{
+						'type': 'game_invite',
+						'game': game,
+						'game_id': game_id,
+						'player1': self.user.id,
+						'player2': target.id,
+					}
+				)
 		
 		except User.DoesNotExist:
 			logger.info(f"[Social]: Game invite from {self.user.username} failed")
