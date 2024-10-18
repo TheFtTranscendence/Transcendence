@@ -36,6 +36,8 @@ function clearTournament() {
 	document.getElementById('winner-screen').classList.add("hidden");
 	document.getElementById('tournament-area').classList.add("hidden");
 
+	// window.isTournamentActive = false
+
 	unloadScripts(window.tournamentScripts);
 }
 
@@ -69,6 +71,7 @@ async function next_game() {
 		document.getElementById('tournament-bracket').classList.add("hidden");
 		document.getElementById('winner-screen').classList.add("hidden");
 		unloadScripts(window.menuScripts);
+		// window.isTournamentActive = false
 		if (!areScriptsLoaded(window.game2Scripts)) {
 			await PromiseloadScripts(window.game2Scripts);
 			startGame2(playerNames[0], playerNames[1], window.game2Skins[playerSkins[0]], window.game2Skins[playerSkins[1]], playerSkins[0], playerSkins[1], true);
@@ -83,6 +86,7 @@ async function next_game() {
 		document.getElementById('tournament-bracket').classList.add("hidden");
 		document.getElementById('winner-screen').classList.add("hidden");
 		unloadScripts(window.menuScripts);
+		// window.isTournamentActive = false
 		if (!areScriptsLoaded(window.gameScripts)) {
 			await PromiseloadScripts(window.gameScripts);
 			startGame(playerNames[0], playerNames[1], window.game1Skins[playerSkins[0]], window.game1Skins[playerSkins[1]], playerSkins[0], playerSkins[1], true);
@@ -189,6 +193,8 @@ function leaveTournament()
 	else {
 		pongyTournamentData.resetTournament()
 	}
+
+	// window.isTournamentActive = false
 
 	document.getElementById("winner-message").textContent = ""
 
@@ -313,10 +319,13 @@ function shuffle_names(playerNames, playerSkins)
 }
 
 function tournament_loop() {
-	window.isTournamentActive = false
 	unloadScripts(window.game2Scripts)
 	unloadScripts(window.gameScripts)
-
+	
+	// if (window.isTournamentActive)
+	// 	window.isTournamentActive = true
+	// else
+	// 	return
 	// debug func | delete after
 	// pongyTournamentData.printAllMatches()
 

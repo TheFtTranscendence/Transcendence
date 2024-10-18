@@ -16,7 +16,7 @@ function game_hashchange(vars)
 		vars.canvasVars.canvas.removeEventListener("click", vars.eventHandlers.eventCanvasClickLocal);
 	}
 
-	window.isGameActive = false
+	// window.isGameActive = false
 	clearInterval(vars.IntervalVars.gameLoop);
 	document.getElementById('game').classList.add('hidden');
 	unloadScripts(window.gameScripts);
@@ -52,7 +52,7 @@ async function cleanUpAfterFinish(vars)
 	clearInterval(vars.IntervalVars.gameLoop);
 
 	window.gamesOnCounter--;
-	window.isGameActive = false
+	// window.isGameActive = false
 	await unloadScripts(window.gameScripts);
 	
 	vars.running = false;
@@ -151,8 +151,7 @@ async function storeMatch(vars)
 			console.log("Game stored successfully:", responseData);
 		})
 		.catch(error => {
-
-
+			
 			fetch(url, {
 				method: 'POST',
 				headers: {
@@ -191,13 +190,13 @@ function loadImage(src, callback)
 
 function startGame(p1Name, p2Name, p1Skin, p2Skin, p1SkinId, p2SkinId, tournamentGame)
 {
-	if (!window.isGameActive)
-		window.isGameActive = true
-	else
-	{
-		console.log("GAME ALREADY FUCKING HAPPENING")
-		return
-	}
+	// if (!window.isGameActive)
+	// 	window.isGameActive = true
+	// else
+	// {
+	// 	console.log("GAME ALREADY FUCKING HAPPENING")
+	// 	return
+	// }
 	const vars = initVars();
 
 	vars.gameVars.tournamentGame = tournamentGame;

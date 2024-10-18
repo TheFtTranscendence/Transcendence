@@ -199,8 +199,8 @@ window.playerCounter = 0;
 
 window.fightyGamesOnCounter = 0
 window.gamesOnCounter = 0
-window.isGameActive = false
-window.isTournamentActive = false
+// window.isGameActive = false
+// window.isTournamentActive = false
 window.storeGame = false
 window.inHome = false
 
