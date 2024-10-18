@@ -308,46 +308,5 @@ async function storeMatch(v)
 		});
 
 	});
-	// try {
-
-	// 	const url = `https://${window.IP}:3000/solidity/solidity/addgame/${window.user.blockchain_id}/Fighty`;
-		
-	// 	const data = {
-	// 	players: players,
-	// 	scores: scores,
-	// 	};
-
-	// 	fetch(url, {
-	// 		method: 'POST',
-	// 		headers: {
-	// 			'Content-Type': 'application/json',
-	// 		},
-	// 		body: JSON.stringify(data),
-	// 	})
-	// 	toast_alert("Game stores on DB!")
-	// } catch {
-
-	// 	try {
-
-	// 		const url = `https://${window.IP}:3000/solidity/solidity/addgame/${window.user.blockchain_id}/Fighty`;
-			
-	// 		const data = {
-	// 		players: players,
-	// 		scores: scores,
-	// 		};
-	
-	// 		fetch(url, {
-	// 			method: 'POST',
-	// 			headers: {
-	// 				'Content-Type': 'application/json',
-	// 			},
-	// 			body: JSON.stringify(data),
-	// 		})
-	// 		toast_alert("Game stores on DB!")
-	// 	} catch {
-	// 		toast_alert("Couldn't store game on blockchain")
-	// 	}
-
-	// }
 
 }
