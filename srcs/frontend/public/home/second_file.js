@@ -25,7 +25,7 @@ function handleFileUpload() {
 	const avatarInput = document.getElementById('avatarInput');
 	const file = avatarInput.files[0];
 
-	if (file) {
+	if (file && file.type === 'image/jpeg') {
 
 		uploadAvatar(file).then((uploadedUrl) => {
 			const profileImg = document.querySelector('#profile-img img');
@@ -38,7 +38,7 @@ function handleFileUpload() {
 		});
 
 	} else {
-		toast_alert('You need to insert a file');
+		toast_alert('You need to insert a jpg file');
 	}
 }
 
@@ -67,12 +67,16 @@ function updateUsername(username) {
 	});
 }
 
+function isAlphanumeric(str) {
+	return /^[a-z0-9]+$/i.test(str);
+}
+
 function changeUsername() {
 	const usernameInput = document.getElementById('usernameInput');
 	const newUsername = usernameInput.value.trim();
 
-	if (newUsername) {
-		
+	if (newUsername && isAlphanumeric(newUsername)) {
+
 		updateUsername(newUsername).then(() => {
 			usernameInput.value = ''
 		}).catch((error) => {
@@ -80,7 +84,9 @@ function changeUsername() {
 			toast_alert('Failed to update username');
 		});
 
-	} else {
+	} else if (!isAlphanumeric(newUsername)) {
+		toast_alert('Username must be alphanumeric')
+	} else  {
 		toast_alert('Please enter a username');
 	}
 }
@@ -121,7 +127,7 @@ function changePassword() {
 	const newPassword = newPasswordInput.value.trim();
 	const confirmPassword = confirmPasswordInput.value.trim();
 
-	if (oldPassword && newPassword && confirmPassword) {
+	if (oldPassword && newPassword && confirmPassword && isAlphanumeric(newPassword)) {
 		if (newPassword === confirmPassword) {
 			
 			updatePassword(oldPassword, newPassword, confirmPassword).then(() => {
@@ -141,7 +147,9 @@ function changePassword() {
 		} else {
 			toast_alert('New passwords do not match');
 		}
-	} else {
+	} else if (!isAlphanumeric(newPassword)) {
+		toast_alert('Passwords must be alphanumeric')
+	} else	{
 		toast_alert('Please fill in all fields');
 	}
 }
