@@ -86,7 +86,7 @@ async function Matchmaking_game_end_winner(v, winner, loser) {
 	
 	console.log('Game ending sequence ended')
 
-	document.querySelector('#game2-end-text').innerHTML = winner.name + ' wins!'
+	document.querySelector('#game2-end-text').innerHTML = winner.name + ' wins!\nPRESS X TO LEAVE'
 	document.querySelector('#game2-end-text').style.display = 'flex'
 
 
@@ -130,7 +130,7 @@ async function Matchmaking_game_end_tie(v) {
 	}
 	, 1000 / v.g.fps)
 	
-	document.querySelector('#game2-end-text').innerHTML = 'Tie!'
+	document.querySelector('#game2-end-text').innerHTML = 'Tie!\nPRESS X TO LEAVE'
 	document.querySelector('#game2-end-text').style.display = 'flex'
 
 	Matchmaking_leave_game(v)

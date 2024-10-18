@@ -233,8 +233,7 @@ async function quitMatchmaking(event)
 
 
         document.getElementById('div-game2-area').classList.add("hidden");
-		document.getElementById('games').classList.add("hidden");
-		
+
         unloadScripts(window.game2Scripts);
 
 		await PromiseloadScripts(window.menuScripts);
@@ -256,16 +255,34 @@ async function storeMatch(v)
         v.enemy.health,
     ]
 
+	const url = `https://${window.IP}:3000/solidity/solidity/addgame/${window.user.blockchain_id}/Fighty`;
 
-	try {
-
-		const url = `https://${window.IP}:3000/solidity/solidity/addgame/${window.user.blockchain_id}/Fighty`;
-		
-		const data = {
+	const data = {
 		players: players,
 		scores: scores,
-		};
+	};
 
+	fetch(url, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify(data),
+	})
+	.then(response => {
+		// Check if the response is successful (status 200-299)
+		if (response.ok) {
+			return response.json();  // Parse JSON response
+		} else {
+			throw new Error(`Error: ${response.status} ${response.statusText}`);
+		}
+	})
+	.then(responseData => {
+		// Log success and the data returned by the server (if any)
+		console.log("Game stored successfully:", responseData);
+	})
+	.catch(error => {
+		
 		fetch(url, {
 			method: 'POST',
 			headers: {
@@ -273,30 +290,64 @@ async function storeMatch(v)
 			},
 			body: JSON.stringify(data),
 		})
-		toast_alert("Game stores on DB!")
-	} catch {
+		.then(response => {
+			// Check if the response is successful (status 200-299)
+			if (response.ok) {
+				return response.json();  // Parse JSON response
+			} else {
+				throw new Error(`Error: ${response.status} ${response.statusText}`);
+			}
+		})
+		.then(responseData => {
+			// Log success and the data returned by the server (if any)
+			console.log("Game stored successfully:", responseData);
+		})
+		.catch(error => {
+			// Log any error that happens during the fetch request
+			console.error("Error storing the game:", error);
+		});
 
-		try {
+	});
+	// try {
 
-			const url = `https://${window.IP}:3000/solidity/solidity/addgame/${window.user.blockchain_id}/Fighty`;
+	// 	const url = `https://${window.IP}:3000/solidity/solidity/addgame/${window.user.blockchain_id}/Fighty`;
+		
+	// 	const data = {
+	// 	players: players,
+	// 	scores: scores,
+	// 	};
+
+	// 	fetch(url, {
+	// 		method: 'POST',
+	// 		headers: {
+	// 			'Content-Type': 'application/json',
+	// 		},
+	// 		body: JSON.stringify(data),
+	// 	})
+	// 	toast_alert("Game stores on DB!")
+	// } catch {
+
+	// 	try {
+
+	// 		const url = `https://${window.IP}:3000/solidity/solidity/addgame/${window.user.blockchain_id}/Fighty`;
 			
-			const data = {
-			players: players,
-			scores: scores,
-			};
+	// 		const data = {
+	// 		players: players,
+	// 		scores: scores,
+	// 		};
 	
-			fetch(url, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(data),
-			})
-			toast_alert("Game stores on DB!")
-		} catch {
-			toast_alert("Couldn't store game on blockchain")
-		}
+	// 		fetch(url, {
+	// 			method: 'POST',
+	// 			headers: {
+	// 				'Content-Type': 'application/json',
+	// 			},
+	// 			body: JSON.stringify(data),
+	// 		})
+	// 		toast_alert("Game stores on DB!")
+	// 	} catch {
+	// 		toast_alert("Couldn't store game on blockchain")
+	// 	}
 
-	}
+	// }
 
 }

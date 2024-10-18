@@ -127,7 +127,7 @@ async function game_end_tie(v) {
 	}
 	, 1000 / v.g.fps)
 	
-	document.querySelector('#game2-end-text').innerHTML = 'Tie!'
+	document.querySelector('#game2-end-text').innerHTML = 'Tie!\nPRESS X TO LEAVE'
 	document.querySelector('#game2-end-text').style.display = 'flex'
 
 	leave_game(v)
