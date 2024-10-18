@@ -50,6 +50,7 @@ body::before {
 #auth {
 	border: 7px transparent;
 	display: flex;
+	z-index: 1000;
 }
 
 .horizontal-line {
@@ -820,6 +821,7 @@ body::before {
 #auth {
 	border: 7px solid var(--background-color);
 	display: flex;
+	z-index: 1000;
 	/* transition: all 0.5s ease; */
 }
 
@@ -1074,4 +1076,36 @@ table th {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.toast {
+    background-color: #2c2c2c;
+    color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.toast-header {
+    background-color: #495057; /* Slightly lighter dark background */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border */
+}
+
+.toast-body {
+    padding: 1rem;
+    font-size: 1rem;
+}
+
+.toast.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.toast.hide {
+    transform: translateY(100%);
+    opacity: 0;
+}
+
+.btn-close {
+    filter: brightness(0) invert(1);
 }
