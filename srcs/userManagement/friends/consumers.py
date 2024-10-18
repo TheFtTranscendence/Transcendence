@@ -37,7 +37,7 @@ class	SocialConsumer(AsyncWebsocketConsumer):
 
 	async def disconnect(self, close_code):
 		try:
-			self._updateUser()
+			await self._updateUser()
 
 			if self.user:
 				await self._setOffline()

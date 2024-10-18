@@ -59,11 +59,11 @@ class GameConsumer(AsyncWebsocketConsumer):
 		except self.ErrorLoggingIn:
 			logger.error(f"[Game] - connect: User tried to connect to game socket, but didn't give a game id")
 			await self.close(self.ERROR_LOGGING_IN)
-			return;
+			return
 		except self.GameFull:
 			logger.error(f"[Game] - connect: User tried to connect to game socket, but game is already full")
 			await self.close(self.ERROR_LOGGING_IN)
-			return;
+			return
 		except Exception as e:
 			logger.exception(f'exception: {e}')
 
