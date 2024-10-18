@@ -8,7 +8,7 @@ window.chatScripts = [
 
 window.homeScripts = [
 
-	'home/init.js',
+	// 'home/init.js',
 ];
 
 window.gameScripts = [

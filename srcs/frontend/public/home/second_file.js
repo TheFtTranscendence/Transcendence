@@ -13,7 +13,8 @@ function uploadAvatar(file) {
 		})
 		.then(response => response.json())
 		.then(data => {
-			console.log(data);
+			window.user = data.user;
+			getAvatar()
 		})
 		.catch(error => console.error('Error:', error));
 	});
@@ -24,7 +25,6 @@ function handleFileUpload() {
 	const file = avatarInput.files[0];
 
 	if (file) {
-		console.log('File selected:', file.name);
 
 		uploadAvatar(file).then((uploadedUrl) => {
 			const profileImg = document.querySelector('#profile-img img');
@@ -32,10 +32,6 @@ function handleFileUpload() {
 			profileImg.alt = file.name;
 			update_user_in_socket();
 			avatarInput.value = '';
-			update_user_info()
-			.then(data => {
-				getAvatar()
-			})
 		}).catch((error) => {
 			console.error('Upload failed:', error);
 			toast_alert('Failed to upload the file');
@@ -48,7 +44,6 @@ function handleFileUpload() {
 
 function updateUsername(username) {
 	return new Promise((resolve, reject) => {
-		console.log(username)
 		const data = {
 			username: username,
 		}
@@ -77,8 +72,6 @@ function changeUsername() {
 	if (newUsername) {
 		
 		updateUsername(newUsername).then(() => {
-			console.log('Username updated to:', newUsername);
-			toast_alert('Username updated successfully');
 			update_user_in_socket();
 			usernameInput.value = ''
 			update_user_info()
@@ -94,9 +87,6 @@ function changeUsername() {
 
 function updatePassword(oldPassword, newPassword, confirmPassword) {
 	return new Promise((resolve, reject) => {
-		console.log(oldPassword)
-		console.log(newPassword)
-		console.log(confirmPassword)
 		const data = {
 			old_password: oldPassword,
 			password: newPassword,
@@ -133,8 +123,6 @@ function changePassword() {
 		if (newPassword === confirmPassword) {
 			
 			updatePassword(oldPassword, newPassword, confirmPassword).then(() => {
-				console.log('Password updated successfully');
-				toast_alert('Password updated successfully');
 				update_user_in_socket();
 				oldPasswordInput.value = ''
 				newPasswordInput.value = ''
