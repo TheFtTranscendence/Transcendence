@@ -30,6 +30,7 @@ function auth() {
 
 	window.location.hash = '#auth';
 	document.getElementById('auth').classList.remove('hidden');
+	document.getElementById('registerForm').removeEventListener('submit', handleRegisterEvent);
 	window.addEventListener('hashchange', auth_hashchange);
 }
 
@@ -93,8 +94,11 @@ async function handleLogin() {
 // Define the event listener as a named function
 async function handleRegisterEvent(event) {
 	event.preventDefault();
-	loadingMessage.style.display = 'block';
+
+	const button = document.getElementById('registerBtn');
+
     button.disabled = true;
+	button.textContent = 'Loading...'
 
 	if (window.isRegistering) {
 		return;
@@ -102,12 +106,12 @@ async function handleRegisterEvent(event) {
 
 	await handleRegister();
 
-	loadingMessage.style.display = 'none';
+	button.textContent = 'Register'
     button.disabled = false;
 }
 
 async function handleRegister() {
-	document.getElementById('registerForm').removeEventListener('submit', handleRegisterEvent);
+	// document.getElementById('registerForm').removeEventListener('submit', handleRegisterEvent);
 
 	window.isRegistering = true;
 
