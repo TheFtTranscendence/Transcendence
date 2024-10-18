@@ -721,7 +721,7 @@ async function storeTournamentBlockchainFighty()
 	const url = `https://${window.IP}:3000/solidity/solidity/addtournament/${window.user.blockchain_id}/Fighty`;
 	const tournament = fightyTournamentData.getFinalTournamentForBlockchain()
 
-	console.log(tournament),
+	console.log(tournament)
 
 	fetch(url, {
 		method: 'POST',

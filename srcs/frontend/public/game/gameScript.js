@@ -854,6 +854,7 @@ function handleCanvasClickMatchmaking(event, vars)
 			vars.canvasVars.canvas.removeEventListener("click", vars.eventHandlers.eventCanvasClickMatchmaking);
 		}
 
+	
 		vars.gameVars.gameStart = true;
 		vars.gameVars.p1Score = 0;
 		vars.gameVars.p2Score = 0;

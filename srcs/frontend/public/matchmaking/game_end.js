@@ -95,14 +95,8 @@ async function Matchmaking_game_end_winner(v, winner, loser) {
 	// YES!!!
 	// Not going global!
 
-	// leave_game(v)
+	Matchmaking_leave_game(v)
 
-	// axios.post(`http://${window.IP}:8001/solidity/addgame/` + window.user.smartcontract_id, {
-	// 	player1: v.player.name,
-	// 	player2: v.enemy.name,
-	// 	score1: v.player.health,
-	// 	score2: v.enemy.health
-	// })
 	
 	console.log('Game Ended!')
 }
@@ -138,13 +132,6 @@ async function Matchmaking_game_end_tie(v) {
 	
 	document.querySelector('#game2-end-text').innerHTML = 'Tie!'
 	document.querySelector('#game2-end-text').style.display = 'flex'
-
-	// axios.post(`http://${window.IP}:8001/solidity/addgame/` + window.user.smartcontract_id, {
-	// 	player1: v.player.name,
-	// 	player2: v.enemy.name,
-	// 	score1: v.player.health,
-	// 	score2: v.enemy.health
-	// })
 
 	Matchmaking_leave_game(v)
 	

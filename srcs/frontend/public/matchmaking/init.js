@@ -188,7 +188,7 @@ function Matchmaking_reset_keys(v) {
 	v.keys.ArrowUp.pressed = false
 }
 
-function Matchmaking_leave_game(v) {
+async function Matchmaking_leave_game(v) {
 	console.log('hashchange game2');
 
 	clearInterval(v.g.gameInterval)
@@ -200,11 +200,6 @@ function Matchmaking_leave_game(v) {
 	window.removeEventListener('keyup', Matchmaking_game2_keyup)
 	window.removeEventListener('hashchange', Matchmaking_game2_hashchange)
 
-	v.g.timer.innerHTML = 200
-	v.player.bar.style.width = '100%'
-	v.enemy.bar.style.width = '100%'
-	document.querySelector('#game2-end-text').style.display = 'none'
-
 
 	v.s.game_socket.close()
 
@@ -213,17 +208,64 @@ function Matchmaking_leave_game(v) {
 	}
 	catch {}
 
+	await storeMatch(v)
+
+
+    v.player = null
+    v.enemy = null
+
+
+	unloadScripts(window.matchmakingScripts);
+	
+	window.addEventListener('keydown', quitMatchmaking);
+}
+
+async function quitMatchmaking(event)
+{
+    if (event.key === 'x' || event.key === 'X') {
+
+        v.g.timer.innerHTML = 200 
+
+        document.querySelector('#game2-bar1').style.width = '100%'
+        document.querySelector('#game2-bar2').style.width = '100%'
+
+        document.querySelector('#game2-end-text').style.display = 'none'
+
+
+        document.getElementById('div-game2-area').classList.add("hidden");
+		document.getElementById('games').classList.add("hidden");
+		
+        unloadScripts(window.game2Scripts);
+
+		await PromiseloadScripts(window.menuScripts);
+		main_menu();
+
+        window.removeEventListener('keydown', quitMatchmaking);
+    }
+}
+
+async function storeMatch(v)
+{
+	players = [
+        v.player.name,
+        v.enemy.name,
+    ]
+
+    scores = [
+        v.player.health,
+        v.enemy.health,
+    ]
+
 
 	try {
+
 		const url = `https://${window.IP}:3000/solidity/solidity/addgame/${window.user.blockchain_id}/Fighty`;
 		
 		const data = {
-			player1: v.player.name,
-			player2: v.enemy.name,
-			score1: v.player.health,
-			score2: v.enemy.health,
+		players: players,
+		scores: scores,
 		};
-		
+
 		fetch(url, {
 			method: 'POST',
 			headers: {
@@ -233,11 +275,28 @@ function Matchmaking_leave_game(v) {
 		})
 		toast_alert("Game stores on DB!")
 	} catch {
-		toast_alert("Couldn't store game on blockchain")
+
+		try {
+
+			const url = `https://${window.IP}:3000/solidity/solidity/addgame/${window.user.blockchain_id}/Fighty`;
+			
+			const data = {
+			players: players,
+			scores: scores,
+			};
+	
+			fetch(url, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(data),
+			})
+			toast_alert("Game stores on DB!")
+		} catch {
+			toast_alert("Couldn't store game on blockchain")
+		}
+
 	}
-		
-	document.getElementById('div-game2-area').classList.add("hidden");
-	document.getElementById('games').classList.add("hidden");
-	unloadScripts(window.matchmakingScripts);
 
 }

@@ -294,7 +294,7 @@ async function storeMatch(v)
 			})
 			toast_alert("Game stores on DB!")
 		} catch {
-			toast_alert("Couldn't store game on blockchain")
+            toast_alert("Couldn't store game on blockchain")
 		}
 	}
 }
