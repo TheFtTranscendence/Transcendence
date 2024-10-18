@@ -188,6 +188,10 @@ function Matchmaking_setup_socket(v) {
 		else if (msg.type == 'game_info') {
 				if (msg.info == 'Disconenct') {
 					toast_alert('Opponent disconnected')
+					if (window.user.id == v.s.player1)
+						v.enemy.health = 0
+					else 
+						v.player.health = 0
 					Matchmaking_leave_game(v)
 					// todo GUARDAR NA BASE DE DADOS JA SENAO COMO WIN
 				}
@@ -216,9 +220,13 @@ function Matchmaking_setup_socket(v) {
 		{
 			if (msg.info == 'Disconnect')
 			{
-				Matchmaking_leave_game(v)
+				Matchmaking_leave_game(v, true)
 				toast_alert("Your opponent Left")
 			}
+		}
+		else if (msg.type == 'invite_declie')
+		{
+			main
 		}
 
 	}

@@ -188,7 +188,7 @@ function Matchmaking_reset_keys(v) {
 	v.keys.ArrowUp.pressed = false
 }
 
-async function Matchmaking_leave_game(v) {
+async function Matchmaking_leave_game(v, force = false) {
 	console.log('hashchange game2');
 
 	clearInterval(v.g.gameInterval)
@@ -200,13 +200,16 @@ async function Matchmaking_leave_game(v) {
 	window.removeEventListener('keyup', Matchmaking_game2_keyup)
 	window.removeEventListener('hashchange', Matchmaking_game2_hashchange)
 
-
+	
 	v.s.game_socket.close()
-
+	
 	try {
 		v.s.queue_socket.close()
 	}
 	catch {}
+	
+	if (force == true)
+		quitMatchmaking({key: 'x'})
 
 	await storeMatch(v)
 
@@ -234,7 +237,7 @@ async function quitMatchmaking(event)
 
         document.getElementById('div-game2-area').classList.add("hidden");
 
-        unloadScripts(window.game2Scripts);
+        unloadScripts(window.matchmakingScripts);
 
 		await PromiseloadScripts(window.menuScripts);
 		main_menu();
