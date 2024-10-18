@@ -16,7 +16,7 @@ function game_hashchange(vars)
 		vars.canvasVars.canvas.removeEventListener("click", vars.eventHandlers.eventCanvasClickLocal);
 	}
 
-	// window.isGameActive = false
+	window.isGameActive = false
 	clearInterval(vars.IntervalVars.gameLoop);
 	document.getElementById('game').classList.add('hidden');
 	unloadScripts(window.gameScripts);
@@ -52,7 +52,7 @@ async function cleanUpAfterFinish(vars)
 	clearInterval(vars.IntervalVars.gameLoop);
 
 	window.gamesOnCounter--;
-	// window.isGameActive = false
+	window.isGameActive = false
 	await unloadScripts(window.gameScripts);
 	
 	vars.running = false;
@@ -151,8 +151,32 @@ async function storeMatch(vars)
 			console.log("Game stored successfully:", responseData);
 		})
 		.catch(error => {
-			// Log any error that happens during the fetch request
-			console.error("Error storing the game:", error);
+
+
+			fetch(url, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(data),
+			})
+			.then(response => {
+				// Check if the response is successful (status 200-299)
+				if (response.ok) {
+					return response.json();  // Parse JSON response
+				} else {
+					throw new Error(`Error: ${response.status} ${response.statusText}`);
+				}
+			})
+			.then(responseData => {
+				// Log success and the data returned by the server (if any)
+				console.log("Game stored successfully:", responseData);
+			})
+			.catch(error => {
+				// Log any error that happens during the fetch request
+				console.error("Error storing the game:", error);
+			});
+
 		});
 	}
 }
@@ -167,14 +191,13 @@ function loadImage(src, callback)
 
 function startGame(p1Name, p2Name, p1Skin, p2Skin, p1SkinId, p2SkinId, tournamentGame)
 {
-	// window.gamesOnCounter++;
-	// if (!window.isGameActive)
-	// 	window.isGameActive = true
-	// else
-	// {
-	// 	console.log("GAME ALREADY FUCKING HAPPENING")
-	// 	return
-	// }
+	if (!window.isGameActive)
+		window.isGameActive = true
+	else
+	{
+		console.log("GAME ALREADY FUCKING HAPPENING")
+		return
+	}
 	const vars = initVars();
 
 	vars.gameVars.tournamentGame = tournamentGame;

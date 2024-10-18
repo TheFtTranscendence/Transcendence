@@ -200,6 +200,7 @@ window.playerCounter = 0;
 window.fightyGamesOnCounter = 0
 window.gamesOnCounter = 0
 window.isGameActive = false
+window.isTournamentActive = false
 window.storeGame = false
 window.inHome = false
 
@@ -679,6 +680,10 @@ async function storeTournamentBlockchainPongy()
 	const url = `https://${window.IP}:3000/solidity/solidity/addtournament/${window.user.blockchain_id}/Pongy`;
 	const tournament = pongyTournamentData.getFinalTournamentForBlockchain()
 
+	console.log("TOURNAMENT TO BE STORED")
+	console.log("------------------")
+	console.log("Tournament", tournament)
+	console.log("------------------")
 
 	fetch(url, {
 		method: 'POST',
