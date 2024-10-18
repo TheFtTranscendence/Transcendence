@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 class GameConsumer(AsyncWebsocketConsumer):
 
-	ERROR_LOGGING_IN = 3042;
+	ERROR_LOGGING_IN = 3042
 	REQUEST_DENIED = 3024
 	#USER_DISCONECT = default
 
@@ -95,8 +95,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 			await self.channel_layer.group_send(
 				self.room_group_name,
 				{
-					'type': 'game_info',
-					'info': 'User dennied game invite',
+					'type': 'invite_dennied_message',
 				}
 			)
 			await self._deleteGame()
@@ -120,6 +119,12 @@ class GameConsumer(AsyncWebsocketConsumer):
 			self.room_group_name,
 			self.channel_name
 		)
+
+	async def invite_dennied_message(self, event):
+
+		await self.send(text_data=json.dumps({
+			'type': 'invite_dennied',
+		}))
 
 	async def receive(self, text_data):
 		text_data_json = json.loads(text_data)
