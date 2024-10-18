@@ -181,10 +181,6 @@ document.getElementById('loginForm').addEventListener('submit', (event) => {
 	handleLogin();
 });
 
-// Add the event listener for the register form
-document.getElementById('registerForm').addEventListener('submit', handleRegisterEvent);
-
-
 function handleClick(expandedSide, collapsedSide, expandedContent, collapsedContent, expandedForm, collapsedForm) {
 	collapsedSide.classList.remove('col-sm-6', 'col-sm-10');
 	collapsedContent.classList.add('hidden');

@@ -2,10 +2,9 @@ window.addEventListener('hashchange', navigate);
 
 navigate();
 
-// window.onload = function (e)	{
-// 	window.location.hash = '#auth';
-// 	navigate();
-// }
+window.onload = function (e)	{
+	document.getElementById('registerForm').addEventListener('submit', handleRegisterEvent);
+}
 
 function navigate() {
 	let element, scripts, startFunction;
