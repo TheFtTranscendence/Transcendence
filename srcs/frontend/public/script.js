@@ -2,10 +2,10 @@ window.addEventListener('hashchange', navigate);
 
 navigate();
 
-window.onload = function (e)	{
-	window.location.hash = '#auth';
-	navigate();
-}
+// window.onload = function (e)	{
+// 	window.location.hash = '#auth';
+// 	navigate();
+// }
 
 function navigate() {
 	let element, scripts, startFunction;
@@ -139,28 +139,36 @@ async function unloadScripts(scripts) {
 	});
 }
 
-// Handle login and register forms
-document.getElementById('loginForm').addEventListener('submit', (event) => {
-	event.preventDefault();
+// // Handle login and register forms
+// document.getElementById('loginForm').addEventListener('submit', (event) => {
+// 	event.preventDefault();
 
-	handleLogin();
+// 	handleLogin();
 	
-	document.getElementById('auth').classList.add('hidden');
-	document.querySelector('nav').classList.remove('hidden');
-	window.location.hash = '#home';
-	navigate();
-});
+// 	document.getElementById('auth').classList.add('hidden');
+// 	document.querySelector('nav').classList.remove('hidden');
+// 	window.location.hash = '#home';
+// 	navigate();
+// });
 
-document.getElementById('registerForm').addEventListener('submit', (event) => {
-	event.preventDefault();
+// document.getElementById('registerForm').addEventListener('submit', (event) => {
+// 	event.preventDefault();
 
-	handleRegister();
+// 	const button = document.getElementById('registerBtn');
+//     const loadingMessage = document.getElementById('loadingMessage');
 
-	document.getElementById('auth').classList.add('hidden');
-	document.querySelector('nav').classList.remove('hidden');
-	window.location.hash = '#home';
-	navigate();
-});
+// 	handleRegister();
+
+// 	loadingMessage.style.display = 'block';
+//     button.disabled = true;
+
+
+
+// 	document.getElementById('auth').classList.add('hidden');
+// 	document.querySelector('nav').classList.remove('hidden');
+// 	window.location.hash = '#home';
+// 	navigate();
+// });
 
 // // Show the appropriate auth page (login or register)
 // function showAuthPage(page) {

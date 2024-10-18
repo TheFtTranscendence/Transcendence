@@ -91,17 +91,22 @@ async function handleLogin() {
 	});
 }
 // Define the event listener as a named function
-function handleRegisterEvent(event) {
+async function handleRegisterEvent(event) {
 	event.preventDefault();
+	loadingMessage.style.display = 'block';
+    button.disabled = true;
 
 	if (window.isRegistering) {
 		return;
 	}
 
-	handleRegister();
+	await handleRegister();
+
+	loadingMessage.style.display = 'none';
+    button.disabled = false;
 }
 
-function handleRegister() {
+async function handleRegister() {
 	document.getElementById('registerForm').removeEventListener('submit', handleRegisterEvent);
 
 	window.isRegistering = true;
@@ -119,7 +124,7 @@ function handleRegister() {
 		confirm_password: confirm_password,
 	};
 
-	return fetch(`https://${window.IP}:3000/user-management/auth/register/`, {
+	return await fetch(`https://${window.IP}:3000/user-management/auth/register/`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
