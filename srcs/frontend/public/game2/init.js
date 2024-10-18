@@ -169,6 +169,11 @@ async function leave_game(v, force = false) {
 		window.removeEventListener('keydown', game2_keydown)
 		window.removeEventListener('keyup', game2_keyup)
 		window.removeEventListener('hashchange', game2_hashchange)
+		document.querySelector('#game2-bar1').style.width = '100%'
+        document.querySelector('#game2-bar2').style.width = '100%'
+
+        document.querySelector('#game2-end-text').style.display = 'none'
+		unloadScripts(window,game2Scripts);
 		return 
 	}
 	
