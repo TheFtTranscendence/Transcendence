@@ -62,13 +62,6 @@ async function next_game() {
 
 	[playerNames, playerSkins] = next_game_players();
 
-	console.log("PLAYERS AND SKINS")
-	console.log("------------------")
-	console.log("playerNames", playerNames)
-	console.log("------------------")
-	console.log("playerSkins", playerSkins)
-	console.log("------------------")
-
 	if (window.location.hash == '#fighters') {
 		clearTournament();
 		document.getElementById('div-game2-area').classList.remove("hidden");
@@ -81,10 +74,7 @@ async function next_game() {
 			startGame2(playerNames[0], playerNames[1], window.game2Skins[playerSkins[0]], window.game2Skins[playerSkins[1]], playerSkins[0], playerSkins[1], true);
 		}
 		else
-		{
-			console.log("RETURNING FUNCKING GAME!!")
 			return
-		}
 	} 
 	else {
 		clearTournament();
@@ -288,12 +278,6 @@ function show_bracket()
 	// 	// Print round three
 		document.getElementById("first-match-r3").classList.remove("hidden"); 
 
-		console.log("---------------------")
-		console.log("SHOW BRACKET LIST FUNC: ", pongyTournamentData.getBracketPlayerList())
-		console.log("SHOW BRACKET LIST: ", players)
-		console.log("initial I: ", (roundInfo.roundTwoMatches * 2) + lastValue)
-		console.log("END I: ", (roundInfo.roundThreeMatches * 2) + lastValue)
-
 		for (i = lastValue; i < (roundInfo.roundThreeMatches * 2) + lastValue; i++)
 		{
 			input_id = 'player' + (divId) + '-r3';
@@ -381,7 +365,6 @@ async function start_tournament(playerNamesOrd, playerSkinsOrd) {
 	document.getElementById('games-tournament-menu').classList.add("hidden");
 
 	[window.playerNames, window.playerSkins] = shuffle_names(playerNamesOrd, playerSkinsOrd);
-	// const namesAndSkins = window.playerNames.map((name, skin) => name + window.playerSkins[skin]);
 
 	// Store tournament data and wait for the result
 	if (window.location.hash == '#fighters') {

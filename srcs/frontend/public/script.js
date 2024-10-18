@@ -3,6 +3,7 @@ window.addEventListener('hashchange', navigate);
 navigate();
 
 window.onload = function (e)	{
+	window.location.hash = '#auth';
 	navigate();
 }
 
