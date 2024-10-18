@@ -26,6 +26,9 @@ function chat_hashchange(event) {
 	window.chatConfirmInput.value = '' // Clear input box
 	window.chatInput.value = '' // Clear input box
 
+	window.CurrentChatting_id = null;
+	window.CurrentChatting = null
+
 	window.sendButton.removeEventListener('click', sendChatMessage)
 	window.removeEventListener('keypress', keypress)
 

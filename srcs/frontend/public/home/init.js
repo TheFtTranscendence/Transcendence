@@ -13,7 +13,9 @@ function home_hashchange(event)
 function home()
 {
 	getAvatar()
-	fillInfos()
+	document.getElementById('gameType').value = 'pongyGames';
+	document.getElementById('mh_username').value = window.user.username;
+	loadData();
 	document.getElementById('home').classList.remove('hidden');
 	window.addEventListener('hashchange', home_hashchange);
 	document.getElementById('profile-img').addEventListener('click', showSideBar);
@@ -64,136 +66,136 @@ function getAvatar() {
 
 // GAME HISTORY TABLE
 
-function	fillInfos() {
-	populateUserDropdown()
-	fillGame()
-}
+// function	fillInfos() {
+// 	populateUserDropdown()
+// 	fillGame()
+// }
 
-function fillGame() {
-	const tableBody = document.getElementById('gameHistoryTableBody');
+// function fillGame() {
+// 	const tableBody = document.getElementById('gameHistoryTableBody');
 	
-	tableBody.innerHTML = '';
+// 	tableBody.innerHTML = '';
 
-	Promise.all([
-		getGames('pongy', window.user.blockchain_id),
-		getGames('fighty', window.user.blockchain_id)
-	])
-	.then(([pongy_games, fighty_games]) => {
-		const games_dict = { ...pongy_games, ...fighty_games };
+// 	Promise.all([
+// 		getGames('pongy', window.user.blockchain_id),
+// 		getGames('fighty', window.user.blockchain_id)
+// 	])
+// 	.then(([pongy_games, fighty_games]) => {
+// 		const games_dict = { ...pongy_games, ...fighty_games };
 
-		if (Object.keys(games_dict).length > 0) {
-			const timestamps = Object.keys(games_dict).sort((a, b) => a - b);
-			tableBody.innerHTML = '';
+// 		if (Object.keys(games_dict).length > 0) {
+// 			const timestamps = Object.keys(games_dict).sort((a, b) => a - b);
+// 			tableBody.innerHTML = '';
 
-			for (const timestamp of timestamps) {
-				let result = '';
+// 			for (const timestamp of timestamps) {
+// 				let result = '';
 
-				if (window.user.username === games_dict[timestamp].player1 || window.user.username === games_dict[timestamp].player2) {
-					if (games_dict[timestamp].score1 > games_dict[timestamp].score2 && games_dict[timestamp].player1 === window.user.username) {
-						result = 'Win';
-						window.scores.wins = window.scores.wins + 1;
-					} else if (games_dict[timestamp].score1 < games_dict[timestamp].score2 && games_dict[timestamp].player2 === window.user.username) {
-						result = 'Win';
-						window.scores.wins = window.scores.wins + 1;
-					} else {
-						window.scores.losses = window.scores.losses + 1;
-						result = 'Loss';
-					}
-				} else {
-					result = 'N/A';
-				}
+// 				if (window.user.username === games_dict[timestamp].player1 || window.user.username === games_dict[timestamp].player2) {
+// 					if (games_dict[timestamp].score1 > games_dict[timestamp].score2 && games_dict[timestamp].player1 === window.user.username) {
+// 						result = 'Win';
+// 						window.scores.wins = window.scores.wins + 1;
+// 					} else if (games_dict[timestamp].score1 < games_dict[timestamp].score2 && games_dict[timestamp].player2 === window.user.username) {
+// 						result = 'Win';
+// 						window.scores.wins = window.scores.wins + 1;
+// 					} else {
+// 						window.scores.losses = window.scores.losses + 1;
+// 						result = 'Loss';
+// 					}
+// 				} else {
+// 					result = 'N/A';
+// 				}
 
-				let game_name = '';
+// 				let game_name = '';
 
-				if (games_dict[timestamp].tournament_id != -1) {
-					game_name = games_dict[timestamp].game_type + ' Tournament' + games_dict[timestamp].tournament_id;
-				}	else {
-					game_name = games_dict[timestamp].game_type;
-				}
+// 				if (games_dict[timestamp].tournament_id != -1) {
+// 					game_name = games_dict[timestamp].game_type + ' Tournament' + games_dict[timestamp].tournament_id;
+// 				}	else {
+// 					game_name = games_dict[timestamp].game_type;
+// 				}
 
-				const newRow = document.createElement("tr");
-				newRow.innerHTML = `
-					<td>${game_name}</td>
-					<td>${games_dict[timestamp].player1}</td>
-					<td>${games_dict[timestamp].player2}</td>
-					<td>${games_dict[timestamp].score1}</td>
-					<td>${games_dict[timestamp].score2}</td>
-					<td>${result}</td>
-				`;
+// 				const newRow = document.createElement("tr");
+// 				newRow.innerHTML = `
+// 					<td>${game_name}</td>
+// 					<td>${games_dict[timestamp].player1}</td>
+// 					<td>${games_dict[timestamp].player2}</td>
+// 					<td>${games_dict[timestamp].score1}</td>
+// 					<td>${games_dict[timestamp].score2}</td>
+// 					<td>${result}</td>
+// 				`;
 
-				tableBody.appendChild(newRow);
-			}
-		} else {
-			const noDataRow = document.createElement("tr");
-			noDataRow.innerHTML = '<td colspan="7" class="text-center">No data available.</td>';
-			tableBody.appendChild(noDataRow);
-			window.scores.wins = 0;
-			window.scores.losses = 0;
-		}
-		fillWinLoss()
-	})
-	.catch(error => {
-		console.error("Error fetching games:", error.message || "An unknown error occurred");
-	});
+// 				tableBody.appendChild(newRow);
+// 			}
+// 		} else {
+// 			const noDataRow = document.createElement("tr");
+// 			noDataRow.innerHTML = '<td colspan="7" class="text-center">No data available.</td>';
+// 			tableBody.appendChild(noDataRow);
+// 			window.scores.wins = 0;
+// 			window.scores.losses = 0;
+// 		}
+// 		fillWinLoss()
+// 	})
+// 	.catch(error => {
+// 		console.error("Error fetching games:", error.message || "An unknown error occurred");
+// 	});
 
-}
+// }
 
-function getGames(gameType, instance) {
-	const url = `https://${window.IP}:3000/solidity/solidity/get${gameType}games/${instance}/`;
-	return fetch(url, {
-		method: 'GET',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-	})
-	.then(response => {
-		if (!response.ok) {
-			throw new Error(`Failed to fetch ${gameType} games: ${response.statusText}`);
-		}
-		return response.json();
-	})
-	.then(data => {
-		const matchDictionary = {};
-		data.success.forEach(game => {
-			const info = {
-				timestamp: game[1],
-				players: game[2],
-				scores: game[3],
-				player1: players[0],
-				player2: players[1],
-				score1: scores[0],
-				score2: scores[1],
-			}
-			matchDictionary[info.timestamp] = {
-				game_type: gameType,
-				player1: info.player1,
-				player2: info.player2,
-				score1: info.score1,
-				score2: info.score2,
-			};
-		});
+// function getGames(gameType, instance) {
+// 	const url = `https://${window.IP}:3000/solidity/solidity/get${gameType}games/${instance}/`;
+// 	return fetch(url, {
+// 		method: 'GET',
+// 		headers: {
+// 			'Content-Type': 'application/json',
+// 		},
+// 	})
+// 	.then(response => {
+// 		if (!response.ok) {
+// 			throw new Error(`Failed to fetch ${gameType} games: ${response.statusText}`);
+// 		}
+// 		return response.json();
+// 	})
+// 	.then(data => {
+// 		const matchDictionary = {};
+// 		data.success.forEach(game => {
+// 			const info = {
+// 				timestamp: game[1],
+// 				players: game[2],
+// 				scores: game[3],
+// 				player1: players[0],
+// 				player2: players[1],
+// 				score1: scores[0],
+// 				score2: scores[1],
+// 			}
+// 			matchDictionary[info.timestamp] = {
+// 				game_type: gameType,
+// 				player1: info.player1,
+// 				player2: info.player2,
+// 				score1: info.score1,
+// 				score2: info.score2,
+// 			};
+// 		});
 
-		const sortedKeys = Object.keys(matchDictionary).sort((a, b) => a - b);
-		const sortedMatchDictionary = {};
-		sortedKeys.forEach(key => {
-			sortedMatchDictionary[key] = matchDictionary[key];
-		});
+// 		const sortedKeys = Object.keys(matchDictionary).sort((a, b) => a - b);
+// 		const sortedMatchDictionary = {};
+// 		sortedKeys.forEach(key => {
+// 			sortedMatchDictionary[key] = matchDictionary[key];
+// 		});
 
-		return sortedMatchDictionary;
-	})
-	.catch(error => {
-		console.error(`Error fetching ${gameType} games:`, error.message);
-		return {};
-	});
-}
+// 		return sortedMatchDictionary;
+// 	})
+// 	.catch(error => {
+// 		console.error(`Error fetching ${gameType} games:`, error.message);
+// 		return {};
+// 	});
+// }
 
-function fillWinLoss() {
-	const winCounter = document.getElementById('winCounter')
-	const lossCounter = document.getElementById('lossCounter')
+// function fillWinLoss() {
+// 	const winCounter = document.getElementById('winCounter')
+// 	const lossCounter = document.getElementById('lossCounter')
 
-	winCounter.textContent = window.scores.wins;
-	lossCounter.textContent = window.scores.losses;
-}
+// 	winCounter.textContent = window.scores.wins;
+// 	lossCounter.textContent = window.scores.losses;
+// }
 
 function addNotification(notificationText) {
 	const tableBody = document.getElementById("notificationsTableBody");
@@ -342,93 +344,93 @@ function declineFriendRequest(button, sender_id) {
 	deny_friend_request(sender_id)
 }
 
-//match history
-function populateUserDropdown() {
-	const userSelect = document.getElementById("userSelect");
+// match history
+// function populateUserDropdown() {
+// 	const userSelect = document.getElementById("userSelect");
 
-	userSelect.innerHTML = '';
+// 	userSelect.innerHTML = '';
 	
-	const currentUserOption = document.createElement("option");
-	currentUserOption.value = window.user.username;
-	currentUserOption.textContent = window.user.username; // Display the current user's username
-	userSelect.appendChild(currentUserOption);
+// 	const currentUserOption = document.createElement("option");
+// 	currentUserOption.value = window.user.username;
+// 	currentUserOption.textContent = window.user.username; // Display the current user's username
+// 	userSelect.appendChild(currentUserOption);
 
-	for (const username in window.user.friend_list) {
-		const option = document.createElement("option");
-		option.value = username;
-		option.textContent = username;
-		userSelect.appendChild(option);
-	}
-}
+// 	for (const username in window.user.friend_list) {
+// 		const option = document.createElement("option");
+// 		option.value = username;
+// 		option.textContent = username;
+// 		userSelect.appendChild(option);
+// 	}
+// }
 
-async function updateContent(selectedUser) {
-	const tableBody = document.getElementById("gameHistoryTableBody");
-	tableBody.innerHTML = '';
+// async function updateContent(selectedUser) {
+// 	const tableBody = document.getElementById("gameHistoryTableBody");
+// 	tableBody.innerHTML = '';
 
-	const selectedUserInfo = await get_user_info(selectedUser);
+// 	const selectedUserInfo = await get_user_info(selectedUser);
 
-	Promise.all([
-		getGames('Pongy', selectedUserInfo.blockchain_id),
-		getGames('Fighty', selectedUserInfo.blockchain_id)
-	])
-	.then(([pongy_games, fighty_games]) => {
-		const games_dict = { ...pongy_games, ...fighty_games };
+// 	Promise.all([
+// 		getGames('Pongy', selectedUserInfo.blockchain_id),
+// 		getGames('Fighty', selectedUserInfo.blockchain_id)
+// 	])
+// 	.then(([pongy_games, fighty_games]) => {
+// 		const games_dict = { ...pongy_games, ...fighty_games };
 
-		if (Object.keys(games_dict).length > 0) {
-			const timestamps = Object.keys(games_dict).sort((a, b) => a - b);
-			tableBody.innerHTML = '';
+// 		if (Object.keys(games_dict).length > 0) {
+// 			const timestamps = Object.keys(games_dict).sort((a, b) => a - b);
+// 			tableBody.innerHTML = '';
 
-			for (const timestamp of timestamps) {
-				let result = '';
+// 			for (const timestamp of timestamps) {
+// 				let result = '';
 
-				if (selectedUser.username === games_dict[timestamp].player1 || selectedUser.username === games_dict[timestamp].player2) {
-					if (games_dict[timestamp].score1 > games_dict[timestamp].score2 && games_dict[timestamp].player1 === selectedUser.username ) {
-						result = 'Win';
-						window.scores.wins = window.scores.wins + 1;
-					} else if (games_dict[timestamp].score1 < games_dict[timestamp].score2 && games_dict[timestamp].player2 === selectedUser.username ) {
-						result = 'Win';
-						window.scores.wins = window.scores.wins + 1;
-					} else {
-						window.scores.losses = window.scores.losses + 1;
-						result = 'Loss';
-					}
-				} else {
-					result = 'N/A';
-				}
+// 				if (selectedUser.username === games_dict[timestamp].player1 || selectedUser.username === games_dict[timestamp].player2) {
+// 					if (games_dict[timestamp].score1 > games_dict[timestamp].score2 && games_dict[timestamp].player1 === selectedUser.username ) {
+// 						result = 'Win';
+// 						window.scores.wins = window.scores.wins + 1;
+// 					} else if (games_dict[timestamp].score1 < games_dict[timestamp].score2 && games_dict[timestamp].player2 === selectedUser.username ) {
+// 						result = 'Win';
+// 						window.scores.wins = window.scores.wins + 1;
+// 					} else {
+// 						window.scores.losses = window.scores.losses + 1;
+// 						result = 'Loss';
+// 					}
+// 				} else {
+// 					result = 'N/A';
+// 				}
 
-				let game_name = '';
+// 				let game_name = '';
 
-				if (games_dict[timestamp].tournament_id != -1) {
-					game_name = games_dict[timestamp].game_type + ' Tournament' + games_dict[timestamp].tournament_id;
-				}	else {
-					game_name = games_dict[timestamp].game_type;
-				}
+// 				if (games_dict[timestamp].tournament_id != -1) {
+// 					game_name = games_dict[timestamp].game_type + ' Tournament' + games_dict[timestamp].tournament_id;
+// 				}	else {
+// 					game_name = games_dict[timestamp].game_type;
+// 				}
 
-				const newRow = document.createElement("tr");
-				newRow.innerHTML = `
-					<td>${game_name}</td>
-					<td>${games_dict[timestamp].player1}</td>
-					<td>${games_dict[timestamp].player2}</td>
-					<td>${games_dict[timestamp].score1}</td>
-					<td>${games_dict[timestamp].score2}</td>
-					<td>${result}</td>
-				`;
+// 				const newRow = document.createElement("tr");
+// 				newRow.innerHTML = `
+// 					<td>${game_name}</td>
+// 					<td>${games_dict[timestamp].player1}</td>
+// 					<td>${games_dict[timestamp].player2}</td>
+// 					<td>${games_dict[timestamp].score1}</td>
+// 					<td>${games_dict[timestamp].score2}</td>
+// 					<td>${result}</td>
+// 				`;
 
-				tableBody.appendChild(newRow);
-			}
-		} else {
-			const noDataRow = document.createElement("tr");
-			noDataRow.innerHTML = '<td colspan="7" class="text-center">No data available.</td>';
-			tableBody.appendChild(noDataRow);
-			window.scores.wins = 0;
-			window.scores.losses = 0;
-		}
-		fillWinLoss()
-	})
-	.catch(error => {
-		console.error("Error fetching games:", error.message || "An unknown error occurred");
-	});
-}
+// 				tableBody.appendChild(newRow);
+// 			}
+// 		} else {
+// 			const noDataRow = document.createElement("tr");
+// 			noDataRow.innerHTML = '<td colspan="7" class="text-center">No data available.</td>';
+// 			tableBody.appendChild(noDataRow);
+// 			window.scores.wins = 0;
+// 			window.scores.losses = 0;
+// 		}
+// 		fillWinLoss()
+// 	})
+// 	.catch(error => {
+// 		console.error("Error fetching games:", error.message || "An unknown error occurred");
+// 	});
+// }
 
 async function checkTournamentStatus()
 {
@@ -444,4 +446,61 @@ async function checkTournamentStatus()
 		fightyTournamentData.retriveTournamentInfo()
 	if (pongyStatus)
 		pongyTournamentData.retriveTournamentInfo()
+}
+
+async function loadData() {
+	// Get selected game type and instanceIndex
+	const gameType = document.getElementById('gameType').value;
+	const username = document.getElementById('mh_username').value;
+
+	const user = await get_user_info(username);
+	// API paths for each game type
+	const apiPaths = {
+		pongyGames: `/solidity/solidity/getpongygames/${user.blockchain_id}`,
+		fightyGames: `/solidity/solidity/getfightygames/${user.blockchain_id}`,
+		pongyTournaments: `/solidity/solidity/getpongytournaments/${user.blockchain_id}`,
+		fightyTournaments: `/solidity/solidity/getfightytournaments/${user.blockchain_id}`
+	};
+
+	// Fetch data from the selected API endpoint
+	fetch(apiPaths[gameType])
+		.then(response => response.json())
+		.then(data => {
+			// Clear existing table data
+			const tableBody = document.querySelector('#resultsTable tbody');
+			tableBody.innerHTML = '';
+
+			// Parse and display results
+			const results = data.success;
+			results.forEach(result => {
+				const row = document.createElement('tr');
+
+				// For Games
+				if (gameType === 'pongyGames' || gameType === 'fightyGames') {
+					row.innerHTML = `
+						<td>${result[0]}</td>
+						<td>${new Date(result[1] * 1000).toLocaleString()}</td>
+						<td>${result[2].join(' vs ')}</td>
+						<td>${result[3].join(' - ')}</td>
+					`;
+				}
+				// For Tournaments
+				else {
+					const tournamentMatches = result[4];
+					tournamentMatches.forEach(match => {
+						const matchRow = document.createElement('tr');
+						matchRow.innerHTML = `
+							<td>${match[0]}</td>
+							<td>${new Date(match[1] * 1000).toLocaleString()}</td>
+							<td>${match[2].join(' vs ')}</td>
+							<td>${match[3].join(' - ')}</td>
+						`;
+						tableBody.appendChild(matchRow);
+					});
+				}
+
+				tableBody.appendChild(row);
+			});
+		})
+		.catch(error => console.error('Error fetching data:', error));
 }
