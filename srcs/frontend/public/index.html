@@ -45,12 +45,27 @@
 	<div id="sidebar" class="sidebar hidden">
 		<ul>
 			<li>
-				<!-- <label class="file-upload" for="avatarInput">Choose File</label> -->
-				<input type="file" id="avatarInput" onchange="updateFileName(this)" />
-				<div class="file-name" id="fileName">No file chosen</div>
-				<button onclick="handleUpload()">Upload Avatar</button>
-			</li>
+				<h1>User Profile</h1>
+
+				<h2>Change Avatar</h2>
+				<input type="file" id="avatarInput" />
+				<button onclick="handleFileUpload()">Upload Avatar</button>
+
+
+				<h2>Change Username</h2>
+				<input type="text" id="usernameInput" placeholder="Enter new username" />
+				<button onclick="changeUsername()">Change Username</button>
+
+				<h2>Change Password</h2>
+				<input type="password" id="oldPasswordInput" placeholder="Enter old password" />
+				<input type="password" id="newPasswordInput" placeholder="Enter new password" />
+				<input type="password" id="confirmPasswordInput" placeholder="Confirm new password" />
+				<button onclick="changePassword()">Change Password</button>
 			
+				<h2>Logout</h2>
+   				<button onclick="logout()">Logout</button>
+			</li>
+<!-- 			
 			<li>
 				<button id="changeUsername">Change Username</button>
 				<div id="changeUsernameForm" class="hidden">
@@ -85,7 +100,7 @@
 					<div id="changePasswordError" class="text-danger bg-dark mt-3 p-2 rounded hidden"></div>
 				</div>
 			</li>
-			<li><button id="logoutButton">Logout</button></li>
+			<li><button id="logoutButton">Logout</button></li> -->
 		</ul>
 	</div>
 
@@ -209,7 +224,7 @@
 	</div>
 
 
-	<div id="auth">
+	<!-- <div id="auth">
 		<div id="login" class="auth-page hidden">
 			<h1>Login</h1>
 			<form id="loginForm">
@@ -232,7 +247,7 @@
 			</form>
 			<button id="toLogin">Already a user?</button>
 		</div>
-	</div>
+	</div> -->
 	
 	<nav class="hidden">
 		<a href="#home" class="nav-link">Home</a>
@@ -551,7 +566,8 @@
 	<script src="script.js"></script>
 	<script src="online_games_utils/queues.js"></script>
 	<script src="game2/classes.js"></script> <!-- So it doesnt give error when loading it more than once -->
-	<script src="matchmaking/classes.js"></script> <!-- So it doesnt give error when loading it more than once -->
+	<script src="home/second_file.js"></script> <!-- So it doesnt give error when loading it more than once -->
+	<script src="auth/init.js"></script> <!-- So it doesnt give error when loading it more than once -->
 
 </body>
 </html>

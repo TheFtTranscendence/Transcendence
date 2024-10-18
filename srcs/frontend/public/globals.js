@@ -1,10 +1,5 @@
-const currentUser = {
-	username: "",
-	email: "" //Not set
-};
-
 window.authScripts = [
-	'auth/init.js'
+	// 'auth/init.js'
 ]
 
 window.chatScripts = [

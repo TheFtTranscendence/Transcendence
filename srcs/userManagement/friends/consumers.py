@@ -34,8 +34,14 @@ class	SocialConsumer(AsyncWebsocketConsumer):
 		except Exception as e:
 			logger.exception(f'exception: {e}')
 
+	@database_sync_to_async
+	def _updateUser(self):
+		self.user.refresh_from_db()
+
 	async def disconnect(self, close_code):
 		try:
+			self._updateUser()
+
 			if self.user:
 				await self._setOffline()
 				await self._notifyOnlineStatus()
@@ -43,12 +49,18 @@ class	SocialConsumer(AsyncWebsocketConsumer):
 					self.room_name,
 					self.channel_name
 				)
+
+
+
 		except Exception as e:
 			logger.exception(f'exception: {e}')
 
 	async def receive(self, text_data):
 		text_data_json = json.loads(text_data)
 		msg_type = text_data_json['type']
+
+		if msg_type == 'update':
+			self._updateUser()
 
 		if msg_type == 'friend_request':
 			await self.handleFriendRequest(text_data_json)

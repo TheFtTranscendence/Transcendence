@@ -198,6 +198,15 @@ function sendMessage(message) {
 	}
 }
 
+function update_user_in_socket() {
+	const data = {
+		type: "update",
+	};
+
+	window.social_socket.send(JSON.stringify(data));
+	update_user_info()
+}
+
 //* Im updating the entire user every time there is a small update, this is obviously not the best way to do it, but it works well enough for our project
 function set_online() {
 	window.social_socket = new WebSocket(`wss://${window.IP}:3000/user-management/ws/social/?user=${window.user.username}`);
