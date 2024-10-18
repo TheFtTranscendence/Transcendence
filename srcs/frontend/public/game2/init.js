@@ -163,35 +163,18 @@ async function leave_game(v) {
     clearInterval(v.g.backgroundInterval)
 
     await storeMatch(v)
-
     if (v.g.tournamentGame && fightyTournamentData.tournamentEnd)
     {
         fightyTournamentData.finalTournament = await getFinalTournamentFighty()
         window.storeTournamentBlockchainFighty()
     }
 
-
     v.player = null
     v.enemy = null
-
-
-	v.player.bar.style.width = '100%'
-	v.enemy.bar.style.width = '100%'
-	document.querySelector('#game2-end-text').style.display = 'none'
 
     window.removeEventListener('keydown', game2_keydown)
 	window.removeEventListener('keyup', game2_keyup)
 	window.removeEventListener('hashchange', game2_hashchange)
-
-	if (window.location.hash != '#fighters')
-	{
-		console.log("BRUH")
-		
-		document.getElementById('games').classList.add("hidden")
-		document.getElementById('div-game2-area').classList.add("hidden")
-		unloadScripts(window.game2Scripts)
-		return ;
-	}
 
     window.addEventListener('keydown', quit);
 
@@ -203,13 +186,13 @@ async function quit(event)
 
         window.fightyGamesOnCounter--;
         v.g.timer.innerHTML = 200 
-        
+
         document.querySelector('#game2-bar1').style.width = '100%'
         document.querySelector('#game2-bar2').style.width = '100%'
 
         document.querySelector('#game2-end-text').style.display = 'none'
 
-        
+
         unloadScripts(window.game2Scripts);
         document.getElementById('div-game2-area').classList.add("hidden");
         if (v.g.tournamentGame) {
@@ -263,7 +246,6 @@ async function storeMatch(v)
                 },
                 body: JSON.stringify(game),
             });
-
             if (!response.ok) {
                 const error = await response.json();
                 throw new Error(error.message);
@@ -273,7 +255,6 @@ async function storeMatch(v)
             if (data.status === "completed") {
                 fightyTournamentData.tournamentEnd = true;
             }
-
         } catch (error) {
             throw new Error(error.message);
         }

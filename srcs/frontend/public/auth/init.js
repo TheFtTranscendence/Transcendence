@@ -1,3 +1,24 @@
+// AUTH ANIMATION
+function initElements() {
+    window.leftSide = window.leftSide || document.querySelector('.left-side');
+    window.rightSide = window.rightSide || document.querySelector('.right-side');
+    window.rightContent = window.rightContent || document.querySelector('.right-content');
+    window.leftContent = window.leftContent || document.querySelector('.left-content');
+    window.leftForm = window.leftForm || document.getElementById('login');
+    window.rightForm = window.rightForm || document.getElementById('register');
+}
+
+initElements();
+
+leftSide.addEventListener('click', () => {
+	handleClick(leftSide, rightSide, leftContent, rightContent, leftForm, rightForm);
+});
+
+rightSide.addEventListener('click', () => {
+	handleClick(rightSide, leftSide, rightContent, leftContent, rightForm, leftForm);
+});
+
+
 function auth_hashchange(event) {
 	document.getElementById('auth').classList.add('hidden');
 	window.removeEventListener('hashchange', auth_hashchange);
@@ -155,17 +176,6 @@ document.getElementById('loginForm').addEventListener('submit', (event) => {
 document.getElementById('registerForm').addEventListener('submit', handleRegisterEvent);
 
 
-// AUTH ANIMATION
-function initElements() {
-    window.leftSide = window.leftSide || document.querySelector('.left-side');
-    window.rightSide = window.rightSide || document.querySelector('.right-side');
-    window.rightContent = window.rightContent || document.querySelector('.right-content');
-    window.leftContent = window.leftContent || document.querySelector('.left-content');
-    window.leftForm = window.leftForm || document.getElementById('login');
-    window.rightForm = window.rightForm || document.getElementById('register');
-}
-
-
 function handleClick(expandedSide, collapsedSide, expandedContent, collapsedContent, expandedForm, collapsedForm) {
 	collapsedSide.classList.remove('col-sm-6', 'col-sm-10');
 	collapsedContent.classList.add('hidden');
@@ -177,13 +187,3 @@ function handleClick(expandedSide, collapsedSide, expandedContent, collapsedCont
 	expandedContent.classList.remove('hidden');
 	expandedForm.classList.remove('hidden');
 }
-
-initElements();
-
-leftSide.addEventListener('click', () => {
-	handleClick(leftSide, rightSide, leftContent, rightContent, leftForm, rightForm);
-});
-
-rightSide.addEventListener('click', () => {
-	handleClick(rightSide, leftSide, rightContent, leftContent, rightForm, leftForm);
-});
