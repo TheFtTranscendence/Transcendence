@@ -15,6 +15,7 @@ function uploadAvatar(file) {
 		.then(data => {
 			window.user = data.user;
 			getAvatar()
+			update_user_in_socket();
 		})
 		.catch(error => console.error('Error:', error));
 	});
@@ -30,7 +31,6 @@ function handleFileUpload() {
 			const profileImg = document.querySelector('#profile-img img');
 			profileImg.src = uploadedUrl;
 			profileImg.alt = file.name;
-			update_user_in_socket();
 			avatarInput.value = '';
 		}).catch((error) => {
 			console.error('Upload failed:', error);
@@ -57,6 +57,8 @@ function updateUsername(username) {
 			},
 		})
 		.then(data => {
+			update_user_in_socket();
+			update_user_info()
 			resolve(data);
 		})
 		.catch(error => {
@@ -72,9 +74,7 @@ function changeUsername() {
 	if (newUsername) {
 		
 		updateUsername(newUsername).then(() => {
-			update_user_in_socket();
 			usernameInput.value = ''
-			update_user_info()
 		}).catch((error) => {
 			console.error('Username update failed:', error);
 			toast_alert('Failed to update username');
@@ -105,6 +105,8 @@ function updatePassword(oldPassword, newPassword, confirmPassword) {
 			resolve(data);
 		})
 		.catch(error => {
+			update_user_in_socket();
+			update_user_info();
 			reject(error);
 		});
 	});
@@ -123,11 +125,9 @@ function changePassword() {
 		if (newPassword === confirmPassword) {
 			
 			updatePassword(oldPassword, newPassword, confirmPassword).then(() => {
-				update_user_in_socket();
 				oldPasswordInput.value = ''
 				newPasswordInput.value = ''
 				confirmPasswordInput.value = ''
-				update_user_info();
 			}).catch((error) => {
 				//todo: on backend password error should return an error
 				console.error('Password update failed:', error);
