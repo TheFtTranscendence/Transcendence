@@ -37,4 +37,5 @@ class Tournament(models.Model):
 class TournamentGame(models.Model):
 	tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name='tournament_game')
 	users = ArrayField(models.CharField(max_length=100), blank=True, null=True)
+	timestamp = models.DateTimeField(auto_now_add=True)
 	scores = ArrayField(models.IntegerField(), blank=True, null=True)

@@ -39,8 +39,8 @@ class TournamentSerializer(serializers.ModelSerializer):
 		if len(data['player_list']) != data['number_of_players']:
 			raise serializers.ValidationError("The number of players in player_list must match number_of_players.")
 		#todo: Its giving problems here:
-		if data['player_info'] and len(data['player_info']) != data['number_of_players']:
-			raise serializers.ValidationError("The number of players in player_info must match number_of_players.")
+		# if data['player_info'] and len(data['player_info']) != data['number_of_players']:
+		# 	raise serializers.ValidationError("The number of players in player_info must match number_of_players.")
 		return data
 	
 	def create(self, validated_data):

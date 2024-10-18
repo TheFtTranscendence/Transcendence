@@ -76,37 +76,35 @@ async function main_menu_matchmakingButton () {
 	}
 }
 
-function loadScriptss(scriptUrls) {
-    return Promise.all(scriptUrls.map(url => {
-        return new Promise((resolve, reject) => {
-            const script = document.createElement('script');
-            script.src = url;
-            script.onload = () => resolve();
-            script.onerror = () => reject(new Error(`Failed to load script: ${url}`));
-            document.head.appendChild(script);
-        });
-    }));
-}
-
-
 async function main_menu_tournamentButton() {
 	console.log('Tournament button clicked')
 	clearMenu()	
 
-	const gameStatus = await window.getTournamentStatus();
-
-	if (window.location.hash == '#fighters' && !gameStatus) {
-		games_tournament_menu()
+	if (window.location.hash == '#fighters') {
+		const gameStatus = await window.getTournamentStatus("Fighty");
+		if (!gameStatus) {
+			games_tournament_menu()
+		}
+		else {
+			if (!areScriptsLoaded(window.tournamentScripts)) {
+				unloadScripts(window.menuScripts)
+				await PromiseloadScripts(window.tournamentScripts)
+				tournament_loop()
+			}
+		}
 	}
-	else if (window.location.hash == '#game' && !gameStatus)
-	{
-		games_tournament_menu()
-	}
-	else
-	{
-		unloadScripts(window.menuScripts)
-		await loadScriptss(window.tournamentScripts)
-		tournament_loop()
+	else if (window.location.hash == '#game') {
+		const gameStatus = await window.getTournamentStatus("Pongy");
+		if (!gameStatus) {
+			games_tournament_menu()
+		}
+		else {
+			if (!areScriptsLoaded(window.tournamentScripts)) {
+				unloadScripts(window.menuScripts)
+				await PromiseloadScripts(window.tournamentScripts)
+				tournament_loop()
+			}
+		}
 	}
 }
 
@@ -146,8 +144,10 @@ function main_menu() {
 	window.tournament = document.getElementById('games-button-tournament')
 	
 	window.changeSkinButton.addEventListener('click', main_menu_changeSkinButton)
-	window.matchmakingButton.addEventListener('click', main_menu_matchmakingButton)
+	window.matchmakingButton.addEventListener('click', main_menu_matchmakingButton, { once: true })
 	window.localButton.addEventListener('click', main_menu_localButton)
-	window.tournament.addEventListener('click', main_menu_tournamentButton)
+	window.tournament.addEventListener('click', main_menu_tournamentButton, { once: true })
+
+
 	
 }
