@@ -19,9 +19,7 @@ function handleSuccessAuth(errorField) {
 		errorField.classList.add('hidden');
 	}
 
-	console.log("INHANDLSUCCESSAUTH")
 	set_online();
-	console.log("ITS JUST GOING AROUND IT...")
 	_update_user_chats();
 
 }
