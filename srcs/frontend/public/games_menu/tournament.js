@@ -313,7 +313,7 @@ function shuffle_names(playerNames, playerSkins)
 }
 
 function tournament_loop() {
-	// window.isTournamentActive = false
+	window.isTournamentActive = false
 	unloadScripts(window.game2Scripts)
 	unloadScripts(window.gameScripts)
 
