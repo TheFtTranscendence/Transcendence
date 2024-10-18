@@ -41,16 +41,10 @@ async function cleanUpAfterFinish(vars)
 		window.removeEventListener("keydown", vars.eventHandlers.eventKeyDownLocal);
 		vars.canvasVars.canvas.removeEventListener("click", vars.eventHandlers.eventCanvasClickLocal);
 		await storeMatch(vars);
-		console.log("--------------")
-		console.log("TOURNNAMENT BOOL", pongyTournamentData.tournamentEnd)
-		console.log("--------------")
-		console.log("|||||||")
-		console.log("--------------")
 		if (vars.gameVars.tournamentGame && pongyTournamentData.tournamentEnd)
 		{
-			pongyTournamentData.finalTournament = await getFinalTournament(pongyTournamentData)
-			const tournamentData = pongyTournamentData.getFinalTournamentForBlockchain()
-			window.storeTournamentBlockchain(tournamentData)
+			pongyTournamentData.finalTournament = await getFinalTournamentPongy()
+			window.storeTournamentBlockchainPongy()
 		}
 	}
 
@@ -97,8 +91,6 @@ async function storeMatch(vars)
 		
 		pongyTournamentData.setMatchAsPlayed(players)
 
-		// await storeGameTournament(pongyTournamentData.id)
-
 		const url = 'https://' + window.IP + ':3000/online-games/tournaments/' + pongyTournamentData.id + '/games/';
 
 		const game = {
@@ -122,7 +114,6 @@ async function storeMatch(vars)
 
             const data = await response.json();
             if (data.status === "completed") {
-                // Set the global variable directly
                 pongyTournamentData.tournamentEnd = true;
             }
 

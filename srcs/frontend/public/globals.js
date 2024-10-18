@@ -376,13 +376,11 @@ class Tournament {
 				players: this.finalTournament.tournament_games[i].users,
 				scores: this.finalTournament.tournament_games[i].scores,
 			};
+
+			finalTournamentForBlockchain.games.push(game)
 		}
 
-		console.log("FINAL TOURNAMENT GETTER")
-		console.log(finalTournamentForBlockchain)
-		
 		return finalTournamentForBlockchain
-
 	}
 
 	// prints all matches stored
@@ -635,8 +633,9 @@ async function storeTournament(playerNames, playerSkins, gameName)
     });
 }
 
-async function getFinalTournament() {
-    const url = 'https://' + window.IP + ':3000/online-games/tournaments/' + pongyTournamentData.id + '/';
+async function getFinalTournamentPongy() {
+
+	const url = 'https://' + window.IP + ':3000/online-games/tournaments/' + pongyTournamentData.id + '/';
 
     try {
         const response = await fetch(url, {
@@ -657,9 +656,33 @@ async function getFinalTournament() {
     }
 }
 
-function storeTournamentBlockchain(tournamentData)
+async function getFinalTournamentFighty() {
+
+	const url = 'https://' + window.IP + ':3000/online-games/tournaments/' + fightyTournamentData.id + '/';
+
+	try {
+		const response = await fetch(url, {
+			method: 'GET',
+		});
+
+		if (!response.ok) {
+			const error = await response.json();
+			throw new Error(error.message);
+		}
+
+		const data = await response.json();
+		return data;  
+
+
+	} catch (error) {
+		throw new Error(`Failed to get final tournament: ${error.message}`);
+	}
+}
+
+async function storeTournamentBlockchainPongy()
 {
 	const url = `https://${window.IP}:3000/solidity/solidity/addtournament/${window.user.blockchain_id}/Pongy`;
+	const tournament = pongyTournamentData.getFinalTournamentForBlockchain()
 
 
 	fetch(url, {
@@ -667,7 +690,38 @@ function storeTournamentBlockchain(tournamentData)
 		headers: {
 			'Content-Type': 'application/json',
 		},
-		body: JSON.stringify(tournamentData),
+		body: JSON.stringify(tournament),
+	})
+	.then(response => {
+		// Check if the response is successful (status 200-299)
+		if (response.ok) {
+			return response.json();  // Parse JSON response
+		} else {
+			throw new Error(`Error: ${response.status} ${response.statusText}`);
+		}
+	})
+	.then(responseData => {
+		// Log success and the data returned by the server (if any)
+		console.log("Tournament stored successfully:", responseData);
+	})
+	.catch(error => {
+		// Log any error that happens during the fetch request
+		console.error("Error storing the Tournament:", error);
+	});
+}
+
+async function storeTournamentBlockchainFighty()
+{
+
+	const url = `https://${window.IP}:3000/solidity/solidity/addtournament/${window.user.blockchain_id}/Fighty`;
+	const tournament = fightyTournamentData.getFinalTournamentForBlockchain()
+
+	fetch(url, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify(tournament),
 	})
 	.then(response => {
 		// Check if the response is successful (status 200-299)

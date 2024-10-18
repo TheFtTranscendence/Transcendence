@@ -153,7 +153,7 @@ function reset_keys(v) {
 
 }
 
-function leave_game(v) {
+async function leave_game(v) {
 	console.log('hashchange game2');
 
     console.log("WE HERE")
@@ -162,7 +162,14 @@ function leave_game(v) {
     clearInterval(v.g.timerInterval)
     clearInterval(v.g.backgroundInterval)
 
-    storeMatch(v)
+    await storeMatch(v)
+
+    if (v.g.tournamentGame && fightyTournamentData.tournamentEnd)
+    {
+        fightyTournamentData.finalTournament = await getFinalTournamentFighty()
+        window.storeTournamentBlockchainFighty()
+    }
+
 
     v.player = null
     v.enemy = null
@@ -202,7 +209,7 @@ async function quit(event)
     }
 }
 
-function storeMatch(v)
+async function storeMatch(v)
 {
     players = [
         v.player.name,
@@ -226,55 +233,35 @@ function storeMatch(v)
 
         fightyTournamentData.setMatchAsPlayed(players)
 
-		const url = 'https://' + window.IP + ':3000/online-game/tournaments/' + fightyTournamentData.id + '/games/';
+		const url = 'https://' + window.IP + ':3000/online-games/tournaments/' + fightyTournamentData.id + '/games/';
 
 		const game = {
 			"users": players,
 			"scores": scores,
 		}
 
-        return fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(game),
-        })
-        .then(response => {
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(game),
+            });
+
             if (!response.ok) {
-                return response.json().then(err => { throw err; });
+                const error = await response.json();
+                throw new Error(error.message);
             }
-            return response.json();
-        })
-        .then(data => { // TODO: send tournament to blockchain
-            // return data
 
-            
+            const data = await response.json();
+            if (data.status === "completed") {
+                fightyTournamentData.tournamentEnd = true;
+            }
 
-			// if (data.status === "completed")
-			// {
-			// 	const url = `https://${window.IP}:3000/solidity/solidity/addtournament/${window.user.blockchain_id}/Fighty`;
-
-			// 	const data = {
-			// 		players:,
-			// 		tournamentId: pongyTournamentData.id,
-			// 		gameName: "Pongy",
-			// 		games: pongyTournamentData.getthisshit() // do this
-			// 	};
-		
-			// 	fetch(url, {
-			// 		method: 'POST',
-			// 		headers: {
-			// 			'Content-Type': 'application/json',
-			// 		},
-			// 		body: JSON.stringify(data),
-			// 	})
-			// }
-        })
-        .catch(error => {
+        } catch (error) {
             throw new Error(error.message);
-        });
-
+        }
 	}
 	else
 	{
