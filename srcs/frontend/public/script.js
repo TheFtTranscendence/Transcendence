@@ -6,6 +6,9 @@
 navigate();
 // Function to handle navigation
 function navigate() {
+	//todo: temp fix
+	getAvatar()
+
 	let element, scripts, startFunction;
 
 	if (window.user == undefined) 
