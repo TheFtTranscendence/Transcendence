@@ -28,12 +28,6 @@ function navigate() {
 			startFunction = 'home'
 			break;
 
-		// case '#game':
-		// 	element = 'games'
-		// 	scripts = window.menuScripts
-		// 	startFunction = 'main_menu'
-		// 	break;
-
 		case '#game':
 		case '#fighters':
 			element = 'games'
@@ -54,35 +48,6 @@ function navigate() {
 	loadScripts(scripts, startFunction);
 }
 
-// window.onload = function() {
-//     // Set the hash to #auth when the page loads
-//     window.location.hash = '#auth';
-// };
-
-// Function to load a script and return a Promise
-// async function loadScript(src) {
-// 	await src.forEach(src => {
-// 		const scriptElement = document.querySelector(`script[src="${src}"]`);
-// 		console.log("Script element -> ", scriptElement)
-// 		if (!scriptElement) {
-// 			return new Promise((resolve, reject) => {
-// 				const script = document.createElement('script');
-// 				script.src = src;
-// 				script.type = 'text/javascript';
-		
-// 				script.onload = () => {
-// 					resolve();
-// 				};
-		
-// 				script.onerror = () => {
-// 					reject(new Error(`Failed to load script: ${src}`));
-// 				};
-		
-// 				document.body.appendChild(script);
-// 			});
-// 		}
-// 	});
-// }
 
 async function loadScript(src) {
     // Check if the script is already loaded

@@ -93,24 +93,6 @@ async function game_end_winner(v, winner, loser) {
 	// Not going global!
 
 	// leave_game(v)
-
-	// NEW WAY OF USING BCH
-	// const url = `https://${window.IP}:3000/solidity/solidity/addgame/${window.user.smartcontract_id}`;
-
-	// const data = {
-	// 	player1: v.player.name,
-	// 	player2: v.enemy.name,
-	// 	score1: v.player.health,
-	// 	score2: v.enemy.health,
-	// };
-
-	// fetch(url, {
-	// 	method: 'POST',
-	// 	headers: {
-	// 		'Content-Type': 'application/json',
-	// 	},
-	// 	body: JSON.stringify(data),
-	// })
 	
 	console.log('Game Ended!')
 	leave_game(v)
@@ -147,24 +129,6 @@ async function game_end_tie(v) {
 	
 	document.querySelector('#game2-end-text').innerHTML = 'Tie!'
 	document.querySelector('#game2-end-text').style.display = 'flex'
-
-	// const url = `https://${window.IP}:3000/solidity/solidity/addgame/${window.user.blockchain_id}/Pongy`;
-
-	// const data = {
-	// 	player1: v.player.name,
-	// 	player2: v.enemy.name,
-	// 	score1: v.player.health,
-	// 	score2: v.enemy.health,
-	// };
-
-	// fetch(url, {
-	// 	method: 'POST',
-	// 	headers: {
-	// 		'Content-Type': 'application/json',
-	// 	},
-	// 	body: JSON.stringify(data),
-	// })
-
 
 	leave_game(v)
 	

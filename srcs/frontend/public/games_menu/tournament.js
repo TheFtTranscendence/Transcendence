@@ -13,9 +13,6 @@ function clearTournament() {
 			fightyTournamentData.resetTournament()
 		
 			document.getElementById('leave-tournament-button').removeEventListener('click', leaveTournament)
-			const winnerScreen = document.getElementById('winner-screen');
-			winnerScreen.classList.add("hidden"); 
-			winnerScreen.textContent = ''; 
 			document.getElementById("winner-message").textContent = ""
 		
 		
@@ -58,9 +55,6 @@ function next_game_players() {
 
 async function next_game() {
 	document.getElementById('next-game-button').removeEventListener('click', next_game)
-	document.getElementById('tournament-area').classList.add("hidden");
-	document.getElementById('tournament-bracket').classList.add("hidden");
-	document.getElementById('winner-screen').classList.add("hidden");
 	window.tournamentVars.tournamentMatch = true;
 
 	let playerNames = [];
@@ -68,24 +62,45 @@ async function next_game() {
 
 	[playerNames, playerSkins] = next_game_players();
 
-	if (window.location.hash == '#fighters') {
-		document.getElementById('div-game2-area').classList.remove("hidden");
-		window.player1Skin = 0;
-		window.player2Skin = 1;
-		unloadScripts(window.menuScripts);
-		clearTournament();
-		await loadScripts(window.game2Scripts);
-		startGame2(playerNames[0], playerNames[1], window.game2Skins[playerSkins[0]], window.game2Skins[playerSkins[1]], true);
-	} else {
-		document.getElementById('game-area').classList.remove("hidden");
+	console.log("PLAYERS AND SKINS")
+	console.log("------------------")
+	console.log("playerNames", playerNames)
+	console.log("------------------")
+	console.log("playerSkins", playerSkins)
+	console.log("------------------")
 
+	if (window.location.hash == '#fighters') {
 		clearTournament();
+		document.getElementById('div-game2-area').classList.remove("hidden");
+		document.getElementById('tournament-area').classList.add("hidden");
+		document.getElementById('tournament-bracket').classList.add("hidden");
+		document.getElementById('winner-screen').classList.add("hidden");
+		unloadScripts(window.menuScripts);
+		if (!areScriptsLoaded(window.game2Scripts)) {
+			await PromiseloadScripts(window.game2Scripts);
+			startGame2(playerNames[0], playerNames[1], window.game2Skins[playerSkins[0]], window.game2Skins[playerSkins[1]], playerSkins[0], playerSkins[1], true);
+		}
+		else
+		{
+			console.log("RETURNING FUNCKING GAME!!")
+			return
+		}
+	} 
+	else {
+		clearTournament();
+		document.getElementById('game-area').classList.remove("hidden");
+		document.getElementById('tournament-area').classList.add("hidden");
+		document.getElementById('tournament-bracket').classList.add("hidden");
+		document.getElementById('winner-screen').classList.add("hidden");
+		unloadScripts(window.menuScripts);
 		if (!areScriptsLoaded(window.gameScripts)) {
 			await PromiseloadScripts(window.gameScripts);
-			startGame(playerNames[0], playerNames[1], window.game1Skins[playerSkins[0]], window.game1Skins[playerSkins[1]], playerSkins[0], playerSkins[1], true, false);
+			startGame(playerNames[0], playerNames[1], window.game1Skins[playerSkins[0]], window.game1Skins[playerSkins[1]], playerSkins[0], playerSkins[1], true);
 		}
+		else
+			return
 	}
-	pongyTournamentData.printAllMatches()
+	// pongyTournamentData.printAllMatches()
 
 }
 
@@ -175,16 +190,16 @@ function leaveTournament()
 	window.removeEventListener('hashchange', clearTournament); 
 
 	document.getElementById('next-game-button').removeEventListener('click', next_game)
+	document.getElementById('leave-tournament-button').removeEventListener('click', leaveTournament)
 
 	clearBracket()
-	if (window.location.hash == '#fighters') {
+	if (window.location.hash === '#fighters') {
 		fightyTournamentData.resetTournament()
 	}
 	else {
 		pongyTournamentData.resetTournament()
 	}
 
-	document.getElementById('leave-tournament-button').removeEventListener('click', leaveTournament)
 	document.getElementById("winner-message").textContent = ""
 
 	document.getElementById("first-match-r3").classList.add("hidden"); 
@@ -196,16 +211,18 @@ function leaveTournament()
 	main_menu()
 }
 
-async function show_bracket()
+function show_bracket()
 {
 	document.getElementById('tournament-bracket').classList.remove("hidden");
+	document.getElementById('next-game-button').removeEventListener('click', next_game)
+	document.getElementById('next-game-button').addEventListener('click', next_game);
 
 	let players = []
 	let nextMatch = []
 	let roundInfo = {}
 	let tournamentSize = 0
  
-	if (window.location.hash == '#fighters') {
+	if (window.location.hash === '#fighters') {
 		players = fightyTournamentData.getBracketPlayerList()
 		nextMatch = fightyTournamentData.getNextTournamentMatch()[0]
 		roundInfo = fightyTournamentData.getRoundInfo()
@@ -217,8 +234,6 @@ async function show_bracket()
 		roundInfo = pongyTournamentData.getRoundInfo()
 		tournamentSize = pongyTournamentData.nrPlayers
 	}
-
-	console.log(pongyTournamentData.getBracketPlayerList())
 
 	// show divs
 	if (tournamentSize === 4)
@@ -297,6 +312,7 @@ async function show_bracket()
 		}
 	}
 	document.getElementById("next-game-players").textContent = nextMatch[0] + " vs " + nextMatch[1]
+	fightyTournamentData.printAllMatches()
 
 }
 
@@ -357,9 +373,6 @@ function tournament_loop() {
 	}
 	else {
 		show_bracket();
-
-		document.getElementById('next-game-button').removeEventListener('click', next_game)
-		document.getElementById('next-game-button').addEventListener('click', next_game);
 	
 	}
 }

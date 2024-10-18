@@ -1,16 +1,18 @@
 function clearTournamentMenu() {
-	document.getElementById('games-tournament-menu').classList.add('hidden')
-	document.getElementById('winner-screen').classList.add("hidden");
 	
 	window.removeEventListener('hashchange', tournament_menu_hashchange)
-
+	
 	window.toogle58Button.removeEventListener('click', tournament_extendPlayers)
 	window.PlayButton.removeEventListener('click', tournament_play)
 	window.BackButton.removeEventListener('click', tournament_backButton)
-
+	
 	window.tournamentskinButton.forEach(function(button) {
 		button.removeEventListener('click', handleButtonClick);
 	})
+
+	document.getElementById('games-tournament-menu').classList.add('hidden')
+	document.getElementById('winner-screen').classList.add("hidden");
+	
 }
 
 
@@ -38,20 +40,6 @@ function tournament_extendPlayers() {
 			player.style.display = 'flex';
 		}
 	});
-}
-
-//maybe integrate this in loadscripts
-//has to return the promisse for await to work
-function loadScriptss(scriptUrls) {
-    return Promise.all(scriptUrls.map(url => {
-        return new Promise((resolve, reject) => {
-            const script = document.createElement('script');
-            script.src = url;
-            script.onload = () => resolve();
-            script.onerror = () => reject(new Error(`Failed to load script: ${url}`));
-            document.head.appendChild(script);
-        });
-    }));
 }
 
 async function tournament_play() {
@@ -87,11 +75,9 @@ async function tournament_play() {
 
 	// Uncomment when scripts apply
 	clearTournamentMenu()
-	console.log(window.pongPlayerNames)
-    console.log(window.pongPlayerSkins)
 	unloadScripts(window.menuScripts)
 	if (!areScriptsLoaded(window.tournamentScripts)) {
-		await loadScriptss(window.tournamentScripts)
+		await PromiseloadScripts(window.tournamentScripts)
 		start_tournament(playerNames, playerSkins)
 	}
 }

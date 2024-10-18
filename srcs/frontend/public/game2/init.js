@@ -1,4 +1,4 @@
-function init_vars(player1, player2, skins1, skins2, tournamentGame) {
+function init_vars(player1, player2, skins1, skins2, skinId1, skinId2, tournamentGame) {
 
     canvas_width = 1366
 	canvas_height = 768
@@ -124,6 +124,8 @@ function init_vars(player1, player2, skins1, skins2, tournamentGame) {
             ground_height: ground_height, // px
 
             tournamentGame: tournamentGame,
+            skinId1: skinId1,
+            skinId2: skinId2,
 
         }
     }
@@ -161,6 +163,9 @@ function leave_game(v) {
     clearInterval(v.g.backgroundInterval)
 
     storeMatch(v)
+
+    v.player = null
+    v.enemy = null
         
     window.removeEventListener('keydown', game2_keydown)
 	window.removeEventListener('keyup', game2_keyup)
@@ -170,12 +175,12 @@ function leave_game(v) {
 
 }
 
-function quit(event)
+async function quit(event)
 {
     if (event.key === 'x' || event.key === 'X') {
 
-
-        v.g.timer.innerHTML = 200 // TODO: check if this works - restart timer
+        window.fightyGamesOnCounter--;
+        v.g.timer.innerHTML = 200 
         
         document.querySelector('#game2-bar1').style.width = '100%'
         document.querySelector('#game2-bar2').style.width = '100%'
@@ -185,79 +190,107 @@ function quit(event)
         
         unloadScripts(window.game2Scripts);
         document.getElementById('div-game2-area').classList.add("hidden");
-        console.log("WE also HERE")
         if (v.g.tournamentGame) {
-            loadScripts(window.tournamentScripts);
+            await PromiseloadScripts(window.tournamentScripts);
             tournament_loop();
         }
         else {
-            loadScripts(window.menuScripts);
+            await PromiseloadScripts(window.menuScripts);
             main_menu();
         }
         window.removeEventListener('keydown', quit);
     }
 }
 
-// TODO: CHANGE TO FETCH
 function storeMatch(v)
 {
-// 	console.log(vars.gameVars.p1Name + vars.gameVars.p1SkinId);
-// 	console.log(vars.gameVars.p2Name + vars.gameVars.p2SkinId);
+    players = [
+        v.player.name,
+        v.enemy.name,
+    ]
+
+    scores = [
+        v.player.health,
+        v.enemy.health,
+    ]
+
 	if (v.g.tournamentGame)
 	{
-        axios.post('http://localhost:8001/solidity/addgame/' + window.user.blockchain_id + "/Fighty", {
-            player1: v.player.name,
-            player2: v.enemy.name,
-            score1: v.player.health,
-            score2: v.enemy.health
+
+        if (v.player.health > v.enemy.health) {
+            fightyTournamentData.addGameWinner(v.player.name, v.g.skinId1)
+        }
+        else {
+            fightyTournamentData.addGameWinner(v.enemy.name, v.g.skinId2)
+        }
+
+        fightyTournamentData.setMatchAsPlayed(players)
+
+		const url = 'https://' + window.IP + ':3000/online-game/tournaments/' + fightyTournamentData.id + '/games/';
+
+		const game = {
+			"users": players,
+			"scores": scores,
+		}
+
+        return fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(game),
         })
-		.then((response) => {
-			console.log(response.data);
-		})
-		.catch((error) => {
-			console.error(error);
-			if (error.response)	{
-				const status = error.response.status;
-			}
-		});
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => { throw err; });
+            }
+            return response.json();
+        })
+        .then(data => { // TODO: send tournament to blockchain
+            // return data
+
+            
+
+			// if (data.status === "completed")
+			// {
+			// 	const url = `https://${window.IP}:3000/solidity/solidity/addtournament/${window.user.blockchain_id}/Fighty`;
+
+			// 	const data = {
+			// 		players:,
+			// 		tournamentId: pongyTournamentData.id,
+			// 		gameName: "Pongy",
+			// 		games: pongyTournamentData.getthisshit() // do this
+			// 	};
+		
+			// 	fetch(url, {
+			// 		method: 'POST',
+			// 		headers: {
+			// 			'Content-Type': 'application/json',
+			// 		},
+			// 		body: JSON.stringify(data),
+			// 	})
+			// }
+        })
+        .catch(error => {
+            throw new Error(error.message);
+        });
+
 	}
 	else
 	{
-        try {
-            const url = `https://${window.IP}:3000/solidity/solidity/addgame/${window.user.blockchain_id}/Fighty`;
-            
-            const data = {
-                player1: v.player.name,
-                player2: v.enemy.name,
-                score1: v.player.health,
-                score2: v.enemy.health,
-            };
-            
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            })
-            toast_alert("Game stores on DB!")
-        } catch {
-            toast_alert("Couldn't store game on blockchain")
-        }
-		// axios.post('http://localhost:8001/solidity/addgame/' +  window.user.blockchain_id + "/Fighty", {
-        //     player1: v.player.name,
-        //     player2: v.enemy.name,
-        //     score1: v.player.health,
-        //     score2: v.enemy.health
-		// })
-		// .then((response) => {
-		// 	console.log(response.data);
-		// })
-		// .catch((error) => {
-		// 	console.error(error);
-		// 	if (error.response)	{
-		// 		const status = error.response.status;
-		// 	}
-		// });
+		const url = `https://${window.IP}:3000/solidity/solidity/addgame/${window.user.blockchain_id}/Fighty`;
+
+		const data = {
+			players: players,
+			scores: scores,
+		};
+
+		fetch(url, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(data),
+		})
 	}
 }

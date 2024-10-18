@@ -1,5 +1,6 @@
 function auth_hashchange(event) {
 	document.getElementById('auth').classList.add('hidden');
+	window.removeEventListener('hashchange', auth_hashchange);
 	unloadScripts(window.authScripts);
 }
 
