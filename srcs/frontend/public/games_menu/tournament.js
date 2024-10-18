@@ -1,10 +1,4 @@
 function clearTournament() {
-	window.tournamentC++;
-	console.log("-------------------")
-	console.log("TOURNAMENT COUNTER | cCLEAR TOURNAMENT", window.tournamentC)
-	console.log("-------------------")
-
-
 	// Make sure you're removing the exact listener added previously
 	window.removeEventListener('hashchange', clearTournament); 
 
@@ -213,10 +207,6 @@ function leaveTournament()
 
 function show_bracket()
 {
-	window.tournamentC++;
-	console.log("-------------------")
-	console.log("TOURNAMENT COUNTER | SHOW BRACKET", window.tournamentC)
-	console.log("-------------------")
 
 	document.getElementById('tournament-bracket').classList.remove("hidden");
 	document.getElementById('next-game-button').removeEventListener('click', next_game)
@@ -322,16 +312,6 @@ function tournament_loop() {
 	unloadScripts(window.game2Scripts)
 	unloadScripts(window.gameScripts)
 	
-	window.tournamentC++;
-	console.log("-------------------")
-	console.log("TOURNAMENT COUNTER | TOURNAMENT LOOP", window.tournamentC)
-	console.log("-------------------")
-	// if (window.isTournamentActive)
-	// 	window.isTournamentActive = true
-	// else
-	// 	return
-	// debug func | delete after
-	// pongyTournamentData.printAllMatches()
 
 	// Make sure you clear the hashchange listener first
 	window.removeEventListener('hashchange', clearTournament);
@@ -351,11 +331,9 @@ function tournament_loop() {
 		}
 	} else {
 		document.getElementById('game-area').classList.add("hidden");
-		console.log("MATCH COUNTER: ", pongyTournamentData.matchCounter)
-		console.log("NUMBER OF MATCHES: ", pongyTournamentData.nrMatches)
+
 		
 		if (pongyTournamentData.matchCounter !== 0 && pongyTournamentData.matchCounter === pongyTournamentData.nrMatches) {
-			console.log("I GOT FUCKING HERE")
 			tournamentOver = true
 			winner = pongyTournamentData.getTournamentWinner()
 		}
@@ -365,7 +343,6 @@ function tournament_loop() {
 		// tournament over
 		const winnerScreen = document.getElementById('winner-screen');
 		winnerScreen.classList.remove("hidden");
-		console.log("ADD EVENT LISTNEERRR!!")
 		// document.getElementById('leave-tournament-button').addEventListener('click', leaveTournament);
 		document.getElementById("winner-message").textContent = "Congratulations, " + winner + "! You are the winner!";
 	
@@ -380,11 +357,6 @@ async function start_tournament(playerNamesOrd, playerSkinsOrd) {
 	document.getElementById('games-tournament-menu').classList.add("hidden");
 
 	[window.playerNames, window.playerSkins] = shuffle_names(playerNamesOrd, playerSkinsOrd);
-
-	window.tournamentC++;
-	console.log("-------------------")
-	console.log("TOURNAMENT COUNTER | SSTART TORUNAMENT", window.tournamentC)
-	console.log("-------------------")
 
 	// Store tournament data and wait for the result
 	if (window.location.hash == '#fighters') {
