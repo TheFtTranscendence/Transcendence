@@ -175,7 +175,7 @@ async function leave_game(v, force = false) {
 
         document.querySelector('#game2-end-text').style.display = 'none'
 		v.g.timer.innerHTML = 200
-		unloadScripts(window,game2Scripts);
+		unloadScripts(window.game2Scripts);
 		return 
 	}
 	
