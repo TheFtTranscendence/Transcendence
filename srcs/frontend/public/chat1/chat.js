@@ -217,7 +217,7 @@ async function chat_confirmButton() {
 	await get_user_info(userInput).then((response) => {
 		user_to_send = response.id
 	}).catch((error) => {
-		toast_alert('User not found', error)
+		toast_alert('User not found')
 		return 
 	})
 
