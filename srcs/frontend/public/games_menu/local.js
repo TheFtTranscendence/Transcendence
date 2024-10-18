@@ -78,8 +78,8 @@ function local_play() {
 	window.changeSkinButton1.addEventListener('click', local_changeSkinButton1)
 	window.changeSkinButton2.addEventListener('click', local_changeSkinButton2)
 	window.playButton.addEventListener('click', local_play)
+	
 	window.backButton.removeEventListener('click', local_backbutton)
-
 
 	window.playButton.removeEventListener('click', local_play)
 	document.getElementById('games-local-menu').classList.add("hidden")
@@ -91,7 +91,7 @@ function local_play() {
 	} else {
 
 		document.getElementById('game-area').classList.remove("hidden")
-		startGame(player1name, player2name, window.game1Skins[window.pongPlayer1Skin], window.game1Skins[window.pongPlayer2Skin], -1, -1, false, false)
+		startGame(player1name, player2name, window.game1Skins[window.pongPlayer1Skin], window.game1Skins[window.pongPlayer2Skin], -1, -1, false)
 	}
 
 }

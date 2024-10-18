@@ -202,6 +202,7 @@ window.pongPlayerSkins = []
 
 window.playerCounter = 0;
 
+window.fightyGamesOnCounter = 0
 window.gamesOnCounter = 0
 window.isGameActive = false
 window.storeGame = false
@@ -230,7 +231,7 @@ class Match {
 class Tournament {
     constructor() {
 		this.id = 0;
-		this.tournamentOver = false;
+		this.tournamentEnd = false;
         this.nrPlayers = 0;
         this.nrMatches = 0;
 		this.matchCounter = 0;
@@ -239,6 +240,7 @@ class Tournament {
 		this.roundTwoMatches = 0;
 		this.roundThreeMatches = 0;
         this.matchList = [];  // Array to hold Match objects
+		this.finalTournament = {};
     }
 
 	// Sets tournament size information (Number of players, rounds and matches)
@@ -357,6 +359,32 @@ class Tournament {
 		console.log("getTournamentWinner | NO WINNER FOUND")
 	}
 
+	getFinalTournamentForBlockchain()
+	{
+		let finalTournamentForBlockchain = {
+            players: this.finalTournament.player_list,
+			tournamentId: this.id,
+			gameName: this.finalTournament.game_name,
+			games: []
+
+		};
+
+		for (let i = 0; i < this.finalTournament.tournament_games.length; i++) {
+			let game = {
+				gameName: this.finalTournament.game_name,
+				timestamp: 0,
+				players: this.finalTournament.tournament_games[i].users,
+				scores: this.finalTournament.tournament_games[i].scores,
+			};
+		}
+
+		console.log("FINAL TOURNAMENT GETTER")
+		console.log(finalTournamentForBlockchain)
+		
+		return finalTournamentForBlockchain
+
+	}
+
 	// prints all matches stored
 	printAllMatches()
 	{
@@ -368,7 +396,9 @@ class Tournament {
 		for (let match of this.matchList) {
 			console.log("Match Number: ", counter)
 			console.log("Player1 -> ", match.players[0])
+			console.log("Player1Skin -> ", match.skins[0])
 			console.log("Player2 -> ", match.players[1])
+			console.log("Player2Skin -> ", match.skins[1])
 			console.log("Has Match been played: ", match.matchPlayed)
 			counter++
 		}
@@ -383,6 +413,8 @@ class Tournament {
 	// Reset tournament once it's over
 	resetTournament()
 	{
+		this.id = 0;
+		this.tournamentEnd = false;
         this.nrPlayers = 0;
         this.nrMatches = 0;
 		this.matchCounter = 0;
@@ -391,6 +423,7 @@ class Tournament {
 		this.roundTwoMatches = 0;
 		this.roundThreeMatches = 0;
         this.matchList = [];  // Clear all matches
+		this.finalTournament = {};
 	}
 
 /* ------------> TOURNAMENT RECOVER FUNCS START <------------ */
@@ -436,9 +469,16 @@ class Tournament {
 
 		const databaseWinnerSkins = []
 
+		console.log("playersAndSkinsDict: ", playersAndSkinsDict)
+		console.log("databaseTournamentWinners: ", databaseTournamentWinners)
+
 		for (let i = 0; i < databaseTournamentWinners.length; i++)
 		{
-			databaseWinnerSkins.push(playersAndSkinsDict.databaseTournamentWinners[i])
+			if (playersAndSkinsDict.hasOwnProperty(databaseTournamentWinners[i])) {
+				databaseWinnerSkins.push(playersAndSkinsDict[databaseTournamentWinners[i]]);
+			} else {
+				console.warn(`No skin found for player: ${databaseTournamentWinners[i]}`);
+			}
 		}
 
 		for (let i = 0; i < databaseTournamentWinners.length; i++) {
@@ -507,7 +547,7 @@ async function getTournamentPlayers() {
 // Blockchain API call to get Tournament Rankings (wtv that means)
 async function getTournamentWinners() {
 
-	const url = 'http://' + window.IP + ':3000/online-games/tournaments/' + pongyTournamentData.id + '/winners/';
+	const url = 'https://' + window.IP + ':3000/online-games/tournaments/' + pongyTournamentData.id + '/winners/';
 
 	return fetch(url, {
 		method: 'GET',
@@ -593,6 +633,58 @@ async function storeTournament(playerNames, playerSkins, gameName)
 		console.log("ERRORR: ", error)
         throw new Error(error.message);
     });
+}
+
+async function getFinalTournament() {
+    const url = 'https://' + window.IP + ':3000/online-games/tournaments/' + pongyTournamentData.id + '/';
+
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.message);
+        }
+
+        const data = await response.json();
+        return data;  
+
+
+    } catch (error) {
+        throw new Error(`Failed to get final tournament: ${error.message}`);
+    }
+}
+
+function storeTournamentBlockchain(tournamentData)
+{
+	const url = `https://${window.IP}:3000/solidity/solidity/addtournament/${window.user.blockchain_id}/Pongy`;
+
+
+	fetch(url, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify(tournamentData),
+	})
+	.then(response => {
+		// Check if the response is successful (status 200-299)
+		if (response.ok) {
+			return response.json();  // Parse JSON response
+		} else {
+			throw new Error(`Error: ${response.status} ${response.statusText}`);
+		}
+	})
+	.then(responseData => {
+		// Log success and the data returned by the server (if any)
+		console.log("Tournament stored successfully:", responseData);
+	})
+	.catch(error => {
+		// Log any error that happens during the fetch request
+		console.error("Error storing the Tournament:", error);
+	});
 }
 
 /* -------------> SOLIDITY CALL FUNCS END <------------- */

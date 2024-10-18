@@ -5,7 +5,7 @@ function home_hashchange(event)
 		window.frontendHealthCheck = true
 		checkTournamentStatus()
 	}
-
+	window.removeEventListener('hashchange', home_hashchange);
 	document.getElementById('home').classList.add('hidden');
 	unloadScripts(window.homeScripts);
 }
@@ -603,11 +603,11 @@ async function checkTournamentStatus()
 	let fightyStatus = await window.getTournamentStatus("Fighty")
 	let pongyStatus = await window.getTournamentStatus("Pongy")
 
+	console.log("FIGHTY STATUS: ", fightyStatus)
 	console.log("PONGY STATUS: ", pongyStatus)
 	
-	console.log("FIGHTY STATUS: ", fightyStatus)
-	if (pongyStatus)
-		pongyTournamentData.retriveTournamentInfo()
 	if (fightyStatus)
 		fightyTournamentData.retriveTournamentInfo()
+	if (pongyStatus)
+		pongyTournamentData.retriveTournamentInfo()
 }

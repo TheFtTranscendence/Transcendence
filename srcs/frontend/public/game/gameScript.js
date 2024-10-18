@@ -34,15 +34,24 @@ async function cleanUpAfterFinish(vars)
 		window.removeEventListener("keydown", vars.eventHandlers.eventKeyDownMatchmaking);
 		vars.canvasVars.canvas.removeEventListener("click", vars.eventHandlers.eventCanvasClickMatchmaking);
 		vars.mm.game_socket.close()
-		// await unloadScripts(queueScripts)	
 	}
 	else
 	{
 		window.removeEventListener("keyup", vars.eventHandlers.eventKeyUpLocal);
 		window.removeEventListener("keydown", vars.eventHandlers.eventKeyDownLocal);
 		vars.canvasVars.canvas.removeEventListener("click", vars.eventHandlers.eventCanvasClickLocal);
-		storeMatch(vars);
-		
+		await storeMatch(vars);
+		console.log("--------------")
+		console.log("TOURNNAMENT BOOL", pongyTournamentData.tournamentEnd)
+		console.log("--------------")
+		console.log("|||||||")
+		console.log("--------------")
+		if (vars.gameVars.tournamentGame && pongyTournamentData.tournamentEnd)
+		{
+			pongyTournamentData.finalTournament = await getFinalTournament(pongyTournamentData)
+			const tournamentData = pongyTournamentData.getFinalTournamentForBlockchain()
+			window.storeTournamentBlockchain(tournamentData)
+		}
 	}
 
 	window.removeEventListener("hashchange", vars.eventHandlers.eventHashChange);
@@ -66,7 +75,7 @@ async function cleanUpAfterFinish(vars)
 
 }
 
-function storeMatch(vars)
+async function storeMatch(vars)
 {
 	players = [
 		vars.gameVars.p1Name,
@@ -76,6 +85,7 @@ function storeMatch(vars)
 		vars.gameVars.p1Score,
 		vars.gameVars.p2Score,
 	]
+
 	if (vars.gameVars.tournamentGame)
 	{
 		if (vars.gameVars.p1Score > vars.gameVars.p2Score) {
@@ -87,50 +97,38 @@ function storeMatch(vars)
 		
 		pongyTournamentData.setMatchAsPlayed(players)
 
-		const url = 'http://' + window.IP + ':3000/online-game/tournaments/' + pongyTournamentData.id + '/games/';
+		// await storeGameTournament(pongyTournamentData.id)
+
+		const url = 'https://' + window.IP + ':3000/online-games/tournaments/' + pongyTournamentData.id + '/games/';
 
 		const game = {
-			users: players,
-			scores: scores,
+			"users": players,
+			"scores": scores,
 		}
 
-        return fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(game),
-        })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(err => { throw err; });
-            }
-            return response.json();
-        })
-        .then(data => {
-			// if (data.status === "completed")
-			// {
-			// 	const url = `https://${window.IP}:3000/solidity/solidity/addtournament/${window.user.blockchain_id}/Pongy`;
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(game),
+            });
 
-			// 	const data = {
-			// 		players:,
-			// 		tournamentId: pongyTournamentData.id,
-			// 		gameName: "Pongy",
-			// 		games: pongyTournamentData.getthisshit() // do this
-			// 	};
-		
-			// 	fetch(url, {
-			// 		method: 'POST',
-			// 		headers: {
-			// 			'Content-Type': 'application/json',
-			// 		},
-			// 		body: JSON.stringify(data),
-			// 	})
-			// }
-        })
-        .catch(error => {
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.message);
+            }
+
+            const data = await response.json();
+            if (data.status === "completed") {
+                // Set the global variable directly
+                pongyTournamentData.tournamentEnd = true;
+            }
+
+        } catch (error) {
             throw new Error(error.message);
-        });
+        }
 
 	}
 	else
@@ -149,6 +147,22 @@ function storeMatch(vars)
 			},
 			body: JSON.stringify(data),
 		})
+		.then(response => {
+			// Check if the response is successful (status 200-299)
+			if (response.ok) {
+				return response.json();  // Parse JSON response
+			} else {
+				throw new Error(`Error: ${response.status} ${response.statusText}`);
+			}
+		})
+		.then(responseData => {
+			// Log success and the data returned by the server (if any)
+			console.log("Game stored successfully:", responseData);
+		})
+		.catch(error => {
+			// Log any error that happens during the fetch request
+			console.error("Error storing the game:", error);
+		});
 	}
 }
 
@@ -465,7 +479,6 @@ function ballMovement(vars)
 			vars.ballVars.ballX -= vars.ballVars.ballSpeedX;
 			if ((vars.ballVars.ballY - (vars.ballVars.ballSize / 2)) < -5 || (vars.ballVars.ballY + (vars.ballVars.ballSize / 2)) >= (vars.canvasVars.canvasHeight - 20))
 				vars.ballVars.ballSpeedY *= -1;
-			vars.ballVars.ballY += vars.ballVars.ballSpeedY;
 		}
 		// Ball hit the pladdle X
 		else
