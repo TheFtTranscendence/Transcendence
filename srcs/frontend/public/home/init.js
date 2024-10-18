@@ -490,11 +490,11 @@ async function loadData() {
 							<td>${match[2].join(' vs ')}</td>
 							<td>${match[3].join(' - ')}</td>
 						`;
-						tableBody.appendChild(matchRow);
+						tableBody.insertBefore(matchRow, tableBody.firstChild);
 					});
 				}
 
-				tableBody.appendChild(row);
+				tableBody.insertBefore(row, tableBody.firstChild);
 			});
 		})
 		.catch(error => console.error('Error fetching data:', error));

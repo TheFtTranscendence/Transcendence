@@ -12,7 +12,7 @@ def is_power_of_two(n):
 class TournamentGameSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = TournamentGame
-		fields = ['id', 'users', 'scores']
+		fields = ['id', 'users', 'scores', 'timestamp']
 
 class TournamentSerializer(serializers.ModelSerializer):
 	tournament_games = TournamentGameSerializer(many=True, read_only=True, source='tournament_game')

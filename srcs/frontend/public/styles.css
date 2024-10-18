@@ -1079,7 +1079,7 @@ table th {
 }
 
 .toast {
-    background-color: #2c2c2c;
+    background-color: #050505;
     color: white;
     border-radius: 0.5rem;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -1108,4 +1108,17 @@ table th {
 
 .btn-close {
     filter: brightness(0) invert(1);
+}
+
+#resultsTable tbody {
+display: block;
+max-height: 500px;
+overflow-y: auto;
+}
+
+#resultsTable thead, 
+#resultsTable tbody tr {
+display: table;
+width: 100%;
+table-layout: fixed;
 }

@@ -366,15 +366,19 @@ class Tournament {
 		};
 
 		for (let i = 0; i < this.finalTournament.tournament_games.length; i++) {
+			const date = new Date(this.finalTournament.tournament_games[i].timestamp)
 			let game = {
 				gameName: this.finalTournament.game_name,
-				timestamp: 0,
+				timestamp: Math.floor(date.getTime() / 1000),
 				players: this.finalTournament.tournament_games[i].users,
 				scores: this.finalTournament.tournament_games[i].scores,
 			};
 
+
 			finalTournamentForBlockchain.games.push(game)
 		}
+
+		console.log(finalTournamentForBlockchain)
 
 		return finalTournamentForBlockchain
 	}
@@ -644,6 +648,7 @@ async function getFinalTournamentPongy() {
         }
 
         const data = await response.json();
+		console.log("MINE ", data)
         return data;  
 
 
@@ -715,6 +720,8 @@ async function storeTournamentBlockchainFighty()
 
 	const url = `https://${window.IP}:3000/solidity/solidity/addtournament/${window.user.blockchain_id}/Fighty`;
 	const tournament = fightyTournamentData.getFinalTournamentForBlockchain()
+
+	console.log(tournament),
 
 	fetch(url, {
 		method: 'POST',
