@@ -37,13 +37,13 @@ async function main_menu_changeSkinButton () {
 		document.getElementById('games-menu-selected-skin').style.backgroundImage = "url('" + window.game2SkinsPreviews[new_skin] + "')" 
 	}
 	else {
-
-		if (window.pongPlayerSkins == window.game1SkinsPreview.length - 1)
-			window.pongPlayerSkins = 0
+		if (window.user.preferences.pongy_skin == window.game1SkinsPreview.length - 1)
+			await modify_user_preferences("pongy_skin", 0)
 		else
-			window.pongPlayerSkins++
-
-		document.getElementById('games-menu-selected-skin').style.backgroundImage = "url('" + window.game1SkinsPreview[window.pongPlayerSkins] + "')" 
+			await modify_user_preferences("pongy_skin",  window.user.preferences.pongy_skin + 1)
+		
+		await update_user_info()
+		document.getElementById('games-menu-selected-skin').style.backgroundImage = "url('" + window.game1SkinsPreview[window.user.preferences.pongy_skin] + "')" 
 	}
 }
 
@@ -128,9 +128,8 @@ function main_menu() {
 			toast_alert("Error setting skin")
 		}
 	} else {
-		window.pongPlayerSkins = 0
 		document.getElementById('games-menu-title').textContent = 'Pongy'
-		document.getElementById('games-menu-selected-skin').style.backgroundImage = "url('" + window.game1SkinsPreview[window.pongPlayerSkins] + "')" 
+		document.getElementById('games-menu-selected-skin').style.backgroundImage = "url('" + window.game1SkinsPreview[window.user.preferences.pongy_skin] + "')" 
 	}
 
 	// pongyTournamentData.printAllMatches()

@@ -195,8 +195,6 @@ window.playerSkins = []
 
 window.pongPlayerNames = []
 
-window.pongPlayerSkins = []
-
 window.playerCounter = 0;
 
 window.fightyGamesOnCounter = 0
