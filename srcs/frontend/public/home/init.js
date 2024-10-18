@@ -43,194 +43,23 @@ function handleOutsideClick(event) {
 }
 
 //GET PROFILE PICTURE
+//todo: make sure the path is correct
 function getAvatar() {
 	const imgElement = document.querySelector('#profile-img img');
 
 	if (window.user && window.user.avatar) {
-		imgElement.src = "https://" + window.IP + ":3000/user-management/" + window.user.avatar;
+		const avatar = window.user.avatar;
+
+		if (avatar.startsWith('https://')) {
+			const url = new URL(avatar);
+			imgElement.src = `${url.protocol}//${window.IP}:3000/user-management${url.pathname}`;
+		} else {
+			imgElement.src = `https://${window.IP}:3000/user-management${avatar}`;
+		}
 	} else {
 		imgElement.src = 'img/red.jpg';
 	}
 	document.getElementById('profile-img').classList.remove('hidden');
-}
-
-// CHANGE PROFILE PICTURE
-//document.getElementById('uploadButton').addEventListener('click', triggerFileDialog);
-//document.getElementById('changeProfilePicture').addEventListener('change', putAvatar);
-
-
-function triggerFileDialog() {
-	document.getElementById('changeProfilePicture').click();
-}
-
-async function handleUpload() {
-	const fileInput = document.getElementById('avatarInput');
-
-	console.log(fileInput.files[0]);
-	if (fileInput.files.length > 0) {
-		uploadAvatar(fileInput.files[0]);
-		await update_user_info();
-		getAvatar()
-	} else {
-		toast_alert('Please select a file to upload.');
-	}
-}
-
-async function uploadAvatar(file) {
-
-	const data = {
-		avatar: file,
-	}
-
-	try {
-		const response = await fetch(`https://${window.IP}:3000/user-management/auth/users/${window.user.id}/`, {
-			method: 'PATCH',
-			body: JSON.stringify(data),
-			headers: {
-				'Authorization': 'Token ' + window.usertoken,
-			},
-		});
-
-		if (!response.ok) {
-			const errorData = await response.json();
-			throw new Error(errorData.message || 'Network response was not ok');
-		}
-
-		const data = await response.json();
-		console.log('Avatar uploaded successfully:', data);
-	} catch (error) {
-		console.error('Error uploading avatar:', error);
-	}
-}
-
-document.getElementById('changeUsername').addEventListener('click', handleUsernameChange);
-
-function handleUsernameChange() {
-	const changeUsernameForm = document.getElementById('changeUsernameForm');
-	const submitButton = document.getElementById('submitUsernameChange');
-
-	if (changeUsernameForm) {
-		if (changeUsernameForm.classList.contains('hidden')) {
-			changeUsernameForm.classList.remove('hidden');
-			if (!isListenerAdded2) {
-				submitButton.addEventListener('click', handleUsernameChangeForm);
-				isListenerAdded2 = true; // Set to true when listener is added
-			}
-		} else {
-			console.log("add hidden");
-			changeUsernameForm.classList.add('hidden');
-			submitButton.removeEventListener('click', handleUsernameChangeForm);
-			isListenerAdded2 = false; // Reset the status
-		}
-	} else {
-		console.error('Element #changeUsernameForm not found');
-	}
-}
-
-function handleUsernameChangeForm() {
-	event.preventDefault();
-
-	const newUsername = document.getElementById('newusername').value;
-	const errorField = document.getElementById('changeUsernameError');
-	const changePasswordForm = document.getElementById('changeUsernameForm');
-	const sidebar = document.getElementById('sidebar');
-
-	modify_user("username", newUsername)
-}
-
-// LOGOUT
-document.getElementById('logoutButton').addEventListener('click', handleLogout);
-
-
-function handleLogout() {
-	const sidebar = document.getElementById('sidebar');
-
-	document.querySelector('nav').classList.add('hidden');
-	sidebar.classList.add('hidden');
-	document.removeEventListener('click', handleOutsideClick);
-	localStorage.removeItem('currentUser');
-	window.location.hash = '#auth';
-}
-
-// CHANGE PASSWORD
-document.getElementById('changePassword').addEventListener('click', handlePasswordChange);
-
-function handlePasswordChange() {
-	const changePasswordForm = document.getElementById('changePasswordForm');
-	const submitButton = document.getElementById('submitPasswordChange');
-
-	if (changePasswordForm) {
-		if (changePasswordForm.classList.contains('hidden')) {
-			console.log("remove hidden");
-			changePasswordForm.classList.remove('hidden');
-			// Add the event listener only if it's not already added
-			if (!isListenerAdded) {
-				submitButton.addEventListener('click', handlePasswordChangeForm);
-				isListenerAdded = true; // Set to true when listener is added
-			}
-		} else {
-			console.log("add hidden");
-			changePasswordForm.classList.add('hidden');
-			submitButton.removeEventListener('click', handlePasswordChangeForm);
-			isListenerAdded = false; // Reset the status
-		}
-	} else {
-		console.error('Element #changePasswordForm not found');
-	}
-}
-
-function handlePasswordChangeForm(event) {
-	event.preventDefault();
-
-	const currentPassword = document.getElementById('currentPassword').value;
-	const newPassword = document.getElementById('newPassword').value;
-	const confirmNewPassword = document.getElementById('confirmNewPassword').value;
-	const errorField = document.getElementById('changePasswordError');
-	const changePasswordForm = document.getElementById('changePasswordForm');
-	const sidebar = document.getElementById('sidebar');
-
-	const data = {
-		old_password: currentPassword,
-		new_password: newPassword,
-		confirm_new_password: confirmNewPassword
-	};
-
-
-	//todo: dont think this is working
-	const url = `https://${window.IP}:3000/user-management/auth/users/${window.user.id}/`;
-
-	fetch(url, {
-		method: 'PATCH',
-		headers: {
-			'Content-Type': 'application/json',
-			'Authorization': 'Token ' + window.usertoken
-		},
-		body: JSON.stringify(data),
-	})
-	.then(response => {
-		if (!response.ok) {
-			return response.json().then(err => { throw err; });
-		}
-		toast_alert("Password change successful");
-		errorField.classList.add('hidden');
-		changePasswordForm.classList.add('hidden');
-		sidebar.classList.add('hidden');
-		document.removeEventListener('click', handleOutsideClick);
-	})
-	.catch(error => {
-		toast_alert("Password not changed successful");
-		errorField.textContent = error.message || "An error occurred. Please try again.";
-		errorField.classList.remove('hidden');
-	});
-}
-
-function updateFileName(input) {
-	const fileName = document.getElementById("fileName");
-	if (input.files.length > 0) {
-		fileName.textContent = input.files[0].name;
-	} else {
-		fileName.textContent = "No file chosen";
-	}
 }
 
 // GAME HISTORY TABLE
@@ -246,8 +75,8 @@ function fillGame() {
 	tableBody.innerHTML = '';
 
 	Promise.all([
-		getGames('Pongy', window.user.blockchain_id),
-		getGames('Fighty', window.user.blockchain_id)
+		getGames('pongy', window.user.blockchain_id),
+		getGames('fighty', window.user.blockchain_id)
 	])
 	.then(([pongy_games, fighty_games]) => {
 		const games_dict = { ...pongy_games, ...fighty_games };
@@ -310,7 +139,7 @@ function fillGame() {
 }
 
 function getGames(gameType, instance) {
-	const url = `https://${window.IP}:3000/solidity/solidity/getgames/${instance}/${gameType}`;
+	const url = `https://${window.IP}:3000/solidity/solidity/get${gameType}games/${instance}/`;
 	return fetch(url, {
 		method: 'GET',
 		headers: {
@@ -327,12 +156,13 @@ function getGames(gameType, instance) {
 		const matchDictionary = {};
 		data.success.forEach(game => {
 			const info = {
-				timestamp: game[0],
-				player1: game[1],
-				player2: game[2],
-				score1: game[3],
-				score2: game[4],
-				tournament_id: game[5],
+				timestamp: game[1],
+				players: game[2],
+				scores: game[3],
+				player1: players[0],
+				player2: players[1],
+				score1: scores[0],
+				score2: scores[1],
 			}
 			matchDictionary[info.timestamp] = {
 				game_type: gameType,
@@ -340,10 +170,8 @@ function getGames(gameType, instance) {
 				player2: info.player2,
 				score1: info.score1,
 				score2: info.score2,
-				tournament_id: info.tournament_id
 			};
 		});
-
 
 		const sortedKeys = Object.keys(matchDictionary).sort((a, b) => a - b);
 		const sortedMatchDictionary = {};

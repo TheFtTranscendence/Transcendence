@@ -963,63 +963,11 @@ body::before {
     background-color: #444;
 }
 
-Style the file input button
-.sidebar input[type="file"] {
-    display: none; /* Hide the default file input */
-}
-
-/* Custom file upload button */
-.sidebar .file-upload {
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    background-color: #2c2c2c; /* Match button color */
-    color: white;
-    cursor: pointer;
-    width: calc(100% - 40px); /* Full width */
-    display: block; /* Center the button */
-    margin: 0 auto; /* Center the button */
-    text-align: center; /* Center text inside button */
-    transition: background-color 0.3s, transform 0.2s;
-}
-
-.sidebar .file-upload:hover {
-    background-color: #444;
-}
-
 /* Show the selected file name */
 .sidebar .file-name {
     margin-top: 5px;
     color: white; /* File name color */
     text-align: center; /* Center the file name */
-}
-
-/* General button styles */
-.sidebar button {
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    background-color: #2c2c2c; /* Default button color */
-    color: white;
-    cursor: pointer;
-    width: calc(100% - 40px); /* Full width */
-    display: block;
-    margin: 0 auto;
-    transition: background-color 0.3s, transform 0.2s;
-}
-
-.sidebar button:hover {
-    background-color: #444;
-}
-
-.sidebar button:active {
-    transform: scale(0.98);
-}
-
-/* Submit button styles */
-.sidebar button.submit {
-    background-color: #ff0000;
-    padding: 8px;
 }
 
 .sidebar .form-group {

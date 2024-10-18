@@ -6,19 +6,8 @@ function auth_hashchange(event) {
 
 function auth() {
 	document.querySelector('nav').classList.add('hidden');
-	const userJSON = localStorage.getItem('currentUser');
-	const currentUserLS = userJSON ? JSON.parse(userJSON) : null;
 
-	if (currentUserLS) {
-		window.currentUser.name = currentUserLS.username; // Ensure 'currentUser' is a global object
-		console.log(`Welcome back, ${currentUserLS.username}`);
-		window.location.hash = '#home';
-		document.getElementById('auth').classList.add('hidden');
-		unloadScripts(window.authScripts);
-	} else {
-		console.log('No user is currently logged in.');
-		window.location.hash = '#auth';
-	}
+	window.location.hash = '#auth';
 	document.getElementById('auth').classList.remove('hidden');
 	window.addEventListener('hashchange', auth_hashchange);
 }
@@ -31,20 +20,12 @@ function handleSuccessAuth(errorField) {
 		errorField.classList.add('hidden');
 	}
 
-	const userHeaders = {
-		'Authorization': 'Token ' + window.usertoken,
-	};
-
 	set_online();
-
 	_update_user_chats();
-
-	window.currentUser.username = window.user.username; // Ensure 'currentUser' is a global object
-	localStorage.setItem('currentUser', JSON.stringify(window.currentUser));
 
 }
 
-function handleLogin() {
+async function handleLogin() {
 	const username = document.getElementById('loginUsername').value;
 	const password = document.getElementById('loginPassword').value;
 	const errorField = document.getElementById('loginError');
@@ -54,7 +35,7 @@ function handleLogin() {
 		password: password,
 	};
 
-	fetch(`https://${window.IP}:3000/user-management/auth/login/`, {
+	await fetch(`https://${window.IP}:3000/user-management/auth/login/`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -175,12 +156,15 @@ document.getElementById('registerForm').addEventListener('submit', handleRegiste
 
 
 // AUTH ANIMATION
-const leftSide = document.querySelector('.left-side');
-const rightSide = document.querySelector('.right-side');
-const rightContent = document.querySelector('.right-content');
-const leftContent = document.querySelector('.left-content');
-const leftForm = document.getElementById('login');
-const rightForm = document.getElementById('register');
+function initElements() {
+    window.leftSide = window.leftSide || document.querySelector('.left-side');
+    window.rightSide = window.rightSide || document.querySelector('.right-side');
+    window.rightContent = window.rightContent || document.querySelector('.right-content');
+    window.leftContent = window.leftContent || document.querySelector('.left-content');
+    window.leftForm = window.leftForm || document.getElementById('login');
+    window.rightForm = window.rightForm || document.getElementById('register');
+}
+
 
 function handleClick(expandedSide, collapsedSide, expandedContent, collapsedContent, expandedForm, collapsedForm) {
 	collapsedSide.classList.remove('col-sm-6', 'col-sm-10');
@@ -193,6 +177,8 @@ function handleClick(expandedSide, collapsedSide, expandedContent, collapsedCont
 	expandedContent.classList.remove('hidden');
 	expandedForm.classList.remove('hidden');
 }
+
+initElements();
 
 leftSide.addEventListener('click', () => {
 	handleClick(leftSide, rightSide, leftContent, rightContent, leftForm, rightForm);

@@ -99,6 +99,7 @@ class UserViewSet(viewsets.ModelViewSet):
 		serializer = self.get_serializer(user_to_update, data=request.data, partial=True)
 		serializer.is_valid(raise_exception=True)
 		serializer.save()
+		user_to_update.refresh_from_db()
 
 		if user_to_update == current_user:
 			message = f'User {user_to_update.username} has been updated'
@@ -106,11 +107,12 @@ class UserViewSet(viewsets.ModelViewSet):
 			message = 'Your information has been updated'
 		return Response({'message': message, 'user': serializer.data})
 
+	#todo return an error not this
 	def _update_password(self, user_to_update, request):
 		old_password = request.data.get('old_password')
 		password = request.data.get('password')
 		confirm_password = request.data.get('confirm_password')
-
+		
 		if old_password and password and confirm_password:
 			user = authenticate(request, username=user_to_update.username, password=old_password)
 			if user is not None:
@@ -118,7 +120,9 @@ class UserViewSet(viewsets.ModelViewSet):
 					if confirm_password and password != confirm_password:
 						return False
 					user_to_update.set_password(password)
+					user_to_update.save(update_fields=["password"])
 					user_to_update.save()
+					user_to_update.refresh_from_db()
 		elif old_password or password or confirm_password:
 			return False
 
