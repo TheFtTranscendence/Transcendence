@@ -1122,3 +1122,37 @@ display: table;
 width: 100%;
 table-layout: fixed;
 }
+
+#winner-screen {
+    position: fixed; /* Fixes the position relative to the viewport */
+    top: 50%; /* Centers vertically */
+    left: 50%; /* Centers horizontally */
+    transform: translate(-50%, -50%); /* Offsets the div to truly center it */
+    background-color: rgba(255, 255, 255, 0.9); /* Light background with slight transparency */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); /* Soft shadow */
+    padding: 20px; /* Spacing inside the div */
+    text-align: center; /* Center text */
+    z-index: 1000; /* Ensures it stays above other elements */
+    font-family: 'Arial', sans-serif; /* Nice font */
+}
+
+#winner-message {
+    font-size: 24px; /* Larger font size for the winner message */
+    margin-bottom: 20px; /* Space between message and button */
+}
+
+#leave-tournament-button {
+    padding: 10px 20px; /* Padding for the button */
+    font-size: 18px; /* Font size for button text */
+    border: none; /* Removes default button border */
+    border-radius: 5px; /* Rounded button corners */
+    background-color: #FF4136; /* Red background color */
+    color: white; /* Button text color */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+#leave-tournament-button:hover {
+    background-color: #C0392B; /* Darker red on hover */
+}
