@@ -274,7 +274,7 @@
 
 					<!-- Right Side: Game Options -->
 					<div id="games-menu-game-options">
-						<button id="games-button-Matchmaking">Matchmaking</button>
+						<button id="games-button-Matchmaking" onclick="main_menu_matchmakingButton()">Matchmaking</button>
 						<button id="games-button-local">Local</button>
 						<button id="games-button-tournament">Tournament</button>
 
@@ -468,12 +468,12 @@
 					</div>
 					<div id="next-game" class="tournament-rounds">
 						<div id="next-game-players">Player X vs Player Y</div>
-						<button id="next-game-button">Next Game</button>
+						<button id="next-game-button" onclick="next_game()">Next Game</button>
 					</div>
 				</div>
 				<div id="winner-screen" class="hidden">
 					<div id = "winner-message"></div>
-					<button id="leave-tournament-button">End Tournament</button>
+					<button id="leave-tournament-button" onclick="leaveTournament()">End Tournament</button>
 				</div>
 			</div>
 

@@ -141,7 +141,7 @@ function main_menu() {
 	window.tournament = document.getElementById('games-button-tournament')
 	
 	window.changeSkinButton.addEventListener('click', main_menu_changeSkinButton)
-	window.matchmakingButton.addEventListener('click', main_menu_matchmakingButton, { once: true })
+	// window.matchmakingButton.addEventListener('click', main_menu_matchmakingButton, { once: true })
 	window.localButton.addEventListener('click', main_menu_localButton)
 	window.tournament.addEventListener('click', main_menu_tournamentButton, { once: true })
 
