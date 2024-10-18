@@ -55,12 +55,12 @@ async function main_menu_matchmakingButton () {
 	console.log('Matchmaking button clicked')
 	console.log("GAMES GOING ON COUNTER ->", window.gamesOnCounter)
 	if (window.location.hash == '#fighters') {
-
 		clearMenu()
-		await PromiseloadScripts(window.matchmakingScripts)
 		unloadScripts(window.menuScripts)
-		Matchmaking_before_game()
-		
+		if (!areScriptsLoaded(window.matchmakingScripts)) {
+			await PromiseloadScripts(window.matchmakingScripts)
+			Matchmaking_before_game()
+		}
 	}
 	else {
 		// Load the scripts for pong matchmaking
@@ -70,7 +70,6 @@ async function main_menu_matchmakingButton () {
 		unloadScripts(window.menuScripts)
 		if (!areScriptsLoaded(window.gameScripts)) {
 			await PromiseloadScripts(window.gameScripts)
-			console.log("AT main_menu_matchmakingButton")
 			startMatchmakingQueue()
         }
 	}
@@ -132,7 +131,6 @@ function main_menu() {
 		document.getElementById('games-menu-selected-skin').style.backgroundImage = "url('" + window.game1SkinsPreview[window.user.preferences.pongy_skin] + "')" 
 	}
 
-	// pongyTournamentData.printAllMatches()
 	console.log("AT MAIN MENU ->")
 
 	window.addEventListener('hashchange', games_menu_hashchange)

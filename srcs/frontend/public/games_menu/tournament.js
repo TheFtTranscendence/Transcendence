@@ -56,8 +56,18 @@ function next_game_players() {
 }
 
 async function next_game() {
+	
+	console.log("-------------------")
+	console.log("TOURNAMENT COUNTER", window.tournamentC)
+	console.log("-------------------")
+	
+	window.tournamentC++;
+	if (window.tournamentC > 2)
+	{
+		window.tournamentC--;
+		return
+	}
 	document.getElementById('next-game-button').removeEventListener('click', next_game)
-	window.tournamentVars.tournamentMatch = true;
 
 	let playerNames = [];
 	let playerSkins = [];
@@ -94,7 +104,6 @@ async function next_game() {
 		else
 			return
 	}
-	// pongyTournamentData.printAllMatches()
 
 }
 
@@ -287,14 +296,6 @@ function show_bracket()
 		for (i = lastValue; i < (roundInfo.roundThreeMatches * 2) + lastValue; i++)
 		{
 			input_id = 'player' + (divId) + '-r3';
-
-			console.log("INPUT ID", input_id)
-			console.log("PLAYER LEGHT", players.length)
-			console.log("DIV ID", divId)
-			console.log("I -> ", i)
-			console.log("ROUNTWO MATCHES * 2", roundInfo.roundTwoMatches * 2)
-			console.log("ROUNTHREE MATCHES * 2", (roundInfo.roundThreeMatches * 2) + lastValue)
-			console.log("PLAYER NAME", players[i])
 			document.getElementById(input_id).classList.remove('hidden')
 			document.getElementById(input_id).textContent = players[i];
 
@@ -302,7 +303,6 @@ function show_bracket()
 		}
 	}
 	document.getElementById("next-game-players").textContent = nextMatch[0] + " vs " + nextMatch[1]
-	fightyTournamentData.printAllMatches()
 
 }
 
