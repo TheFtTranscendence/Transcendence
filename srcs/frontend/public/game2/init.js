@@ -156,8 +156,6 @@ function reset_keys(v) {
 async function leave_game(v, force = false) {
 	console.log('hashchange game2');
 
-    console.log("WE HERE")
-
     clearInterval(v.g.gameInterval)
     clearInterval(v.g.timerInterval)
     clearInterval(v.g.backgroundInterval)
@@ -181,6 +179,10 @@ async function leave_game(v, force = false) {
 
     v.player = null
     v.enemy = null
+
+	//todo: not working
+	document.querySelector('#game2-bar1').style.width = '100%'
+    document.querySelector('#game2-bar2').style.width = '100%'
 
     window.removeEventListener('keydown', game2_keydown)
 	window.removeEventListener('keyup', game2_keyup)
