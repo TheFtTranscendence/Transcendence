@@ -9,7 +9,7 @@ window.onload = function (e)	{
 function navigate() {
 	let element, scripts, startFunction;
 	document.getElementById("navigation-bar").classList.remove("hidden");
-	
+	element = 'none';
 	if (window.user == undefined) 
 		window.location.hash = '#auth';
 
@@ -42,14 +42,14 @@ function navigate() {
 	}
 
 	
-	if (element === undefined)
+	if (element !== 'none')
 		document.getElementById(element).classList.remove("hidden");
 	if (element === "games")
 		unloadScripts(scripts)
 	if (window.invite_hash_change)	{
 		window.invite_hash_change = false;		
 	}	else	{
-		if (startFunction == undefined)
+	if (element !== 'none')
 			loadScripts(scripts, startFunction);
 	}
 }
