@@ -26,6 +26,6 @@ function game2_keyup(event) {
 
 function game2_hashchange(event) {
 	console.log('leaving game')
-	leave_game(v)
+	leave_game(v, true)
 	
 }

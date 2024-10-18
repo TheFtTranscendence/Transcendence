@@ -153,7 +153,7 @@ function reset_keys(v) {
 
 }
 
-async function leave_game(v) {
+async function leave_game(v, force = false) {
 	console.log('hashchange game2');
 
     console.log("WE HERE")
@@ -162,6 +162,16 @@ async function leave_game(v) {
     clearInterval(v.g.timerInterval)
     clearInterval(v.g.backgroundInterval)
 
+	if (force == true)
+	{
+		document.getElementById('games').classList.add("hidden");
+		document.getElementById('div-game2-area').classList.add("hidden");
+		window.removeEventListener('keydown', game2_keydown)
+		window.removeEventListener('keyup', game2_keyup)
+		window.removeEventListener('hashchange', game2_hashchange)
+		return 
+	}
+	
     await storeMatch(v)
     if (v.g.tournamentGame && fightyTournamentData.tournamentEnd)
     {
@@ -261,19 +271,25 @@ async function storeMatch(v)
 	}
 	else
 	{
-		const url = `https://${window.IP}:3000/solidity/solidity/addgame/${window.user.blockchain_id}/Fighty`;
+		try {
 
-		const data = {
+			const url = `https://${window.IP}:3000/solidity/solidity/addgame/${window.user.blockchain_id}/Fighty`;
+			
+			const data = {
 			players: players,
 			scores: scores,
-		};
+			};
 
-		fetch(url, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(data),
-		})
+			fetch(url, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(data),
+			})
+			toast_alert("Game stores on DB!")
+		} catch {
+			toast_alert("Couldn't store game on blockchain")
+		}
 	}
 }
