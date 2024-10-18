@@ -147,5 +147,7 @@ function changePassword() {
 }
 
 function logout()	{
+	window.user = null
+	document.getElementById("navigation-bar").classList.add("hidden");
 	location.reload();
 }

@@ -8,7 +8,8 @@ window.onload = function (e)	{
 
 function navigate() {
 	let element, scripts, startFunction;
-
+	document.getElementById("navigation-bar").classList.remove("hidden");
+	
 	if (window.user == undefined) 
 		window.location.hash = '#auth';
 
