@@ -173,10 +173,25 @@ async function leave_game(v) {
 
     v.player = null
     v.enemy = null
-        
+
+
+	v.player.bar.style.width = '100%'
+	v.enemy.bar.style.width = '100%'
+	document.querySelector('#game2-end-text').style.display = 'none'
+
     window.removeEventListener('keydown', game2_keydown)
 	window.removeEventListener('keyup', game2_keyup)
 	window.removeEventListener('hashchange', game2_hashchange)
+
+	if (window.location.hash != '#fighters')
+	{
+		console.log("BRUH")
+		
+		document.getElementById('games').classList.add("hidden")
+		document.getElementById('div-game2-area').classList.add("hidden")
+		unloadScripts(window.game2Scripts)
+		return ;
+	}
 
     window.addEventListener('keydown', quit);
 

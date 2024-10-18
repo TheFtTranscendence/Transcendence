@@ -75,10 +75,10 @@ function local_play() {
 	
 	window.removeEventListener('hashchange', local_menu_hashchange)
 
-	window.changeSkinButton1.addEventListener('click', local_changeSkinButton1)
-	window.changeSkinButton2.addEventListener('click', local_changeSkinButton2)
-	window.playButton.addEventListener('click', local_play)
-	
+	window.changeSkinButton1.removeEventListener('click', local_changeSkinButton1)
+	window.changeSkinButton2.removeEventListener('click', local_changeSkinButton2)
+	window.playButton.removeEventListener('click', local_play)
+
 	window.backButton.removeEventListener('click', local_backbutton)
 
 	window.playButton.removeEventListener('click', local_play)
@@ -131,6 +131,4 @@ function games_local_menu() {
 	window.changeSkinButton2.addEventListener('click', local_changeSkinButton2)
 	window.playButton.addEventListener('click', local_play)
 	window.backButton.addEventListener('click', local_backbutton)
-
-
 }
