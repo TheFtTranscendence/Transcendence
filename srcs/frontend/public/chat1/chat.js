@@ -211,7 +211,7 @@ async function chat_confirmButton() {
 		toast_alert('Enter a username')
 		return
 	}
-	if (userInput === 'username') {
+	if (userInput === window.user.username) {
 		toast_alert('Username is yourself')
 	}
 	await get_user_info(userInput).then((response) => {
