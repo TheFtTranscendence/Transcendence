@@ -449,12 +449,10 @@ async function checkTournamentStatus()
 }
 
 async function loadData() {
-	// Get selected game type and instanceIndex
 	const gameType = document.getElementById('gameType').value;
 	const username = document.getElementById('mh_username').value;
 
 	const user = await get_user_info(username);
-	// API paths for each game type
 	const apiPaths = {
 		pongyGames: `/solidity/solidity/getpongygames/${user.blockchain_id}`,
 		fightyGames: `/solidity/solidity/getfightygames/${user.blockchain_id}`,
@@ -462,20 +460,17 @@ async function loadData() {
 		fightyTournaments: `/solidity/solidity/getfightytournaments/${user.blockchain_id}`
 	};
 
-	// Fetch data from the selected API endpoint
 	fetch(apiPaths[gameType])
 		.then(response => response.json())
 		.then(data => {
-			// Clear existing table data
 			const tableBody = document.querySelector('#resultsTable tbody');
 			tableBody.innerHTML = '';
 
-			// Parse and display results
+			console.log(data);
 			const results = data.success;
 			results.forEach(result => {
 				const row = document.createElement('tr');
 
-				// For Games
 				if (gameType === 'pongyGames' || gameType === 'fightyGames') {
 					row.innerHTML = `
 						<td>${result[0]}</td>
@@ -484,9 +479,9 @@ async function loadData() {
 						<td>${result[3].join(' - ')}</td>
 					`;
 				}
-				// For Tournaments
 				else {
-					const tournamentMatches = result[4];
+					console.log(result)
+					const tournamentMatches = result[3];
 					tournamentMatches.forEach(match => {
 						const matchRow = document.createElement('tr');
 						matchRow.innerHTML = `
