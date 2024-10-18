@@ -122,7 +122,6 @@ async function loadScripts(scripts, functionName = 'none') {
 		}
 	})
 	.catch(error => {
-		console.error(error);
 	});
 	return true
 }
