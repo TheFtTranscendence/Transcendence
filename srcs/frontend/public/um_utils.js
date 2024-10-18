@@ -406,12 +406,16 @@ function set_online() {
 
 // Target should be an ID
 function send_friend_request(target) {
-	const data = {
-		type: "friend_request",
-		target: target
-	};
+	if (target == window.user.id)
+		toast_alert("You can't add your self as a friend")
+	else {
+		const data = {
+			type: "friend_request",
+			target: target
+		};
 
-	window.social_socket.send(JSON.stringify(data));
+		window.social_socket.send(JSON.stringify(data));
+	}
 }
 
 // Target should be an ID
