@@ -116,12 +116,11 @@ async function loadScripts(scripts, functionName = 'none') {
 		if (functionName != 'none') {
 			if (typeof window[functionName] === 'function') {
 				window[functionName]();
-			} else {
-				console.error("Function " + functionName + " not found");
 			}
 		}
 	})
 	.catch(error => {
+		console.error(error);
 	});
 	return true
 }
@@ -135,59 +134,6 @@ async function unloadScripts(scripts) {
 		}
 	});
 }
-
-// // Handle login and register forms
-// document.getElementById('loginForm').addEventListener('submit', (event) => {
-// 	event.preventDefault();
-
-// 	handleLogin();
-	
-// 	document.getElementById('auth').classList.add('hidden');
-// 	document.querySelector('nav').classList.remove('hidden');
-// 	window.location.hash = '#home';
-// 	navigate();
-// });
-
-// document.getElementById('registerForm').addEventListener('submit', (event) => {
-// 	event.preventDefault();
-
-// 	const button = document.getElementById('registerBtn');
-//     const loadingMessage = document.getElementById('loadingMessage');
-
-// 	handleRegister();
-
-// 	loadingMessage.style.display = 'block';
-//     button.disabled = true;
-
-
-
-// 	document.getElementById('auth').classList.add('hidden');
-// 	document.querySelector('nav').classList.remove('hidden');
-// 	window.location.hash = '#home';
-// 	navigate();
-// });
-
-// // Show the appropriate auth page (login or register)
-// function showAuthPage(page) {
-//     document.querySelectorAll('.auth-page').forEach(el => el.classList.add('hidden'));
-//     document.getElementById(page).classList.remove('hidden');
-// }
-
-//     document.getElementById('toRegister').addEventListener('click', () => {
-//         showAuthPage('register');
-//     });
-
-//     document.getElementById('toLogin').addEventListener('click', () => {
-//         showAuthPage('login');
-//     });
-// }
-
-// // Initial page load
-// window.addEventListener('load', () => {
-//     // Show login page initially
-//     showAuthPage('login');
-//     handleAuthForms();
-// });
 
 // Optional: Adding click event listeners to navigation links (not necessary if links have hrefs with hashes)
 document.querySelectorAll('.nav-link').forEach(link => {
