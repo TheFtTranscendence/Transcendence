@@ -359,48 +359,52 @@ async function loadData() {
 	const gameType = document.getElementById('gameType').value;
 	const username = document.getElementById('mh_username').value;
 
-	const user = await get_user_info(username);
-	const apiPaths = {
-		pongyGames: `/solidity/solidity/getpongygames/${user.blockchain_id}`,
-		fightyGames: `/solidity/solidity/getfightygames/${user.blockchain_id}`,
-		pongyTournaments: `/solidity/solidity/getpongytournaments/${user.blockchain_id}`,
-		fightyTournaments: `/solidity/solidity/getfightytournaments/${user.blockchain_id}`
-	};
+	try {
+		const user = await get_user_info(username);
+		const apiPaths = {
+			pongyGames: `/solidity/solidity/getpongygames/${user.blockchain_id}`,
+			fightyGames: `/solidity/solidity/getfightygames/${user.blockchain_id}`,
+			pongyTournaments: `/solidity/solidity/getpongytournaments/${user.blockchain_id}`,
+			fightyTournaments: `/solidity/solidity/getfightytournaments/${user.blockchain_id}`
+		};
 
-	fetch(apiPaths[gameType])
-		.then(response => response.json())
-		.then(data => {
-			const tableBody = document.querySelector('#resultsTable tbody');
-			tableBody.innerHTML = '';
+		fetch(apiPaths[gameType])
+			.then(response => response.json())
+			.then(data => {
+				const tableBody = document.querySelector('#resultsTable tbody');
+				tableBody.innerHTML = '';
 
-			const results = data.success;
-			results.forEach(result => {
-				const row = document.createElement('tr');
+				const results = data.success;
+				results.forEach(result => {
+					const row = document.createElement('tr');
 
-				if (gameType === 'pongyGames' || gameType === 'fightyGames') {
-					row.innerHTML = `
-						<td>${result[0]}</td>
-						<td>${new Date(result[1] * 1000).toLocaleString()}</td>
-						<td>${result[2].join(' vs ')}</td>
-						<td>${result[3].join(' - ')}</td>
-					`;
-				}
-				else {
-					const tournamentMatches = result[3];
-					tournamentMatches.forEach(match => {
-						const matchRow = document.createElement('tr');
-						matchRow.innerHTML = `
-							<td>${match[0]}</td>
-							<td>${new Date(match[1] * 1000).toLocaleString()}</td>
-							<td>${match[2].join(' vs ')}</td>
-							<td>${match[3].join(' - ')}</td>
+					if (gameType === 'pongyGames' || gameType === 'fightyGames') {
+						row.innerHTML = `
+							<td>${result[0]}</td>
+							<td>${new Date(result[1] * 1000).toLocaleString()}</td>
+							<td>${result[2].join(' vs ')}</td>
+							<td>${result[3].join(' - ')}</td>
 						`;
-						tableBody.insertBefore(matchRow, tableBody.firstChild);
-					});
-				}
+					}
+					else {
+						const tournamentMatches = result[3];
+						tournamentMatches.forEach(match => {
+							const matchRow = document.createElement('tr');
+							matchRow.innerHTML = `
+								<td>${match[0]}</td>
+								<td>${new Date(match[1] * 1000).toLocaleString()}</td>
+								<td>${match[2].join(' vs ')}</td>
+								<td>${match[3].join(' - ')}</td>
+							`;
+							tableBody.insertBefore(matchRow, tableBody.firstChild);
+						});
+					}
 
-				tableBody.insertBefore(row, tableBody.firstChild);
-			});
-		})
-		.catch(error => console.error('Error fetching data:', error));
+					tableBody.insertBefore(row, tableBody.firstChild);
+				});
+			})
+			.catch(error => console.error('Error fetching data:', error));
+	}	catch	{
+		toast_alert("User not found")
+	}
 }
