@@ -42,13 +42,15 @@ function navigate() {
 	}
 
 	
-	document.getElementById(element).classList.remove("hidden");
+	if (element === undefined)
+		document.getElementById(element).classList.remove("hidden");
 	if (element === "games")
 		unloadScripts(scripts)
 	if (window.invite_hash_change)	{
 		window.invite_hash_change = false;		
 	}	else	{
-		loadScripts(scripts, startFunction);
+		if (startFunction == undefined)
+			loadScripts(scripts, startFunction);
 	}
 }
 
